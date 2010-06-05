@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------*/
-/* PIC16F7x_PRG.h                                                          */
+/* pic16f7xx_prg.h                                                          */
 /*                                                                         */
 /*  Purpose: Serial PIC Programming algorithms for PIC16F7x (in WinPic).   */
 /*  Author : Wolfgang Buescher (DL4YHF)                                    */

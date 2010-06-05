@@ -41,8 +41,8 @@ bool MyApp::OnInit()
     bool wxsOK = true;
 
     TLanguage::SetLangDefDir();
-    MainFrame::TheIniFile.SetPath(_T("/LANGUAGE"));
-    MainFrame::TheIniFile.Read(_T("Name"), &MainFrame::TheLanguageName);
+    MainFrame::TheIniFile.SetPath(wxT("/LANGUAGE"));
+    MainFrame::TheIniFile.Read(wxT("Name"), &MainFrame::TheLanguageName);
     if (MainFrame::TheLanguageName != BUILT_IN_NAME)
         TLanguage::SetLanguage(MainFrame::TheLanguageName);
     if (MainFrame::TheLanguageName.IsEmpty())

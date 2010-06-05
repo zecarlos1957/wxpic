@@ -123,26 +123,26 @@ long HexStringToLongint(int nMaxDigits, const wxChar *pszSource)
  long lResult = 0;
  wxChar c;
  int i;
-  if(pszSource[0]==_T('0') && pszSource[1]==_T('x'))
+  if(pszSource[0]==wxT('0') && pszSource[1]==wxT('x'))
      pszSource += 2;
-  else if(pszSource[0]==_T('$'))
+  else if(pszSource[0]==wxT('$'))
      pszSource += 1;
 
   for(i=0; i<nMaxDigits; ++i)
    {
      c=pszSource[i];
-     if(c==_T('\0') || c==_T(' ') || c==_T(',') )  // "early" end of the HEX string
+     if(c==wxT('\0') || c==wxT(' ') || c==wxT(',') )  // "early" end of the HEX string
         return lResult;
 
      lResult <<= 4;  // shift "older, upper digits" 4 bits left
-     if(c>=_T('0') && c<=_T('9'))
-        lResult += (c-_T('0'));
+     if(c>=wxT('0') && c<=wxT('9'))
+        lResult += (c-wxT('0'));
      else
-     if(c>=_T('a') && c<=_T('f'))
-        lResult += (c-_T('a')+10);
+     if(c>=wxT('a') && c<=wxT('f'))
+        lResult += (c-wxT('a')+10);
      else
-     if(c>=_T('A') && c<=_T('F'))
-        lResult += (c-_T('A')+10);
+     if(c>=wxT('A') && c<=wxT('F'))
+        lResult += (c-wxT('A')+10);
      else
         return -1;  // not a valid HEX digit
    }

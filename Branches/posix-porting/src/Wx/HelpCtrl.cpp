@@ -52,7 +52,7 @@
 // ----------------------------------------------------------------------------
 
 /// Name for map file.
-#define WXEXTHELP_MAPFILE   _T("wxhelp.map")
+#define WXEXTHELP_MAPFILE   wxT("wxhelp.map")
 
 ///// Character introducing comments/documentation field in map file.
 //#define WXEXTHELP_COMMENTCHAR   ';'
@@ -110,7 +110,7 @@ bool wxBrowserHelpController::DisplayHelp(const wxString &relativeURL)
     wxFileName NormalizedFilename(relativeURL);
     NormalizedFilename.Normalize(wxPATH_NORM_DOTS|wxPATH_NORM_ABSOLUTE, m_helpDir);
     // construct hte URL to open -- it's just a file
-    wxString url(_T("file://") + NormalizedFilename.GetFullPath());
+    wxString url(wxT("file://") + NormalizedFilename.GetFullPath());
 //    if (url.Right(1) != wxFILE_SEP_PATH)
 //        url << wxFILE_SEP_PATH;
 //    url << relativeURL;
@@ -128,7 +128,7 @@ bool wxBrowserHelpController::DisplayHelp(const wxString &relativeURL)
                 return true;
         }
 
-        if ( wxExecute(m_BrowserName + _T(' ') + url, wxEXEC_SYNC) != -1 )
+        if ( wxExecute(m_BrowserName + wxT(' ') + url, wxEXEC_SYNC) != -1 )
             return true;
     }
     //else: either no browser explicitly specified or we failed to open it
@@ -187,11 +187,11 @@ bool wxBrowserHelpController::ParseMapFile(const wxString& fileName)
 
     for (const wxXmlNode *entry = input.GetRoot()->GetChildren(); entry != NULL; entry = entry->GetNext() )
     {
-        if (entry->GetName() != _T("entry"))
+        if (entry->GetName() != wxT("entry"))
             //-- In case the file would be used to add other data skip unrecognized nodes
             continue;
 
-        if (!entry->GetPropVal(_T("id"), &num))
+        if (!entry->GetPropVal(wxT("id"), &num))
         {
             wxLogError(_("No Id found for entry #%d of the map file \"%s\"."),
                        m_NumOfEntries+1, fileName.c_str());
@@ -213,18 +213,18 @@ bool wxBrowserHelpController::ParseMapFile(const wxString& fileName)
                        m_NumOfEntries+1, fileName.c_str());
             return false;
         }
-        if (!entry->GetPropVal(_T("url"), &url))
+        if (!entry->GetPropVal(wxT("url"), &url))
         {
             wxLogError(_("No Url found for entry #%d of the map file \"%s\"."),
                        m_NumOfEntries+1, fileName.c_str());
             return false;
         }
-        if (entry->GetPropVal(_T("anchor"), &anchor))
+        if (entry->GetPropVal(wxT("anchor"), &anchor))
         {
-            int find = url.Find(_T('.'), true);
+            int find = url.Find(wxT('.'), true);
             if (find == wxNOT_FOUND)
                 find = url.Len();
-            url = url.Left(find) + _T("++") + anchor + url.Mid(find);
+            url = url.Left(find) + wxT("++") + anchor + url.Mid(find);
         }
 
         m_MapList->Append(new wxExtHelpMapEntry(id, url, entry->GetNodeContent()));
@@ -261,7 +261,7 @@ bool wxBrowserHelpController::LoadFile(const wxString& file)
         if ( ! dirExists )
         {
             // try without encoding
-            const wxString locNameWithoutEncoding = locName.BeforeLast(_T('.'));
+            const wxString locNameWithoutEncoding = locName.BeforeLast(wxT('.'));
             if ( !locNameWithoutEncoding.empty() )
             {
                 helpDirLoc = helpDir;
@@ -273,7 +273,7 @@ bool wxBrowserHelpController::LoadFile(const wxString& file)
         if ( !dirExists )
         {
             // try without country part
-            wxString locNameWithoutCountry = locName.BeforeLast(_T('_'));
+            wxString locNameWithoutCountry = locName.BeforeLast(wxT('_'));
             if ( !locNameWithoutCountry.empty() )
             {
                 helpDirLoc = helpDir;

@@ -118,9 +118,9 @@ public:
         if (isTitleRow0(row) || isTitleRow1(row))
             return wxEmptyString;
         unsigned Second = isSecond(row);
-        return wxString::Format(_T("%04X"), (*(aGetAddress[Second]))((row-aFirstRow[Second])<<aColPower).address);
+        return wxString::Format(wxT("%04X"), (*(aGetAddress[Second]))((row-aFirstRow[Second])<<aColPower).address);
     }
-    virtual wxString GetColLabelValue ( int col ) { return wxString::Format(_T("%X"),col); }
+    virtual wxString GetColLabelValue ( int col ) { return wxString::Format(wxT("%X"),col); }
     virtual wxString GetTypeName(int row, int col){ return wxGRID_VALUE_STRING; }
     virtual void SetValueAsLong( int row, int col, long value )
     {
@@ -149,11 +149,11 @@ public:
         bool         Error = false;
         const wxChar *Src   = value.c_str();
         wxChar       *Dst   = Buffer;
-        for (; *Src != _T('\0'); ++Src)
+        for (; *Src != wxT('\0'); ++Src)
         {
-            if (((*Src >= _T('0')) && (*Src <= _T('9')))
-            ||  ((*Src >= _T('A')) && (*Src <= _T('F')))
-            ||  ((*Src >= _T('a')) && (*Src <= _T('f'))))
+            if (((*Src >= wxT('0')) && (*Src <= wxT('9')))
+            ||  ((*Src >= wxT('A')) && (*Src <= wxT('F')))
+            ||  ((*Src >= wxT('a')) && (*Src <= wxT('f'))))
                 *(Dst++) = *Src;
             else
                 Error = true;
@@ -342,7 +342,7 @@ THexGrid::THexGrid (wxWindow *parent, wxWindowID id, const wxPoint& pos, const w
     wxClientDC Dc(this);
     Dc.SetFont(GetLabelFont());
     int LabelWidth, LabelHeight;
-    Dc.GetTextExtent(_T("0000"), &LabelWidth, &LabelHeight);
+    Dc.GetTextExtent(wxT("0000"), &LabelWidth, &LabelHeight);
     SetColLabelSize(LabelHeight+4);
     SetRowLabelSize(LabelWidth+8);
 
@@ -380,7 +380,7 @@ void THexGrid::SetHexFormat(int pWordBitCount)
 {
     int NibbleCount = (pWordBitCount+3)/4;
     wxString Format;
-    Format.Printf(_T("%%0%dX"), NibbleCount);
+    Format.Printf(wxT("%%0%dX"), NibbleCount);
     aGridTable->SetHexFormat(Format);
     wxString Sample;
     Sample.Printf(Format, 0);
@@ -389,7 +389,7 @@ void THexGrid::SetHexFormat(int pWordBitCount)
     int ColWidth, ColHeight;
     Dc.GetTextExtent(Sample, &ColWidth, &ColHeight);
     SetDefaultColSize(ColWidth+7);
-    aEditor->SetParameters(wxString::Format(_T("%d"), NibbleCount));
+    aEditor->SetParameters(wxString::Format(wxT("%d"), NibbleCount));
 }
 
 void THexGrid::SetDefaultCellBackgroundColour (wxColour pBgColour)

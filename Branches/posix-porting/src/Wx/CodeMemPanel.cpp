@@ -22,9 +22,9 @@ TCodeMemPanel::TCodeMemPanel(wxWindow* parent,wxWindowID id,const wxPoint& pos,c
 	//(*Initialize(TCodeMemPanel)
 	wxBoxSizer* BoxSizer5;
 
-	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("id"));
+	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("id"));
 	BoxSizer5 = new wxBoxSizer(wxHORIZONTAL);
-	aCodeMemGrid = new THexGrid(this, ID_CODE_MEM_GRID, wxDefaultPosition, wxDefaultSize, 0, _T("ID_CODE_MEM_GRID"));
+	aCodeMemGrid = new THexGrid(this, ID_CODE_MEM_GRID, wxDefaultPosition, wxDefaultSize, 0, wxT("ID_CODE_MEM_GRID"));
 	aCodeMemGrid->CreateGrid(0,8);
 	aCodeMemGrid->SetMinSize(wxSize(0,0));
 	BoxSizer5->Add(aCodeMemGrid, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
@@ -66,11 +66,11 @@ void TCodeMemPanel::UpdateCodeMemDisplay(void)
     {
         // there seems to be "loaded" EXECUTIVE CODE MEMORY -> show multiple sections !
         if ( PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex >=/*!*/ 0 )
-            aCodeMemGrid->LoadHexData (aCodeMemAddrGetter1.SetMemory(PIC_BUF_CODE, TotalLocation), TotalLocation, aCodeMemAddrGetter1, _T("User Code Memory"), 0);
+            aCodeMemGrid->LoadHexData (aCodeMemAddrGetter1.SetMemory(PIC_BUF_CODE, TotalLocation), TotalLocation, aCodeMemAddrGetter1, wxT("User Code Memory"), 0);
         else
             aCodeMemGrid->UnloadData(0);
         int TotalExecLocation = std::min(PicBuf[PIC_BUF_EXEC].i32LastUsedArrayIndex+1, (long)PicBuf[PIC_BUF_EXEC].dwMaxSize);
-        aCodeMemGrid->LoadHexData (aCodeMemAddrGetter2.SetMemory(PIC_BUF_EXEC, TotalExecLocation), TotalExecLocation, aCodeMemAddrGetter2, _T("Executive Code Memory"), 1);
+        aCodeMemGrid->LoadHexData (aCodeMemAddrGetter2.SetMemory(PIC_BUF_EXEC, TotalExecLocation), TotalExecLocation, aCodeMemAddrGetter2, wxT("Executive Code Memory"), 1);
     }
     else // no EXECUTIVE MEMORY, only 'ordinary' code memory : No need to show what it is !
     {

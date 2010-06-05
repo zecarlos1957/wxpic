@@ -39,7 +39,7 @@
 #include "InterfacePanel.h"
 #include "MessagePanel.h"
 
-#define BUILT_IN_NAME (_T("Built-in"))
+#define BUILT_IN_NAME (wxT("Built-in"))
 
 
 class MainFrame: public wxFrame

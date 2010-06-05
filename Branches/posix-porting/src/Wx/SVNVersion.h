@@ -7,9 +7,9 @@
 //-- It is not itself in configuration management (it would have to know the version before it exists!)
 #else
 //-- Manual version definition
-#define SVN_DATE     (_T(""))
+#define SVN_DATE     (wxT(""))
 #define SVN_REVISION (0)
-#define SVN_VERSION  (_T(""))
+#define SVN_VERSION  (wxT(""))
 #define SVN_MANAGED  (false)
 #endif
 

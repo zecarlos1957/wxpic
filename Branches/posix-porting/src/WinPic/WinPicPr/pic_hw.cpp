@@ -222,7 +222,7 @@ bool COM_OpenPicPort(void)
      // Under Win95, there were no problems !!!
      memset( &COM_sOverlappedIo, 0, sizeof(OVERLAPPED)); // structure for OVERLAPPED I/O
      COM_sOverlappedIo.hEvent = ::CreateEvent( NULL, true, false, NULL );
-     _stprintf( szPort, _T("COM%d"), Config.iComPortNr );
+     _stprintf( szPort, wxT("COM%d"), Config.iComPortNr );
      COM_hComPort = CreateFile(
         szPort,                        // pointer to name of the file
         GENERIC_READ | GENERIC_WRITE,  // access (read-write) mode
@@ -1635,71 +1635,71 @@ bool PicHw_ReadCustomProgrammerDefsFromIniFile(const wxChar *pszFileName, T_PicH
         return false;
 
     wxXmlNode *Root = doc.GetRoot();
-    if (Root->GetName() != _T("programmer-control-lines"))
+    if (Root->GetName() != wxT("programmer-control-lines"))
         return false;
 
     // main INPUT function, reads the state of serial data from PIC to PC
-    Root->GetPropVal(_T("DataIn"), &s);
+    Root->GetPropVal(wxT("DataIn"), &s);
     ss = s.mb_str(wxConvISO8859_1);
     PicHw_TokensToInOutFuncs(ss, &pHwFuncs->GetInBit );
     // input function to query the programming adapter's "ok"-button :
-    Root->GetPropVal(_T("OkButton"), &s);
+    Root->GetPropVal(wxT("OkButton"), &s);
     ss = s.mb_str(wxConvISO8859_1);
     PicHw_TokensToInOutFuncs(ss, &pHwFuncs->GetOkButton );
 
     // set/check Vpp, result:  1=yes 0=no -1=not supported
-    s = Root->GetPropVal(_T("VppOnOff"), wxEmptyString);
+    s = Root->GetPropVal(wxT("VppOnOff"), wxEmptyString);
     ss = s.mb_str(wxConvISO8859_1);
     PicHw_TokensToInOutFuncs(ss, &pHwFuncs->SetVpp );
     // set/check Vdd, result:  1=yes 0=no -1=not supported
-    s = Root->GetPropVal(_T("VddOnOff"), wxEmptyString);
+    s = Root->GetPropVal(wxT("VddOnOff"), wxEmptyString);
     ss = s.mb_str(wxConvISO8859_1);
     PicHw_TokensToInOutFuncs(ss, &pHwFuncs->SetVdd );
     // SELECT Vdd (actually done BEFORE turning Vdd on !)
-    s = Root->GetPropVal(_T("SelVddLow"), wxEmptyString);
+    s = Root->GetPropVal(wxT("SelVddLow"), wxEmptyString);
     ss = s.mb_str(wxConvISO8859_1);
     PicHw_TokensToInOutFuncs(ss, &pHwFuncs->SelectVddLow );
-    s = Root->GetPropVal(_T("SelVddNorm"), wxEmptyString);
+    s = Root->GetPropVal(wxT("SelVddNorm"), wxEmptyString);
     ss = s.mb_str(wxConvISO8859_1);
     PicHw_TokensToInOutFuncs(ss, &pHwFuncs->SelectVddNorm );
-    s = Root->GetPropVal(_T("SelVddHigh"), wxEmptyString);
+    s = Root->GetPropVal(wxT("SelVddHigh"), wxEmptyString);
     ss = s.mb_str(wxConvISO8859_1);
     PicHw_TokensToInOutFuncs(ss, &pHwFuncs->SelectVddHigh );
 
     // Connect/disconnect programmer with target, return: 1=yes 0=no -1=not supported
-    s = Root->GetPropVal(_T("Connect"), wxEmptyString);
+    s = Root->GetPropVal(wxT("Connect"), wxEmptyString);
     ss = s.mb_str(wxConvISO8859_1);
     PicHw_TokensToInOutFuncs(ss, &pHwFuncs->ConnectTarget );
     // Tie MCLR to ground (like D4 on the "AN589" programmer :
-    s = Root->GetPropVal(_T("PullMclrDown"), wxEmptyString);
+    s = Root->GetPropVal(wxT("PullMclrDown"), wxEmptyString);
     ss = s.mb_str(wxConvISO8859_1);
     PicHw_TokensToInOutFuncs(ss, &pHwFuncs->PullMclrToGnd );
     // set/check CLOCK bit, result:  1=yes 0=no -1=not supported
-    s = Root->GetPropVal(_T("ClockOut"), wxEmptyString);
+    s = Root->GetPropVal(wxT("ClockOut"), wxEmptyString);
     ss = s.mb_str(wxConvISO8859_1);
     PicHw_TokensToInOutFuncs(ss, &pHwFuncs->SetClk );
 
     // set/check DATA OUTPUT bit, result:  1=yes 0=no -1=not supported
-    s = Root->GetPropVal(_T("DataOut"), wxEmptyString);
+    s = Root->GetPropVal(wxT("DataOut"), wxEmptyString);
     ss = s.mb_str(wxConvISO8859_1);
     PicHw_TokensToInOutFuncs(ss, &pHwFuncs->SetData );
   // LOGIC(!) state of data-output-line while reading
-    s = Root->GetPropVal(_T("DataOutWhileReading"), _T("1"));  // ( usually 1 so PIC can pull this line down )
+    s = Root->GetPropVal(wxT("DataOutWhileReading"), wxT("1"));  // ( usually 1 so PIC can pull this line down )
     ss = s.mb_str(wxConvISO8859_1);
     s.ToLong (&PicHw_iStateOfDataOutWhileReading);
 
     // Test Clock Enable,    result:  1=yes(enabled) 0=no(not enabled) -1=not supported
-    s = Root->GetPropVal(_T("ClkEnable"), wxEmptyString);
+    s = Root->GetPropVal(wxT("ClkEnable"), wxEmptyString);
     ss = s.mb_str(wxConvISO8859_1);
     PicHw_TokensToInOutFuncs(ss, &pHwFuncs->SetClkEnable );
     // Test Data  Enable,    result:  1=yes(enabled) 0=no(not enabled) -1=not supported
-    s = Root->GetPropVal(_T("OutEnable"), wxEmptyString);
+    s = Root->GetPropVal(wxT("OutEnable"), wxEmptyString);
     ss = s.mb_str(wxConvISO8859_1);
     PicHw_TokensToInOutFuncs(ss, &pHwFuncs->SetDataEnable );
-    s = Root->GetPropVal(_T("RedLed"), wxEmptyString);
+    s = Root->GetPropVal(wxT("RedLed"), wxEmptyString);
     ss = s.mb_str(wxConvISO8859_1);
     PicHw_TokensToInOutFuncs(ss, &pHwFuncs->SetRedLed );
-    s = Root->GetPropVal(_T("GreenLed"), wxEmptyString);
+    s = Root->GetPropVal(wxT("GreenLed"), wxEmptyString);
     ss = s.mb_str(wxConvISO8859_1);
     PicHw_TokensToInOutFuncs(ss, &pHwFuncs->SetGreenLed );
 
@@ -1904,7 +1904,7 @@ bool PicHw_SelectProgrammerHardware(
    }
 
 //    wxFileName DllFilename (wxStandardPaths::Get().GetExecutablePath());
-//    DllFilename.AppendDir(_T("interfaces"));
+//    DllFilename.AppendDir(wxT("interfaces"));
 //    DllFilename.SetFullName(pszSupportFileName);
 //    s = DllFilename.GetFullPath();
 

@@ -936,7 +936,7 @@ int PIC_HEX_DumpHexFile(const wxChar *fname )
  FILE *fp;
 // int  iBufNr;
 
-  if ( (fp = _tfopen(fname, _T("w"))) == NULL )
+  if ( (fp = _tfopen(fname, wxT("w"))) == NULL )
    {
        return -1;
    }

@@ -122,7 +122,7 @@ wxArrayString TLanguage::GetLanguageNameList(void)
         aLanguageDefFile.AppendDir(LANGUAGE_DEFAULT_DIR_NAME);
     }
     //-- Dans tous les cas l'extension des fichiers de traduction est .mo
-    aLanguageDefFile.SetExt(_T("mo"));
+    aLanguageDefFile.SetExt(wxT("mo"));
     //-- Indique que les catalogues doivent être cherchés dans le répertoire de traduction
     aLocale.AddCatalogLookupPathPrefix(aLanguageDefFile.GetPath());
 
@@ -158,7 +158,7 @@ bool TLanguage::try2Languages (int pLanguage)
                 //-- Si on n'a pas trouvé le fichier de traduction
                 //-- Et si la langue est une variante nationale
                 //-- On peut vérifier si le langage générique existe
-                int SubLangPos = LangTag.Find(_T('_'));
+                int SubLangPos = LangTag.Find(wxT('_'));
                 if (SubLangPos != wxNOT_FOUND)
                 {
                     //-- Construction du nom du langage générique
@@ -210,7 +210,7 @@ wxString TLanguage::doGetFileText (const wxString &pFilename)
         if (!Found)
         {
             Filename.RemoveLastDir();
-            int SubLangPos = LangTag.Find(_T('_'));
+            int SubLangPos = LangTag.Find(wxT('_'));
             if (SubLangPos != wxNOT_FOUND)
             {
                 LangTag.Truncate(SubLangPos);

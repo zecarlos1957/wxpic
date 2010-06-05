@@ -52,40 +52,40 @@ TConfigMemoryPanel::TConfigMemoryPanel(wxWindow* parent,wxWindowID id,const wxPo
 	wxBoxSizer* BoxSizer13;
 	wxBoxSizer* BoxSizer12;
 
-	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("id"));
+	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("id"));
 	BoxSizer12 = new wxBoxSizer(wxHORIZONTAL);
-	aCfgMemGrid = new wxGrid(this, ID_CFG_MEM_GRID, wxDefaultPosition, wxSize(-1,0), 0, _T("ID_CFG_MEM_GRID"));
+	aCfgMemGrid = new wxGrid(this, ID_CFG_MEM_GRID, wxDefaultPosition, wxSize(-1,0), 0, wxT("ID_CFG_MEM_GRID"));
 	aCfgMemGrid->CreateGrid(0,3);
 	aCfgMemGrid->SetMinSize(wxSize(0,0));
 	BoxSizer12->Add(aCfgMemGrid, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 7);
-	Panel6 = new wxPanel(this, ID_PANEL6, wxDefaultPosition, wxDefaultSize, wxRAISED_BORDER|wxTAB_TRAVERSAL, _T("ID_PANEL6"));
+	Panel6 = new wxPanel(this, ID_PANEL6, wxDefaultPosition, wxDefaultSize, wxRAISED_BORDER|wxTAB_TRAVERSAL, wxT("ID_PANEL6"));
 	BoxSizer13 = new wxBoxSizer(wxVERTICAL);
-	StaticText10 = new wxStaticText(Panel6, ID_STATICTEXT10, _("ID and Config Memory"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT10"));
+	StaticText10 = new wxStaticText(Panel6, ID_STATICTEXT10, _("ID and Config Memory"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT10"));
 	BoxSizer13->Add(StaticText10, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 1);
 	wxString __wxRadioBoxChoices_1[2] =
 	{
 		_("Binary"),
 		_("Hexadecimal")
 	};
-	aIdBinHexRadio = new wxRadioBox(Panel6, ID_ID_BIN_HEX_RADIO, wxEmptyString, wxDefaultPosition, wxDefaultSize, 2, __wxRadioBoxChoices_1, 1, wxRA_HORIZONTAL, wxDefaultValidator, _T("ID_ID_BIN_HEX_RADIO"));
+	aIdBinHexRadio = new wxRadioBox(Panel6, ID_ID_BIN_HEX_RADIO, wxEmptyString, wxDefaultPosition, wxDefaultSize, 2, __wxRadioBoxChoices_1, 1, wxRA_HORIZONTAL, wxDefaultValidator, wxT("ID_ID_BIN_HEX_RADIO"));
 	BoxSizer13->Add(aIdBinHexRadio, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
-	aShowAllCfgCellsChk = new wxCheckBox(Panel6, ID_SHOW_ALL_CFG_CELLS_CHK, _("Show ALL locations"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SHOW_ALL_CFG_CELLS_CHK"));
+	aShowAllCfgCellsChk = new wxCheckBox(Panel6, ID_SHOW_ALL_CFG_CELLS_CHK, _("Show ALL locations"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_SHOW_ALL_CFG_CELLS_CHK"));
 	aShowAllCfgCellsChk->SetValue(false);
 	BoxSizer13->Add(aShowAllCfgCellsChk, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 1);
-	StaticText11 = new wxStaticText(Panel6, ID_STATICTEXT11, _("(* = reserved)"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT11"));
+	StaticText11 = new wxStaticText(Panel6, ID_STATICTEXT11, _("(* = reserved)"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT11"));
 	BoxSizer13->Add(StaticText11, 0, wxALL|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL, 1);
 	BoxSizer13->Add(0,5,0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
-	aDevIdTitle = new wxStaticText(Panel6, ID_DEV_ID_TITLE, _("Device ID WORD:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_DEV_ID_TITLE"));
+	aDevIdTitle = new wxStaticText(Panel6, ID_DEV_ID_TITLE, _("Device ID WORD:"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_DEV_ID_TITLE"));
 	BoxSizer13->Add(aDevIdTitle, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 1);
-	aDevId = new wxStaticText(Panel6, ID_DEV_ID, _("11 1111 1111 1111"), wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE, _T("ID_DEV_ID"));
+	aDevId = new wxStaticText(Panel6, ID_DEV_ID, _("11 1111 1111 1111"), wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE, wxT("ID_DEV_ID"));
 	BoxSizer13->Add(aDevId, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 1);
-	aDevIdDecoded = new wxStaticText(Panel6, ID_DEV_ID_DECODED, _("= <unknown ID>"), wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE, _T("ID_DEV_ID_DECODED"));
+	aDevIdDecoded = new wxStaticText(Panel6, ID_DEV_ID_DECODED, _("= <unknown ID>"), wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE, wxT("ID_DEV_ID_DECODED"));
 	BoxSizer13->Add(aDevIdDecoded, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 1);
 	BoxSizer13->Add(0,5,0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
-	aApplyIdLocsButton = new wxButton(Panel6, ID_APPLY_ID_LOCS_BUTTON, _("Apply edits"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_APPLY_ID_LOCS_BUTTON"));
+	aApplyIdLocsButton = new wxButton(Panel6, ID_APPLY_ID_LOCS_BUTTON, _("Apply edits"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_APPLY_ID_LOCS_BUTTON"));
 	aApplyIdLocsButton->Disable();
 	BoxSizer13->Add(aApplyIdLocsButton, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 3);
-	aHelpOnIdButton = new wxButton(Panel6, ID_BUTTON6, _("Help"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON6"));
+	aHelpOnIdButton = new wxButton(Panel6, ID_BUTTON6, _("Help"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_BUTTON6"));
 	BoxSizer13->Add(aHelpOnIdButton, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 3);
 	Panel6->SetSizer(BoxSizer13);
 	BoxSizer13->Fit(Panel6);
@@ -104,7 +104,7 @@ TConfigMemoryPanel::TConfigMemoryPanel(wxWindow* parent,wxWindowID id,const wxPo
 
     wxGridCellAttr *ReadOnlyAttr = new wxGridCellAttr;
     ReadOnlyAttr->SetReadOnly();
-    aCfgMemGrid->SetColLabelValue(configMemSTAR, _T("*"));
+    aCfgMemGrid->SetColLabelValue(configMemSTAR, wxT("*"));
     aCfgMemGrid->SetColLabelValue(configMemINFO, _("Info"));
     aCfgMemGrid->SetColLabelValue(configMemVALUE, _("Value"));
     aCfgMemGrid->SetColSize(configMemSTAR, 20);
@@ -133,11 +133,11 @@ static wxChar *WordToSeparatedBinary(uint16_t w, int iNrBits)
 
     for (j=k=0;j<iNrBits;++j)
     {
-        sz80Result[k++] = _T('0') +  ( (w & (1<<(iNrBits-1-j)))!=0);
+        sz80Result[k++] = wxT('0') +  ( (w & (1<<(iNrBits-1-j)))!=0);
         if ( ((iNrBits-1-j)&3) == 0)
-            sz80Result[k++] = _T(' ');
+            sz80Result[k++] = wxT(' ');
     }
-    sz80Result[k] = _T('\0');
+    sz80Result[k] = wxT('\0');
     return sz80Result;
 }
 
@@ -162,7 +162,7 @@ void TConfigMemoryPanel::ApplyIdLocationDisplay(void)
         w=0;
         ok=true;
         cp=sz80Temp;
-        if ( (cp[0]==_T('$')) || (cp[0]==_T('0') && cp[1]==_T('x')) )
+        if ( (cp[0]==wxT('$')) || (cp[0]==wxT('0') && cp[1]==wxT('x')) )
         {
             w = HexStringToLongint(6,cp);
         }
@@ -170,13 +170,13 @@ void TConfigMemoryPanel::ApplyIdLocationDisplay(void)
         {
             for (j=0;j<wBitsPerIdLocation;++j)
             {
-                while (*cp==_T(' ')) ++cp; // skip spaces, they are no syntax element here
-                if (*cp==_T('1'))
+                while (*cp==wxT(' ')) ++cp; // skip spaces, they are no syntax element here
+                if (*cp==wxT('1'))
                 {
                     w |= (1<<(wBitsPerIdLocation-1-j));
                     ++cp;
                 }
-                else if (*cp==_T('0'))
+                else if (*cp==wxT('0'))
                 {
                     ++cp;
                 }
@@ -197,7 +197,7 @@ void TConfigMemoryPanel::ApplyIdLocationDisplay(void)
 //---------------------------------------------------------------------------
 
 
-static const wxString Star (_T("*"));
+static const wxString Star (wxT("*"));
 
 //---------------------------------------------------------------------------
 void TConfigMemoryPanel::UpdateIdAndConfMemDisplay(void)
@@ -257,24 +257,24 @@ void TConfigMemoryPanel::UpdateIdAndConfMemDisplay(void)
             if ( PicBuf_GetBufferWord( dwAddress, &dw ) > 0 )
             {
                 aCfgMemGrid->AppendRows();
-                aCfgMemGrid->SetRowLabelValue(iGridLine, wxString::Format(_T("0x%4.4X"), dwAddress)); // sprintf is smart enough to use 6 digits if necessary !
+                aCfgMemGrid->SetRowLabelValue(iGridLine, wxString::Format(wxT("0x%4.4X"), dwAddress)); // sprintf is smart enough to use 6 digits if necessary !
                 aCfgMemGrid->SetCellValue(iGridLine, configMemSTAR, ( !PicDev_IsConfigMemLocationValid(dwAddress) ) ? Star : wxString(wxEmptyString));
 //      if( !PicDev_IsConfigMemLocationValid(dwAddress) )
-//        strcat( sz80Temp, _T(" *") );
+//        strcat( sz80Temp, wxT(" *") );
 //      SG_CfgMem->Cells[0][iGridLine] = sz80Temp;
                 aCfgMemGrid->SetCellValue(iGridLine, configMemINFO, PicDev_GetInfoOnConfigMemory( dwAddress ));
 //      SG_CfgMem->Cells[1][iGridLine] = PicDev_GetInfoOnConfigMemory( dwAddress );
                 aCfgMemGrid->SetCellValue(iGridLine, configMemVALUE,
                                           (aIdBinHexRadio->GetSelection()==radioDevIdBIN)
                                           ? wxString(WordToSeparatedBinary(dw, wBitsPerIdLocation))
-                                          : wxString::Format(_T("0x%4.4X"), dw));
+                                          : wxString::Format(wxT("0x%4.4X"), dw));
 //
 //        memset(sz80Temp,0,80);
 //        if(RB_IdBin->Checked)
 //          SG_CfgMem->Cells[2][iGridLine] = WordToSeparatedBinary(dw, wBitsPerIdLocation);
 //        else
 //         {
-//          sprintf(sz80Temp, _T("0x%4.4X"), dw );
+//          sprintf(sz80Temp, wxT("0x%4.4X"), dw );
 //          SG_CfgMem->Cells[2][iGridLine] = sz80Temp;
 //         }
                 iGridLine++;
@@ -296,20 +296,20 @@ void TConfigMemoryPanel::UpdateIdAndConfMemDisplay(void)
             if ( PicBuf_GetBufferWord( dwAddress, &dw ) > 0 )
             {
                 aCfgMemGrid->AppendRows();
-                aCfgMemGrid->SetColLabelValue(iGridLine, wxString::Format(_T("0x%4.4X"), dwAddress)); // sprintf is smart enough to use 6 digits if necessary !
-//        sprintf(sz80Temp, _T("0x%4.4X"), dwAddress); // sprintf is smart enough to use 6 digits if necessary !
+                aCfgMemGrid->SetColLabelValue(iGridLine, wxString::Format(wxT("0x%4.4X"), dwAddress)); // sprintf is smart enough to use 6 digits if necessary !
+//        sprintf(sz80Temp, wxT("0x%4.4X"), dwAddress); // sprintf is smart enough to use 6 digits if necessary !
 //        SG_CfgMem->Cells[0][iGridLine] = sz80Temp;
                 aCfgMemGrid->SetCellValue(iGridLine, configMemINFO, PicDev_GetInfoOnConfigMemory( dwAddress ));
 //        SG_CfgMem->Cells[1][iGridLine] = PicDev_GetInfoOnConfigMemory( dwAddress );
                 aCfgMemGrid->SetCellValue(iGridLine, configMemVALUE,
                                           (aIdBinHexRadio->GetSelection()==radioDevIdBIN)
                                           ? wxString(WordToSeparatedBinary(dw, wBitsPerIdLocation))
-                                          : wxString::Format(_T("0x%4.4X"), dw));
+                                          : wxString::Format(wxT("0x%4.4X"), dw));
 //            memset(sz80Temp,0,80);
 //           if(RB_IdBin->Checked)
 //              SG_CfgMem->Cells[2][iGridLine] = WordToSeparatedBinary(dw, wBitsPerIdLocation);
 //           else
-//            { sprintf(sz80Temp, _T("0x%4.4X"), dw );
+//            { sprintf(sz80Temp, wxT("0x%4.4X"), dw );
 //              SG_CfgMem->Cells[2][iGridLine] = sz80Temp;
 //            }
                 iGridLine++;
@@ -338,7 +338,7 @@ void TConfigMemoryPanel::UpdateIdAndConfMemDisplay(void)
             aDevId->SetLabel(WordToSeparatedBinary(dw, wBitsPerIdLocation));
         else
         {
-            aDevId->SetLabel(wxString::Format(_T("0x%4.4X"),(int)dw));
+            aDevId->SetLabel(wxString::Format(wxT("0x%4.4X"),(int)dw));
         }
     }
     else
@@ -375,7 +375,7 @@ void TConfigMemoryPanel::UpdateIdAndConfMemDisplay(void)
     {
         strcpy(m_sz80DetectedPicDevName, "---------");
     }
-    aDevIdDecoded->SetLabel(wxString::Format(_T(" = %hs"), m_sz80DetectedPicDevName));
+    aDevIdDecoded->SetLabel(wxString::Format(wxT(" = %hs"), m_sz80DetectedPicDevName));
     if ( MainFrame::TheMainFrame->m_fPicDeviceConflict )
     {
         aDevIdTitle  ->SetForegroundColour(*wxRED);

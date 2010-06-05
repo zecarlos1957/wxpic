@@ -16,8 +16,8 @@
 #include <wx/filename.h>
 #include "HelpCtrl.h"
 
-#define HELP_DEFAULT_DIR_NAME     (_T("Help"))
-#define LANGUAGE_DEFAULT_DIR_NAME (_T("Lang"))
+#define HELP_DEFAULT_DIR_NAME     (wxT("Help"))
+#define LANGUAGE_DEFAULT_DIR_NAME (wxT("Lang"))
 
 class TLanguage
 {

@@ -21,11 +21,11 @@ TMessagePanel::TMessagePanel(wxWindow* parent,wxWindowID id,const wxPoint& pos,c
 	//(*Initialize(TMessagePanel)
 	wxBoxSizer* BoxSizer24;
 
-	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("id"));
+	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("id"));
 	BoxSizer24 = new wxBoxSizer(wxVERTICAL);
-	aClearMsgButton = new wxButton(this, ID_BUTTON11, _("Clear"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON11"));
+	aClearMsgButton = new wxButton(this, ID_BUTTON11, _("Clear"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_BUTTON11"));
 	BoxSizer24->Add(aClearMsgButton, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 1);
-	aMessageLog = new wxTextCtrl(this, ID_TEXTCTRL13, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY, wxDefaultValidator, _T("ID_TEXTCTRL13"));
+	aMessageLog = new wxTextCtrl(this, ID_TEXTCTRL13, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY, wxDefaultValidator, wxT("ID_TEXTCTRL13"));
 	BoxSizer24->Add(aMessageLog, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 1);
 	SetSizer(BoxSizer24);
 	BoxSizer24->Fit(this);
@@ -47,7 +47,7 @@ void TMessagePanel::onClearMsgButtonClick(wxCommandEvent& event)
 //void ::Btn_ClearMessagesClick(TObject *Sender)
 {
     aMessageLog->Clear();
-    MainFrame::TheMainFrame->aStatusBar->SetStatusText(_T(""));
+    MainFrame::TheMainFrame->aStatusBar->SetStatusText(wxT(""));
     MainFrame::TheMainFrame->m_iMessagePanelUsage = MainFrame::MP_USAGE_NOTHING;
 }
 //---------------------------------------------------------------------------

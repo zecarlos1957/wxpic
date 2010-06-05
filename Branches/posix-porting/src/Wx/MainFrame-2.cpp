@@ -32,9 +32,9 @@
 #include <WinPic/WinPicPr/pic_hw.h>
 #include <WinPic/WinPicPr/pic_prg.h>
 #include <WinPic/WinPicPr/dspic_prg.h>
-#include <WinPic/WinPicPr/PIC16F7x_PRG.h>
+#include <WinPic/WinPicPr/pic16f7xx_prg.h>
 #include <WinPic/WinPicPr/PIC10F_PRG.h>
-#include <WinPic/WinPicPr/PIC18F_PRG.h>
+#include <WinPic/WinPicPr/pic18f_prg.h>
 #include <WinPic/WinPicPr/Config.h>
 
 #define MAX_MESSAGES_IN_LOG     500
@@ -112,7 +112,7 @@ void MainFrame::AddTextToLog (const wxChar *szText)
 
 void MainFrame::doAddTextLog (const wxChar *szText)
 {
-    aMessageTab->aMessageLog->AppendText(wxString(szText)+_T("\n"));
+    aMessageTab->aMessageLog->AppendText(wxString(szText)+wxT("\n"));
 }
 
 
@@ -130,21 +130,21 @@ void MainFrame::ShowProgress (int pPercentage)
 void MainFrame::SaveLayout (void)
 {
     /* Save some windows stuff like old screen position & size.              */
-    TheIniFile.SetPath(_T("/Layout"));
+    TheIniFile.SetPath(wxT("/Layout"));
     wxRect WindowRect = GetRect();
-    TheIniFile.Write(_T("Left"),  WindowRect.GetLeft  ());
-    TheIniFile.Write(_T("Top"),   WindowRect.GetTop   ());
-    TheIniFile.Write(_T("Width"), WindowRect.GetWidth ());
-    TheIniFile.Write(_T("Height"),WindowRect.GetHeight());
-    TheIniFile.Write(_T("CodeMemBgColor"), aCodeMemTab->aCodeMemGrid->GetDefaultCellBackgroundColour().GetAsString(wxC2S_HTML_SYNTAX));
-    TheIniFile.Write(_T("CodeMemFgColor"), aCodeMemTab->aCodeMemGrid->GetDefaultCellTextColour().GetAsString(wxC2S_HTML_SYNTAX));
-    TheIniFile.Write(_T("DataMemBgColor"), aDataMemTab->aDataMemGrid->GetDefaultCellBackgroundColour().GetAsString(wxC2S_HTML_SYNTAX));
-    TheIniFile.Write(_T("DataMemFgColor"), aDataMemTab->aDataMemGrid->GetDefaultCellTextColour().GetAsString(wxC2S_HTML_SYNTAX));
+    TheIniFile.Write(wxT("Left"),  WindowRect.GetLeft  ());
+    TheIniFile.Write(wxT("Top"),   WindowRect.GetTop   ());
+    TheIniFile.Write(wxT("Width"), WindowRect.GetWidth ());
+    TheIniFile.Write(wxT("Height"),WindowRect.GetHeight());
+    TheIniFile.Write(wxT("CodeMemBgColor"), aCodeMemTab->aCodeMemGrid->GetDefaultCellBackgroundColour().GetAsString(wxC2S_HTML_SYNTAX));
+    TheIniFile.Write(wxT("CodeMemFgColor"), aCodeMemTab->aCodeMemGrid->GetDefaultCellTextColour().GetAsString(wxC2S_HTML_SYNTAX));
+    TheIniFile.Write(wxT("DataMemBgColor"), aDataMemTab->aDataMemGrid->GetDefaultCellBackgroundColour().GetAsString(wxC2S_HTML_SYNTAX));
+    TheIniFile.Write(wxT("DataMemFgColor"), aDataMemTab->aDataMemGrid->GetDefaultCellTextColour().GetAsString(wxC2S_HTML_SYNTAX));
 
     // The "most recent file" list is only a part of the user interface:
-    TheIniFile.SetPath(_T("/MostRecentFiles"));
+    TheIniFile.SetPath(wxT("/MostRecentFiles"));
     for (int i=0; i<=5; ++i)
-        TheIniFile.Write(wxString::Format(_T("file%d"),i), GetMRFname(i));
+        TheIniFile.Write(wxString::Format(wxT("file%d"),i), GetMRFname(i));
 }
 
 /**static*/
@@ -174,29 +174,29 @@ void MainFrame::ChangeDefaultGridBackgroundColour(wxGrid *Grid, const wxColour &
 void MainFrame::LoadLayout (void)
 {
 //   IniFile=new wxConfig(ExtractFilePath(Application->ExeName)+CFG_INI_FILE_NAME);
-    TheIniFile.SetPath(_T("/Layout"));
-    SetSize(TheIniFile.Read(_T("Left"),   -1),
-            TheIniFile.Read(_T("Top"),    -1),
-            TheIniFile.Read(_T("Width"),  -1),
-            TheIniFile.Read(_T("Height"), -1));
+    TheIniFile.SetPath(wxT("/Layout"));
+    SetSize(TheIniFile.Read(wxT("Left"),   -1),
+            TheIniFile.Read(wxT("Top"),    -1),
+            TheIniFile.Read(wxT("Width"),  -1),
+            TheIniFile.Read(wxT("Height"), -1));
 
     wxColour Color;
-    if (Color.Set(TheIniFile.Read(_T("CodeMemBgColor"), _T("#000000"))))
+    if (Color.Set(TheIniFile.Read(wxT("CodeMemBgColor"), wxT("#000000"))))
         ChangeDefaultGridForegroundColour(aCodeMemTab->aCodeMemGrid, Color);
-    if (Color.Set(TheIniFile.Read(_T("CodeMemFgColor"), _T("#33FF33"))))
+    if (Color.Set(TheIniFile.Read(wxT("CodeMemFgColor"), wxT("#33FF33"))))
         ChangeDefaultGridForegroundColour(aCodeMemTab->aCodeMemGrid, Color);
-    if (Color.Set(TheIniFile.Read(_T("DataMemBgColor"), _T("#FFFFFF"))))
+    if (Color.Set(TheIniFile.Read(wxT("DataMemBgColor"), wxT("#FFFFFF"))))
         ChangeDefaultGridForegroundColour(aDataMemTab->aDataMemGrid, Color);
-    if (Color.Set(TheIniFile.Read(_T("DataMemFgColor"), _T("#000000"))))
+    if (Color.Set(TheIniFile.Read(wxT("DataMemFgColor"), wxT("#000000"))))
         ChangeDefaultGridForegroundColour(aDataMemTab->aDataMemGrid, Color);
 
 
     // The "most recent file" list is only a part of the user interface:
-    TheIniFile.SetPath(_T("/MostRecentFiles"));
+    TheIniFile.SetPath(wxT("/MostRecentFiles"));
     for (int i=0; i<=5; ++i)
         SetMRFname( i, aEmptyMRFname );
     for (int i=0; i<=5; ++i)
-        AddMRFname( TheIniFile.Read(wxString::Format(_T("file%d"),i), aEmptyMRFname) );
+        AddMRFname( TheIniFile.Read(wxString::Format(wxT("file%d"),i), aEmptyMRFname) );
 
 }
 
@@ -560,7 +560,7 @@ bool MainFrame::ProgramPic(void)
                           PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex,
                           PIC_DeviceInfo.lCodeMemSize );
                 APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
-                _stprintf(sz255Temp, _T("%s\n%s"), sz80Temp,
+                _stprintf(sz255Temp, wxT("%s\n%s"), sz80Temp,
                           _("Select YES to ignore this problem and truncate the buffer contents.") );
                 if (wxMessageBox(sz255Temp, _("Problem encountered before CODE MEMORY programming") ,
                                  wxICON_QUESTION | wxYES_NO | wxCANCEL ) == wxYES )
@@ -1026,17 +1026,17 @@ bool MainFrame::VerifyPic(void)
         case 0:
             iSupplyVoltageLevel = 1; // first check at NOMINAL voltage ...
             if (fVerifyAtDifferentVoltages)
-                pszMsg = _T("Verifying at nominal supply voltage...");
+                pszMsg = wxT("Verifying at nominal supply voltage...");
             else
-                pszMsg = _T("Verifying...");
+                pszMsg = wxT("Verifying...");
             break;
         case 1:
             iSupplyVoltageLevel = 0; // ... then check at LOW voltage ...
-            pszMsg = _T("Verifying at low supply voltage...");
+            pszMsg = wxT("Verifying at low supply voltage...");
             break;
         case 2:
             iSupplyVoltageLevel = 2; // ... and finally check at HIGH voltage
-            pszMsg = _T("Verifying at high supply voltage...");
+            pszMsg = wxT("Verifying at high supply voltage...");
             break;
         }
         // Select supply voltage for verify mode .
@@ -1147,7 +1147,7 @@ bool MainFrame::VerifyPic(void)
                     {
                         fDidSomething = true;
                         APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _(" Verifying CONFIG-WORD%c"),
-                                      (PIC_DeviceInfo.wCfgmask2_used!=0) ? _T('s') : _T(' ') );
+                                      (PIC_DeviceInfo.wCfgmask2_used!=0) ? wxT('s') : wxT(' ') );
                         dwTemp4[0] = PicBuf_GetConfigWord(0);
                         dwTemp4[1] = PicBuf_GetConfigWord(1);
                         if (!PicPrg_Verify( PIC_DeviceInfo.lConfWordAdr,

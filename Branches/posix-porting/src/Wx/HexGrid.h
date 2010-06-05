@@ -45,7 +45,7 @@ public:
 // TODO (Admin#1#): Add ASCI column
 
     //-- Constructor compatible with standard control prototype for wxSmith
-    THexGrid (wxWindow *parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0, const wxString& name = _T("HexGrid"));
+    THexGrid (wxWindow *parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0, const wxString& name = wxT("HexGrid"));
 
     ~THexGrid();
 

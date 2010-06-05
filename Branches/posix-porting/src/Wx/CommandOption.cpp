@@ -46,24 +46,24 @@ void TCommandOption::Load (const wxApp *App)
         _tcsncpy(sz255Command, App->argv[iCmdArgumentIndex], 255 );
         APPL_ShowMsg( APPL_CALLER_MAIN, 0, _("Parsing argument from command line : \"%s\""), sz255Command );
         cp = sz255Command;
-        if (_tcsncmp(cp,_T("/nodelay"),8)==0)
+        if (_tcsncmp(cp,wxT("/nodelay"),8)==0)
         {
             WinPic_fCommandLineOption_NoDelay = true;
         }
-        else if (_tcsncmp(cp,_T("/tm="),4)==0) // "/tm=" = test mode
+        else if (_tcsncmp(cp,wxT("/tm="),4)==0) // "/tm=" = test mode
         {
             cp+=4;
             WinPic_iTestMode = HexStringToLongint(4, cp);
             if ( WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
                 APPL_LogEvent( _("ParseCommandLine: GUI-Speed-Test enabled") );
         }
-        else if (_tcsncmp(cp,_T("/overwrite"),10)==0)
+        else if (_tcsncmp(cp,wxT("/overwrite"),10)==0)
         {
             // "/overwrite"  =  "don't ask silly questions if an already existing file
             //                   would be overwritten"
             WinPic_fCommandLineOption_QueryBeforeOverwritingFiles = false;
         }
-        else if (_tcsncmp(cp,_T("/device="),8)==0)
+        else if (_tcsncmp(cp,wxT("/device="),8)==0)
         {
             cp+=8;
             // The configuration has been loaded EARLIER,
@@ -75,41 +75,41 @@ void TCommandOption::Load (const wxApp *App)
             }
             strncpy(Config.sz40DeviceName, Device, 40);
         }
-        else if (_tcsncmp(cp,_T("/config_word="),13)==0)
+        else if (_tcsncmp(cp,wxT("/config_word="),13)==0)
         {
             cp+=13;
             WinPic_i32CmdLineOption_OverrideConfigWord = HexStringToLongint(4, cp);
         }
-        else if (_tcsncmp(cp,_T("/e"),2)==0)
+        else if (_tcsncmp(cp,wxT("/e"),2)==0)
         {
             // /e = "erase"
             WinPic_fCommandLineOption_Erase   = true;
             WinPic_fCommandLineMode           = true;
         }
-        else if (_tcsncmp(cp,_T("/p"),2)==0)
+        else if (_tcsncmp(cp,wxT("/p"),2)==0)
         {
             // /p = "program"
             WinPic_fCommandLineOption_Program = true;
             WinPic_fCommandLineMode           = true;
         }
-        else if (_tcsncmp(cp,_T("/q"),2)==0)
+        else if (_tcsncmp(cp,wxT("/q"),2)==0)
         {
             // /q = "quit"
             WinPic_fCommandLineOption_Quit    = true;
             WinPic_fCommandLineMode           = true;
-            if ( cp[2]==_T('=') && cp[3]>_T('0') && cp[4]<=_T('9')  )
+            if ( cp[2]==wxT('=') && cp[3]>wxT('0') && cp[4]<=wxT('9')  )
             {
                 // "additional number of SECONDS before quitting" ?
-                WinPic_i200msToQuit = (cp[3]-_T('0')) * 5;
+                WinPic_i200msToQuit = (cp[3]-wxT('0')) * 5;
             }
         }
-        else if (_tcsncmp(cp,_T("/r"),2)==0)
+        else if (_tcsncmp(cp,wxT("/r"),2)==0)
         {
             // /r = "read"
             WinPic_fCommandLineOption_Read    = true;
             WinPic_fCommandLineMode           = true;
         }
-        else if (_tcsncmp(cp,_T("/v"),2)==0)
+        else if (_tcsncmp(cp,wxT("/v"),2)==0)
         {
             // /v = "verify"
             WinPic_fCommandLineOption_Verify  = true;

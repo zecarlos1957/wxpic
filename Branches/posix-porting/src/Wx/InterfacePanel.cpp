@@ -73,46 +73,46 @@ TInterfacePanel::TInterfacePanel(wxWindow* parent,wxWindowID id,const wxPoint& p
 	wxBoxSizer* BoxSizer22;
 	wxStaticBoxSizer* StaticBoxSizer5;
 
-	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("id"));
+	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("id"));
 	BoxSizer14 = new wxBoxSizer(wxVERTICAL);
 	BoxSizer16 = new wxBoxSizer(wxVERTICAL);
 	BoxSizer15 = new wxBoxSizer(wxHORIZONTAL);
-	aInitInterfButton = new wxButton(this, ID_BUTTON7, _("Initialize!"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON7"));
+	aInitInterfButton = new wxButton(this, ID_BUTTON7, _("Initialize!"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_BUTTON7"));
 	BoxSizer15->Add(aInitInterfButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 1);
-	aLptInterfHelpButton = new wxButton(this, ID_LPT_INTERF_HELP_BUTTON, _("Help on LPT interfaces"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_LPT_INTERF_HELP_BUTTON"));
+	aLptInterfHelpButton = new wxButton(this, ID_LPT_INTERF_HELP_BUTTON, _("Help on LPT interfaces"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_LPT_INTERF_HELP_BUTTON"));
 	BoxSizer15->Add(aLptInterfHelpButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 1);
 	BoxSizer16->Add(BoxSizer15, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
 	BoxSizer17 = new wxBoxSizer(wxHORIZONTAL);
 	StaticBoxSizer5 = new wxStaticBoxSizer(wxHORIZONTAL, this, _("Interface Test"));
 	BoxSizer18 = new wxBoxSizer(wxVERTICAL);
-	aTestVppChk = new wxCheckBox(this, ID_CHECKBOX15, _("Vpp (+13V)"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX15"));
+	aTestVppChk = new wxCheckBox(this, ID_CHECKBOX15, _("Vpp (+13V)"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_CHECKBOX15"));
 	aTestVppChk->SetValue(false);
 	BoxSizer18->Add(aTestVppChk, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 1);
-	aTestVddChk = new wxCheckBox(this, ID_CHECKBOX16, _("Vdd on/off"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX16"));
+	aTestVddChk = new wxCheckBox(this, ID_CHECKBOX16, _("Vdd on/off"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_CHECKBOX16"));
 	aTestVddChk->SetValue(false);
 	BoxSizer18->Add(aTestVddChk, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 1);
-	aTestClockChk = new wxCheckBox(this, ID_CHECKBOX17, _("Clock"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX17"));
+	aTestClockChk = new wxCheckBox(this, ID_CHECKBOX17, _("Clock"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_CHECKBOX17"));
 	aTestClockChk->SetValue(false);
 	BoxSizer18->Add(aTestClockChk, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 1);
-	aTestDataChk = new wxCheckBox(this, ID_CHECKBOX18, _("Data to PIC"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX18"));
+	aTestDataChk = new wxCheckBox(this, ID_CHECKBOX18, _("Data to PIC"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_CHECKBOX18"));
 	aTestDataChk->SetValue(false);
 	BoxSizer18->Add(aTestDataChk, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 1);
 	BoxSizer26 = new wxBoxSizer(wxHORIZONTAL);
-	StaticText15 = new wxStaticText(this, ID_STATICTEXT15, _("Data In ="), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT15"));
+	StaticText15 = new wxStaticText(this, ID_STATICTEXT15, _("Data In ="), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT15"));
 	BoxSizer26->Add(StaticText15, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	aTestDataInText = new wxStaticText(this, ID_STATICTEXT24, _("---"), wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE|wxALIGN_LEFT, _T("ID_STATICTEXT24"));
+	aTestDataInText = new wxStaticText(this, ID_STATICTEXT24, _("---"), wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE|wxALIGN_LEFT, wxT("ID_STATICTEXT24"));
 	BoxSizer26->Add(aTestDataInText, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
 	BoxSizer18->Add(BoxSizer26, 1, wxALL|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL, 0);
-	aClockEnableChk = new wxCheckBox(this, ID_CHECKBOX19, _("Clock Enable"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX19"));
+	aClockEnableChk = new wxCheckBox(this, ID_CHECKBOX19, _("Clock Enable"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_CHECKBOX19"));
 	aClockEnableChk->SetValue(false);
 	BoxSizer18->Add(aClockEnableChk, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 1);
-	aDataEnableChk = new wxCheckBox(this, ID_CHECKBOX20, _("Data Enable"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX20"));
+	aDataEnableChk = new wxCheckBox(this, ID_CHECKBOX20, _("Data Enable"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_CHECKBOX20"));
 	aDataEnableChk->SetValue(false);
 	BoxSizer18->Add(aDataEnableChk, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 1);
-	aPullMclrToGndChk = new wxCheckBox(this, ID_CHECKBOX21, _("Pull MCLR low"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX21"));
+	aPullMclrToGndChk = new wxCheckBox(this, ID_CHECKBOX21, _("Pull MCLR low"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_CHECKBOX21"));
 	aPullMclrToGndChk->SetValue(false);
 	BoxSizer18->Add(aPullMclrToGndChk, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 1);
-	aConnectICSPTargetChk = new wxCheckBox(this, ID_CHECKBOX22, _("Connect target"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX22"));
+	aConnectICSPTargetChk = new wxCheckBox(this, ID_CHECKBOX22, _("Connect target"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_CHECKBOX22"));
 	aConnectICSPTargetChk->SetValue(false);
 	BoxSizer18->Add(aConnectICSPTargetChk, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 1);
 	StaticBoxSizer5->Add(BoxSizer18, 1, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 0);
@@ -123,62 +123,62 @@ TInterfacePanel::TInterfacePanel(wxWindow* parent,wxWindowID id,const wxPoint& p
 		_("norm (5V)"),
 		_("high")
 	};
-	aVddSelectRadio = new wxRadioBox(this, ID_RADIOBOX3, _("Vdd Select"), wxDefaultPosition, wxDefaultSize, 3, __wxRadioBoxChoices_1, 1, wxRA_HORIZONTAL, wxDefaultValidator, _T("ID_RADIOBOX3"));
+	aVddSelectRadio = new wxRadioBox(this, ID_RADIOBOX3, _("Vdd Select"), wxDefaultPosition, wxDefaultSize, 3, __wxRadioBoxChoices_1, 1, wxRA_HORIZONTAL, wxDefaultValidator, wxT("ID_RADIOBOX3"));
 	BoxSizer19->Add(aVddSelectRadio, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	FlexGridSizer4 = new wxFlexGridSizer(2, 2, 0, 0);
-	aRedLedBitmap = new wxBitmapButton(this, ID_BITMAPBUTTON1, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BITMAPBUTTON1"));
+	aRedLedBitmap = new wxBitmapButton(this, ID_BITMAPBUTTON1, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_BITMAPBUTTON1"));
 	aRedLedBitmap->SetBitmapLabel(*TResource::GetLedRedIcon16());
 	FlexGridSizer4->Add(aRedLedBitmap, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
-	aRedLedText = new wxStaticText(this, ID_STATICTEXT16, _("Red Led"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT16"));
+	aRedLedText = new wxStaticText(this, ID_STATICTEXT16, _("Red Led"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT16"));
 	FlexGridSizer4->Add(aRedLedText, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
-	aGreenLedBitmap = new wxBitmapButton(this, ID_BITMAPBUTTON2, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BITMAPBUTTON2"));
+	aGreenLedBitmap = new wxBitmapButton(this, ID_BITMAPBUTTON2, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_BITMAPBUTTON2"));
 	aGreenLedBitmap->SetBitmapLabel(*TResource::GetLedGreenIcon16());
 	FlexGridSizer4->Add(aGreenLedBitmap, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
-	aGreenLedText = new wxStaticText(this, ID_STATICTEXT17, _("Green Led"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT17"));
+	aGreenLedText = new wxStaticText(this, ID_STATICTEXT17, _("Green Led"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT17"));
 	FlexGridSizer4->Add(aGreenLedText, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
 	BoxSizer19->Add(FlexGridSizer4, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
-	aOkButtonText = new wxStaticText(this, ID_STATICTEXT25, _("---"), wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE, _T("ID_STATICTEXT25"));
+	aOkButtonText = new wxStaticText(this, ID_STATICTEXT25, _("---"), wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE, wxT("ID_STATICTEXT25"));
 	BoxSizer19->Add(aOkButtonText, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 1);
 	StaticBoxSizer5->Add(BoxSizer19, 1, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 0);
 	BoxSizer17->Add(StaticBoxSizer5, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 1);
 	StaticBoxSizer6 = new wxStaticBoxSizer(wxVERTICAL, this, _("Interface Type"));
-	aInterfaceTypeChoice = new wxChoice(this, ID_INTERFACE_TYPE_CHOICE, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_INTERFACE_TYPE_CHOICE"));
+	aInterfaceTypeChoice = new wxChoice(this, ID_INTERFACE_TYPE_CHOICE, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, wxT("ID_INTERFACE_TYPE_CHOICE"));
 	StaticBoxSizer6->Add(aInterfaceTypeChoice, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 1);
 	BoxSizer20 = new wxBoxSizer(wxHORIZONTAL);
-	StaticText18 = new wxStaticText(this, ID_STATICTEXT18, _("on port"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT18"));
+	StaticText18 = new wxStaticText(this, ID_STATICTEXT18, _("on port"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT18"));
 	BoxSizer20->Add(StaticText18, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
-	aInterfacePortChoice = new wxChoice(this, ID_INTERFACE_PORT_CHOICE, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_INTERFACE_PORT_CHOICE"));
+	aInterfacePortChoice = new wxChoice(this, ID_INTERFACE_PORT_CHOICE, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, wxT("ID_INTERFACE_PORT_CHOICE"));
 	BoxSizer20->Add(aInterfacePortChoice, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
 	BoxSizer20->Add(5,-1,0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 1);
-	StaticText19 = new wxStaticText(this, ID_STATICTEXT19, _("Address:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT19"));
+	StaticText19 = new wxStaticText(this, ID_STATICTEXT19, _("Address:"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT19"));
 	BoxSizer20->Add(StaticText19, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
-	aIoPortAddressEdit = new wxTextCtrl(this, ID_IO_PORT_ADDRESS_EDIT, _("03F8"), wxDefaultPosition, wxSize(40,-1), wxTE_PROCESS_ENTER, wxDefaultValidator, _T("ID_IO_PORT_ADDRESS_EDIT"));
+	aIoPortAddressEdit = new wxTextCtrl(this, ID_IO_PORT_ADDRESS_EDIT, _("03F8"), wxDefaultPosition, wxSize(40,-1), wxTE_PROCESS_ENTER, wxDefaultValidator, wxT("ID_IO_PORT_ADDRESS_EDIT"));
 	aIoPortAddressEdit->Disable();
 	BoxSizer20->Add(aIoPortAddressEdit, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
 	StaticBoxSizer6->Add(BoxSizer20, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer21 = new wxBoxSizer(wxHORIZONTAL);
-	StaticText20 = new wxStaticText(this, ID_STATICTEXT20, _("Custom interface definition file"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT20"));
+	StaticText20 = new wxStaticText(this, ID_STATICTEXT20, _("Custom interface definition file"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT20"));
 	BoxSizer21->Add(StaticText20, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
-	aCustomInterfSelectButton = new wxButton(this, ID_BUTTON10, _("Select"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON10"));
+	aCustomInterfSelectButton = new wxButton(this, ID_BUTTON10, _("Select"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_BUTTON10"));
 	BoxSizer21->Add(aCustomInterfSelectButton, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
 	StaticBoxSizer6->Add(BoxSizer21, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	aCustomDefFileText = new wxTextCtrl(this, ID_TEXTCTRL10, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_TEXTCTRL10"));
+	aCustomDefFileText = new wxTextCtrl(this, ID_TEXTCTRL10, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_TEXTCTRL10"));
 	StaticBoxSizer6->Add(aCustomDefFileText, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 1);
-	aInterfaceTypeText = new wxStaticText(this, ID_INTERFACE_TYPE_TEXT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE|wxSIMPLE_BORDER, _T("ID_INTERFACE_TYPE_TEXT"));
+	aInterfaceTypeText = new wxStaticText(this, ID_INTERFACE_TYPE_TEXT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE|wxSIMPLE_BORDER, wxT("ID_INTERFACE_TYPE_TEXT"));
 	StaticBoxSizer6->Add(aInterfaceTypeText, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 1);
 	BoxSizer22 = new wxBoxSizer(wxHORIZONTAL);
-	StaticText22 = new wxStaticText(this, ID_STATICTEXT22, _("Extra delay before reading data line [us]"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT22"));
+	StaticText22 = new wxStaticText(this, ID_STATICTEXT22, _("Extra delay before reading data line [us]"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT22"));
 	BoxSizer22->Add(StaticText22, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
-	aExtraRdDelayEdit = new wxTextCtrl(this, ID_TEXTCTRL11, wxEmptyString, wxDefaultPosition, wxSize(40,-1), 0, wxDefaultValidator, _T("ID_TEXTCTRL11"));
+	aExtraRdDelayEdit = new wxTextCtrl(this, ID_TEXTCTRL11, wxEmptyString, wxDefaultPosition, wxSize(40,-1), 0, wxDefaultValidator, wxT("ID_TEXTCTRL11"));
 	BoxSizer22->Add(aExtraRdDelayEdit, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 1);
 	StaticBoxSizer6->Add(BoxSizer22, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer23 = new wxBoxSizer(wxHORIZONTAL);
-	StaticText23 = new wxStaticText(this, ID_STATICTEXT23, _("Extra lengthening for clock pulses [us]"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT23"));
+	StaticText23 = new wxStaticText(this, ID_STATICTEXT23, _("Extra lengthening for clock pulses [us]"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT23"));
 	BoxSizer23->Add(StaticText23, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
-	aExtraClkDelayEdit = new wxTextCtrl(this, ID_TEXTCTRL12, wxEmptyString, wxDefaultPosition, wxSize(40,-1), 0, wxDefaultValidator, _T("ID_TEXTCTRL12"));
+	aExtraClkDelayEdit = new wxTextCtrl(this, ID_TEXTCTRL12, wxEmptyString, wxDefaultPosition, wxSize(40,-1), 0, wxDefaultValidator, wxT("ID_TEXTCTRL12"));
 	BoxSizer23->Add(aExtraClkDelayEdit, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 1);
 	StaticBoxSizer6->Add(BoxSizer23, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	aSlowInterfaceChk = new wxCheckBox(this, ID_CHECKBOX23, _("slow mode (to check for timing problems)"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX23"));
+	aSlowInterfaceChk = new wxCheckBox(this, ID_CHECKBOX23, _("slow mode (to check for timing problems)"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_CHECKBOX23"));
 	aSlowInterfaceChk->SetValue(false);
 	StaticBoxSizer6->Add(aSlowInterfaceChk, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 1);
 	BoxSizer17->Add(StaticBoxSizer6, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 1);
@@ -360,7 +360,7 @@ void TInterfacePanel::UpdateInterfaceType(int interface_type)
         aInterfacePortChoice->Append(_("(unknown)"));
         for (i=1;i<=16;++i)
         {
-            aInterfacePortChoice->Append(wxString::Format(_T("COM%d"),i));
+            aInterfacePortChoice->Append(wxString::Format(wxT("COM%d"),i));
         }
         if (Config.iComPortNr>=0 && Config.iComPortNr<=16)
             aInterfacePortChoice->SetSelection(Config.iComPortNr);
@@ -370,7 +370,7 @@ void TInterfacePanel::UpdateInterfaceType(int interface_type)
         if ( Config.iComIoAddress != 0 )
         {
             // use a "non-standard" I/O-address for the COM-port, entered manually:
-            _stprintf(str80,_T("%04X"),(int)Config.iComIoAddress);
+            _stprintf(str80,wxT("%04X"),(int)Config.iComIoAddress);
             aIoPortAddressEdit->Disable();
 //        Ed_IoPortAddress->ReadOnly = false;
 //        Ed_IoPortAddress->Color = clWindow;
@@ -381,16 +381,16 @@ void TInterfacePanel::UpdateInterfaceType(int interface_type)
             switch ( Config.iComPortNr )
             {
             case 1:
-                _tcscpy(str80, _T("03F8"));
+                _tcscpy(str80, wxT("03F8"));
                 break;
             case 2:
-                _tcscpy(str80, _T("02F8"));
+                _tcscpy(str80, wxT("02F8"));
                 break;
             case 3:
-                _tcscpy(str80, _T("03E8"));
+                _tcscpy(str80, wxT("03E8"));
                 break;
             case 4:
-                _tcscpy(str80, _T("02E8"));
+                _tcscpy(str80, wxT("02E8"));
                 break;
             default:
                 _tcscpy(str80, _("-std-"));
@@ -417,14 +417,14 @@ void TInterfacePanel::UpdateInterfaceType(int interface_type)
             aInterfacePortChoice->Enable();
             aInterfacePortChoice->Clear();
             aInterfacePortChoice->Append(_("(unknown)") );
-            aInterfacePortChoice->Append(_T("LPT1"));
-            aInterfacePortChoice->Append(_T("LPT2"));
+            aInterfacePortChoice->Append(wxT("LPT1"));
+            aInterfacePortChoice->Append(wxT("LPT2"));
             aInterfacePortChoice->SetSelection(Config.iLptPortNr);
 
             if (Config.iLptIoAddress == 0)
                 _tcscpy(str80, _("-std-"));
             else
-                _stprintf(str80,_T("%04X"),Config.iLptIoAddress);
+                _stprintf(str80,wxT("%04X"),Config.iLptIoAddress);
             aIoPortAddressEdit->SetValue(str80);
 //    Ed_IoPortAddress->SetValue(str80);
             aIoPortAddressEdit->Enable();
@@ -454,8 +454,8 @@ void TInterfacePanel::UpdateInterfaceType(int interface_type)
 ////    Ed_IoPortAddress->ReadOnly = true;
 ////    Ed_IoPortAddress->Color = clBtnFace;
 //        } // end else < neither serial nor parallel port >
-    aExtraRdDelayEdit ->SetValue(wxString::Format(_T("%d"), Config.iExtraRdDelay_us ));
-    aExtraClkDelayEdit->SetValue(wxString::Format(_T("%d"), Config.iExtraClkDelay_us));
+    aExtraRdDelayEdit ->SetValue(wxString::Format(wxT("%d"), Config.iExtraRdDelay_us ));
+    aExtraClkDelayEdit->SetValue(wxString::Format(wxT("%d"), Config.iExtraClkDelay_us));
 //  Ed_ExtraRdDelay->Text = IntToStr(Config.iExtraRdDelay_us);
 //  Ed_ExtraClkDelay->Text= IntToStr(Config.iExtraClkDelay_us);
     aSlowInterfaceChk->SetValue(Config.iSlowInterface);
@@ -539,7 +539,7 @@ void TInterfacePanel::UpdateInterfaceInputSignalDisplay(void)
     i = PIC_HW_GetDataBit();
     if (i != LastValueDataIn)
     {
-        aTestDataInText->SetLabel((i>=0)?wxString::Format(_T("%d"),i):wxString(_("n/a")));
+        aTestDataInText->SetLabel((i>=0)?wxString::Format(wxT("%d"),i):wxString(_("n/a")));
         LastValueDataIn = i;
     }
 //  if(i>=0) aTestDataInText->Caption = IntToStr( i );
@@ -1086,7 +1086,7 @@ void TInterfacePanel::onCustomInterfSelectButtonClick(wxCommandEvent& event)
 //    if ( interface_type == PIC_INTF_TYPE_PLUGIN_DLL )
 //    {
 //        aFileDialog->SetWildcard(_("Plugin DLLs (*.dll)|*.dll"));
-//        Filename.AppendDir(_T("interface_dlls"));
+//        Filename.AppendDir(wxT("interface_dlls"));
 ////       OpenDialog->DefaultExt = "dll";
 ////     OpenDialog->InitialDir = ExtractFilePath(Application->ExeName) + "interface_dlls";
 ////     OpenDialog->Filter = "Plugin DLLs (*.dll)|*.dll";
@@ -1094,7 +1094,7 @@ void TInterfacePanel::onCustomInterfSelectButtonClick(wxCommandEvent& event)
 //    else
     {
         MainFrame::TheMainFrame->aFileDialog->SetWildcard(_("Xml files (*.xml)|*.xml"));
-//        Filename.AppendDir(_T("interfaces"));
+//        Filename.AppendDir(wxT("interfaces"));
 //       OpenDialog->DefaultExt = "ini";
 //     OpenDialog->InitialDir = ExtractFilePath(Application->ExeName) + "interfaces";
 //     OpenDialog->Filter = "INI files (*.ini)|*.ini";

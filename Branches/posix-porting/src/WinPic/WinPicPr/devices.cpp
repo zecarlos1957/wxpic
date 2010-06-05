@@ -47,14 +47,14 @@
 /*----------- INTERNAL definitions -----------------------------------------*/
 
 
-const wxChar C_DEVLIST_FILE_NAME[] = _T("devices.ini");
+const wxChar C_DEVLIST_FILE_NAME[] = wxT("devices.ini");
 
 /*----------- Tables -------------------------------------------------------*/
 
 // Combo List Items  for "single-bit-functions" in any configuration register..
 const T_PicConfigBitSetting PicDev_BitCombi_OneOrZero[] =  // suited for "N" bits !
-{  { _T("1"), 0xFFFFFFFF, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_OneOrZero+1 },
-    { _T("0"), 0,          0xFFFFFFFF, NULL }
+{  { wxT("1"), 0xFFFFFFFF, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_OneOrZero+1 },
+    { wxT("0"), 0,          0xFFFFFFFF, NULL }
 };
 
 const T_PicConfigBitSetting PicDev_BitCombi_HighActiveOnOff[] =
@@ -199,31 +199,31 @@ const T_PicConfigBitSetting PicDev_BitCombi_dsPICFPWRT[] = // dsPIC30F Power-on 
 const T_PicConfigBitSetting PicDev_BitCombi_dsPICWdtPreA[] = // dsPIC30F Watchdog Prescaler A
 {
     // char sz60ComboText, dwCombiValue, dwExtraMask, *pNext
-    { _T("1 : 512 [11]"), 3, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreA+1 },
-    { _T("1 : 64  [10]"), 2, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreA+2 },
-    { _T("1 : 8   [01]"), 1, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreA+3 },
-    { _T("1 : 1   [00]"), 0, 0xFFFFFFFF,  NULL/*end of list*/ }
+    { wxT("1 : 512 [11]"), 3, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreA+1 },
+    { wxT("1 : 64  [10]"), 2, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreA+2 },
+    { wxT("1 : 8   [01]"), 1, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreA+3 },
+    { wxT("1 : 1   [00]"), 0, 0xFFFFFFFF,  NULL/*end of list*/ }
 };
 
 const T_PicConfigBitSetting PicDev_BitCombi_dsPICWdtPreB[] = // dsPIC30F Watchdog Prescaler B
 {
     // char sz60ComboText, dwCombiValue, dwExtraMask, *pNext
-    { _T("1 : 16 [1111]"), 0x0F, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+1 },
-    { _T("1 : 15 [1110]"), 0x0E, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+2 },
-    { _T("1 : 14 [1101]"), 0x0D, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+3 },
-    { _T("1 : 13 [1100]"), 0x0C, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+4 },
-    { _T("1 : 12 [1011]"), 0x0B, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+5 },
-    { _T("1 : 11 [1010]"), 0x0A, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+6 },
-    { _T("1 : 10 [1001]"), 0x09, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+7 },
-    { _T("1 : 9  [1000]"), 0x08, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+8 },
-    { _T("1 : 8  [0111]"), 0x07, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+9 },
-    { _T("1 : 7  [0110]"), 0x06, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+10 },
-    { _T("1 : 6  [0101]"), 0x05, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+11 },
-    { _T("1 : 5  [0100]"), 0x04, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+12 },
-    { _T("1 : 4  [0011]"), 0x03, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+13 },
-    { _T("1 : 3  [0010]"), 0x02, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+14 },
-    { _T("1 : 2  [0001]"), 0x01, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+15 },
-    { _T("1 : 1  [0000]"), 0x00, 0xFFFFFFFF,  NULL/*end of list*/ }
+    { wxT("1 : 16 [1111]"), 0x0F, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+1 },
+    { wxT("1 : 15 [1110]"), 0x0E, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+2 },
+    { wxT("1 : 14 [1101]"), 0x0D, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+3 },
+    { wxT("1 : 13 [1100]"), 0x0C, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+4 },
+    { wxT("1 : 12 [1011]"), 0x0B, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+5 },
+    { wxT("1 : 11 [1010]"), 0x0A, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+6 },
+    { wxT("1 : 10 [1001]"), 0x09, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+7 },
+    { wxT("1 : 9  [1000]"), 0x08, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+8 },
+    { wxT("1 : 8  [0111]"), 0x07, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+9 },
+    { wxT("1 : 7  [0110]"), 0x06, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+10 },
+    { wxT("1 : 6  [0101]"), 0x05, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+11 },
+    { wxT("1 : 5  [0100]"), 0x04, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+12 },
+    { wxT("1 : 4  [0011]"), 0x03, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+13 },
+    { wxT("1 : 3  [0010]"), 0x02, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+14 },
+    { wxT("1 : 2  [0001]"), 0x01, 0xFFFFFFFF, (P_PicConfigBitSetting)PicDev_BitCombi_dsPICWdtPreB+15 },
+    { wxT("1 : 1  [0000]"), 0x00, 0xFFFFFFFF,  NULL/*end of list*/ }
 };
 
 
@@ -272,7 +272,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction,  code mem size, data EEPROM size, internal RAM size,
     { "PIC10F200",     PIC_MT_FLASH, 12,                   256/*WORDS*/,  0,                16 ,
         // sz80ConfigRegisterInfoFile[] :
-        _T("PIC10F200.dev"),
+        wxT("PIC10F200.dev"),
         // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
         1, 1,
         // lConfMemBase,lConfWordAdr,
@@ -320,7 +320,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction,  code mem size, data EEPROM size, internal RAM size,
     { "PIC10F206",     PIC_MT_FLASH, 12,                   512,           0,                24 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC10F206.dev"),
+      wxT("PIC10F206.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -369,7 +369,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction,  code mem size, data EEPROM size, internal RAM size,
     { "PIC12F629",     PIC_MT_FLASH, 14,                   1024,           128,             64 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC12F629.dev"),
+      wxT("PIC12F629.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -415,7 +415,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC12F675",     PIC_MT_FLASH, 14,                  1024,           128,             64 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC12F675.dev"),
+      wxT("PIC12F675.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -461,7 +461,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16C61",      PIC_MT_EPROM, 14,                  1024,           0,               -1 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T(""),      // no longer supported by MPLAB ?
+      wxT(""),      // no longer supported by MPLAB ?
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -507,7 +507,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16C71", PIC_MT_EPROM,      14,                  1024,             0,         -1 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16C71.dev"),
+      wxT("PIC16C71.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -554,7 +554,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction,  code mem size, data EEPROM size, internal RAM size,
     { "PIC16C84", PIC_MT_FLASH,      14,                   1024,            64,         -1 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T(""),    // no dev-file for this chip !
+      wxT(""),    // no dev-file for this chip !
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -601,7 +601,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction,  code mem size, data EEPROM size, internal RAM size,
     { "PIC16C710",     PIC_MT_EPROM, 14,                   512,           0,                64 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T(""),
+      wxT(""),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -647,7 +647,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16C711",     PIC_MT_EPROM, 14,                  1024,          0,                64 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T(""),
+      wxT(""),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -699,7 +699,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16C715",     PIC_MT_EPROM, 16/*!*/,             2048,          0,                128 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T(""),
+      wxT(""),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -746,7 +746,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16F73",      PIC_MT_FLASH, 14,                  4096,             0 ,            192 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F73.dev"),
+      wxT("PIC16F73.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -793,7 +793,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16F737",     PIC_MT_FLASH, 14,                  4096,             0 ,            368 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F737.dev"),
+      wxT("PIC16F737.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -840,7 +840,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16F74",      PIC_MT_FLASH, 14,                  4096,          0 ,               192 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F74.dev"),
+      wxT("PIC16F74.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -887,7 +887,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16F76",      PIC_MT_FLASH, 14,                  8192,             0 ,            368 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F76.dev"),
+      wxT("PIC16F76.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -934,7 +934,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16F77",      PIC_MT_FLASH, 14,                  8192,           0 ,              368 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F77.dev"),
+      wxT("PIC16F77.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -981,7 +981,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16F84", PIC_MT_FLASH,      14,                  1024,          64,               64,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F84.dev"),
+      wxT("PIC16F84.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -1027,7 +1027,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16F627",     PIC_MT_FLASH, 14,                  1024,          128,              224 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F627.dev"),
+      wxT("PIC16F627.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -1073,7 +1073,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16F628",     PIC_MT_FLASH, 14,                  2048,           128,             224 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F628.dev"),
+      wxT("PIC16F628.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -1119,7 +1119,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16F630",     PIC_MT_FLASH, 14,                  1024,           128,             64 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F630.dev"),
+      wxT("PIC16F630.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -1168,7 +1168,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16F818",     PIC_MT_FLASH, 14,                  1024,          128 ,             128 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F818.dev"),
+      wxT("PIC16F818.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -1216,7 +1216,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType,  iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16F819",     PIC_MT_FLASH,  14,                  2048,          256 ,             128 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F819.dev"),
+      wxT("PIC16F819.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -1264,7 +1264,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16F870", PIC_MT_FLASH,     14,                  2048,            64 ,        -1  ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F870.dev"),
+      wxT("PIC16F870.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -1310,7 +1310,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16F871", PIC_MT_FLASH,     14,                  2048,            64 ,        -1  ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F871.dev"),
+      wxT("PIC16F871.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -1356,7 +1356,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction,  code mem size, data EEPROM size, internal RAM size,
     { "PIC16F872",     PIC_MT_FLASH, 14                 ,  2048,            64 ,        -1 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F872.dev"),
+      wxT("PIC16F872.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -1402,7 +1402,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction,  code mem size, data EEPROM size, internal RAM size,
     { "PIC16F873", PIC_MT_FLASH,     14,                   4096,            128,        -1 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F873.dev"),
+      wxT("PIC16F873.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -1448,7 +1448,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16F874", PIC_MT_FLASH,     14,                  4096,            128,        -1 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F874.dev"),
+      wxT("PIC16F874.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -1494,7 +1494,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16F876",     PIC_MT_FLASH, 14,                  8192,            256,        -1 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F876.dev"),
+      wxT("PIC16F876.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -1540,7 +1540,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC16F877", PIC_MT_FLASH,     14,                  8192,            256,        -1 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC16F877.dev"),
+      wxT("PIC16F877.dev"),
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 1,
       // lConfMemBase,lConfWordAdr,
@@ -1586,7 +1586,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC18F252",     PIC_MT_FLASH, 16/*!*/,             16384/*instr!*/,  256/*byte!*/,  1536/*byte!*/,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC18F252.dev"),  // <<< file must be "borrowed" from MLPAB IDE/device !
+      wxT("PIC18F252.dev"),  // <<< file must be "borrowed" from MLPAB IDE/device !
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       8, 64,  // 8 *BYTES* for WRITING,  64 *BYTES* for ERASING !
       // lConfMemBase,lConfWordAdr,
@@ -1637,7 +1637,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC18F2550",    PIC_MT_FLASH, 16/*!*/,             16384/*instr!*/,  256/*byte!*/,  2048/*byte!*/,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC18F2550.dev"),  // <<< file must be "borrowed" from MLPAB IDE/device !
+      wxT("PIC18F2550.dev"),  // <<< file must be "borrowed" from MLPAB IDE/device !
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       32, 64,  // 32 *BYTES* for WRITING,  64 *BYTES* for ERASING (PIC18F2420, 2520, 4420, 4520, 2455, 2550, 4455, 4550, ..??)
       // lConfMemBase,lConfWordAdr,
@@ -1685,7 +1685,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC18F4455",    PIC_MT_FLASH, 16/*!*/,             12288/*instr!*/,  256/*byte!*/,  2048/*byte!*/,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC18F4455.dev"),  // <<< file must be "borrowed" from MLPAB IDE/device !
+      wxT("PIC18F4455.dev"),  // <<< file must be "borrowed" from MLPAB IDE/device !
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       32, 64,  // 32 *BYTES* for WRITING,  64 *BYTES* for ERASING (PIC18F2420, 2520, 4420, 4520, 2455, 2550, 4455, 4550, ..??)
       // lConfMemBase,lConfWordAdr,
@@ -1733,7 +1733,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "PIC18F4550",    PIC_MT_FLASH, 16/*!*/,             16384/*instr!*/,  256/*byte!*/,  2048/*byte!*/,
       // sz80ConfigRegisterInfoFile[] :
-      _T("PIC18F4550.dev"),  // <<< file must be "borrowed" from MLPAB IDE/device !
+      wxT("PIC18F4550.dev"),  // <<< file must be "borrowed" from MLPAB IDE/device !
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       32, 64,  // 32 *BYTES* for WRITING,  64 *BYTES* for ERASING (PIC18F2420, 2520, 4420, 4520, 2455, 2550, 4455, 4550, ..??)
       // lConfMemBase,lConfWordAdr,
@@ -1782,7 +1782,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "dsPIC30F2010",  PIC_MT_FLASH, 24/*!*/,             4096/*instr!*/, 1024,            512,
       // sz80ConfigRegisterInfoFile[] :
-      _T("dsPIC30F2010.dev"), // <<< file must be "borrowed" from MLPAB IDE/device !
+      wxT("dsPIC30F2010.dev"), // <<< file must be "borrowed" from MLPAB IDE/device !
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       32, 0,  // dsPIC: 32 instruction words (!!!!!!!!!) = 32*3 bytes for dsPIC30F
       // lConfMemBase,lConfWordAdr,
@@ -1834,7 +1834,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "dsPIC30F4013",  PIC_MT_FLASH, 24/*!*/,             16384/*instr!*/, 1024,            512,
       // sz80ConfigRegisterInfoFile[] :
-      _T("dsPIC30F4013.dev"), // <<< file must be "borrowed" from MLPAB IDE/device !
+      wxT("dsPIC30F4013.dev"), // <<< file must be "borrowed" from MLPAB IDE/device !
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       32, 0,  // dsPIC: 32 instruction words (!!!!!!!!) = 32*3 bytes for dsPIC30F
       // lConfMemBase,lConfWordAdr,
@@ -1886,7 +1886,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction, code mem size, data EEPROM size, internal RAM size,
     { "dsPIC30F6010",  PIC_MT_FLASH, 24/*!*/,             49152/*instr!*/, 4096,            512,
       // sz80ConfigRegisterInfoFile[] :
-      _T("dsPIC30F6010.dev"), // <<< file must be "borrowed" from MLPAB IDE/device !
+      wxT("dsPIC30F6010.dev"), // <<< file must be "borrowed" from MLPAB IDE/device !
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       32, 0,  // dsPIC: 32 instruction words (!!!!!!) = 32*3 bytes for dsPIC30F
       // lConfMemBase,lConfWordAdr,
@@ -1939,7 +1939,7 @@ const T_PicDeviceInfo BuiltInPicDeviceInfo[] =
 // sz40DeviceName, iCodeMemType, iBitsPerInstruction,  code mem size, data EEPROM size, internal RAM size,
     { "PIC??????", PIC_MT_FLASH,       14,                   8192,          256,              -1 ,
       // sz80ConfigRegisterInfoFile[] :
-      _T(""),  // no "dev"-file for unknown devices !
+      wxT(""),  // no "dev"-file for unknown devices !
       // lCodeMemWriteLatchSize, lCodeMemEraseLatchSize (only important for PIC18Fxxxx and dsPIC) :
       1, 0,
       // lConfMemBase,lConfWordAdr,
@@ -2084,83 +2084,47 @@ const char *PicDev_AlgorithmCodeToString(int iAlgorithm)
 /***************************************************************************/
 int PicDev_StringToAlgorithmCode(const char * pszAlgorithmName)
 {
-    wxChar sz80Temp[81];
+	if (pszAlgorithmName == "16Fxx")					return PIC_ALGO_16FXX;
+	if (pszAlgorithmName == "16Fxx_OLD_ERASE")	return PIC_ALGO_16FXX_OLD_ERASE;
+	if (pszAlgorithmName == "12Fxx")					return PIC_ALGO_12FXX;
+	if (pszAlgorithmName == "16F630")				return PIC_ALGO_16F630;
+	if (pszAlgorithmName == "16F7x7")				return PIC_ALGO_16F7X7;
+	if (pszAlgorithmName == "16F7x")					return PIC_ALGO_PIC16F7X;
+	if (pszAlgorithmName == "16F716")				return PIC_ALGO_PIC16F716;
+	if (pszAlgorithmName == "16F81x")				return PIC_ALGO_16F81X;
+	if (pszAlgorithmName == "16F87xA")				return PIC_ALGO_16F87XA;
+	if (pszAlgorithmName == "16F87x")				return PIC_ALGO_16F87X;
+	if (pszAlgorithmName == "16Cxx")					return PIC_ALGO_16CXX;
+	if (pszAlgorithmName == "dsPIC30F")				return PIC_ALGO_dsPIC30F;
+	if (pszAlgorithmName == "PIC18F")				return PIC_ALGO_PIC18F;
+	if (pszAlgorithmName == "PIC18F_OLD")			return PIC_ALGO_PIC18F_OLD;
+	if (pszAlgorithmName == "PIC10F20x")			return PIC_ALGO_PIC10F;
+	if (pszAlgorithmName == "ERASE_16F62xA")		return PIC_ALGO_ERASE_16F62XA;
+	if (pszAlgorithmName == "ERASE_16F81x")		return PIC_ALGO_ERASE_16F81X;
+	if (pszAlgorithmName == "ERASE_16F87xA")		return PIC_ALGO_ERASE_16F87XA;
+	if (pszAlgorithmName == "ERASE_16F87x")		return PIC_ALGO_ERASE_16F87X;
+	if (pszAlgorithmName == "ERASE_12F6xx")		return PIC_ALGO_ERASE_12F6XX;
+	if (pszAlgorithmName == "DATA_EEPROM_16xxx")	return PIC_ALGO_DATA_EEPROM_16XXX;
+	if (pszAlgorithmName == "CONFIG_MEM_16xxx")	return PIC_ALGO_CONFIG_MEM_16XXX;
+	if (pszAlgorithmName == "CONFIG_MEM_16F81x")	return PIC_ALGO_CONFIG_MEM_16F81X;
+	if (pszAlgorithmName == "CONFIG_MEM_16F87xA") return PIC_ALGO_CONFIG_MEM_16F87XA;
+	if (pszAlgorithmName == "MULTI_WORD")			return PIC_ALGO_MULTI_WORD;
+	if (pszAlgorithmName == "NONE")					return PIC_ALGO_UNKNOWN;
 
-    if (stricmp(pszAlgorithmName, "16Fxx")==0)
-        return PIC_ALGO_16FXX;
-    if (stricmp(pszAlgorithmName, "16Fxx_OLD_ERASE")==0)
-        return PIC_ALGO_16FXX_OLD_ERASE;
-    if (stricmp(pszAlgorithmName, "12Fxx")==0)
-        return PIC_ALGO_12FXX;
-    if (stricmp(pszAlgorithmName, "16F630")==0)
-        return PIC_ALGO_16F630;
-    if (stricmp(pszAlgorithmName, "16F7x7")==0)
-        return PIC_ALGO_16F7X7;
-    if (stricmp(pszAlgorithmName, "16F7x")==0)
-        return PIC_ALGO_PIC16F7X;
-    if (stricmp(pszAlgorithmName, "16F716")==0)
-        return PIC_ALGO_PIC16F716;
-
-    if (stricmp(pszAlgorithmName, "16F81x")==0)
-        return PIC_ALGO_16F81X;
-    if (stricmp(pszAlgorithmName, "16F87xA")==0)
-        return PIC_ALGO_16F87XA;
-    if (stricmp(pszAlgorithmName, "16F87x")==0)
-        return PIC_ALGO_16F87X;
-    if (stricmp(pszAlgorithmName, "16Cxx")==0)
-        return PIC_ALGO_16CXX;
-    if (stricmp(pszAlgorithmName, "dsPIC30F")==0)
-        return PIC_ALGO_dsPIC30F;
-    if (stricmp(pszAlgorithmName, "PIC18F")==0)
-        return PIC_ALGO_PIC18F;
-    if (stricmp(pszAlgorithmName, "PIC18F_OLD")==0)
-        return PIC_ALGO_PIC18F_OLD;
-    if (stricmp(pszAlgorithmName, "PIC10F20x")==0)
-        return PIC_ALGO_PIC10F;
-    if (stricmp(pszAlgorithmName, "ERASE_16F62xA")==0)
-        return PIC_ALGO_ERASE_16F62XA;
-    if (stricmp(pszAlgorithmName, "ERASE_16F81x")==0)
-        return PIC_ALGO_ERASE_16F81X;
-    if (stricmp(pszAlgorithmName, "ERASE_16F87xA")==0)
-        return PIC_ALGO_ERASE_16F87XA;
-    if (stricmp(pszAlgorithmName, "ERASE_16F87x")==0)
-        return PIC_ALGO_ERASE_16F87X;
-    if (stricmp(pszAlgorithmName, "ERASE_12F6xx")==0)
-        return PIC_ALGO_ERASE_12F6XX;
-
-    if (stricmp(pszAlgorithmName, "DATA_EEPROM_16xxx")==0)
-        return PIC_ALGO_DATA_EEPROM_16XXX;
-
-    if (stricmp(pszAlgorithmName, "CONFIG_MEM_16xxx")==0)
-        return PIC_ALGO_CONFIG_MEM_16XXX;
-
-    if (stricmp(pszAlgorithmName, "CONFIG_MEM_16F81x")==0)
-        return PIC_ALGO_CONFIG_MEM_16F81X;
-
-    if (stricmp(pszAlgorithmName, "CONFIG_MEM_16F87xA")==0)
-        return PIC_ALGO_CONFIG_MEM_16F87XA;
-
-    if (stricmp(pszAlgorithmName, "MULTI_WORD")==0)
-        return PIC_ALGO_MULTI_WORD;
-
-    if (stricmp(pszAlgorithmName, "NONE")==0)
-        return PIC_ALGO_UNKNOWN;
-
-    _stprintf(sz80Temp, _T("Unknown algorithm name : \"%hs\" !"), pszAlgorithmName);
-    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
-    return  PIC_ALGO_UNKNOWN;
+	APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, wxString::Format( _("Unknown algorithm name : \"%hs\" !"), pszAlgorithmName) );
+	return  PIC_ALGO_UNKNOWN;
 } // end PicDev_StringToAlgorithmCode()
 
 
 /***************************************************************************/
-int PicDev_StringToVppVddSequenceCode( char *pszVppVddSequence )
+int PicDev_StringToVppVddSequenceCode( wxString pszVppVddSequence )
 {
-    if (stricmp(pszVppVddSequence, "Vdd_before_Vpp")==0)
-        return PROGMODE_VDD_THEN_VPP;
-    if (stricmp(pszVppVddSequence, "Vpp_before_Vdd")==0)
-        return PROGMODE_VPP_THEN_VDD;
+	 if ( pszVppVddSequence == wxT("Vdd_before_Vpp"))
+		  return PROGMODE_VDD_THEN_VPP;
+	 if ( pszVppVddSequence == wxT("Vpp_before_Vdd"))
+		  return PROGMODE_VPP_THEN_VDD;
 
-    return PROGMODE_VPP_VDD_UNKNOWN;
+	 return PROGMODE_VPP_VDD_UNKNOWN;
 } // end PicDev_StringToVppVddSequenceCode()
 
 
@@ -2419,21 +2383,21 @@ const wxChar *PicDev_GetInfoOnConfigMemory(uint32_t dwCfgMemAddress)
         switch ( dwCfgMemAddress ) // note: only EVEN addresses accessable here
         {
         case 0xF80000:
-            return _T("FOSC");  // note : these are MICROCHIP's names !
+            return wxT("FOSC");  // note : these are MICROCHIP's names !
         case 0xF80002:
-            return _T("FWDT");
+            return wxT("FWDT");
         case 0xF80004:
-            return _T("FBORPOR");
+            return wxT("FBORPOR");
         case 0xF80006:
-            return _T("RESERVED1");
+            return wxT("RESERVED1");
         case 0xF80008:
-            return _T("RESERVED2");
+            return wxT("RESERVED2");
         case 0xF8000A:
-            return _T("FGS");
+            return wxT("FGS");
         case 0xF8000C:
-            return _T("FICD");
+            return wxT("FICD");
         default:
-            return _T("");  // no info about this location !
+            return wxT("");  // no info about this location !
         }
     }
     else // not a dsPIC, but .. ?
@@ -2443,21 +2407,21 @@ const wxChar *PicDev_GetInfoOnConfigMemory(uint32_t dwCfgMemAddress)
             switch ( dwCfgMemAddress )
             {
             case 0x300000:
-                return _T("FOSC,CLKDIV");  // note : these are MICROCHIP's names !
+                return wxT("FOSC,CLKDIV");  // note : these are MICROCHIP's names !
             case 0x300002:
-                return _T("BORV,WDT");     // part at 0x200003
+                return wxT("BORV,WDT");     // part at 0x200003
             case 0x300004:
-                return _T("MCLRE,CCP2MX"); // most at 0x300005, but 16 bit here
+                return wxT("MCLRE,CCP2MX"); // most at 0x300005, but 16 bit here
             case 0x300006:
-                return _T("DEBUG,STVREN");
+                return wxT("DEBUG,STVREN");
             case 0x300008:
-                return _T("CPx");
+                return wxT("CPx");
             case 0x30000A:
-                return _T("WRTx");
+                return wxT("WRTx");
             case 0x30000C:
-                return _T("EBTRx");
+                return wxT("EBTRx");
             default:
-                return _T("");  // no info about this location !
+                return wxT("");  // no info about this location !
             }
         }
         else // neither 24 nor 16 bit core, but .. 14 ?
@@ -2481,7 +2445,7 @@ const wxChar *PicDev_GetInfoOnConfigMemory(uint32_t dwCfgMemAddress)
                 case 0x2009:
                     return _("Calib Word 2");
                 default:
-                    return _T("");
+                    return wxT("");
                 }
             } // end if < 14-bit core >
             else // neither 24, 16, nor 14- bit core, but .. ?
@@ -2507,7 +2471,7 @@ const wxChar *PicDev_GetInfoOnConfigMemory(uint32_t dwCfgMemAddress)
                         case 0x0FFF:
                             return _("Config Word(f)");
                         default:
-                            return _T("");
+                            return wxT("");
                         }
                     }
                     // ex: else // here for PIC10F202 / 206 (512 words code memory)
@@ -2531,7 +2495,7 @@ const wxChar *PicDev_GetInfoOnConfigMemory(uint32_t dwCfgMemAddress)
                         case 0x0FFF:
                             return _("Config Word(f)");
                         default:
-                            return _T("");
+                            return wxT("");
                         }
                     }
                     else // (1024 words code memory) :
@@ -2552,13 +2516,13 @@ const wxChar *PicDev_GetInfoOnConfigMemory(uint32_t dwCfgMemAddress)
                         case 0x0FFF:
                             return _("Config Word(f)");
                         default:
-                            return  _T("");
+                            return  wxT("");
                         }
                     }
                 } // end if < 12-bit core >
 
 
-    return _T("??");
+    return wxT("??");
 
 } // end PicDev_GetInfoOnConfigMemory()
 
@@ -2608,7 +2572,7 @@ const wxChar * PicDev_ConfigBitValueToString( T_PicConfigBitInfo *pConfigBitInfo
 } // end PicDev_ConfigBitValueToString()
 
 //---------------------------------------------------------------------------
-bool PicDev_ConfigBitStringToValue( T_PicConfigBitInfo *pConfigBitInfo, const wxChar *pszComboText, uint32_t *pdwDest )
+bool PicDev_ConfigBitStringToValue( T_PicConfigBitInfo *pConfigBitInfo, const wxString pszComboText, uint32_t *pdwDest )
 {
     bool fResult=false;
     P_PicConfigBitSetting pBitCombiInfo;
@@ -2620,7 +2584,7 @@ bool PicDev_ConfigBitStringToValue( T_PicConfigBitInfo *pConfigBitInfo, const wx
     {
         do
         {
-            if (_tcscmp( pszComboText, pBitCombiInfo->szComboText) == 0)
+            if ( pszComboText == pBitCombiInfo->szComboText)
             {
                 dwValue = pBitCombiInfo->dwCombiValue;
                 fResult = true;
@@ -2673,6 +2637,9 @@ bool PicDev_ConfigBitStringToValue( T_PicConfigBitInfo *pConfigBitInfo, const wx
 //---------------------------------------------------------------------------
 const wxChar * PicDev_GetDeviceFileName(void)
 {
+	///Erdem_ua: Warning, here defined static variable. Why this is required?
+	///Migh problematic if wxString used...
+
     static wxChar sz511FileName[512];
 //  wxString s = ExtractFilePath(Application->ExeName)+C_DEVLIST_FILE_NAME;
     wxFileName  DeviceListFilename (wxStandardPaths::Get().GetExecutablePath());
@@ -3776,7 +3743,7 @@ bool PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo )
         cp = _tcsrchr(psrcPicDeviceInfo->sz80ConfigRegisterInfoFile,'.');
         if ( cp )
         {
-            if (_tcsicmp(cp, _T(".dev")) == 0)
+            if (_tcsicmp(cp, wxT(".dev")) == 0)
             {
                 // it MAY be one of Microchip's "dev"-files...
                 // WinPic once expected these files IN ITS OWN SUB-FOLDER "DEVICES",
@@ -3789,7 +3756,7 @@ bool PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo )
                 else
                 {
                     DevFilename.Assign(wxStandardPaths::Get().GetExecutablePath());
-                    DevFilename.AppendDir(_T("Devices"));
+                    DevFilename.AppendDir(wxT("Devices"));
                 }
                 DevFilename.SetFullName(psrcPicDeviceInfo->sz80ConfigRegisterInfoFile);
                 wxString DevFilenameText = DevFilename.GetFullPath();

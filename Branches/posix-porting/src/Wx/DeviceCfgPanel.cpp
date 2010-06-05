@@ -59,62 +59,62 @@ TDeviceCfgPanel::TDeviceCfgPanel(wxWindow* parent,wxWindowID id,const wxPoint& p
 	wxBoxSizer* BoxSizer9;
 	wxBoxSizer* BoxSizer25;
 
-	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("id"));
+	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("id"));
 	BoxSizer7 = new wxBoxSizer(wxVERTICAL);
 	BoxSizer8 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer9 = new wxBoxSizer(wxVERTICAL);
 	BoxSizer11 = new wxBoxSizer(wxHORIZONTAL);
-	StaticText3 = new wxStaticText(this, ID_STATICTEXT3, _("Part"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT3"));
+	StaticText3 = new wxStaticText(this, ID_STATICTEXT3, _("Part"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT3"));
 	BoxSizer11->Add(StaticText3, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 1);
-	aPartNameChoice = new wxChoice(this, ID_PART_NAME_CHOICE, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_PART_NAME_CHOICE"));
+	aPartNameChoice = new wxChoice(this, ID_PART_NAME_CHOICE, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, wxT("ID_PART_NAME_CHOICE"));
 	BoxSizer11->Add(aPartNameChoice, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 1);
 	BoxSizer9->Add(BoxSizer11, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 0);
 	FlexGridSizer2 = new wxFlexGridSizer(2, 3, 0, 0);
-	StaticText4 = new wxStaticText(this, ID_STATICTEXT4, _("Config word #1:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT4"));
+	StaticText4 = new wxStaticText(this, ID_STATICTEXT4, _("Config word #1:"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT4"));
 	FlexGridSizer2->Add(StaticText4, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
-	aConfigWordHexEdit = new wxTextCtrl(this, ID_TEXTCTRL5, _("3FFF"), wxDefaultPosition, wxSize(60,20), wxNO_BORDER, wxDefaultValidator, _T("ID_TEXTCTRL5"));
-	wxFont aConfigWordHexEditFont(16,wxSWISS,wxFONTSTYLE_NORMAL,wxBOLD,false,_T("Courier New"),wxFONTENCODING_DEFAULT);
+	aConfigWordHexEdit = new wxTextCtrl(this, ID_TEXTCTRL5, _("3FFF"), wxDefaultPosition, wxSize(60,20), wxNO_BORDER, wxDefaultValidator, wxT("ID_TEXTCTRL5"));
+	wxFont aConfigWordHexEditFont(16,wxSWISS,wxFONTSTYLE_NORMAL,wxBOLD,false,wxT("Courier New"),wxFONTENCODING_DEFAULT);
 	aConfigWordHexEdit->SetFont(aConfigWordHexEditFont);
 	FlexGridSizer2->Add(aConfigWordHexEdit, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 1);
-	StaticText5 = new wxStaticText(this, ID_STATICTEXT5, _("(hex)"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT5"));
+	StaticText5 = new wxStaticText(this, ID_STATICTEXT5, _("(hex)"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT5"));
 	FlexGridSizer2->Add(StaticText5, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 1);
-	StaticText6 = new wxStaticText(this, ID_STATICTEXT6, _("Config word #2:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT6"));
+	StaticText6 = new wxStaticText(this, ID_STATICTEXT6, _("Config word #2:"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT6"));
 	FlexGridSizer2->Add(StaticText6, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 1);
-	aConfigWordHexEdit2 = new wxTextCtrl(this, ID_TEXTCTRL6, _("3FFF"), wxDefaultPosition, wxSize(60,20), wxNO_BORDER, wxDefaultValidator, _T("ID_TEXTCTRL6"));
-	wxFont aConfigWordHexEdit2Font(16,wxSWISS,wxFONTSTYLE_NORMAL,wxBOLD,false,_T("Courier New"),wxFONTENCODING_DEFAULT);
+	aConfigWordHexEdit2 = new wxTextCtrl(this, ID_TEXTCTRL6, _("3FFF"), wxDefaultPosition, wxSize(60,20), wxNO_BORDER, wxDefaultValidator, wxT("ID_TEXTCTRL6"));
+	wxFont aConfigWordHexEdit2Font(16,wxSWISS,wxFONTSTYLE_NORMAL,wxBOLD,false,wxT("Courier New"),wxFONTENCODING_DEFAULT);
 	aConfigWordHexEdit2->SetFont(aConfigWordHexEdit2Font);
 	FlexGridSizer2->Add(aConfigWordHexEdit2, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 1);
-	StaticText7 = new wxStaticText(this, ID_STATICTEXT7, _("(hex)"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT7"));
+	StaticText7 = new wxStaticText(this, ID_STATICTEXT7, _("(hex)"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT7"));
 	FlexGridSizer2->Add(StaticText7, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
 	BoxSizer9->Add(FlexGridSizer2, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer8->Add(BoxSizer9, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 0);
 	BoxSizer10 = new wxBoxSizer(wxVERTICAL);
 	StaticBoxSizer4 = new wxStaticBoxSizer(wxHORIZONTAL, this, _("Device Properties"));
 	FlexGridSizer3 = new wxFlexGridSizer(2, 2, 0, 0);
-	aProgMemSizeText = new wxTextCtrl(this, ID_TEXTCTRL7, _("00000"), wxDefaultPosition, wxSize(45,-1), 0, wxDefaultValidator, _T("ID_TEXTCTRL7"));
+	aProgMemSizeText = new wxTextCtrl(this, ID_TEXTCTRL7, _("00000"), wxDefaultPosition, wxSize(45,-1), 0, wxDefaultValidator, wxT("ID_TEXTCTRL7"));
 	aProgMemSizeText->SetMaxLength(5);
 	FlexGridSizer3->Add(aProgMemSizeText, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 1);
-	StaticText8 = new wxStaticText(this, ID_STATICTEXT8, _("word code memory"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT8"));
+	StaticText8 = new wxStaticText(this, ID_STATICTEXT8, _("word code memory"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT8"));
 	FlexGridSizer3->Add(StaticText8, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
-	aEepromMemSizeText = new wxTextCtrl(this, ID_TEXTCTRL8, _("00000"), wxDefaultPosition, wxSize(45,-1), 0, wxDefaultValidator, _T("ID_TEXTCTRL8"));
+	aEepromMemSizeText = new wxTextCtrl(this, ID_TEXTCTRL8, _("00000"), wxDefaultPosition, wxSize(45,-1), 0, wxDefaultValidator, wxT("ID_TEXTCTRL8"));
 	aEepromMemSizeText->SetMaxLength(5);
 	FlexGridSizer3->Add(aEepromMemSizeText, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 1);
-	StaticText9 = new wxStaticText(this, ID_STATICTEXT9, _("byte data EEPROM"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT9"));
+	StaticText9 = new wxStaticText(this, ID_STATICTEXT9, _("byte data EEPROM"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT9"));
 	FlexGridSizer3->Add(StaticText9, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 1);
 	StaticBoxSizer4->Add(FlexGridSizer3, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	aHasFlashMemoryChk = new wxCheckBox(this, ID_CHECKBOX13, _("FLASH"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX13"));
+	aHasFlashMemoryChk = new wxCheckBox(this, ID_CHECKBOX13, _("FLASH"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxT("ID_CHECKBOX13"));
 	aHasFlashMemoryChk->SetValue(false);
 	StaticBoxSizer4->Add(aHasFlashMemoryChk, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 1);
 	BoxSizer10->Add(StaticBoxSizer4, 1, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 1);
 	BoxSizer8->Add(BoxSizer10, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer7->Add(BoxSizer8, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer25 = new wxBoxSizer(wxHORIZONTAL);
-	aSavedBeforeEraseTitle = new wxStaticText(this, ID_STATICTEXT21, _("Saved before erase:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT21"));
+	aSavedBeforeEraseTitle = new wxStaticText(this, ID_STATICTEXT21, _("Saved before erase:"), wxDefaultPosition, wxDefaultSize, 0, wxT("ID_STATICTEXT21"));
 	BoxSizer25->Add(aSavedBeforeEraseTitle, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 1);
-	aSavedBeforeEraseText = new wxStaticText(this, ID_SAVED_BEFORE_ERASE_TEXT, _("-"), wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE, _T("ID_SAVED_BEFORE_ERASE_TEXT"));
+	aSavedBeforeEraseText = new wxStaticText(this, ID_SAVED_BEFORE_ERASE_TEXT, _("-"), wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE, wxT("ID_SAVED_BEFORE_ERASE_TEXT"));
 	BoxSizer25->Add(aSavedBeforeEraseText, 1, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 1);
 	BoxSizer7->Add(BoxSizer25, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 1);
-	aDevCfgGrid = new wxGrid(this, ID_DEV_CFG_GRID, wxDefaultPosition, wxDefaultSize, 0, _T("ID_DEV_CFG_GRID"));
+	aDevCfgGrid = new wxGrid(this, ID_DEV_CFG_GRID, wxDefaultPosition, wxDefaultSize, 0, wxT("ID_DEV_CFG_GRID"));
 	aDevCfgGrid->CreateGrid(1,3);
 	aDevCfgGrid->SetMinSize(wxSize(0,0));
 	BoxSizer7->Add(aDevCfgGrid, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
@@ -204,7 +204,7 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
     if (fFoundDevName && (m_sz40DisplayedDeviceName[0]!='u') )
     {
         MainFrame::TheMainFrame->SetLabel(MainFrame::TheMainFrame->m_original_title
-                                    + _T(" - ") + aPartNameChoice->GetStringSelection());
+                                    + wxT(" - ") + aPartNameChoice->GetStringSelection());
         aProgMemSizeText->SetEditable(false);
 //        aEepromMemSizeText->Color       = clBtnFace;
         aEepromMemSizeText->SetEditable(false);
@@ -229,8 +229,8 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
     {
         // only if the user is not editing the hex config word(s) at the moment...
         // Show the currently used config-word and some of its elements:
-        aConfigWordHexEdit->ChangeValue(wxString::Format(_T("%04X"), m_displayed_config_word[0]));
-//      _stprintf(str80, _T("%04X"), m_displayed_config_word[0]);
+        aConfigWordHexEdit->ChangeValue(wxString::Format(wxT("%04X"), m_displayed_config_word[0]));
+//      _stprintf(str80, wxT("%04X"), m_displayed_config_word[0]);
 //      Ed_ConfigWordHex->Text = str80;
 
         // Since 2003-12, the PIC16F88 is supported, it was the first midrange-PIC
@@ -240,8 +240,8 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
 //         Ed_ConfigWord2->Color = clBtnShadow;
 //      else // 2nd config word seems to exist:
 //         Ed_ConfigWord2->Color = clWindow;
-        aConfigWordHexEdit2->ChangeValue(wxString::Format(_T("%04X"), PicBuf_GetConfigWord(1)));
-//      _stprintf(str80, _T("%04X"), PicBuf_GetConfigWord(1) );
+        aConfigWordHexEdit2->ChangeValue(wxString::Format(wxT("%04X"), PicBuf_GetConfigWord(1)));
+//      _stprintf(str80, wxT("%04X"), PicBuf_GetConfigWord(1) );
 //      Ed_ConfigWord2->Text = str80;
     }
 
@@ -253,13 +253,13 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
 //       APPL_LogEvent( _("UpdateDeviceConfigTab: Updating config BIT COMBO..") );
 //   UpdateConfigBitCombo();
 
-    aProgMemSizeText  ->ChangeValue(wxString::Format(_T("%d"), PIC_DeviceInfo.lCodeMemSize));
-    aEepromMemSizeText->ChangeValue(wxString::Format(_T("%d"), PIC_DeviceInfo.lDataEEPROMSizeInByte));
+    aProgMemSizeText  ->ChangeValue(wxString::Format(wxT("%d"), PIC_DeviceInfo.lCodeMemSize));
+    aEepromMemSizeText->ChangeValue(wxString::Format(wxT("%d"), PIC_DeviceInfo.lDataEEPROMSizeInByte));
 
 
     // Some new PIC devices need to preserve Bandgap Calibration bits
     //      and oscillator calibration words. Show info about this:
-    aSavedBeforeEraseText->SetLabel(_T(""));
+    aSavedBeforeEraseText->SetLabel(wxT(""));
     aSavedBeforeEraseText->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT));
 //   aSavedBeforeEraseText->Color   = clBtnFace;
 //    aSavedBeforeEraseTitle->Enable(false);
@@ -271,7 +271,7 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
         {
 //            _stprintf(str80, _("bandgap_cal=0x%06lX"), PIC_lBandgapCalibrationBits);
 //          Lab_SavedBeforeErase->Caption = str80;
-            _stprintf(str80, _T("0x%06lX"), PIC_lBandgapCalibrationBits);
+            _stprintf(str80, wxT("0x%06lX"), PIC_lBandgapCalibrationBits);
             psz = str80;
         }
         else
@@ -282,12 +282,12 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
     if ( PIC_DeviceInfo.lAddressOscCal>0 ) // oscillator calibration word, at 0x03FF for 12F675
     {
         if (!SavedData.IsEmpty())
-            SavedData += _T("   ");
+            SavedData += wxT("   ");
         // (usually the very last word in the CODE memory)
 //        aSavedBeforeEraseTitle->Enable(true);
         if (PIC_lOscillatorCalibrationWord>=0)
         {
-            _stprintf(str80, _T("0x%06lX"), PIC_lOscillatorCalibrationWord);
+            _stprintf(str80, wxT("0x%06lX"), PIC_lOscillatorCalibrationWord);
             psz = str80;
 //            _stprintf(str80,_("  oscillator_cal=0x%06lX"),(long)PIC_lOscillatorCalibrationWord);
 //          Lab_SavedBeforeErase->Caption = Lab_SavedBeforeErase->Caption + wxString(str80);
@@ -348,7 +348,7 @@ void TDeviceCfgPanel::UpdateConfigBitGrid(void)
 
 //   for(i=0; i<SG_ConfigBits->ColCount; ++i)  // clear line 1, we MAY not be able to fill it
 //    {
-//        SG_ConfigBits->Cells[i][1] = _T("");
+//        SG_ConfigBits->Cells[i][1] = wxT("");
 //    }
 
     wxArrayString ConfigChoice;
@@ -364,11 +364,11 @@ void TDeviceCfgPanel::UpdateConfigBitGrid(void)
             aDevCfgGrid->AppendRows();
             aDevCfgGrid->SetRowLabelValue(n, pConfigBitInfo->szText);
 //          SG_ConfigBits->Cells[configbitsCOL_NAME][n+1] = pConfigBitInfo->sz60Text;
-            aDevCfgGrid->SetCellValue(n, configbitsCOL_ADDR, wxString::Format(_T("%06lX"), dwConfigWordAddress));
-//        sprintf(str80, _T("%06lX"), dwConfigWordAddress);
+            aDevCfgGrid->SetCellValue(n, configbitsCOL_ADDR, wxString::Format(wxT("%06lX"), dwConfigWordAddress));
+//        sprintf(str80, wxT("%06lX"), dwConfigWordAddress);
 //        SG_ConfigBits->Cells[configbitsCOL_ADDR][n+1] = str80;
-            aDevCfgGrid->SetCellValue(n, configbitsCOL_MASK, wxString::Format(_T("%06lX"), dwConfigMask));
-//        sprintf(str80, _T("%06lX"), dwConfigMask);
+            aDevCfgGrid->SetCellValue(n, configbitsCOL_MASK, wxString::Format(wxT("%06lX"), dwConfigMask));
+//        sprintf(str80, wxT("%06lX"), dwConfigMask);
 //        SG_ConfigBits->Cells[configbitsCOL_MASK][n+1] = str80;
             m_pConfigBitGridRowNumber_to_ConfigBitInfoPtr[n]= pConfigBitInfo;
 //        if( dwConfigWordAddress == 0x300005 )

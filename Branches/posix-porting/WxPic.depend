@@ -480,3 +480,87 @@
 
 1275772598 /home/compile/svn/wxpic/local-posix-port/src/WinPic/WinPicPr/dspic_prg.h
 
+1275773950 source:/home/compile/svn/wxpic/Branches/posix-porting/src/Res/Resource.cpp
+	"Resource.h"
+	"Icon.inc"
+	"Icon.inc"
+	"Icon.inc"
+
+1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/Res/Resource.h
+	<wx/icon.h>
+	"Icon.inc"
+	"Icon.inc"
+
+1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/Res/Icon.inc
+
+1275773950 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/dspic_prg.cpp
+	"pic_hw.h"
+	"config.h"
+	"../../Wx/Appl.h"
+	"dspic_prg.h"
+
+1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic_hw.h
+	<wx/defs.h>
+	<stdint.h>
+
+1275778388 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/config.h
+	<wx/confbase.h>
+
+1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/Wx/Appl.h
+	"CommandOption.h"
+
+1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/Wx/CommandOption.h
+	<wx/app.h>
+
+1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/dspic_prg.h
+
+1275773950 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic10f_prg.cpp
+	<wx/intl.h>
+	"pic_hw.h"
+	"devices.h"
+	"config.h"
+	"../../Wx/Appl.h"
+	"pic_hex.h"
+	"pic_prg.h"
+	"pic10f_prg.h"
+
+1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/devices.h
+	<stdint.h>
+
+1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic_hex.h
+
+1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic_prg.h
+	"devices.h"
+
+1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic10f_prg.h
+
+1275777994 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic16f716_prg.cpp
+	<wx/intl.h>
+	<stdio.h>
+	"pic_hw.h"
+	"devices.h"
+	"config.h"
+	"../../Wx/Appl.h"
+	"pic_hex.h"
+	"pic_prg.h"
+	"pic16f716_prg.h"
+
+1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic16f716_prg.h
+
+1275778290 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/loadhex.cpp
+	<wx/intl.h>
+	"../YHF_tools/QFile.h"
+	"loadhex.h"
+
+1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/YHF_tools/QFile.h
+	<wx/file.h>
+	<stdint.h>
+
+1256634995 /usr/include/wx-2.8/wx/file.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/filefn.h"
+	"wx/strconv.h"
+
+1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/loadhex.h
+

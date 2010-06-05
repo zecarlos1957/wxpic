@@ -18,7 +18,7 @@
 
 /*static*/ void TResource::Load (void)
 {
-#define ICON_DEF_GEN(name,size) the ## name ## Icon ## size = new wxIcon(_T(#name), wxBITMAP_TYPE_ICO_RESOURCE, size, size);
+#define ICON_DEF_GEN(name,size) the ## name ## Icon ## size = new wxIcon(wxT(#name), wxBITMAP_TYPE_ICO_RESOURCE, size, size);
 #include "Icon.inc"
 #undef ICON_DEF_GEN
 }

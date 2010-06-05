@@ -22,12 +22,12 @@ TDataMemPanel::TDataMemPanel(wxWindow* parent,wxWindowID id,const wxPoint& pos,c
 	//(*Initialize(TDataMemPanel)
 	wxBoxSizer* BoxSizer6;
 
-	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("id"));
+	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("id"));
 	BoxSizer6 = new wxBoxSizer(wxHORIZONTAL);
-	aDataMemGrid = new THexGrid(this, ID_DATA_MEM_GRID, wxDefaultPosition, wxDefaultSize, 0, _T("ID_DATA_MEM_GRID"));
+	aDataMemGrid = new THexGrid(this, ID_DATA_MEM_GRID, wxDefaultPosition, wxDefaultSize, 0, wxT("ID_DATA_MEM_GRID"));
 	aDataMemGrid->CreateGrid(0,8);
 	aDataMemGrid->SetMinSize(wxSize(0,0));
-	for(int i=0;i<8;++i)aDataMemGrid->SetColLabelValue(i,wxString::Format(_T("%d"),i));
+	for(int i=0;i<8;++i)aDataMemGrid->SetColLabelValue(i,wxString::Format(wxT("%d"),i));
 	BoxSizer6->Add(aDataMemGrid, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
 	SetSizer(BoxSizer6);
 	BoxSizer6->Fit(this);
@@ -126,11 +126,11 @@ void TDataMemPanel::UpdateDataMemDisplay(void)
 //                wOldFlags  = wFlags;
 //               RTF_SetColorForMemFlags( &cp, wFlags );
 //            }
-//           _stprintf(cp, _T(" %02X"), dwData & 0x00FF );
+//           _stprintf(cp, wxT(" %02X"), dwData & 0x00FF );
 //           RTF_SkipToEnd( &cp );
 //         }
 //
-//        _tcscpy(cp, _T("    ") );  // separator between HEX- and ASCII display
+//        _tcscpy(cp, wxT("    ") );  // separator between HEX- and ASCII display
 //        RTF_SkipToEnd( &cp );
 //        for(i=0; (i<words_per_line)
 //              && (i32ArrayIndex<PIC_BUF_DATA_SIZE)
@@ -139,23 +139,23 @@ void TDataMemPanel::UpdateDataMemDisplay(void)
 //           b = PicBuf[PIC_BUF_DATA].pdwData[i32ArrayIndex+i];
 //           if( (uint8_t)b==(uint8_t)'{' )// RTF treat's curly braces something special, so ESCAPE it
 //            {
-//              _tcscpy(cp, _T("\\{"));
+//              _tcscpy(cp, wxT("\\{"));
 //              cp+=2;
 //            }
 //           else if( (uint8_t)b==(uint8_t)'}' )
 //            {
-//                _tcscpy(cp, _T("\\}"));
+//                _tcscpy(cp, wxT("\\}"));
 //                cp+=2;
 //            }
-//           else if( b==_T('\\') )       // a SINGLE(!) backslash begins an RTF token, so escape it
+//           else if( b==wxT('\\') )       // a SINGLE(!) backslash begins an RTF token, so escape it
 //            {
-//                _tcscpy(cp, _T("\\\\"));
+//                _tcscpy(cp, wxT("\\\\"));
 //                cp+=2;  // caution, these are TWO backslashes
 //            }
 //           else if( b>=0x20 && b<=0x7F )
 //                  *cp++ = b;   // "printable"
 //             else
-//                *cp++ = _T('.');       // "non-printable" (really ?)
+//                *cp++ = wxT('.');       // "non-printable" (really ?)
 //         }
 //        strcpy(cp, _("\\par ") );   // Note: \par = END OF PARAGRAPH, important !
 //        RTF_WriteStringToStream( pRtfMemStream, szTemp );  // append string to code memory dump

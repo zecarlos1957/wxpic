@@ -122,16 +122,16 @@ void MainFrame::initAuto (void)
     wxBoxSizer* MainBoxSizer;
     wxMenuItem* ShowPrgOptMenuItem;
 
-    Create(0, wxID_ANY, _("Wx PIC Programmer"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
+    Create(0, wxID_ANY, _("Wx PIC Programmer"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, wxT("wxID_ANY"));
     MainBoxSizer = new wxBoxSizer(wxVERTICAL);
-    aNotebook = new wxNotebook(this, ID_NOTEBOOK, wxPoint(216,312), wxDefaultSize, 0, _T("ID_NOTEBOOK"));
-    aCodeMemTab = new TCodeMemPanel(aNotebook, ID_CODE_MEM_PANEL, wxDefaultPosition, wxDefaultSize, 0, _T("ID_CODE_MEM_PANEL"));
-    aDataMemTab = new TDataMemPanel(aNotebook, ID_DATA_MEM_PANEL, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_DATA_MEM_PANEL"));
-    aDeviceCfgTab = new TDeviceCfgPanel(aNotebook, ID_PANEL4, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL4"));
-    aConfigMemoryTab = new TConfigMemoryPanel(aNotebook, ID_PANEL5, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL5"));
-    aOptionTab = new TOptionPanel(aNotebook, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
-    aInterfaceTab = new TInterfacePanel(aNotebook, ID_PANEL7, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL7"));
-    aMessageTab = new TMessagePanel(aNotebook, ID_PANEL8, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL8"));
+    aNotebook = new wxNotebook(this, ID_NOTEBOOK, wxPoint(216,312), wxDefaultSize, 0, wxT("ID_NOTEBOOK"));
+    aCodeMemTab = new TCodeMemPanel(aNotebook, ID_CODE_MEM_PANEL, wxDefaultPosition, wxDefaultSize, 0, wxT("ID_CODE_MEM_PANEL"));
+    aDataMemTab = new TDataMemPanel(aNotebook, ID_DATA_MEM_PANEL, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("ID_DATA_MEM_PANEL"));
+    aDeviceCfgTab = new TDeviceCfgPanel(aNotebook, ID_PANEL4, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("ID_PANEL4"));
+    aConfigMemoryTab = new TConfigMemoryPanel(aNotebook, ID_PANEL5, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("ID_PANEL5"));
+    aOptionTab = new TOptionPanel(aNotebook, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("ID_PANEL1"));
+    aInterfaceTab = new TInterfacePanel(aNotebook, ID_PANEL7, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("ID_PANEL7"));
+    aMessageTab = new TMessagePanel(aNotebook, ID_PANEL8, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("ID_PANEL8"));
     aNotebook->AddPage(aCodeMemTab, _("Code"), false);
     aNotebook->AddPage(aDataMemTab, _("Data"), false);
     aNotebook->AddPage(aDeviceCfgTab, _("Device, Config"), false);
@@ -140,7 +140,7 @@ void MainFrame::initAuto (void)
     aNotebook->AddPage(aInterfaceTab, _("Interface"), false);
     aNotebook->AddPage(aMessageTab, _("Messages"), false);
     MainBoxSizer->Add(aNotebook, 1, wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 7);
-    aProgressGauge = new wxGauge(this, ID_PROGRESS_GAUGE, 100, wxDefaultPosition, wxSize(-1,8), wxGA_SMOOTH, wxDefaultValidator, _T("ID_PROGRESS_GAUGE"));
+    aProgressGauge = new wxGauge(this, ID_PROGRESS_GAUGE, 100, wxDefaultPosition, wxSize(-1,8), wxGA_SMOOTH, wxDefaultValidator, wxT("ID_PROGRESS_GAUGE"));
     aProgressGauge->Hide();
     MainBoxSizer->Add(aProgressGauge, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
     SetSizer(MainBoxSizer);
@@ -244,13 +244,13 @@ void MainFrame::initAuto (void)
     aHelpMenu->Append(aAboutMenuItem);
     MenuBar->Append(aHelpMenu, _("&Help"));
     SetMenuBar(MenuBar);
-    aStatusBar = new wxStatusBar(this, ID_STATUSBAR, 0, _T("ID_STATUSBAR"));
+    aStatusBar = new wxStatusBar(this, ID_STATUSBAR, 0, wxT("ID_STATUSBAR"));
     int __wxStatusBarWidths_1[1] = { -10 };
     int __wxStatusBarStyles_1[1] = { wxSB_NORMAL };
     aStatusBar->SetFieldsCount(1,__wxStatusBarWidths_1);
     aStatusBar->SetStatusStyles(1,__wxStatusBarStyles_1);
     SetStatusBar(aStatusBar);
-    aFileDialog = new wxFileDialog(this, _("Select file"), wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_DEFAULT_STYLE, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
+    aFileDialog = new wxFileDialog(this, _("Select file"), wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_DEFAULT_STYLE, wxDefaultPosition, wxDefaultSize, wxT("wxFileDialog"));
     aTimer.SetOwner(this, ID_TIMER);
     aTimer.Start(50, false);
     MainBoxSizer->Fit(this);
@@ -306,7 +306,7 @@ void MainFrame::initMore (void)
     Connect(ID_VERIFY_PROGRAM_TOOL,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&MainFrame::onVerifyMenuItemSelected);
     Connect(ID_READ_PROGRAM_TOOL,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&MainFrame::onReadMenuItemSelected);
 
-    aToolBar = new wxToolBar(this, ID_TOOLBAR, wxDefaultPosition, wxDefaultSize, wxTB_HORIZONTAL|wxNO_BORDER, _T("ID_TOOLBAR"));
+    aToolBar = new wxToolBar(this, ID_TOOLBAR, wxDefaultPosition, wxDefaultSize, wxTB_HORIZONTAL|wxNO_BORDER, wxT("ID_TOOLBAR"));
     aOpenHexFileTool = aToolBar->AddTool(ID_OPEN_HEX_FILE_TOOL, _("Load HEX File"), *TResource::GetOpenIcon16(), wxNullBitmap, wxITEM_NORMAL, _("Load HEX file"), _("Load an Hex file in the buffer and Program"));
     aSaveHexFileTool = aToolBar->AddTool(ID_SAVE_HEX_FILE_TOOL, _("Dump buffer to HEX file"), *TResource::GetSaveIcon16(), wxNullBitmap, wxITEM_NORMAL, _("Dump buffer to HEX file"), _("Save the Buffer to an Hex file"));
     aToolBar->AddSeparator();
@@ -481,17 +481,17 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
                 wxChar sz80Actions[81];
                 sz80Actions[0]=0;
                 if ( CommandOption.WinPic_fCommandLineOption_Read )
-                    _tcscat(sz80Actions,_T("READ+"));
+                    _tcscat(sz80Actions,wxT("READ+"));
                 if ( CommandOption.WinPic_fCommandLineOption_Erase )
-                    _tcscat(sz80Actions,_T("ERASE+"));
+                    _tcscat(sz80Actions,wxT("ERASE+"));
                 if ( CommandOption.WinPic_fCommandLineOption_Load )
-                    _tcscat(sz80Actions,_T("LOAD+"));
+                    _tcscat(sz80Actions,wxT("LOAD+"));
                 if ( CommandOption.WinPic_fCommandLineOption_Program )
-                    _tcscat(sz80Actions,_T("PROGRAM+"));
+                    _tcscat(sz80Actions,wxT("PROGRAM+"));
                 if ( CommandOption.WinPic_fCommandLineOption_Verify)
-                    _tcscat(sz80Actions,_T("VERIFY+"));
+                    _tcscat(sz80Actions,wxT("VERIFY+"));
                 if ( CommandOption.WinPic_fCommandLineOption_Quit )
-                    _tcscat(sz80Actions,_T("QUIT"));
+                    _tcscat(sz80Actions,wxT("QUIT"));
                 i = _tcslen(sz80Actions);
                 if (i>1 && sz80Actions[i-1]=='+')
                     sz80Actions[i-1] = '\0';
@@ -867,7 +867,7 @@ void MainFrame::OnRecentFile6MenuItemSelected(wxCommandEvent& event)
 void MainFrame::LoadMRF(int iMRFindex)
 {
     wxString s = GetMRFname(iMRFindex);
-    if (s != _T(""))
+    if (s != wxT(""))
     {
         _tcscpy( Config.sz255HexFileName, s.c_str() );
         Config_changed |= APPL_CALLER_SAVE_CFG;
@@ -1313,7 +1313,7 @@ void MainFrame::onFaqMenuItemSelected(wxCommandEvent& event)
 void MainFrame::onDevDumpMenuItemSelected(wxCommandEvent& event)
 //void MainFrame::M_DumpDevListClick(TObject *Sender)
 {
-    PicDev_DumpDeviceListToFile(_T("DevListDump.txt"));
+    PicDev_DumpDeviceListToFile(wxT("DevListDump.txt"));
 }
 //---------------------------------------------------------------------------
 
@@ -1376,13 +1376,13 @@ wxString MainFrame::ProgramWhatInfoString(void)
     }
     if (Config.iProgramWhat & PIC_PROGRAM_DATA)
     {
-        if ( iNeedSeparator ) sResult=sResult + _T("+");
+        if ( iNeedSeparator ) sResult=sResult + wxT("+");
         sResult = sResult + _("DATA");
         iNeedSeparator=1;
     }
     if (Config.iProgramWhat & PIC_PROGRAM_CONFIG)
     {
-        if ( iNeedSeparator ) sResult=sResult + _T("+");
+        if ( iNeedSeparator ) sResult=sResult + wxT("+");
         sResult = sResult + _("CONFIG");
         iNeedSeparator=1;
     }
@@ -1399,11 +1399,11 @@ void MainFrame::onMenuOpen(wxMenuEvent &pEvent)
     // Rename some menu items according to programmer options
     aLoadNProgMenuItem->SetText(
         /*Menu_LoadAndProgram->Caption =*/ wxString(_("Load && &Program Device"))
-        + _T(" (") + ProgramWhatInfoString() + _T(")..."));
+        + wxT(" (") + ProgramWhatInfoString() + wxT(")..."));
     wxFileName HexFilename(Config.sz255HexFileName);
     aReloadNProgMenuItem->SetText(
         /*MI_ReloadAndProg->Caption =*/ wxString(_("&Reload && Program"))
-        + _T(" \"") + HexFilename.GetFullName()/*ExtractFileName(Config.sz255HexFileName)*/ + _T("\""));
+        + wxT(" \"") + HexFilename.GetFullName()/*ExtractFileName(Config.sz255HexFileName)*/ + wxT("\""));
     for (i=j=0; i<=5; ++i)
     {
         if ( GetMRFname(i) != wxEmptyString ) ++j;
@@ -1419,8 +1419,8 @@ void MainFrame::onMenuOpen(wxMenuEvent &pEvent)
     // Rename some menu items according to programmer options
     aProgramMenuItem->SetText(
 //  Menu_ProgramDevice->Caption =
-        wxString(_( "Program")) + _T(" (" )
-        + ProgramWhatInfoString() + _T(")"));
+        wxString(_( "Program")) + wxT(" (" )
+        + ProgramWhatInfoString() + wxT(")"));
 //}
 ////---------------------------------------------------------------------------
 //
@@ -1579,7 +1579,7 @@ bool MainFrame::QueryAndApplyHexEditIfRequired(void)
     {
         int Answer = wxMessageBox(
                          _( "Apply changes in the HEX EDITOR ?" ) ,
-                         _T("WxPic"),
+                         wxT("WxPic"),
                          wxICON_QUESTION | wxYES_NO | wxCANCEL );
         if (Answer == wxYES )
         {
@@ -1719,7 +1719,7 @@ void MainFrame::onDumpBufferMenuItemSelected(wxCommandEvent& event)
     aFileDialog->SetWindowStyle(wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
     aFileDialog->SetMessage(_("Save Hex File"));
     aFileDialog->SetWildcard(_("HEX files (INHX8M, *.hex)|*.hex"));
-    aFileDialog->SetFilename(_T("dumped.hex"));
+    aFileDialog->SetFilename(wxT("dumped.hex"));
     aFileDialog->SetPath(wxEmptyString);
     /* beware: Win XP saves a history in the registry (grrrrrr) */
 //  SaveDialog->Title      = TE( "Save Hex File" );
@@ -1906,8 +1906,8 @@ void MainFrame::OnClose(wxCloseEvent& event)
         SaveLayout();
         strncpy(Config.sz40DeviceName, PIC_DeviceInfo.sz40DeviceName, 40) ;
         CFG_Save(TheIniFile);
-        TheIniFile.SetPath(_T("/LANGUAGE"));
-        TheIniFile.Write(_T("Name"), MainFrame::TheLanguageName);
+        TheIniFile.SetPath(wxT("/LANGUAGE"));
+        TheIniFile.Write(wxT("Name"), MainFrame::TheLanguageName);
     } // end if( m_fMaySaveSettings )
 
 //   if(ToolForm)

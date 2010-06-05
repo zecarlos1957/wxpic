@@ -32,7 +32,7 @@ typedef struct  // T_CONFIG structure, used for var Config .
   int iLptIoAddress; // can be modified for LPT3, LPT4 etc.  0="standard" value
 //  int iWhichPortAccessDriver;   // since 2005-11, CFG_PORTACCESS_...
 
-  char sz40DeviceName[44]; // like PIC16F628 (complete name, used in combo and ini file)
+  wxString sz40DeviceName; // like PIC16F628 (complete name, used in combo and ini file)
   int pic_interface_type;  // PIC_INTF_TYPE_COM84 for example
   int iExtraRdDelay_us;    // extra read-delay before sampling the DATA-IN line
   int iExtraClkDelay_us;   // extra lengthening of the clock pulses
@@ -40,9 +40,9 @@ typedef struct  // T_CONFIG structure, used for var Config .
                            // (in fact, make MOST delay loops longer by a factor of ten)
   int iIdleSupplyVoltage;  // added 2005-09-29 for "production grade" - programmers
 
-  wxChar sz255InterfaceSupportFile[256]; // only applicable for 'custom' interfaces defined in an INI file
-  wxChar sz80InterfacePluginDLL[81];   // only applicable for 'custom' interfaces using a plugin-DLL
-  wxChar sz255MplabDevDir[256];     // path to MPLAB's 'DEVICE'-folder
+  wxString sz255InterfaceSupportFile; // only applicable for 'custom' interfaces defined in an INI file
+  wxString sz80InterfacePluginDLL;   // only applicable for 'custom' interfaces using a plugin-DLL
+  wxString sz255MplabDevDir;     // path to MPLAB's 'DEVICE'-folder
 
   int iProgramWhat;         // PIC_PROGRAM_ALL for example
   int iUseCompleteChipErase;      // 0=no 1=yes  (once called "bulk erase" but too misleading now,
@@ -62,7 +62,7 @@ typedef struct  // T_CONFIG structure, used for var Config .
             // Vdd/Vpp sequence: A NEVER ENDING STORY ! More about this in PIC_HW.C::PIC_HW_ProgMode() !
   int iVerboseMessages;     // 0= normal message display,   1= a LOT of display messages (for debugging)
 
-  wxChar sz255HexFileName[256];
+  wxString sz255HexFileName;
 
 
   uint32_t dwUnknownCodeMemorySize;  // used for PIC_DEV_TYPE_UNKNOWN..

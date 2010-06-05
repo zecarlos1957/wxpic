@@ -34,7 +34,7 @@
 #define APPL_CUST_NO_MENU_EDIT           0x0010  // bit 4 : "hide the EDIT menu and all its contents"
 #define APPL_CUST_NO_MENU_SPECIALS       0x0020  // bit 5 : "hide the SPECIALS submenu"
 
-#define APPLICATION_NAME (_T("WxPIC"))
+#define APPLICATION_NAME (wxT("WxPIC"))
 
 
 /*------- global variables - bad style but this makes living easier -------*/

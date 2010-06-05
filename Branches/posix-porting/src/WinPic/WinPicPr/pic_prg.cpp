@@ -111,7 +111,7 @@
 #include "PIC16F716_PRG.H" // support for PIC16F716 since 2005-12 (what's different with that beast ?)
 #include "PIC10F_PRG.h" // support for PIC10F20x by W.Buescher (2005-05)
 #include "dspic_prg.h"  // support dsPIC30 family by W.Buescher
-#include "PIC18F_PRG.h" // support for PIC18F devices by Martin van der Werff
+#include "pic18f_prg.h" // support for PIC18F devices by Martin van der Werff
 
 #define _I_AM_PIC_PRG_
 #include "pic_prg.h"  // include file for THIS module with single-source VARs
@@ -1930,7 +1930,7 @@ bool PIC_PRG_ProgramConfigMem_16F81X(
     if (   ( dwDeviceAddress < (uint32_t)PIC_DeviceInfo.lConfMemBase)
             || ( dwDeviceAddress > (uint32_t)PIC_DeviceInfo.lConfWordAdr) )
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _T("Erroneously called ProgramConfigMem_16F81X !")); // not worth translating !
+        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, wxT("Erroneously called ProgramConfigMem_16F81X !")); // not worth translating !
         return false;
     }
 

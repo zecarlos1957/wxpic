@@ -72,9 +72,9 @@ uint32_t Hex_ParseHexNumber(char *cp, int digits)
 
 
 /*************************************************************************/
-long LoadHexFile( const wxChar *fname,
+long LoadHexFile( const wxString fname,
                   T_HexLoadCallback pvLoadCallback,
-                  wxChar *sz80ErrorMessage )
+                  wxString sz80ErrorMessage )
   /* Laedt ein Intel-Hex-File in den Puffer des HEX-Editors.
    * Wird automatisch aus HexBuf_LoadFile() aufgerufen,
    * wenn die zu ladende Datei die Erweiterung ".HEX" hat.
@@ -192,7 +192,7 @@ long LoadHexFile( const wxChar *fname,
                   {
                    if (iErrorInLine==0)
                     { iErrorInLine=iCurrentLineNr;
-                      _stprintf(sz80ErrorMessage,_("bad length(%d)"),(int)iErrorInLine);
+                     sz80ErrorMessage = wxString::Format(_("bad length(%d)"),(int)iErrorInLine);
                     }
                   }
                  else
@@ -214,7 +214,7 @@ long LoadHexFile( const wxChar *fname,
                   {
                    if (iErrorInLine==0)
                     { iErrorInLine=iCurrentLineNr;
-                      _stprintf(sz80ErrorMessage,_("bad length(%d)"),(int)iErrorInLine);
+                      sz80ErrorMessage = wxString::Format(_("bad length(%d)"),(int)iErrorInLine);
                     }
                   }
                  else
@@ -226,7 +226,7 @@ long LoadHexFile( const wxChar *fname,
                case 5:     /* record type == "Start linear address"----------*/
                 break;
                default:    /* unbekannte "record types" werden ignoriert !!! */
-                _stprintf(sz80ErrorMessage,_("HEX-record%d??"), iRecordType);
+                sz80ErrorMessage = wxString::Format(_("HEX-record%d??"), iRecordType);
                 break;
               } /* end switch(sz255Line[7])           */
             }   /* end if <Pruefsumme ok>      */
@@ -235,7 +235,7 @@ long LoadHexFile( const wxChar *fname,
              if (iErrorInLine==0)
               {
                 iErrorInLine=iCurrentLineNr;
-                _stprintf(sz80ErrorMessage,_("ChkSum (l%d)?"),(int)iErrorInLine);
+                sz80ErrorMessage = wxString::Format(_("ChkSum (l%d)?"),(int)iErrorInLine);
               }
             }
          } /* end if <gueltige INTEL-HEX-File-Zeile> */
@@ -288,8 +288,8 @@ long LoadHexFile( const wxChar *fname,
               }
              else // must be some other (funny) comment :
               {   // NOTE: this is STRANGE (like some compilers) but not an ERROR ! !
-                if( sz80ErrorMessage[0]=='\0' )
-                 { _stprintf(sz80ErrorMessage,_("Strange line in HEX-file (%d): %40hs"),(int)iCurrentLineNr, sz255Line);
+                if( sz80ErrorMessage==_("") )
+                 { sz80ErrorMessage = wxString::Format(_("Strange line in HEX-file (%d): %40hs"),(int)iCurrentLineNr, sz255Line);
                  }
               }
            }
@@ -304,7 +304,7 @@ long LoadHexFile( const wxChar *fname,
    /*  (dies deutet darauf hin, dass die geladene Datei einen Bug hat)  */
    if ( (iErrorInLine==0) && (!iGotEOFRecord) )
      { iErrorInLine=iCurrentLineNr;
-       _tcscpy(sz80ErrorMessage,_("No EOF-record"));
+       sz80ErrorMessage =_("No EOF-record");
      }
 
    return iErrorInLine;

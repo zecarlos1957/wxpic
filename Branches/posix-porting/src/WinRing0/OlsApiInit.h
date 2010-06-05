@@ -135,9 +135,9 @@ _SetOlsValue SetOlsValue = NULL;
 BOOL InitOpenLibSys(HMODULE *hModule)
 {
 #ifdef _M_X64
-	*hModule = LoadLibrary(_T("WinRing0x64.dll"));
+	*hModule = LoadLibrary(wxT("WinRing0x64.dll"));
 #else
-	*hModule = LoadLibrary(_T("WinRing0.dll"));
+	*hModule = LoadLibrary(wxT("WinRing0.dll"));
 #endif
 
 	if(*hModule == NULL)
@@ -277,10 +277,10 @@ BOOL InitOpenLibSys(HMODULE *hModule)
 	&&	ReadPciConfigWordEx
 	&&	ReadPciConfigDwordEx
 	&&	WritePciConfigByte
-	&&	WritePciConfigWord 
+	&&	WritePciConfigWord
 	&&	WritePciConfigDword
 	&&	WritePciConfigByteEx
-	&&	WritePciConfigWordEx 
+	&&	WritePciConfigWordEx
 	&&	WritePciConfigDwordEx
 	&&	FindPciDeviceById
 	&&	FindPciDeviceByClass

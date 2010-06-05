@@ -38,10 +38,10 @@
 #include "pic_hw.h"     // Routines to drive the programmer hardware interface
 #include "devices.h"    // need T_PicDeviceInfo here !
 #include "config.h"     // permanently saved Config-structure
-#include <Wx/Appl.h>       // APPL_ShowMsg(), etc
+#include "../../Wx/Appl.h"       // APPL_ShowMsg(), etc
 #include "pic_hex.h"    // access routines to the "hex data buffer"
 #include "pic_prg.h"    // generic defines for programming routines
-#include "PIC16F7x_PRG.h" // header for the PIC16F7x programming algorithms
+#include "pic16f7x_prg.h" // header for the PIC16F7x programming algorithms
 
 
 //----------------------------------------------------------------------------
@@ -93,8 +93,6 @@ bool PIC16F7x_VerifyRange( uint32_t dwNrOfLocations )
  uint32_t dwRead, dwWritten, dwMask;
  uint32_t dwVerifyStartAddr = (uint32_t)PIC16F7x_iCurrTargetAddress;
  int  n_errors = 0;
- wxChar sz80Msg[84];
-
   // NO-NO-NO :  PIC_HW_ProgMode();
   for ( i=0; (uint32_t)i<dwNrOfLocations; ++i )
    {// PHWInfo.iCurrProgAddress = PIC16F7x_iCurrTargetAddress; // since 2008-05, for DLL-plugin
@@ -120,9 +118,9 @@ bool PIC16F7x_VerifyRange( uint32_t dwNrOfLocations )
 
         if(n_errors<5)
          {
-           _stprintf(sz80Msg, _("Verify Error: %06lX: read %06lX, wanted %06lX"),
-                           (long)PIC16F7x_iCurrTargetAddress, (long)dwRead, (long)dwWritten );
-           APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, sz80Msg );
+           APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
+								wxString::Format( _("Verify Error: %06lX: read %06lX, wanted %06lX"),
+                           (long)PIC16F7x_iCurrTargetAddress, (long)dwRead, (long)dwWritten ) );
          }
       } // end if <verify failed>
      else  // verify ok, reset "verify error" flag for this location:
@@ -144,9 +142,9 @@ bool PIC16F7x_VerifyRange( uint32_t dwNrOfLocations )
 
   if(n_errors>=5)
    {
-    _stprintf(sz80Msg, _( "More Verify Errors, unable to list all (total=%d)" ),
-            (int)n_errors);
-    APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, sz80Msg );
+    ;
+    APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
+					wxString::Format(_( "More Verify Errors, unable to list all (total=%d)" ),(int)n_errors) );
    }
 
   PicPrg_SetVerifyResult( dwVerifyStartAddr, (n_errors==0) ? +1 : -1 );
