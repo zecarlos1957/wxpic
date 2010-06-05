@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxPanel" name="TCodeMemPanel">
+		<pos_arg>1</pos_arg>
+		<size_arg>1</size_arg>
+		<object class="wxBoxSizer" variable="BoxSizer5" member="no">
+			<object class="sizeritem">
+				<object class="wxGrid" name="ID_CODE_MEM_GRID" subclass="THexGrid" variable="aCodeMemGrid" member="yes">
+					<cols>8</cols>
+					<minsize>0,0</minsize>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+				<option>1</option>
+			</object>
+		</object>
+	</object>
+</wxsmith>
