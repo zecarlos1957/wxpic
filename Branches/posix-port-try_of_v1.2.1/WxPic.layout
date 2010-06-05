@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug-Linux" />
+	<File name="WinPic/WinPicPr/Config.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="3591" topLine="49" />
+	</File>
+	<File name="WinPic/WinPicPr/Config.h" open="0" top="0" tabpos="4">
+		<Cursor position="3929" topLine="50" />
+	</File>
+	<File name="WinPic/WinPicPr/Devices.cpp" open="1" top="1" tabpos="2">
+		<Cursor position="195440" topLine="3717" />
+	</File>
+	<File name="WinPic/WinPicPr/Devices.h" open="0" top="0" tabpos="5">
+		<Cursor position="15142" topLine="233" />
+	</File>
+	<File name="WinPic/WinPicPr/LoadHex.cpp" open="0" top="0" tabpos="10">
+		<Cursor position="13924" topLine="283" />
+	</File>
+	<File name="WinPic/WinPicPr/LoadHex.h" open="0" top="0" tabpos="8">
+		<Cursor position="1854" topLine="13" />
+	</File>
+	<File name="WinPic/WinPicPr/PIC10F_PRG.cpp" open="0" top="0" tabpos="9">
+		<Cursor position="19843" topLine="337" />
+	</File>
+	<File name="WinPic/WinPicPr/PIC16F716_PRG.cpp" open="0" top="0" tabpos="10">
+		<Cursor position="9229" topLine="172" />
+	</File>
+	<File name="WinPic/WinPicPr/PIC16F7x_PRG.cpp" open="0" top="0" tabpos="11">
+		<Cursor position="14893" topLine="279" />
+	</File>
+	<File name="WinPic/WinPicPr/PIC18F_PRG.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="2483" topLine="33" />
+	</File>
+	<File name="WinPic/WinPicPr/PIC18F_PRG.h" open="0" top="0" tabpos="13">
+		<Cursor position="1048" topLine="29" />
+	</File>
+	<File name="WinPic/WinPicPr/PIC_HEX.cpp" open="0" top="0" tabpos="14">
+		<Cursor position="44659" topLine="921" />
+	</File>
+	<File name="WinPic/WinPicPr/PIC_HEX.h" open="0" top="0" tabpos="15">
+		<Cursor position="9810" topLine="180" />
+	</File>
+	<File name="WinPic/WinPicPr/PIC_HW.cpp" open="0" top="0" tabpos="1">
+		<Cursor position="3657" topLine="56" />
+	</File>
+	<File name="WinPic/WinPicPr/PIC_HW.h" open="0" top="0" tabpos="3">
+		<Cursor position="1160" topLine="0" />
+	</File>
+	<File name="WinPic/WinPicPr/PIC_PRG.cpp" open="0" top="0" tabpos="6">
+		<Cursor position="50817" topLine="982" />
+	</File>
+	<File name="WinPic/WinPicPr/PIC_PRG.h" open="0" top="0" tabpos="18">
+		<Cursor position="9059" topLine="161" />
+	</File>
+	<File name="WinPic/WinPicPr/dsPIC_PRG.cpp" open="0" top="0" tabpos="7">
+		<Cursor position="2590" topLine="21" />
+	</File>
+	<File name="WinPic/WinPicPr/dsPIC_PRG.h" open="0" top="0" tabpos="20">
+		<Cursor position="2833" topLine="24" />
+	</File>
+	<File name="WinPic/YHF_tools/QFile.cpp" open="0" top="0" tabpos="8">
+		<Cursor position="15918" topLine="347" />
+	</File>
+	<File name="WinPic/YHF_tools/QFile.h" open="0" top="0" tabpos="9">
+		<Cursor position="1583" topLine="24" />
+	</File>
+	<File name="WinRing0/OlsApiInit.h" open="0" top="0" tabpos="0">
+		<Cursor position="0" topLine="288" />
+	</File>
+	<File name="WinRing0/OlsApiInitDef.h" open="0" top="0" tabpos="22">
+		<Cursor position="1539" topLine="29" />
+	</File>
+	<File name="Wx/Appl.cpp" open="0" top="0" tabpos="31">
+		<Cursor position="5073" topLine="136" />
+	</File>
+	<File name="Wx/Appl.h" open="0" top="0" tabpos="30">
+		<Cursor position="3600" topLine="45" />
+	</File>
+	<File name="Wx/CodeMemPanel.cpp" open="0" top="0" tabpos="23">
+		<Cursor position="12770" topLine="303" />
+	</File>
+	<File name="Wx/CommandOption.cpp" open="0" top="0" tabpos="32">
+		<Cursor position="1209" topLine="21" />
+	</File>
+	<File name="Wx/ConfigMemoryPanel.cpp" open="0" top="0" tabpos="24">
+		<Cursor position="6872" topLine="134" />
+	</File>
+	<File name="Wx/DataMemPanel.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="1491" topLine="52" />
+	</File>
+	<File name="Wx/DeviceCfgPanel.cpp" open="0" top="0" tabpos="25">
+		<Cursor position="41969" topLine="816" />
+	</File>
+	<File name="Wx/HelpCtrl.cpp" open="0" top="0" tabpos="33">
+		<Cursor position="13087" topLine="428" />
+	</File>
+	<File name="Wx/HexGrid.cpp" open="0" top="0" tabpos="34">
+		<Cursor position="5830" topLine="136" />
+	</File>
+	<File name="Wx/InterfacePanel.cpp" open="0" top="0" tabpos="35">
+		<Cursor position="16136" topLine="213" />
+	</File>
+	<File name="Wx/MainFrame-2.cpp" open="0" top="0" tabpos="26">
+		<Cursor position="70272" topLine="1561" />
+	</File>
+	<File name="Wx/MainFrame.cpp" open="0" top="0" tabpos="27">
+		<Cursor position="59449" topLine="1167" />
+	</File>
+	<File name="Wx/MainFrame.h" open="0" top="0" tabpos="36">
+		<Cursor position="13155" topLine="315" />
+	</File>
+	<File name="Wx/MemAddrGetter.cpp" open="0" top="0" tabpos="28">
+		<Cursor position="1635" topLine="6" />
+	</File>
+	<File name="Wx/OptionPanel.cpp" open="0" top="0" tabpos="29">
+		<Cursor position="13164" topLine="185" />
+	</File>
+</CodeBlocks_layout_file>
