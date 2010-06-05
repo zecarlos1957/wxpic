@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+</head>
+
+<body>
+<h1>Adapter definition file</h1>
+<p> If your (simple) programmer for the parallel or serial&nbsp;port is not listed
+  on the 'interface' tab, here's what to do: </p>
+<ul>
+  <li> Copy and rename one of the SampleInterfaceXXX.xml in the WxPic install directory  into another file, for example
+    MyInterface.xml </li>
+  <li> With your favorite text editor, load 'your' file and modify it for your needs with the following entries ... some of them optional, only a few are mandatory,
+marked with &quot;m&quot;=mandatory: </li>
+</ul>
+<dl>
+  <dt> <U>DataIn (m)</U> </dt>
+  <dd> serial data line from PIC to PC. Example for a simple interface on the serial
+    port:<br />
+        <code>DataIn=&quot;cts&quot;</code><br />
+  </dd>
+  <dt> <U>OkButton</U> </dt>
+  <dd> signal from programming adapter to PC for an optional &quot;OK&quot;-button. </dd>
+  <dt> <U>VppOnOff (m)</U> </dt>
+  <dd> control line to turn the programming voltage on(H) and off(L). From PC to
+    PIC. Example for a simple interface:<br />
+        <code>VppOnOff=&quot;txd&quot;</code><br />
+  </dd>
+  <dt> <U>VddOnOff</U> </dt>
+  <dd> control line to turn the supply voltage on(H) and off(L). From PC to PIC. </dd>
+  <dt> <U>PullMclrDown</U> </dt>
+  <dd> control line to pull the MCLR pin down to ground. As far as I know, only
+    Microchip's &quot;AN589&quot;-programmer uses this (with PullMclrDown=D4) </dd>
+  <dt> <U>Connect</U> </dt>
+  <dd> control line to connect(H) or disconnect(L) the target. From PC to programming
+    interface. Usually <code>&quot;!D7&quot;</code>. </dd>
+  <dt> <U>ClockOut (m)</U> </dt>
+  <dd> serial clock output from PC to PIC. Example for a simple interface on the
+    serial port:<br />
+        <code>ClockOut=&quot;rts&quot;</code><br />
+  </dd>
+  <dt> <U>DataOut (m)</U> </dt>
+  <dd> Definies the <em>interface signal</em> which is used to send serial data
+    output from PC to PIC. Example for a simple interface on the serial port:<br />
+        <code>DataOut=dtr</code><br />
+  </dd>
+  <dt style="text-decoration: underline;"> DataOutWhileReading </dt>
+  <dd> Defines the <em>logic state</em> (not a control signal) of the data output
+    line while reading. For most interfaces, the data output must be set to a
+    logic &quot;1&quot; by the programmer, so the PIC can pull the serial output low (because
+    most interfaces use an NPN-transistor or open collector output stage, and
+    a pullup resistor connected to Vdd). For interfaces with a tristate output,
+    the level of the serial ouput line while reading doesn't matter (use &quot;OutEnable&quot;
+    to define the control line for the tristate driver in that case). Example
+    for a simple interface on the serial port:<br />
+        <code>DataOutWhileReading=&quot;1&quot;</code><br />
+  </dd>
+  <dt> <U>ClkEnable</U> </dt>
+  <dd> Tristate buffer control for the serial clock output. As far as I know, the
+    only interface which uses this is the original Microchip &quot;AN589&quot; programmer.
+    &quot;H&quot; level means output enabled (from PC to PIC), &quot;L&quot; means output disabled
+    (high impedance). Example for a simple interface:<br />
+        <code>ClkEnable=&quot;nc&quot;</code><br />
+  </dd>
+  <dt> <U>OutEnable</U> </dt>
+  <dd> Tristate buffer control for the data output. As far as I know, the only interface
+    which uses this is the original Microchip &quot;AN589&quot; programmer. &quot;H&quot; level means
+    output enabled (from PC to PIC), &quot;L&quot; means output disabled (high
+    impedance).<br />
+  </dd>
+  <dt> <U>RedLed</U> </dt>
+  <dd> Optional output from the PC to a red LED on the programmer, signalling &quot;error
+    state&quot; after programming. </dd>
+  <dt> <U>GreenLed</U> </dt>
+  <dd> Optional output from the PC to a green LED on the programmer, signalling
+    &quot;success&quot; after programming. </dd>
+</dl>
+<p> The <i>function token</i> in the definition file&nbsp;is followed by a &quot;=&quot;
+  character, and a symbolic definition for the <i>control signal</i> which
+  is used. This can be any of the centronics data lines, inverted (LOW-active)
+  or not inverted (HIGH-active). &quot;Active&quot; must be seen from the target's point
+  of view. If -for example- there is an inverter between the serial data output
+  on centronics D0 and the PIC's &quot;RB7&quot; pin, the definition line must be </p>
+<p><code>DataOut=&quot;!D0&quot;</code></p>
+<dl>
+  <dt> which means </dt>
+  <dd> &quot;The serial data output is connected to D0, inverted&quot; &nbsp;(the '!' character
+    to invert something is &quot;C&quot;-style) </dd>
+</dl>
+<p> These names can be used for control lines on the centronics port (&quot;LPT1&quot;
+  or &quot;LPT2&quot;). Non-inverted always means active-HIGH level on the PC's output,
+  no matter what the centronics printer specification says (signals which are
+  inverted by the PC hardware are automatically inverted by software&nbsp;!). </p>
+<dl>
+  <dt> <U>D0, D1, ... D7&nbsp;</U> </dt>
+  <dd> centronics data, not inverted. Can be used as OUTPUTS from PC to target. </dd>
+  <dt> <U>!D0, !D1, ... !D7</U> </dt>
+  <dd> centronics data, inverted. Can be used as OUTPUTS from PC to target. </dd>
+  <dt> <U>pap, &nbsp;!pap</U> </dt>
+  <dd> centronics &quot;paper out&quot;, normal (H=active) or inverted (L=active). Can be
+    used as INPUT from target to PC. </dd>
+  <dt> <U>ack, &nbsp;!ack</U> </dt>
+  <dd> centronics &quot;acknowledge&quot;, normal (H=active) or inverted (L=active). Can be
+    used as INPUT from target to PC. </dd>
+  <dt> <U>str, alf, psl, ini</U> </dt>
+  <dd> Other control signals OUTPUTS from PC to target: strobe, automatic line feed,
+    select printer, initialize printer(reset). </dd>
+  <dt> <U>bsy, sld, err</U> </dt>
+  <dd> Other INPUTS from target to PC: busy, selected, error </dd>
+  <dt> <U>nc</U> </dt>
+  <dd> not connected. Use this token for all unused/unsupported functions, like
+    &quot;RedLed=nc&quot; . &nbsp;All unused functions appear disabled on the &quot;Interface
+    Test&quot; tab. </dd>
+</dl>
+<p> For an interface on the serial port, these control lines are available (may
+  be used if you have an interface with an inverting RS-232 level converter
+  like the MAX232). If you use the original &quot;COM84&quot; programmer, you don't have
+  to write your own interface definition ! </p>
+<dl>
+  <dt> <U>txd, !txd</U> </dt>
+  <dd> Transmit Data (here: abused as simple control line). For COM84, &quot;txd&quot; is
+    used as programming voltage (non-inverted) </dd>
+  <dt> <U>dtr, !dtr</U> </dt>
+  <dd> Data Terminal Ready. For COM84, &quot;dtr&quot; is used as serial data output from
+    PC to PIC (non-inverted) </dd>
+  <dt> <U>rts, !rts</U> </dt>
+  <dd> Ready To Send. For COM84, &quot;rts&quot; is the serial clock output from PC to PIC. </dd>
+  <dt> <U>cts, !cts</U> </dt>
+  <dd> Clear To Send. For COM84, &quot;cts&quot; is the serial data input (from PIC to PC). </dd>
+</dl>
+<p> Other &quot;control signal tokens&quot; are listed in the <a href="#lpt_connector">LPT
+  connector table</a>, or in the &nbsp;SampleInterfaceXXX.xml files. Every
+  macro definition can control up to 4 output lines, like:<br />
+  SelVddHigh=D0+D1+!D2+!D3<br />
+  which will set both D0+D1 high and D2+D3 low when the supply voltage shall
+  generator shall be configured for &quot;high supply voltage (see notes on simple production-grade programmers). </p>
+<p> If you have the source code of WxPic, look for &quot;PicHw_TokenToInOutFunc()&quot;
+  to find out which tokens are implemented so far ;-) </p>
+<p> To continue the installation of a customized programming interface... </p>
+<ul>
+  <li> Save your modified interface definition file now, and close the text editor. </li>
+  <li> Open WinPic's &quot;Interface&quot; tab and select &quot;Custom , on XXX port, defined by
+    file&quot; (XXX = COM or LPT; scroll to the end of the list !).<br />
+    Notice that the edit field under &quot;Custom interface definition file&quot; will
+    be enabled now. </li>
+  <li> Enter the name of your interface definition file in the edit field, or click
+    &quot;Select&quot; to open a file selector.<br />
+  </li>
+  <li> If an error message like &quot;invalid signal definition&quot; appears, check your
+    interface definition file again (with a text editor) and try again. </li>
+</ul>
+<p> If everything is ok, check the proper function of the control lines with
+  the interface test option. Keep your interface
+  definition file at its place, because this file will be loaded whenever
+  you start the program again (the <b><i>definitions</i></b> are NOT copied
+  into the SETTINGS.INI file. Only the <i><b>name</b></i> of your interface
+  definition file is saved in the settings !) </p>
+  <table align="center" border="1" cellpadding="2">
+    <caption>
+      <u><b><a name="lpt_connector" id="lpt_connector">Signals on the PC's 25-pin
+      "LPT" connector (SUB-D)</a></b></u>
+    </caption>
+	<tbody><tr>
+      <td>Pin Nr</td>
+      <td>Signal</td>
+      <td>token name<br>
+	in <a href="#interface_definition_file">interface<br>
+	definition file</a></td>
+
+      <td>Direction<br>
+      </td>
+      <td>Description<br>
+	(usual function)</td>
+    </tr>
+    <tr>
+      <td>1</td>
+
+      <td>/STROBE</td>
+      <td>str</td>
+      <td>PC-&gt;printer</td>
+      <td>'Byte clock'</td>
+    </tr>
+    <tr>
+
+      <td>2</td>
+      <td>D0</td>
+      <td>D0</td>
+      <td>PC-&gt;printer</td>
+      <td>Centronics Data</td>
+    </tr>
+
+    <tr>
+      <td>3</td>
+      <td>D1</td>
+      <td>D1</td>
+      <td>PC-&gt;printer</td>
+      <td>Centronics Data</td>
+
+    </tr>
+    <tr>
+      <td>4...8</td>
+      <td>...</td>
+      <td>&nbsp;...</td>
+      <td>PC-&gt;printer</td>
+
+      <td>Centronics Data</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>D7</td>
+      <td>D7</td>
+      <td>PC-&gt;printer</td>
+
+      <td>Centronics Data</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>/ACK</td>
+      <td>ack</td>
+      <td>printer-&gt;PC</td>
+
+      <td>Acknowledge</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>BUSY</td>
+      <td>bsy</td>
+      <td>printer-&gt;PC</td>
+
+      <td>Busy or Error</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>PAPER</td>
+      <td>pap</td>
+      <td>printer-&gt;PC</td>
+
+      <td>high=printer ran out of paper</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>SELECTED</td>
+      <td>sld</td>
+      <td>printer-&gt;PC</td>
+
+      <td>high=printer is on-line</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>/ALF</td>
+      <td>alf</td>
+      <td>PC-&gt;printer</td>
+
+      <td>automatic line feed</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>/ERROR</td>
+      <td>err</td>
+      <td>printer-&gt;PC</td>
+
+      <td>out of paper, error, offline</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>/INIT</td>
+      <td>ini</td>
+      <td>PC-&gt;printer</td>
+
+      <td>resets the printer</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>/PRINTER SEL</td>
+      <td>psl</td>
+      <td>PC-&gt;printer</td>
+
+      <td>low = select printer</td>
+    </tr>
+    <tr>
+      <td>18..25</td>
+      <td>GROUND</td>
+      <td><br>
+      </td>
+
+      <td>-</td>
+      <td>connect ALL LINES to ground</td>
+    </tr>
+  </tbody>
+  </table>
+</body>
+</html>
