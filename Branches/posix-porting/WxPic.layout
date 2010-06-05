@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug Linux" />
+	<File name="src/WinPic/WinPicPr/config.cpp" open="1" top="1" tabpos="0">
+		<Cursor position="1153" topLine="13" />
+	</File>
+	<File name="src/WinPic/YHF_tools/QFile.h" open="0" top="0" tabpos="0">
+		<Cursor position="1588" topLine="9" />
+	</File>
+	<File name="src/Wx/Appl.h" open="0" top="0" tabpos="0">
+		<Cursor position="399" topLine="0" />
+	</File>
+	<File name="src/Wx/DeviceCfgPanel.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="10439" topLine="152" />
+	</File>
+	<File name="src/Wx/InterfacePanel.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="357" topLine="0" />
+	</File>
+	<File name="src/Wx/MainFrame-2.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="1742" topLine="2" />
+	</File>
+	<File name="src/Wx/MainFrame.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="1270" topLine="0" />
+	</File>
+	<File name="src/Wx/OptionPanel.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="311" topLine="0" />
+	</File>
+</CodeBlocks_layout_file>
