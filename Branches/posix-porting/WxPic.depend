@@ -480,41 +480,43 @@
 
 1275772598 /home/compile/svn/wxpic/local-posix-port/src/WinPic/WinPicPr/dspic_prg.h
 
-1275773950 source:/home/compile/svn/wxpic/Branches/posix-porting/src/Res/Resource.cpp
+1275823993 source:/home/compile/svn/wxpic/Branches/posix-porting/src/Res/Resource.cpp
 	"Resource.h"
 	"Icon.inc"
 	"Icon.inc"
 	"Icon.inc"
 
-1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/Res/Resource.h
+1275823993 /home/compile/svn/wxpic/Branches/posix-porting/src/Res/Resource.h
 	<wx/icon.h>
 	"Icon.inc"
 	"Icon.inc"
 
-1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/Res/Icon.inc
+1275823993 /home/compile/svn/wxpic/Branches/posix-porting/src/Res/Icon.inc
 
-1275773950 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/dspic_prg.cpp
+1275823994 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/dspic_prg.cpp
 	"pic_hw.h"
 	"config.h"
 	"../../Wx/Appl.h"
 	"dspic_prg.h"
 
-1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic_hw.h
+1275826146 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic_hw.h
 	<wx/defs.h>
 	<stdint.h>
+	<sys/time.h>
 
-1275778388 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/config.h
+1275825732 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/config.h
 	<wx/confbase.h>
+	<stdint.h>
 
-1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/Wx/Appl.h
+1275823995 /home/compile/svn/wxpic/Branches/posix-porting/src/Wx/Appl.h
 	"CommandOption.h"
 
-1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/Wx/CommandOption.h
+1275823995 /home/compile/svn/wxpic/Branches/posix-porting/src/Wx/CommandOption.h
 	<wx/app.h>
 
-1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/dspic_prg.h
+1275823994 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/dspic_prg.h
 
-1275773950 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic10f_prg.cpp
+1275823994 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic10f_prg.cpp
 	<wx/intl.h>
 	"pic_hw.h"
 	"devices.h"
@@ -524,17 +526,17 @@
 	"pic_prg.h"
 	"pic10f_prg.h"
 
-1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/devices.h
+1275824780 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/devices.h
 	<stdint.h>
 
-1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic_hex.h
+1275824864 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic_hex.h
 
-1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic_prg.h
+1275823994 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic_prg.h
 	"devices.h"
 
-1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic10f_prg.h
+1275826413 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic10f_prg.h
 
-1275777994 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic16f716_prg.cpp
+1275826414 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic16f716_prg.cpp
 	<wx/intl.h>
 	<stdio.h>
 	"pic_hw.h"
@@ -545,14 +547,14 @@
 	"pic_prg.h"
 	"pic16f716_prg.h"
 
-1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic16f716_prg.h
+1275826414 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic16f716_prg.h
 
-1275778290 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/loadhex.cpp
+1275825545 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/loadhex.cpp
 	<wx/intl.h>
 	"../YHF_tools/QFile.h"
 	"loadhex.h"
 
-1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/YHF_tools/QFile.h
+1275826705 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/YHF_tools/QFile.h
 	<wx/file.h>
 	<stdint.h>
 
@@ -562,5 +564,85 @@
 	"wx/filefn.h"
 	"wx/strconv.h"
 
-1275773950 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/loadhex.h
+1275825626 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/loadhex.h
+
+1275823994 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/config.cpp
+	<wx/string.h>
+	<wx/confbase.h>
+	<wx/app.h>
+	"../../Wx/Appl.h"
+	"pic_hw.h"
+	"pic_prg.h"
+	"config.h"
+
+1275826414 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic16f7x_prg.cpp
+	<wx/string.h>
+	<wx/intl.h>
+	"pic_hw.h"
+	"devices.h"
+	"config.h"
+	"../../Wx/Appl.h"
+	"pic_hex.h"
+	"pic_prg.h"
+	"pic16f7x_prg.h"
+
+1275823994 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic16f7x_prg.h
+
+1275823994 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic18f_prg.cpp
+	<stdio.h>
+	"pic_hw.h"
+	"pic18f_prg.h"
+	"../../Wx/Appl.h"
+
+1275823994 /home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic18f_prg.h
+
+1275826324 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/WinPicPr/pic_hw.cpp
+	<stdio.h>
+	<wx/string.h>
+	<wx/filename.h>
+	<wx/xml/xml.h>
+	<wx/intl.h>
+	<wx/stdpaths.h>
+	<windows.h>
+	"../../WinRing0/OlsApiInit.h"
+	"config.h"
+	"../../Wx/Appl.h"
+	"pic_prg.h"
+	"pic_hw.h"
+
+1256634995 /usr/include/wx-2.8/wx/filename.h
+	"wx/arrstr.h"
+	"wx/filefn.h"
+	"wx/datetime.h"
+	"wx/intl.h"
+
+1256634995 /usr/include/wx-2.8/wx/xml/xml.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/object.h"
+	"wx/list.h"
+
+1256634995 /usr/include/wx-2.8/wx/stdpaths.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/filefn.h"
+	"wx/msw/stdpaths.h"
+	"wx/mac/corefoundation/stdpaths.h"
+	"wx/os2/stdpaths.h"
+	"wx/unix/stdpaths.h"
+	"wx/palmos/stdpaths.h"
+
+1256634995 /usr/include/wx-2.8/wx/unix/stdpaths.h
+
+1275823994 /home/compile/svn/wxpic/Branches/posix-porting/src/WinRing0/OlsApiInit.h
+	"OlsDef.h"
+	"OlsApiInitDef.h"
+
+1275823994 /home/compile/svn/wxpic/Branches/posix-porting/src/WinRing0/OlsDef.h
+
+1275823994 /home/compile/svn/wxpic/Branches/posix-porting/src/WinRing0/OlsApiInitDef.h
+
+1275826663 source:/home/compile/svn/wxpic/Branches/posix-porting/src/WinPic/YHF_tools/QFile.cpp
+	"QFile.h"
+	<wx/log.h>
 

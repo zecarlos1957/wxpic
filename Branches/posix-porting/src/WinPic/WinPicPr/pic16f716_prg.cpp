@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------*/
-/* PIC16F716_PRG.c                                                         */
+/* pic16f716_prg.c                                                         */
 /*                                                                         */
 /*  Purpose: Serial PIC Programming algorithms for PIC16F716 (in WinPic).  */
 /*  Author : Wolfgang Buescher (DL4YHF)                                    */
@@ -26,7 +26,7 @@
   // 2005-12-03:  Added this module after someone found out that the
   //     CONFIG MEMORY PROGRAMMING method used for other PICs didn't work
   //     for a PIC16F716 . To avoid trashing other subroutines in PIC_PRG.C ,
-  //     this new module named PIC16F716_PRG.C was added to WinPic .
+  //     this new module named pic16f716_prg.C was added to WinPic .
   // Based on PIC16F7x_PRG.C , and then modified according to [PIC16F716ps] .
   //
 
@@ -317,7 +317,7 @@ bool PIC16F716_WriteConfigMemory(
 
 
 
-/* EOF < PIC16F716_PRG.c > */
+/* EOF < pic16f716_prg.c > */
 
 
 

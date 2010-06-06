@@ -31,7 +31,8 @@
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 
-//#include <stdio.h>      // don't panic.. just required for sprintf !
+#include <stdio.h>      // don't panic.. just required for sprintf !
+//#include <stdlib.h> //required for itoa
 
 #define _I_AM_DEVICES_
 #include "devices.h"   // header for THIS module
@@ -2082,34 +2083,34 @@ const char *PicDev_AlgorithmCodeToString(int iAlgorithm)
 } // end PicDev_AlgorithmCodeToString()
 
 /***************************************************************************/
-int PicDev_StringToAlgorithmCode(const char * pszAlgorithmName)
+int PicDev_StringToAlgorithmCode(wxString pszAlgorithmName)
 {
-	if (pszAlgorithmName == "16Fxx")					return PIC_ALGO_16FXX;
-	if (pszAlgorithmName == "16Fxx_OLD_ERASE")	return PIC_ALGO_16FXX_OLD_ERASE;
-	if (pszAlgorithmName == "12Fxx")					return PIC_ALGO_12FXX;
-	if (pszAlgorithmName == "16F630")				return PIC_ALGO_16F630;
-	if (pszAlgorithmName == "16F7x7")				return PIC_ALGO_16F7X7;
-	if (pszAlgorithmName == "16F7x")					return PIC_ALGO_PIC16F7X;
-	if (pszAlgorithmName == "16F716")				return PIC_ALGO_PIC16F716;
-	if (pszAlgorithmName == "16F81x")				return PIC_ALGO_16F81X;
-	if (pszAlgorithmName == "16F87xA")				return PIC_ALGO_16F87XA;
-	if (pszAlgorithmName == "16F87x")				return PIC_ALGO_16F87X;
-	if (pszAlgorithmName == "16Cxx")					return PIC_ALGO_16CXX;
-	if (pszAlgorithmName == "dsPIC30F")				return PIC_ALGO_dsPIC30F;
-	if (pszAlgorithmName == "PIC18F")				return PIC_ALGO_PIC18F;
-	if (pszAlgorithmName == "PIC18F_OLD")			return PIC_ALGO_PIC18F_OLD;
-	if (pszAlgorithmName == "PIC10F20x")			return PIC_ALGO_PIC10F;
-	if (pszAlgorithmName == "ERASE_16F62xA")		return PIC_ALGO_ERASE_16F62XA;
-	if (pszAlgorithmName == "ERASE_16F81x")		return PIC_ALGO_ERASE_16F81X;
-	if (pszAlgorithmName == "ERASE_16F87xA")		return PIC_ALGO_ERASE_16F87XA;
-	if (pszAlgorithmName == "ERASE_16F87x")		return PIC_ALGO_ERASE_16F87X;
-	if (pszAlgorithmName == "ERASE_12F6xx")		return PIC_ALGO_ERASE_12F6XX;
-	if (pszAlgorithmName == "DATA_EEPROM_16xxx")	return PIC_ALGO_DATA_EEPROM_16XXX;
-	if (pszAlgorithmName == "CONFIG_MEM_16xxx")	return PIC_ALGO_CONFIG_MEM_16XXX;
-	if (pszAlgorithmName == "CONFIG_MEM_16F81x")	return PIC_ALGO_CONFIG_MEM_16F81X;
-	if (pszAlgorithmName == "CONFIG_MEM_16F87xA") return PIC_ALGO_CONFIG_MEM_16F87XA;
-	if (pszAlgorithmName == "MULTI_WORD")			return PIC_ALGO_MULTI_WORD;
-	if (pszAlgorithmName == "NONE")					return PIC_ALGO_UNKNOWN;
+	if (pszAlgorithmName == wxT("16Fxx"))					return PIC_ALGO_16FXX;
+	if (pszAlgorithmName == wxT("16Fxx_OLD_ERASE"))		return PIC_ALGO_16FXX_OLD_ERASE;
+	if (pszAlgorithmName == wxT("12Fxx"))					return PIC_ALGO_12FXX;
+	if (pszAlgorithmName == wxT("16F630"))					return PIC_ALGO_16F630;
+	if (pszAlgorithmName == wxT("16F7x7"))					return PIC_ALGO_16F7X7;
+	if (pszAlgorithmName == wxT("16F7x"))					return PIC_ALGO_PIC16F7X;
+	if (pszAlgorithmName == wxT("16F716"))					return PIC_ALGO_PIC16F716;
+	if (pszAlgorithmName == wxT("16F81x"))					return PIC_ALGO_16F81X;
+	if (pszAlgorithmName == wxT("16F87xA"))				return PIC_ALGO_16F87XA;
+	if (pszAlgorithmName == wxT("16F87x"))					return PIC_ALGO_16F87X;
+	if (pszAlgorithmName == wxT("16Cxx"))					return PIC_ALGO_16CXX;
+	if (pszAlgorithmName == wxT("dsPIC30F"))				return PIC_ALGO_dsPIC30F;
+	if (pszAlgorithmName == wxT("PIC18F"))					return PIC_ALGO_PIC18F;
+	if (pszAlgorithmName == wxT("PIC18F_OLD"))			return PIC_ALGO_PIC18F_OLD;
+	if (pszAlgorithmName == wxT("PIC10F20x"))				return PIC_ALGO_PIC10F;
+	if (pszAlgorithmName == wxT("ERASE_16F62xA"))		return PIC_ALGO_ERASE_16F62XA;
+	if (pszAlgorithmName == wxT("ERASE_16F81x"))			return PIC_ALGO_ERASE_16F81X;
+	if (pszAlgorithmName == wxT("ERASE_16F87xA"))		return PIC_ALGO_ERASE_16F87XA;
+	if (pszAlgorithmName == wxT("ERASE_16F87x"))			return PIC_ALGO_ERASE_16F87X;
+	if (pszAlgorithmName == wxT("ERASE_12F6xx"))			return PIC_ALGO_ERASE_12F6XX;
+	if (pszAlgorithmName == wxT("DATA_EEPROM_16xxx"))	return PIC_ALGO_DATA_EEPROM_16XXX;
+	if (pszAlgorithmName == wxT("CONFIG_MEM_16xxx"))	return PIC_ALGO_CONFIG_MEM_16XXX;
+	if (pszAlgorithmName == wxT("CONFIG_MEM_16F81x"))	return PIC_ALGO_CONFIG_MEM_16F81X;
+	if (pszAlgorithmName == wxT("CONFIG_MEM_16F87xA"))	return PIC_ALGO_CONFIG_MEM_16F87XA;
+	if (pszAlgorithmName == wxT("MULTI_WORD"))			return PIC_ALGO_MULTI_WORD;
+	if (pszAlgorithmName == wxT("NONE"))					return PIC_ALGO_UNKNOWN;
 
 	APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, wxString::Format( _("Unknown algorithm name : \"%hs\" !"), pszAlgorithmName) );
 	return  PIC_ALGO_UNKNOWN;
@@ -2635,18 +2636,14 @@ bool PicDev_ConfigBitStringToValue( T_PicConfigBitInfo *pConfigBitInfo, const wx
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-const wxChar * PicDev_GetDeviceFileName(void)
+const wxString PicDev_GetDeviceFileName(void)
 {
 	///Erdem_ua: Warning, here defined static variable. Why this is required?
-	///Migh problematic if wxString used...
-
-    static wxChar sz511FileName[512];
+    static wxString sz511FileName;
 //  wxString s = ExtractFilePath(Application->ExeName)+C_DEVLIST_FILE_NAME;
-    wxFileName  DeviceListFilename (wxStandardPaths::Get().GetExecutablePath());
+    wxFileName DeviceListFilename (wxStandardPaths::Get().GetExecutablePath());
     DeviceListFilename.SetFullName(C_DEVLIST_FILE_NAME);
-    wxString s = DeviceListFilename.GetFullPath();
-    _tcsncpy( sz511FileName, s.c_str(), 511 );
-    sz511FileName[511]=0;
+    sz511FileName = DeviceListFilename.GetFullPath();
     return sz511FileName;
 }
 
@@ -3738,13 +3735,10 @@ bool PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo )
     // If one of Microchip's device-definition files (*.DEV) exists,
     //  use the config bit definitions from that file (instead of "our own").
     // First look at the file extension to find out how it can be loaded..
-    if ( psrcPicDeviceInfo->sz80ConfigRegisterInfoFile[0] > 32 )
+    if ( psrcPicDeviceInfo->sz80ConfigRegisterInfoFile != wxEmptyString )
     {
-        cp = _tcsrchr(psrcPicDeviceInfo->sz80ConfigRegisterInfoFile,'.');
-        if ( cp )
+        if ( psrcPicDeviceInfo->sz80ConfigRegisterInfoFile.AfterLast('.')==wxT("dev") )
         {
-            if (_tcsicmp(cp, wxT(".dev")) == 0)
-            {
                 // it MAY be one of Microchip's "dev"-files...
                 // WinPic once expected these files IN ITS OWN SUB-FOLDER "DEVICES",
                 //   but since 2005-10 it is possible to specify the path into
@@ -3762,7 +3756,6 @@ bool PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo )
                 wxString DevFilenameText = DevFilename.GetFullPath();
                 table_loaded = PicDev_LoadMcDevFile(DevFilenameText.c_str());
             }
-        }
     } // end if < Config-Register info file specified in DEVICE-TABLE >
 
     // If no *.DEV-file could be loaded for this PIC device,
@@ -4112,7 +4105,7 @@ void WriteValue (wxFile &File, const char *Key, const char *Value)
 void WriteIntValue (wxFile &File, const char *Key, int Value)
 {
     char Buf[10];
-    _itoa(Value, Buf, 10);
+    itoa(Value, Buf, 10);
     File.Write (Key, strlen(Key));
     File.Write ("=", 1);
     File.Write (Buf, strlen(Buf));
@@ -4129,17 +4122,15 @@ void WriteHeader (wxFile &File, const char *Header)
 void PicDev_DumpDeviceListToFile( const wxChar *pszDumpFileName )
 {
 // originally just a "test function" but may be interesting for the user..
-    wxString s;
     T_PicDeviceInfo MyDeviceInfo;
     char sz80[81];
     int  i;
 
     wxFileName DumpFilename(wxStandardPaths::Get().GetExecutablePath());
     DumpFilename.SetFullName(pszDumpFileName);
-    s = DumpFilename.GetFullPath();
-    DeleteFile( s );  // make sure we write into a "clean" file. No old scrap !
-    APPL_ShowMsg(APPL_CALLER_MAIN,0,_("Device list dumped to \"%s\""),s.c_str());
-    wxFile IniFile(s, wxFile::write);
+    wxRemoveFile( DumpFilename.GetFullPath() );  // make sure we write into a "clean" file. No old scrap !
+    APPL_ShowMsg(APPL_CALLER_MAIN,0,_("Device list dumped to \"%s\""),DumpFilename.GetFullPath());
+    wxFile IniFile(DumpFilename.GetFullPath(), wxFile::write);
     WriteHeader(IniFile, "Info");
     WriteValue(IniFile,"i1","Dump of built-in device info table");
     sprintf(sz80,"Generated by WinPic, compiled %s",__DATE__);

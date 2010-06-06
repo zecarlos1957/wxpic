@@ -31,9 +31,7 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
 THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
-
-
-#include <windows.h>
+#ifdef __WXMSW__
 
 #include <stdio.h>     // don't panic.. just required for sprintf !
 #include <wx/string.h>
@@ -41,10 +39,13 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <wx/xml/xml.h>
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
-#include <WinRing0/OlsApiInit.h>  //-- WinRing0 Header
+
+
+#include <windows.h>
+#include "../../WinRing0/OlsApiInit.h"  //-- WinRing0 Header
 
 #include "config.h"    // permanently saved Config-structure
-#include <Wx/Appl.h>      // call the APPLication to display message strings
+#include "../../Wx/Appl.h"      // call the APPLication to display message strings
 
 //#include <WinPic/smport/TSmPort.h>   // A.Weitzman's SMALL PORT plus WoBu's C++ wrapper
 //                       // (to replace the good old inportb() & outportb() )
@@ -3455,5 +3456,5 @@ void UpdateLedsForResult(bool fOk)
 }
 
 
-
+#endif //only for __WXMSW__ for now
 /* EOF <pic_hw.cpp> */

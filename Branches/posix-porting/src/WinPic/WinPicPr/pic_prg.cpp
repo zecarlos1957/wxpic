@@ -103,13 +103,13 @@
 
 #include "config.h"    // permanently saved Config-structure
 #include "devices.h"   // device information structure
-#include <Wx/Appl.h>       // APPL_ShowMsg(), etc
-#include "PIC_HEX.h"   // HEX-file import, export  and buffers
+#include "../../Wx/Appl.h"       // APPL_ShowMsg(), etc
+#include "pic_hex.h"   // HEX-file import, export  and buffers
 
 #include "pic_hw.h"    // Routines to drive the programmer hardware interface
 
-#include "PIC16F716_PRG.H" // support for PIC16F716 since 2005-12 (what's different with that beast ?)
-#include "PIC10F_PRG.h" // support for PIC10F20x by W.Buescher (2005-05)
+#include "pic16f716_prg.h" // support for PIC16F716 since 2005-12 (what's different with that beast ?)
+#include "pic10f_prg.h" // support for PIC10F20x by W.Buescher (2005-05)
 #include "dspic_prg.h"  // support dsPIC30 family by W.Buescher
 #include "pic18f_prg.h" // support for PIC18F devices by Martin van der Werff
 
@@ -145,7 +145,7 @@ int PIC_run_mode = PIC_RM_STOP; /* let PIC run PIC_run_mode = PIC_RM_GO   */
 
 int PIC_PRG_iSimulateOnly = 0;  // don't simulate, use "the real thing"
 
-wxChar PIC_error_string[256];
+wxString PIC_error_string;
 
 
 
@@ -865,7 +865,7 @@ bool PIC_PRG_Erase(int iEraseOptions)
                 break;  // end case PIC_ALGO_ERASE_16F62XA
 
             case PIC_ALGO_PIC16F716:      // PIC16F716 should be erased this way :
-                PIC16F716_EraseAll();   // implemented in PIC16F716_PRG.C
+                PIC16F716_EraseAll();   // implemented in pic16f716_prg.C
                 PicPrg_iCodeMemErased = PicPrg_iDataMemErased = PicPrg_iConfMemErased = 1;
                 break;
 
@@ -994,8 +994,7 @@ bool PIC_PRG_Erase(int iEraseOptions)
                 w = PIC_PRG_ReadConf(); // read configuration word, to check if we used protection ;-)
                 if (Config.iVerboseMessages)
                 {
-                    _stprintf(sz80Temp, _( "EraseAll: Read config word 0x%06lX" ), w);
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+                    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, wxString::Format( _( "EraseAll: Read config word 0x%06lX" ), w) );
                 }
                 fIsProtected = false;
                 if ( (w & PIC_DeviceInfo.wCfgmask_cpbits) != PIC_DeviceInfo.wCfgmask_cpbits)
@@ -1268,7 +1267,7 @@ bool PIC_PRG_Program16FXX(   // Also used for 12FXX (but can't change the name t
                 if ( (w & dwVerifyMask) != (r & dwVerifyMask) )
                 {
                     ++n_errors;
-                    _stprintf(PIC_error_string, _( "Verify Error: %06lX: read %06lX, wanted %06lX" ), dwDeviceAddr2, r, w );
+                    PIC_error_string = wxString::Format( _( "Verify Error: %06lX: read %06lX, wanted %06lX" ), dwDeviceAddr2, r, w );
                     APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, PIC_error_string);
                     fOk = false;
                     wFlags = PicBuf_GetMemoryFlags(dwDeviceAddr2);
@@ -1349,7 +1348,7 @@ bool PIC_PRG_Program16FXX(   // Also used for 12FXX (but can't change the name t
         APPL_ShowProgress( (100*i) / n );
         if (n_errors>16)
         {
-            _stprintf(PIC_error_string, _( "Programming aborted after %d errors." ), n_errors);
+            PIC_error_string = wxString::Format( _( "Programming aborted after %d errors." ), n_errors);
             APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
             break;
         }
@@ -1460,7 +1459,7 @@ bool PIC_PRG_ProgramCode16F630(
         {
             // "If data not correct, report programming failure" ..
             ++n_errors;
-            _stprintf(PIC_error_string, _( "Verify Error: %06lX: read %06lX, wanted %06lX" ), dwDeviceAddress+i, r, w );
+            PIC_error_string = wxString::Format( _( "Verify Error: %06lX: read %06lX, wanted %06lX" ), dwDeviceAddress+i, r, w );
             APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
             fOk = false;
             wFlags = PicBuf_GetMemoryFlags(dwDeviceAddress+i);
@@ -1490,7 +1489,7 @@ bool PIC_PRG_ProgramCode16F630(
         APPL_ShowProgress( (100*i) / n );
         if (n_errors>16)
         {
-            _stprintf(PIC_error_string, _( "Programming aborted after %d errors." ), n_errors);
+            PIC_error_string = wxString::Format( _( "Programming aborted after %d errors." ), n_errors);
             APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
             break;
         }
@@ -1982,7 +1981,7 @@ bool PIC_PRG_ProgramConfigMem_16F81X(
             if ( ( w & dwVerifyMask ) != ( r & dwVerifyMask ) )
             {
                 ++n_errors;
-                _stprintf(PIC_error_string, _( "Verify Error: %06lX: read %06lX, wanted %06lX" ), iAddress, r, w );
+                PIC_error_string = wxString::Format( _( "Verify Error: %06lX: read %06lX, wanted %06lX" ), iAddress, r, w );
                 APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
                 fOk = false;
             }
@@ -2230,7 +2229,7 @@ bool PIC_PRG_ProgramConfigMem_16F87XA(
             {
                 // if data not correct, report programming failure
                 ++n_errors;
-                _stprintf(PIC_error_string, _( "Verify Error: %06lX: read %06lX, wanted %06lX" ), iAddress, r, w );
+                PIC_error_string = wxString::Format( _( "Verify Error: %06lX: read %06lX, wanted %06lX" ), iAddress, r, w );
                 APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
                 fOk = false;
             }
@@ -2454,7 +2453,7 @@ bool PIC_PRG_ProgramEpromMcu(
         {
             // this cell does not want to be programmed ?  grumble.. another chip please :-(
             ++n_errors;
-            _stprintf(PIC_error_string, _( "Verify Error: %06lX: read %06lX, wanted %06lX" ), dwDeviceAddress+i, r, w );
+            PIC_error_string = wxString::Format( _( "Verify Error: %06lX: read %06lX, wanted %06lX" ), dwDeviceAddress+i, r, w );
             APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
             fOk = false;
 
@@ -2479,7 +2478,7 @@ bool PIC_PRG_ProgramEpromMcu(
         APPL_ShowProgress( (100*i) / iCountOfWords );
         if (n_errors>20)
         {
-            _stprintf(PIC_error_string, _( "Programming aborted after %d errors." ), n_errors);
+            PIC_error_string = wxString::Format( _( "Programming aborted after %d errors." ), n_errors);
             APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
             break;
         }
@@ -2934,13 +2933,12 @@ bool PicPrg_Verify(
                         }
                         if (n_errors<5)
                         {
-                            _stprintf(PIC_error_string, _("Verify Error: %06lX: read %06lX, wanted %06lX"),
+                            PIC_error_string = wxString::Format( _("Verify Error: %06lX: read %06lX, wanted %06lX"),
                                       dwDeviceAddress2, r, w );
                             if ( dwMask2 != dwMask )
                             {
                                 // something special -> show the verify-bitmask too
-                                cp = PIC_error_string + _tcslen(PIC_error_string);
-                                _stprintf(cp, _(", mask %06lX  ==> diff=%06lX"), dwMask2, (r^w) & dwMask2 );
+                                PIC_error_string << wxString::Format( _(", mask %06lX  ==> diff=%06lX"), dwMask2, (r^w) & dwMask2 );
                             }
                             APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
                         }
@@ -3012,7 +3010,7 @@ bool PicPrg_Verify(
                 }
                 if (n_errors<5)
                 {
-                    _stprintf(PIC_error_string, _("Verify Error: %06lX: read %06lX, wanted %06lX"), dwDeviceAddress2, r, w );
+                    PIC_error_string = wxString::Format( _("Verify Error: %06lX: read %06lX, wanted %06lX"), dwDeviceAddress2, r, w );
                     APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
                 }
             } // end if <verify failed>
@@ -3050,7 +3048,7 @@ bool PicPrg_Verify(
 
     if (n_errors>=5)
     {
-        _stprintf(PIC_error_string, _( "More Verify Errors, unable to list all (total=%d)" ), n_errors);
+        PIC_error_string = wxString::Format( _( "More Verify Errors, unable to list all (total=%d)" ), n_errors);
         APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
     }
 
@@ -3483,9 +3481,8 @@ bool PIC_PRG_ReadAll(
             if (  (PIC_DeviceInfo.lAddressOscCal >= 0)
                     && ((PIC_lOscillatorCalibrationWord & 0xFF00) != 0x3400/*RETLW*/ ) )
             {
-                _stprintf(sz80Temp, _( "Oscillator calibration word looks bad (0x%06lX) !" ),
-                          PIC_lOscillatorCalibrationWord & 0x0FFFF );
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, wxString::Format(_( "Oscillator calibration word looks bad (0x%06lX) !" ),
+                          PIC_lOscillatorCalibrationWord & 0x0FFFF ) );
             }
         } // end else  ( PIC_DeviceInfo.iBitsPerInstruction != 24 )
 

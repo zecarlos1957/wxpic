@@ -1,5 +1,5 @@
 /**********************************************************************/
-/*  LoadHex.H  =  Modul zum Importieren von Intel-Hex-Dateien         */
+/*  loadhex.h  =  Modul zum Importieren von Intel-Hex-Dateien         */
 /*                 in W.B.'s HEX-Editor                               */
 /*  Ermoeglicht das Einlesen von Dateien im 8-bit-Intel-Hex-Format.   */
 /*  Die maximale Dateigroesse ist nur durch den von HEX_ED bereit-    */
@@ -29,7 +29,7 @@
 typedef void(* T_HexLoadCallback)(uint32_t dwHexSourceLine,uint32_t dwLinearByteAddress, uint8_t bData); // callback for 'load file'
 
 //--------------- Prototypen ----------------------------------------
-CPROT long LoadHexFile( const wxChar *fname, T_HexLoadCallback pvLoadCallback, wxChar *sz80ErrorMessage );
+CPROT long LoadHexFile( const wxString fname, T_HexLoadCallback pvLoadCallback, wxString sz80ErrorMessage );
       // loads data from an INTEL-HEX-file
 
 

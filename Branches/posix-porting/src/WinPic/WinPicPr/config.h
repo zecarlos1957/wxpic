@@ -5,7 +5,7 @@
 /*-------------------------------------------------------------------------*/
 //#include <tchar.h>
 #include <wx/confbase.h>
-
+#include <stdint.h>
 
 /*----------------- constants  --------------------------------------------*/
 #define CFG_INI_FILE_NAME  "settings.ini"

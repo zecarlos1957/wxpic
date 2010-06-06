@@ -67,7 +67,7 @@ typedef struct // T_PicDeviceInfo ..
   //    Only required for PIC18F and dsPIC30F ,  not for PIC16Fxxx .
   //    This may be the name of one of Microchip's "DEVICE"-files too,
   //    copied from C:\Programme\Microchip\MPLAB IDE\Device or similar.
-  wxChar sz80ConfigRegisterInfoFile[84];  // example: "dsPIC30F2010.dev"
+  wxString sz80ConfigRegisterInfoFile;  // example: "dsPIC30F2010.dev"
 
   // device-specific info, required for programming:
   long lCodeMemWriteLatchSize; // number of *BYTES* (not "words") programmed at a time - only for PIC18F

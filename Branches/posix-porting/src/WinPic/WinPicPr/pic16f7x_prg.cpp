@@ -16,7 +16,7 @@
 /*  C A U T I O N :  The "PIC16F7x" prog spec does not cover the PIC16F72. */
 /*               We don't know why Microchip produced an extra document    */
 /*               for the PIC16F72 which is *not* supported by this module. */
-/*  Furthermore, the PIC16F716 is also not compatible (see PIC16F716_PRG.C)*/
+/*  Furthermore, the PIC16F716 is also not compatible (see pic16f716_prg.C)*/
 /*-------------------------------------------------------------------------*/
 
 #define L_RELEASE_VERSION 0

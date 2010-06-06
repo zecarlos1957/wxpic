@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------*/
-/* PIC10F_PRG.h                                                            */
+/* pic10f_prg.h                                                            */
 /*                                                                         */
 /*  Purpose: Serial PIC Programming algorithms for PIC10F20x .             */
 /*  Author : Wolfgang Buescher (DL4YHF)                                    */

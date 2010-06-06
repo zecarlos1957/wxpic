@@ -65,6 +65,15 @@
 #define PIC_HW_COM_ADDR_MIN  0x0200   /* min I/O address for COM port */
 #define PIC_HW_COM_ADDR_MAX  0x03F8   /* max I/O address for COM port */
 
+#ifndef __WXMSW__
+#include <sys/time.h>
+unsigned GetTickCount(){
+        struct timeval tv;
+        if(gettimeofday(&tv, NULL) != 0)
+                return 0;
+        return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+}
+#endif
 
 /*------------- Data Types ------------------------------------------------*/
 

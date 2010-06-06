@@ -10,7 +10,7 @@
 //*)
 #include <wx/settings.h>
 
-#include <WinPic/WinPicPr/PIC_HEX.h>
+#include <WinPic/WinPicPr/pic_hex.h>
 
 //(*IdInit(TConfigMemoryPanel)
 const long TConfigMemoryPanel::ID_CFG_MEM_GRID = wxNewId();

@@ -74,7 +74,7 @@ uint32_t Hex_ParseHexNumber(char *cp, int digits)
 /*************************************************************************/
 long LoadHexFile( const wxString fname,
                   T_HexLoadCallback pvLoadCallback,
-                  wxString sz80ErrorMessage )
+                  wxString& sz80ErrorMessage )
   /* Laedt ein Intel-Hex-File in den Puffer des HEX-Editors.
    * Wird automatisch aus HexBuf_LoadFile() aufgerufen,
    * wenn die zu ladende Datei die Erweiterung ".HEX" hat.
@@ -119,8 +119,8 @@ long LoadHexFile( const wxString fname,
    dwAddressBase= 0; /* aktuelle Bits 16..31 der Ladeadresse fuer Puffer      */
    /*   HexBuffer.bytes = 0;  gestrichen wegen "mehrteiligem Laden"           */
 
-  if( sz80ErrorMessage )
-      sz80ErrorMessage[0] = '\0';
+  if( not sz80ErrorMessage.IsEmpty() )
+      sz80ErrorMessage.Empty();
 
   //  Open the file to see what's in it ...
   if( myQFile.QFile_Open( fname, QFILE_O_RDONLY ) )

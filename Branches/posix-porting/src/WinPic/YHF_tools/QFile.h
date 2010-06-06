@@ -60,7 +60,7 @@ T_QFile(void)
 //
 
 /***************************************************************************/
-bool QFile_Open( const wxChar *filename, wxFile::OpenMode mode);
+bool QFile_Open( const wxString filename, wxFile::OpenMode mode);
   // Opens a file.  Parameters similar to wxFile : wxFile::read, wxFile::write, wxFile::read_write
   // #defined to  QFILE_O_RDONLY , QFILE_O_WRONLY ,  or   QFILE_O_RDWR  .
 
@@ -87,7 +87,7 @@ int  QFile_ReadLine( char *pszDest, int iMaxLen );
 
 
 /***************************************************************************/
-bool QFile_Create( const wxChar *filename, int attrib);
+bool QFile_Create( const wxString filename, int attrib);
   // Creates a new file (or truncates existing). Parameters similar to _rtl_creat:
   // attrib=0 is a "normal" file (neither hidden nor something else)
 
@@ -114,7 +114,7 @@ private:
     bool QFile_Flush(void);
 
   wxFile   File;
-  wxChar  sz512PathAndName[514];
+  wxString  sz512PathAndName;
   uint8_t  bBuffer[QFILE_BUFFER_SIZE];
   uint8_t  bPrevCharFromReadLine; // added 2007-07-08 to detect end of text lines properly
   bool  fBufferModified;

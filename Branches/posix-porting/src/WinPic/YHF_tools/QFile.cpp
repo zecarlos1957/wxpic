@@ -77,7 +77,7 @@
 
 
 /***************************************************************************/
-bool T_QFile::QFile_Open( const wxChar *filename, wxFile::OpenMode mode)
+bool T_QFile::QFile_Open( const wxString filename, wxFile::OpenMode mode)
   // Opens a file.  Parameters similar to _rtl_open (which in fact is used internally):
   //   QFILE_O_RDONLY , QFILE_O_WRONLY ,  or   QFILE_O_RDWR  .
 {
@@ -93,7 +93,7 @@ bool T_QFile::QFile_Open( const wxChar *filename, wxFile::OpenMode mode)
 //     dwLastError = GetLastError();  // added 2003-12-15
 //   }
 //  else
-   { _tcsncpy( sz512PathAndName, filename, 512 );
+   { sz512PathAndName = filename;
 //     fOpened = true;
    }
   return File.IsOpened();
@@ -360,7 +360,7 @@ long T_QFile::QFile_Seek( long offset, int fromwhere)
 
 
 /***************************************************************************/
-bool T_QFile::QFile_Create( const wxChar *filename, int attrib)
+bool T_QFile::QFile_Create( const wxString filename, int attrib)
   // Creates a new file (or truncates existing). Parameters similar to _rtl_creat .
 {
 //  dwLastError = 0;       // no error yet
@@ -373,7 +373,7 @@ bool T_QFile::QFile_Create( const wxChar *filename, int attrib)
 //     dwLastError = GetLastError();  // added 2003-12-15
 //   }
 //  else
-   { _tcsncpy( sz512PathAndName, filename, 512 );
+   { sz512PathAndName = filename;
 //     fOpened = true;
    }
   return File.IsOpened();

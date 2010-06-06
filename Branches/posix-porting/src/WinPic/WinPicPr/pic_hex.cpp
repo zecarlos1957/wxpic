@@ -38,12 +38,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <Wx/Appl.h>       // APPL_ShowMsg(), etc
+#include "../../Wx/Appl.h" // APPL_ShowMsg(), etc
 #include "pic_prg.h"   // some infos in PIC_dev_param are required here !
-#include "LoadHex.H"   // newer, "universal" routine to load hex files (also for dsPIC)
+#include "loadhex.h"   // newer, "universal" routine to load hex files (also for dsPIC)
 
 #define _I_AM_PIC_HEX_ 1
-#include "PIC_HEX.h"
+#include "pic_hex.h"
 
 #ifndef false
  #define false 0
@@ -836,19 +836,18 @@ extern "C" void PIC_HEX_EnterByteInBuffer(   // callback for 'load file'..
 /***************************************************************************/
 int PIC_HEX_LoadFile(const wxChar *fname )  // Loads a Microchip hex file
 {
- wxChar szErrorMsg[256];
- int  i32ParserErrorInLine;
+  int  i32ParserErrorInLine;
   PicHex_i32ErrorInLine = 0;
   PicHex_i32FirstIgnoredAddress = -1;
   PicHex_i32LastIgnoredAddress = -1;
   PicHex_i32CountIgnoredLocations = 0;
-  szErrorMsg[0]=0;
+  wxString szErrorMsg;
   i32ParserErrorInLine = LoadHexFile( fname,
                   (T_HexLoadCallback)PIC_HEX_EnterByteInBuffer,
                    szErrorMsg );
   if( PicHex_i32CountIgnoredLocations>0 )
    {
-    _stprintf(szErrorMsg, _("LoadHex: Ignored %ld location%c at addr 0x%06lX...0x%06lX ."),
+    szErrorMsg = wxString::Format( _("LoadHex: Ignored %ld location%c at addr 0x%06lX...0x%06lX ."),
              (long)PicHex_i32CountIgnoredLocations,
              (char)(PicHex_i32CountIgnoredLocations==1)?' ':'s',
              (long)PicHex_i32FirstIgnoredAddress,
@@ -863,7 +862,7 @@ int PIC_HEX_LoadFile(const wxChar *fname )  // Loads a Microchip hex file
       }
      else // no ERROR, but there may be funny stuff in the HEX file
       {   //  (for example, placed there by the SCC-compiler) ...
-        if( szErrorMsg[0]>32 )
+        if( not szErrorMsg.IsEmpty())
          { APPL_ShowMsg( APPL_CALLER_PIC_HEX,0, szErrorMsg );
          }
       }
@@ -930,13 +929,13 @@ static void PIC_HEX_DumpHexRecords(FILE *fp, uint32_t *buf, int address, int nw)
 
 
 /***************************************************************************/
-int PIC_HEX_DumpHexFile(const wxChar *fname )
+int PIC_HEX_DumpHexFile(const wxString fname )
   // Dumps buffers in Microchip HEX format.
 {
  FILE *fp;
 // int  iBufNr;
 
-  if ( (fp = _tfopen(fname, wxT("w"))) == NULL )
+  if ( (fp = fopen(fname.c_str(), "w")) == NULL )
    {
        return -1;
    }

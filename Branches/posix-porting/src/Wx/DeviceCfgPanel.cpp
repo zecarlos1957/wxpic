@@ -12,7 +12,7 @@
 
 #include <WinPic/WinPicPr/Config.h>
 #include <WinPic/WinPicPr/pic_prg.h>
-#include <WinPic/WinPicPr/PIC_HEX.h>
+#include <WinPic/WinPicPr/pic_hex.h>
 
 enum
 {

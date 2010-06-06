@@ -28,12 +28,12 @@
 #include <wx/stdpaths.h>
 #include <wx/settings.h>
 
-#include <WinPic/WinPicPr/PIC_HEX.h>
+#include <WinPic/WinPicPr/pic_hex.h>
 #include <WinPic/WinPicPr/pic_hw.h>
 #include <WinPic/WinPicPr/pic_prg.h>
 #include <WinPic/WinPicPr/dspic_prg.h>
 #include <WinPic/WinPicPr/pic16f7xx_prg.h>
-#include <WinPic/WinPicPr/PIC10F_PRG.h>
+#include <WinPic/WinPicPr/pic10f_prg.h>
 #include <WinPic/WinPicPr/pic18f_prg.h>
 #include <WinPic/WinPicPr/Config.h>
 
