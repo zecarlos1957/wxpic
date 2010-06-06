@@ -184,7 +184,6 @@ bool TOptionPanel::InterfaceSpeedTest(void)
     double dblDelayTimes_ns[N_TEST_LOOPS];
     bool fDataOutState;
     wxString sz255Msg;
-    wxChar *cp;
     int64_t i64PTFreq, i64PTStart, i64PTStop;
     double dblLoopTime_ns;
 
@@ -208,7 +207,7 @@ bool TOptionPanel::InterfaceSpeedTest(void)
         sz255Msg = wxString::Format(_("SetClockAndData takes %d ns per call ."), dblLoopTime_ns);
         if (dblLoopTime_ns > 1e6 )
         {
-            _tcscat( sz255Msg, _(" THIS IS INCREDIBLY SLOW ! ") );
+            sz255Msg << _(" THIS IS INCREDIBLY SLOW ! ");
             // One example: A USB<->RS-232 adapter by "Belkin", which identified
             //  itself as "Prolific USB-Serial Adapter" in the system control,
             //  required almost 5 ms (FIVE MILLISECONDS!!!!) for a Clock-and-Data-Cycle.
@@ -280,20 +279,16 @@ bool TOptionPanel::InterfaceSpeedTest(void)
     MainFrame::TheMainFrame->aInterfaceTab->UpdateInterfaceTestDisplay();
 
     // Present the results...
-    _tcscpy( sz255Msg, _("Response times L->H : ") );
-    cp = sz255Msg+_tcslen(sz255Msg);
+    sz255Msg = _("Response times L->H : ");
     for (iTestLoops=0; iTestLoops<N_TEST_LOOPS; iTestLoops+=2)
     {
-        _stprintf( cp, _(" %dns"), dblDelayTimes_ns[iTestLoops] );
-        cp += _tcslen(cp);
+        sz255Msg << wxString::Format( _(" %dns"), dblDelayTimes_ns[iTestLoops] );
     }
     APPL_ShowMsg(APPL_CALLER_MAIN,0, sz255Msg );
-    _tcscpy( sz255Msg, _("Response times H->L : ") );
-    cp = sz255Msg+_tcslen(sz255Msg);
+    sz255Msg = _("Response times H->L : ");
     for (iTestLoops=1; iTestLoops<N_TEST_LOOPS; iTestLoops+=2)
     {
-        _stprintf( cp, _(" %lgns"), dblDelayTimes_ns[iTestLoops] );
-        cp += _tcslen(cp);
+        sz255Msg << wxString::Format(_(" %lgns"), dblDelayTimes_ns[iTestLoops] );
     }
     APPL_ShowMsg(APPL_CALLER_MAIN,0, sz255Msg );
 

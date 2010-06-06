@@ -31,7 +31,6 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
 THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
-#ifdef __WXMSW__
 
 #include <stdio.h>     // don't panic.. just required for sprintf !
 #include <wx/string.h>
@@ -40,9 +39,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
 
-
+#ifdef __WXMSW__
 #include <windows.h>
 #include "../../WinRing0/OlsApiInit.h"  //-- WinRing0 Header
+#endif
 
 #include "config.h"    // permanently saved Config-structure
 #include "../../Wx/Appl.h"      // call the APPLication to display message strings
@@ -3456,5 +3456,4 @@ void UpdateLedsForResult(bool fOk)
 }
 
 
-#endif //only for __WXMSW__ for now
 /* EOF <pic_hw.cpp> */

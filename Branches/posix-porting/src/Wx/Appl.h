@@ -7,6 +7,7 @@
 //#include <tchar.h>
 #include "CommandOption.h"
 
+#include "time.h"
 //#ifdef __cplusplus
 // #define CPROT extern "C"
 //#else
@@ -88,4 +89,6 @@ wxChar       *DupIso8859_1_TChar  (const char* psz);
 #define _tcscpy wxStrcpy
 #define _stprintf wxSprintf
 #endif
+void QueryPerformanceCounter( int64_t* cnt );
+void QueryPerformanceFrequency( int64_t* frq );
 #endif

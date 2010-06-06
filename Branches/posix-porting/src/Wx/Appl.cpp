@@ -182,3 +182,19 @@ wxChar *DupIso8859_1_TChar (const char* psz)
     return strdup(psz);
 #endif
 }
+
+#ifndef __WXMSW__
+void QueryPerformanceCounter( int64_t* cnt ){
+	timespec clk;
+	clock_gettime( CLOCK_MONOTONIC, &clk );
+	*cnt = clk.tv_nsec;
+	}
+
+void QueryPerformanceFrequency( int64_t* frq ){
+    timespec start, end;
+    clock_gettime( CLOCK_MONOTONIC, &start ) ;
+    usleep(1000);
+    clock_gettime( CLOCK_MONOTONIC, &end ) ;
+	*frq = (end.tv_nsec - start.tv_nsec)*1000 ;
+	}
+#endif

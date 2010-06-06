@@ -53,6 +53,7 @@
 #include "pic_hw.h"
 #include "pic18f_prg.h"
 #include "../../Wx/Appl.h"
+#include <wx/datetime.h>
 
 #define PIC18F_CORE_INSTRUCTION              0
 #define PIC18F_SHIFT_OUT_TABLAT_REGISTER     2
@@ -223,14 +224,14 @@ void PIC18F_ConnectToTarget(const char * message)
 
   PIC_HW_ProgMode();
 
-  dwStartOfOperation = GetTickCount();
+  dwStartOfOperation = wxDateTime::Now().GetTicks();
 }
 
 void PIC18F_DisconnectFromTarget(const char * message)
 {
 
 #ifndef COMPILING_WINPIC
-  uint32_t dwEndOfOperation = GetTickCount();
+  uint32_t dwEndOfOperation = wxDateTime::Now().GetTicks();
   fprintf(stderr, "%s (took %.3f sec)\n", message, (dwEndOfOperation - dwStartOfOperation) / 1000.0);
 #endif
 
