@@ -2,7 +2,7 @@
 #include "MainFrame.h"
 #include "Appl.h"
 #include "Language.h"
-#include <Res/Resource.h>
+#include "../Res/Resource.h"
 
 //(*InternalHeaders(TInterfacePanel)
 #include <wx/intl.h>
@@ -12,8 +12,8 @@
 #include <wx/msgdlg.h>
 #include <wx/stdpaths.h>
 
-#include <WinPic/WinPicPr/Config.h>
-#include <WinPic/WinPicPr/pic_hw.h>
+#include "../WinPic/WinPicPr/config.h"
+#include "../WinPic/WinPicPr/pic_hw.h"
 
 //(*IdInit(TInterfacePanel)
 const long TInterfacePanel::ID_BUTTON7 = wxNewId();
@@ -767,9 +767,9 @@ void TInterfacePanel::onInitInterfButtonClick(wxCommandEvent& event)
     iInterfaceType = aIntfItemIndex2InterfaceType[iInterfaceType];
 
 //    if ( iInterfaceType == PIC_INTF_TYPE_PLUGIN_DLL )
-//        _tcsncpy( Config.sz80InterfacePluginDLL,   aCustomDefFileText->GetValue().c_str(), 80 );
+//        wxStrncpy( Config.sz80InterfacePluginDLL,   aCustomDefFileText->GetValue().c_str(), 80 );
 //    else
-        _tcsncpy( Config.sz255InterfaceSupportFile, aCustomDefFileText->GetValue().c_str(), 80 );
+        Config.sz255InterfaceSupportFile = aCustomDefFileText->GetValue();
     PIC_HW_SetInterfaceType( iInterfaceType );
     UpdateInterfaceType(PIC_HW_interface.type);
     TestTheInterface();
@@ -931,9 +931,8 @@ void TInterfacePanel::onInterfaceTypeChoiceSelect(wxCommandEvent& event)
 //  iInterfaceType = Combo_InterfaceType->ItemIndex;
     if (iInterfaceType<0) iInterfaceType=0;
     iInterfaceType = aIntfItemIndex2InterfaceType[iInterfaceType];
-    _tcsncpy(
 //        (iInterfaceType == PIC_INTF_TYPE_PLUGIN_DLL) ? Config.sz80InterfacePluginDLL :
-        Config.sz255InterfaceSupportFile, aCustomDefFileText->GetValue().c_str(), 256 );
+    Config.sz255InterfaceSupportFile = aCustomDefFileText->GetValue();
 //  if( iInterfaceType == PIC_INTF_TYPE_PLUGIN_DLL )
 //       strncpy( Config.sz80InterfacePluginDLL,   Ed_CustomInterfaceDefFile->Text.c_str(), 80 );
 //  else strncpy( Config.sz255InterfaceSupportFile, Ed_CustomInterfaceDefFile->Text.c_str(), 256 );
@@ -1124,9 +1123,8 @@ void TInterfacePanel::onCustomInterfSelectButtonClick(wxCommandEvent& event)
     {
         Filename.Assign(MainFrame::TheMainFrame->aFileDialog->GetPath());
 //    Ed_CustomInterfaceDefFile->Text = ExtractFileName(OpenDialog->FileName);
-        _tcsncpy(
 //            (interface_type == PIC_INTF_TYPE_PLUGIN_DLL)?Config.sz80InterfacePluginDLL:
-            Config.sz255InterfaceSupportFile, Filename.GetFullPath(), 256);
+        Config.sz255InterfaceSupportFile = Filename.GetFullPath();
 //    if( interface_type == PIC_INTF_TYPE_PLUGIN_DLL )
 //         strncpy( Config.sz80InterfacePluginDLL,   Ed_CustomInterfaceDefFile->Text.c_str(), 80 );
 //    else strncpy( Config.sz255InterfaceSupportFile, Ed_CustomInterfaceDefFile->Text.c_str(), 256 );

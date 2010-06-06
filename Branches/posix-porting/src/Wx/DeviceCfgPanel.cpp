@@ -10,9 +10,9 @@
 #include <wx/settings.h>
 #include <wx/msgdlg.h>
 
-#include <WinPic/WinPicPr/Config.h>
-#include <WinPic/WinPicPr/pic_prg.h>
-#include <WinPic/WinPicPr/pic_hex.h>
+#include "../WinPic/WinPicPr/config.h"
+#include "../WinPic/WinPicPr/pic_prg.h"
+#include "../WinPic/WinPicPr/pic_hex.h"
 
 enum
 {
@@ -456,8 +456,8 @@ void TDeviceCfgPanel::ApplyConfigBitGrid(void)
         pConfigBitInfo = m_pConfigBitGridRowNumber_to_ConfigBitInfoPtr[iGridRow];
         if ( pConfigBitInfo ) // can only "handle" this grid line with this device-specific config-bit info...
         {
-//        _tcsncpy(str80, SG_ConfigBits->Cells[configbitsCOL_VALUE][iGridRow].c_str(), 80 );
-            _tcsncpy(str80, aDevCfgGrid->GetCellValue(iGridRow, configbitsCOL_VALUE).c_str(), 80 );
+//        wxStrncpy(str80, SG_ConfigBits->Cells[configbitsCOL_VALUE][iGridRow].c_str(), 80 );
+            wxStrncpy(str80, aDevCfgGrid->GetCellValue(iGridRow, configbitsCOL_VALUE).c_str(), 80 );
             dwConfigWordAddress = pConfigBitInfo->dwAddress;  // target address (example: 0x002007 for PIC16Fxx)
             dwConfigMask   = pConfigBitInfo->dwBitmask;    // bitmask (usually only ONE bit set in this value)
             // Try to convert the text from the COMBO BOX of this config bit group
@@ -862,7 +862,7 @@ void TDeviceCfgPanel::onDevCfgGridCellChange(wxGridEvent& event)
 //        CB_ConfigBits->Items->Strings[CB_ConfigBits->ItemIndex];
 
     // .. and check the ADDRESS of this config bit, to mark this buffer entry as "used" :
-//  _tcsncpy(str80, SG_ConfigBits->Cells[configbitsCOL_ADDR][iGridRow].c_str(), 80 );
+//  wxStrncpy(str80, SG_ConfigBits->Cells[configbitsCOL_ADDR][iGridRow].c_str(), 80 );
 //  cp = str80;
     if (aDevCfgGrid->GetCellValue(iGridRow, configbitsCOL_ADDR).ToLong( (long*)&dwAddr, 16))
 //  if( PicHex_GetHexValueFromSource( &cp, &dwAddr ) )  // parsed a valid address ?

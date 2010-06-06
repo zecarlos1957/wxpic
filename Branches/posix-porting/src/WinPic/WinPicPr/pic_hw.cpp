@@ -1788,7 +1788,7 @@ bool PicHw_ReadCustomProgrammerDefsFromIniFile(const wxChar *pszFileName, T_PicH
 //     // Arrived here: Library exists and could be loaded.
 //     // Save the name of the plugin as info for the plugin (it may need it,
 //     //  to find out if someone has RENAMED the original file name) .
-//     _tcsncpy( PHWInfo.sz255PluginFileName, pszPluginFileName, 255 );
+//     wxStrncpy( PHWInfo.sz255PluginFileName, pszPluginFileName, 255 );
 //
 //     // Also save the "DLL handle", because the plugin may need to know this
 //     // to access resources in its own file (see long story in PHW_framework1).

@@ -691,7 +691,6 @@ bool PIC_PRG_Erase(int iEraseOptions)
 {
     int i;
     uint16_t w;
-    wxChar sz80Temp[81];
     bool fIsProtected;
     bool fResult = true;
 
@@ -1339,7 +1338,7 @@ bool PIC_PRG_Program16FXX(   // Also used for 12FXX (but can't change the name t
         }
         if ( PIC_PRG_iSimulateOnly )
         {
-            Sleep(10);
+            wxMicroSleep(10);
         }
         else
         {
@@ -1480,7 +1479,7 @@ bool PIC_PRG_ProgramCode16F630(
         }
         if ( PIC_PRG_iSimulateOnly )
         {
-            Sleep(10);
+            wxMicroSleep(10);
         }
         else
         {
@@ -1555,7 +1554,7 @@ bool PIC_PRG_Program16F87X(
         }
         else // PIC_PRG_iSimulateOnly
         {
-            Sleep(10);
+            wxMicroSleep(10);
         }
         APPL_ShowProgress( (100*i) / n );
         if (APPL_iUserBreakFlag)
@@ -1730,7 +1729,7 @@ bool PIC_PRG_Program16F7X7(
         }
         if ( PIC_PRG_iSimulateOnly )
         {
-            Sleep(10);
+            wxMicroSleep(10);
         }
         APPL_ShowProgress( (100*iLocationCounter) / n );
         if (APPL_iUserBreakFlag)
@@ -1859,7 +1858,7 @@ bool PIC_PRG_Program16F81X(
         }
         if ( PIC_PRG_iSimulateOnly )
         {
-            Sleep(10);
+            wxMicroSleep(10);
         }
         APPL_ShowProgress( (100*iLocationCounter) / n );
 #if(0)
@@ -2025,7 +2024,7 @@ bool PIC_PRG_ProgramConfigMem_16F81X(
         }
         else //  PIC_PRG_iSimulateOnly
         {
-            Sleep(10);
+            wxMicroSleep(10);
         }
         APPL_ShowProgress( 100 );
     } // end if <program CONFIG WORD ? >
@@ -2125,7 +2124,7 @@ bool PIC_PRG_Program16F87XA(
         }
         if ( PIC_PRG_iSimulateOnly )
         {
-            Sleep(10);
+            wxMicroSleep(10);
         }
         APPL_ShowProgress( (100*iLocationCounter) / n );
     } // end for(iLocationCounter..)
@@ -2273,7 +2272,7 @@ bool PIC_PRG_ProgramConfigMem_16F87XA(
         }
         else //  PIC_PRG_iSimulateOnly
         {
-            Sleep(10);
+            wxMicroSleep(10);
         }
         APPL_ShowProgress( 100 );
     } // end if <program CONFIG WORD ? >
@@ -2388,7 +2387,7 @@ void PIC_PRG_Eprom14ProgCycle(uint16_t w)
 {
     if ( PIC_PRG_iSimulateOnly )
     {
-        Sleep(5);
+        wxMicroSleep(5);
         return;
     }
 
@@ -2840,7 +2839,6 @@ bool PicPrg_Verify(
     uint32_t *pdwTempBuf;
     T_PicBufferInfo * pBufInfo;
     T_PicPrg_ReadWriteFunc *pvReader;
-    wxChar  *cp;
     int  nGoodConfigMemLocs = 0;
     int  n_errors = 0;
 
@@ -3084,7 +3082,7 @@ bool PIC_PRG_ReadAll(
     uint16_t w, wFlags;
     bool fResult = true;
     bool not_blank, memrange_blank;
-    wxChar sz80Temp[81];
+    wxString sz80Temp;
     uint32_t dwVerifyMask = 0;
     uint32_t dwTargetAddress = 0;
     uint32_t dw32TempBuffer[32];

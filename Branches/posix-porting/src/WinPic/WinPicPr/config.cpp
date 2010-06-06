@@ -22,7 +22,7 @@ void CFG_Init(void)
   Config.pic_interface_type = PIC_INTF_TYPE_COM84;
   Config.iComPortNr = 1;    // enter your favorite COM port number here ;-)
   Config.iComIoAddress = 0; // do NOT use a non-standard I/O address for the COM port
-  Config.sz40DeviceName = wxT("PIC??????");
+  Config.sz40DeviceName = "PIC??????";
   Config.dwUnknownCodeMemorySize = 4096;  // used for PIC_DEV_TYPE_UNKNOWN..
   Config.dwUnknownDataMemorySize = 256;   // ..for a trial to program exotic types
 
@@ -94,7 +94,8 @@ void CFG_Load(wxConfigBase &IniFile) /* Loads configuration data from a file */
   // Since the device TYPE NUMBERS keep changing and never had a useful meaning,
   //       a full PIC DEVICE NAME is saved as a STRING in the ini file since Nov. 2002 .
   IniFile.Read(wxT("DeviceType"), &s, wxEmptyString );
-  Config.sz40DeviceName = s;
+  strncpy( Config.sz40DeviceName, s.mb_str(), 40 );
+  //Config.sz40DeviceName = s;
   IniFile.Read(wxT("HasFlashMemory"),  &Config.iUnknownDevHasFlashMemory, Config.iUnknownDevHasFlashMemory);
   IniFile.Read(wxT("UnknownCodeSize"), (long*)&Config.dwUnknownCodeMemorySize,   Config.dwUnknownCodeMemorySize );
   IniFile.Read(wxT("UnknownDataSize"), (long*)&Config.dwUnknownDataMemorySize, Config.dwUnknownDataMemorySize );

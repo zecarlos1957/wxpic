@@ -31,8 +31,8 @@
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 
-#include <stdio.h>      // don't panic.. just required for sprintf !
-//#include <stdlib.h> //required for itoa
+//#include <stdio.h>      // don't panic.. just required for sprintf !
+#include <stdlib.h>     //required for itoa
 
 #define _I_AM_DEVICES_
 #include "devices.h"   // header for THIS module
@@ -2112,7 +2112,9 @@ int PicDev_StringToAlgorithmCode(wxString pszAlgorithmName)
 	if (pszAlgorithmName == wxT("MULTI_WORD"))			return PIC_ALGO_MULTI_WORD;
 	if (pszAlgorithmName == wxT("NONE"))					return PIC_ALGO_UNKNOWN;
 
-	APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, wxString::Format( _("Unknown algorithm name : \"%hs\" !"), pszAlgorithmName) );
+	wxString s = _("Unknown algorithm name : \"") +  pszAlgorithmName + wxT("\" !");
+	APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, s);
+
 	return  PIC_ALGO_UNKNOWN;
 } // end PicDev_StringToAlgorithmCode()
 
@@ -2763,7 +2765,7 @@ bool PicDev_LoadPicDeviceDefinitionFromFile(
     //  Open the file to see what's in it ...
     if ( ! myQFile.QFile_Open( PicDev_GetDeviceFileName(), QFILE_O_RDONLY ) )
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("ERROR: Cannot find %s ."), PicDev_GetDeviceFileName() );
+        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,_("ERROR: Cannot find ")+PicDev_GetDeviceFileName() );
         return false;
     }
 
@@ -2835,8 +2837,9 @@ bool PicDev_LoadPicDeviceDefinitionFromFile(
                 }
                 else if ( strcmp(pszKey, "DeviceInfoFileName")== 0 )
                 {
-                    CopyIso8859_1_TChar(pDevInfo->sz80ConfigRegisterInfoFile, pszValue, 80);
-//                _tcsncpy(pDevInfo->sz80ConfigRegisterInfoFile, pszValue, 80);
+                    CopyIso8859_1_TChar(pDevInfo->sz80ConfigRegisterInfoFile.GetWriteBuf(80), pszValue, 80);
+                    pDevInfo->sz80ConfigRegisterInfoFile.UngetWriteBuf();
+//                wxStrncpy(pDevInfo->sz80ConfigRegisterInfoFile, pszValue, 80);
                 }
                 else if ( strcmp(pszKey, "CodeMemWriteLatchSize")== 0 )
                 {
@@ -3718,8 +3721,6 @@ bool PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo )
     bool table_loaded = false;
 //    wxChar sz355DevFileName[356];
     wxFileName DevFilename;
-    wxChar *cp;
-
 
     // First clear the old "config bit info table" :
     for (i=0;i<PICDEV_MAX_CONFIG_BIT_INFOS;++i)
@@ -3975,8 +3976,8 @@ int PicDev_GetDeviceInfoByName(const char *pszDeviceName,
     {
         iFileTableIndex = i+iCountOfBuiltInDevices;
         APPL_ShowMsg(APPL_CALLER_MAIN,0,
-                     _("Info: Loading definitions for \"%hs\" from %s .") ,
-                     pszDeviceName, PicDev_GetDeviceFileName() );
+                     wxString::Format(_("Info: Loading definitions for \"%hs\" from %s .") ,
+                     pszDeviceName, PicDev_GetDeviceFileName().c_str() ));
         if ( PicDev_LoadPicDeviceDefinitionFromFile(
                     pszDeviceName, // name of a new PIC DEVICE (not a filename!)
                     pDstDeviceInfo, // destination structure (to be filled)
@@ -4104,11 +4105,19 @@ void WriteValue (wxFile &File, const char *Key, const char *Value)
 }
 void WriteIntValue (wxFile &File, const char *Key, int Value)
 {
-    char Buf[10];
-    itoa(Value, Buf, 10);
     File.Write (Key, strlen(Key));
     File.Write ("=", 1);
-    File.Write (Buf, strlen(Buf));
+
+
+    //no itoa on linux
+    //char Buf[10];
+    //itoa(Value, Buf, 10);
+    //File.Write (Buf, strlen(Buf));
+
+    wxString s;
+    s << Value;
+    File.Write ( s );
+
     File.Write ("\n", 1);
 }
 void WriteHeader (wxFile &File, const char *Header)
@@ -4129,7 +4138,7 @@ void PicDev_DumpDeviceListToFile( const wxChar *pszDumpFileName )
     wxFileName DumpFilename(wxStandardPaths::Get().GetExecutablePath());
     DumpFilename.SetFullName(pszDumpFileName);
     wxRemoveFile( DumpFilename.GetFullPath() );  // make sure we write into a "clean" file. No old scrap !
-    APPL_ShowMsg(APPL_CALLER_MAIN,0,_("Device list dumped to \"%s\""),DumpFilename.GetFullPath());
+    APPL_ShowMsg(APPL_CALLER_MAIN,0,_("Device list dumped to \"") + DumpFilename.GetFullPath() + wxT("%s\""));
     wxFile IniFile(DumpFilename.GetFullPath(), wxFile::write);
     WriteHeader(IniFile, "Info");
     WriteValue(IniFile,"i1","Dump of built-in device info table");

@@ -5,7 +5,7 @@
 
 #include "CommandOption.h"
 #include "Appl.h"
-#include <WinPic/WinPicPr/Config.h>
+#include "../WinPic/WinPicPr/config.h"
 #include <wx/string.h>
 
 //-- Definition of the single instance
@@ -43,27 +43,27 @@ void TCommandOption::Load (const wxApp *App)
             iCmdArgumentIndex < App->argc;
             ++iCmdArgumentIndex)
     {
-        _tcsncpy(sz255Command, App->argv[iCmdArgumentIndex], 255 );
+        wxStrncpy(sz255Command, App->argv[iCmdArgumentIndex], 255 );
         APPL_ShowMsg( APPL_CALLER_MAIN, 0, _("Parsing argument from command line : \"%s\""), sz255Command );
         cp = sz255Command;
-        if (_tcsncmp(cp,wxT("/nodelay"),8)==0)
+        if (wxStrncmp(cp,wxT("/nodelay"),8)==0)
         {
             WinPic_fCommandLineOption_NoDelay = true;
         }
-        else if (_tcsncmp(cp,wxT("/tm="),4)==0) // "/tm=" = test mode
+        else if (wxStrncmp(cp,wxT("/tm="),4)==0) // "/tm=" = test mode
         {
             cp+=4;
             WinPic_iTestMode = HexStringToLongint(4, cp);
             if ( WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
                 APPL_LogEvent( _("ParseCommandLine: GUI-Speed-Test enabled") );
         }
-        else if (_tcsncmp(cp,wxT("/overwrite"),10)==0)
+        else if (wxStrncmp(cp,wxT("/overwrite"),10)==0)
         {
             // "/overwrite"  =  "don't ask silly questions if an already existing file
             //                   would be overwritten"
             WinPic_fCommandLineOption_QueryBeforeOverwritingFiles = false;
         }
-        else if (_tcsncmp(cp,wxT("/device="),8)==0)
+        else if (wxStrncmp(cp,wxT("/device="),8)==0)
         {
             cp+=8;
             // The configuration has been loaded EARLIER,
@@ -75,24 +75,24 @@ void TCommandOption::Load (const wxApp *App)
             }
             strncpy(Config.sz40DeviceName, Device, 40);
         }
-        else if (_tcsncmp(cp,wxT("/config_word="),13)==0)
+        else if (wxStrncmp(cp,wxT("/config_word="),13)==0)
         {
             cp+=13;
             WinPic_i32CmdLineOption_OverrideConfigWord = HexStringToLongint(4, cp);
         }
-        else if (_tcsncmp(cp,wxT("/e"),2)==0)
+        else if (wxStrncmp(cp,wxT("/e"),2)==0)
         {
             // /e = "erase"
             WinPic_fCommandLineOption_Erase   = true;
             WinPic_fCommandLineMode           = true;
         }
-        else if (_tcsncmp(cp,wxT("/p"),2)==0)
+        else if (wxStrncmp(cp,wxT("/p"),2)==0)
         {
             // /p = "program"
             WinPic_fCommandLineOption_Program = true;
             WinPic_fCommandLineMode           = true;
         }
-        else if (_tcsncmp(cp,wxT("/q"),2)==0)
+        else if (wxStrncmp(cp,wxT("/q"),2)==0)
         {
             // /q = "quit"
             WinPic_fCommandLineOption_Quit    = true;
@@ -103,13 +103,13 @@ void TCommandOption::Load (const wxApp *App)
                 WinPic_i200msToQuit = (cp[3]-wxT('0')) * 5;
             }
         }
-        else if (_tcsncmp(cp,wxT("/r"),2)==0)
+        else if (wxStrncmp(cp,wxT("/r"),2)==0)
         {
             // /r = "read"
             WinPic_fCommandLineOption_Read    = true;
             WinPic_fCommandLineMode           = true;
         }
-        else if (_tcsncmp(cp,wxT("/v"),2)==0)
+        else if (wxStrncmp(cp,wxT("/v"),2)==0)
         {
             // /v = "verify"
             WinPic_fCommandLineOption_Verify  = true;
@@ -117,7 +117,7 @@ void TCommandOption::Load (const wxApp *App)
         }
         else // none of these commands, guess the string is a FILENAME..
         {
-            _tcscpy( Config.sz255HexFileName, cp );
+            Config.sz255HexFileName = wxString(cp);
             // Since 2004-01-09:  If the filename was the *ONLY* parameter,
             //                    automatically set the 'LOAD' flag
             //                    to simplify drag-and-drop on WinPic's icon.

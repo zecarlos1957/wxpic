@@ -131,7 +131,6 @@
 					<Add option="-D__WXDEBUG__" />
 					<Add option="-DUNICODE" />
 					<Add option="-D_UNICODE" />
-					<Add option="-DUSE_SVN_VERSION" />
 					<Add option="-DCOMPILING_WINPIC" />
 				</Compiler>
 				<Linker>

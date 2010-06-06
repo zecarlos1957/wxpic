@@ -32,7 +32,7 @@ typedef struct  // T_CONFIG structure, used for var Config .
   int iLptIoAddress; // can be modified for LPT3, LPT4 etc.  0="standard" value
 //  int iWhichPortAccessDriver;   // since 2005-11, CFG_PORTACCESS_...
 
-  wxString sz40DeviceName; // like PIC16F628 (complete name, used in combo and ini file)
+  char *sz40DeviceName; // like PIC16F628 (complete name, used in combo and ini file)
   int pic_interface_type;  // PIC_INTF_TYPE_COM84 for example
   int iExtraRdDelay_us;    // extra read-delay before sampling the DATA-IN line
   int iExtraClkDelay_us;   // extra lengthening of the clock pulses

@@ -49,7 +49,7 @@ void APPL_LogEvent( const wxChar * pszFormat, ... )  // logs an "event" with cur
   // Show the TIME of this event :
   wxDateTime Now = wxDateTime::UNow();
   _stprintf(sz500, _("%02d:%02d:%02d.%02d "), Now.GetHour(), Now.GetMinute(), Now.GetSecond(), Now.GetMillisecond());
-  cp = sz500+_tcslen(sz500);
+  cp = sz500+wxStrlen(sz500);
 
   // Print to string and append to edit control
   va_start(arglist, pszFormat);

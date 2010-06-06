@@ -2,7 +2,7 @@
 #include "MainFrame.h"
 #include "Appl.h"
 #include "Language.h"
-#include <Res/Resource.h>
+#include "../Res/Resource.h"
 
 //(*InternalHeaders(TConfigMemoryPanel)
 #include <wx/intl.h>
@@ -10,7 +10,7 @@
 //*)
 #include <wx/settings.h>
 
-#include <WinPic/WinPicPr/pic_hex.h>
+#include "../WinPic/WinPicPr/pic_hex.h"
 
 //(*IdInit(TConfigMemoryPanel)
 const long TConfigMemoryPanel::ID_CFG_MEM_GRID = wxNewId();
@@ -156,9 +156,9 @@ void TConfigMemoryPanel::ApplyIdLocationDisplay(void)
     int RowCount = aCfgMemGrid->GetNumberRows();
     for (i=0; i<RowCount; ++i)
     {
-        _tcsncpy(sz80Temp, aCfgMemGrid->GetRowLabelValue(i).c_str(), 80);
+        wxStrncpy(sz80Temp, aCfgMemGrid->GetRowLabelValue(i).c_str(), 80);
         dwAddress = HexStringToLongint(6,sz80Temp);
-        _tcsncpy(sz80Temp, aCfgMemGrid->GetCellValue(i,configMemVALUE).c_str(), 80);
+        wxStrncpy(sz80Temp, aCfgMemGrid->GetCellValue(i,configMemVALUE).c_str(), 80);
         w=0;
         ok=true;
         cp=sz80Temp;

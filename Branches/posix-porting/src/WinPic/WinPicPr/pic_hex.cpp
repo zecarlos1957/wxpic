@@ -935,7 +935,7 @@ int PIC_HEX_DumpHexFile(const wxString fname )
  FILE *fp;
 // int  iBufNr;
 
-  if ( (fp = fopen(fname.c_str(), "w")) == NULL )
+  if ( (fp = fopen(fname.ToAscii(), "w")) == NULL )
    {
        return -1;
    }

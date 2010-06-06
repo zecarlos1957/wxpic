@@ -378,7 +378,7 @@ void TOptionPanel::onProgOptionChanged(wxCommandEvent& event)
     Config.iClearBufBeforeLoad = aClrBeforeLoadChk->GetValue();
     Config.iNeedPowerBeforeRaisingMCLR = aVddBeforeMCLRChk->GetValue();  // read a long story in PIC_HW_ProgMode() !
 
-    _tcsncpy( Config.sz255MplabDevDir, aMplabDevDirEdit->GetValue().c_str(), 255 );
+    wxStrncpy( Config.sz255MplabDevDir, aMplabDevDirEdit->GetValue().c_str(), 255 );
 
     // Since 2005-11-05, the port access driver can be selected ...
     //  but changing this will become effective after restarting WinPic only !
@@ -544,7 +544,7 @@ void TOptionPanel::updateFromMPLabDevText(void)
 
 void TOptionPanel::updateMPLabDevDir (const wxString &pDirPath)
 {
-    _tcsncpy( Config.sz255MplabDevDir, pDirPath.c_str(), 255 );
+    wxStrncpy( Config.sz255MplabDevDir, pDirPath.c_str(), 255 );
     TDeviceCfgPanel::SetDevice(PIC_DeviceInfo.sz40DeviceName);
 }
 
