@@ -32,7 +32,7 @@
 #include <WinPic/WinPicPr/pic_hw.h>
 #include <WinPic/WinPicPr/pic_prg.h>
 #include <WinPic/WinPicPr/dspic_prg.h>
-#include <WinPic/WinPicPr/pic16f7xx_prg.h>
+#include <WinPic/WinPicPr/pic16f7x_prg.h>
 #include <WinPic/WinPicPr/pic10f_prg.h>
 #include <WinPic/WinPicPr/pic18f_prg.h>
 #include <WinPic/WinPicPr/Config.h>
@@ -1225,7 +1225,7 @@ bool MainFrame::RunHexOpenDialog(void)
     aFileDialog->SetWindowStyle(wxFD_OPEN | wxFD_FILE_MUST_EXIST);
     if ( aFileDialog->ShowModal() == wxID_OK)
     {
-        _tcscpy( Config.sz255HexFileName, aFileDialog->GetPath().c_str() );
+        Config.sz255HexFileName = aFileDialog->GetPath();
         Config_changed |= APPL_CALLER_SAVE_CFG;
         return true;
     }

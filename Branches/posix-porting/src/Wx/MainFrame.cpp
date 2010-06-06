@@ -553,7 +553,7 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
                             else
                             {
                                 APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-                                              _("Loaded file \"%s\" through command line ."), Config.sz255HexFileName );
+                                              _("Loaded file \"%s\" through command line ."), Config.sz255HexFileName.c_str() );
                             }
                             CommandOption.WinPic_fCommandLineOption_Load = false; // done.
                         } // end if( WinPic_fCommandLineOption_Load )
@@ -869,7 +869,7 @@ void MainFrame::LoadMRF(int iMRFindex)
     wxString s = GetMRFname(iMRFindex);
     if (s != wxT(""))
     {
-        _tcscpy( Config.sz255HexFileName, s.c_str() );
+        Config.sz255HexFileName = s;
         Config_changed |= APPL_CALLER_SAVE_CFG;
         if ( LoadFileAndProgramPic( s.c_str(), false/*load only, don't program*/ ) )
         {
