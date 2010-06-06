@@ -12,6 +12,7 @@
 #include <wx/textctrl.h>
 #include <wx/dcclient.h>
 #include <vector>
+#include "Appl.h"
 
 #define MAX_HEX_STRING_LENGTH 8
 

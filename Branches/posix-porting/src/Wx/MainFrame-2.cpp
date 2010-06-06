@@ -28,14 +28,14 @@
 #include <wx/stdpaths.h>
 #include <wx/settings.h>
 
-#include <WinPic/WinPicPr/pic_hex.h>
-#include <WinPic/WinPicPr/pic_hw.h>
-#include <WinPic/WinPicPr/pic_prg.h>
-#include <WinPic/WinPicPr/dspic_prg.h>
-#include <WinPic/WinPicPr/pic16f7x_prg.h>
-#include <WinPic/WinPicPr/pic10f_prg.h>
-#include <WinPic/WinPicPr/pic18f_prg.h>
-#include <WinPic/WinPicPr/Config.h>
+#include "../WinPic/WinPicPr/pic_hex.h"
+#include "../WinPic/WinPicPr/pic_hw.h"
+#include "../WinPic/WinPicPr/pic_prg.h"
+#include "../WinPic/WinPicPr/dspic_prg.h"
+#include "../WinPic/WinPicPr/pic16f7x_prg.h"
+#include "../WinPic/WinPicPr/pic10f_prg.h"
+#include "../WinPic/WinPicPr/pic18f_prg.h"
+#include "../WinPic/WinPicPr/config.h"
 
 #define MAX_MESSAGES_IN_LOG     500
 
@@ -295,7 +295,7 @@ bool MainFrame::TestDelayRoutine(void)
     wxDateTime DateTime;
     wxChar sz80[82];
     float fltMeasuredDelay;
-    LONGLONG i64;
+    int64_t i64;
 
     // Test function of the delay routine :
     DateTime = wxDateTime::UNow();
@@ -306,7 +306,7 @@ bool MainFrame::TestDelayRoutine(void)
     if (i32EndTime<i32StartTime)
         i32EndTime+= 60 * 1000;  // minute wrap
     fltMeasuredDelay = (float)(i32EndTime-i32StartTime) / 1000.0;
-    QueryPerformanceFrequency( (LARGE_INTEGER *) &i64 );
+    QueryPerformanceFrequency( (int64_t *) &i64 );
     _stprintf(sz80, _("Testing: delay(500ms) took %.2f seconds, timer_freq=%.4f MHz ..."),
               fltMeasuredDelay,  (float)i64 * 1E-6 );
     // "gettime()" may have a resolution of only 0.1 seconds, so be tolerant :

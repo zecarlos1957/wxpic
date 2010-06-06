@@ -225,7 +225,7 @@ TInterfacePanel::~TInterfacePanel()
 void TInterfacePanel::UpdateInterfaceType(int interface_type)
 {
     int i;
-    wxChar str80[81];
+    wxString str80;
     ++(MainFrame::TheMainFrame->m_Updating);
 
     // Set the Items in the interface selection combo (TComboBox.Items = TStrings)
@@ -370,7 +370,7 @@ void TInterfacePanel::UpdateInterfaceType(int interface_type)
         if ( Config.iComIoAddress != 0 )
         {
             // use a "non-standard" I/O-address for the COM-port, entered manually:
-            _stprintf(str80,wxT("%04X"),(int)Config.iComIoAddress);
+            str80 = wxString::Format(wxT("%04X"),(int)Config.iComIoAddress);
             aIoPortAddressEdit->Disable();
 //        Ed_IoPortAddress->ReadOnly = false;
 //        Ed_IoPortAddress->Color = clWindow;
@@ -381,19 +381,19 @@ void TInterfacePanel::UpdateInterfaceType(int interface_type)
             switch ( Config.iComPortNr )
             {
             case 1:
-                _tcscpy(str80, wxT("03F8"));
+                str80 = wxT("03F8");
                 break;
             case 2:
-                _tcscpy(str80, wxT("02F8"));
+                str80 = wxT("02F8");
                 break;
             case 3:
-                _tcscpy(str80, wxT("03E8"));
+                str80 = wxT("03E8");
                 break;
             case 4:
-                _tcscpy(str80, wxT("02E8"));
+                str80 =wxT("02E8");
                 break;
             default:
-                _tcscpy(str80, _("-std-"));
+                str80 = _("-std-");
                 break;
             }
             aIoPortAddressEdit->Enable();
@@ -422,9 +422,9 @@ void TInterfacePanel::UpdateInterfaceType(int interface_type)
             aInterfacePortChoice->SetSelection(Config.iLptPortNr);
 
             if (Config.iLptIoAddress == 0)
-                _tcscpy(str80, _("-std-"));
+                str80 = _("-std-");
             else
-                _stprintf(str80,wxT("%04X"),Config.iLptIoAddress);
+                str80 = wxString::Format(wxT("%04X"),Config.iLptIoAddress);
             aIoPortAddressEdit->SetValue(str80);
 //    Ed_IoPortAddress->SetValue(str80);
             aIoPortAddressEdit->Enable();

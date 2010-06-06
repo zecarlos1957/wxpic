@@ -9,8 +9,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "MemAddrGetter.h"
-#include <WinPic/WinPicPr/pic_hex.h>
-#include <WinPic/WinPicPr/Devices.h>
+#include "../WinPic/WinPicPr/pic_hex.h"
+#include "../WinPic/WinPicPr/devices.h"
 
 THexGrid::TColouredAddress TMemAddrGetter::operator()(int pIndex) const
 {

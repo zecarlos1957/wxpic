@@ -12,9 +12,9 @@
 #include <wx/colordlg.h>
 #include <wx/settings.h>
 
-#include <WinPic/WinPicPr/config.h>
-#include <WinPic/WinPicPr/pic_prg.h>
-#include <WinPic/WinPicPr/pic_hw.h>
+#include "../WinPic/WinPicPr/config.h"
+#include "../WinPic/WinPicPr/pic_prg.h"
+#include "../WinPic/WinPicPr/pic_hw.h"
 
 //(*IdInit(TOptionPanel)
 const long TOptionPanel::ID_PROG_CODE_MEM_CHK = wxNewId();
@@ -183,29 +183,29 @@ bool TOptionPanel::InterfaceSpeedTest(void)
 #define N_TEST_LOOPS 10
     double dblDelayTimes_ns[N_TEST_LOOPS];
     bool fDataOutState;
-    wxChar sz255Msg[256];
+    wxString sz255Msg;
     wxChar *cp;
-    LONGLONG i64PTFreq, i64PTStart, i64PTStop;
+    int64_t i64PTFreq, i64PTStart, i64PTStop;
     double dblLoopTime_ns;
 
 
-    QueryPerformanceFrequency( (LARGE_INTEGER *) &i64PTFreq );
+    QueryPerformanceFrequency( (int64_t *) &i64PTFreq );
 
     // Check how fast we can set and reset the CLOCK signal .
     //  You may be badly surprised how increadibly slow the access
     //  to such a stupid piece of hardware can be under windoze these days !
-    QueryPerformanceCounter( (LARGE_INTEGER*)&i64PTStart );
+    QueryPerformanceCounter( (int64_t *)&i64PTStart );
     for (iTestLoops=0; iTestLoops<1000; ++iTestLoops)
     {
         PIC_HW_SetClockAndData( (iTestLoops&1)!=0/*clock_high*/,
                                 (iTestLoops&2)!=0/*data_high*/  );
     }
-    QueryPerformanceCounter( (LARGE_INTEGER*)&i64PTStop );
+    QueryPerformanceCounter( (int64_t*)&i64PTStop );
     dblLoopTime_ns = (double)(i64PTStop - i64PTStart);
     if (i64PTFreq>0)
     {
         dblLoopTime_ns *= (1e9 / ((double)1000/*Loops*/ * (double)i64PTFreq) );
-        _stprintf( sz255Msg, _("SetClockAndData takes %d ns per call ."), dblLoopTime_ns);
+        sz255Msg = wxString::Format(_("SetClockAndData takes %d ns per call ."), dblLoopTime_ns);
         if (dblLoopTime_ns > 1e6 )
         {
             _tcscat( sz255Msg, _(" THIS IS INCREDIBLY SLOW ! ") );
@@ -250,7 +250,7 @@ bool TOptionPanel::InterfaceSpeedTest(void)
         // Now swith the DATA line to "the other state" and wait until we read that state back..
         fDataOutState = !fDataOutState;
         i50nsLoops = i50nsLoopsUnstable = 0;
-        QueryPerformanceCounter( (LARGE_INTEGER*)&i64PTStart );
+        QueryPerformanceCounter( (int64_t*)&i64PTStart );
         if (!PIC_HW_SetClockAndData( false, fDataOutState ) ) // time-critical section..
         {
             ++n_errors;
@@ -265,7 +265,7 @@ bool TOptionPanel::InterfaceSpeedTest(void)
                 i50nsLoopsUnstable = i50nsLoops;
             }
         }
-        QueryPerformanceCounter( (LARGE_INTEGER*)&i64PTStop );
+        QueryPerformanceCounter( (int64_t*)&i64PTStop );
         dblLoopTime_ns = (double)(i64PTStop - i64PTStart);
         if (i64PTFreq>0)
             dblLoopTime_ns *= (1e9 / ((double)i50nsLoops * (double)i64PTFreq) );

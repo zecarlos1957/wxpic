@@ -165,7 +165,7 @@ TDeviceCfgPanel::~TDeviceCfgPanel()
 void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
 {
 //  int i,n;
-    wxChar str80[81];
+    wxString str80;
     const wxChar *psz;
     bool fFoundDevName;
 //  T_PicDeviceInfo MyDeviceInfo;
@@ -271,7 +271,7 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
         {
 //            _stprintf(str80, _("bandgap_cal=0x%06lX"), PIC_lBandgapCalibrationBits);
 //          Lab_SavedBeforeErase->Caption = str80;
-            _stprintf(str80, wxT("0x%06lX"), PIC_lBandgapCalibrationBits);
+            str80 = wxString::Format( wxT("0x%06lX"), PIC_lBandgapCalibrationBits);
             psz = str80;
         }
         else
@@ -287,7 +287,7 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
 //        aSavedBeforeEraseTitle->Enable(true);
         if (PIC_lOscillatorCalibrationWord>=0)
         {
-            _stprintf(str80, wxT("0x%06lX"), PIC_lOscillatorCalibrationWord);
+            str80 = wxString::Format( wxT("0x%06lX"), PIC_lOscillatorCalibrationWord );
             psz = str80;
 //            _stprintf(str80,_("  oscillator_cal=0x%06lX"),(long)PIC_lOscillatorCalibrationWord);
 //          Lab_SavedBeforeErase->Caption = Lab_SavedBeforeErase->Caption + wxString(str80);

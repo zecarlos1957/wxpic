@@ -16,11 +16,11 @@
 #include "Appl.h"
 #include "CommandOption.h"
 #include "Language.h"
-#include <WinPic/WinPicPr/Config.h>
-#include <WinPic/WinPicPr/pic_hw.h>
-#include <WinPic/WinPicPr/pic_hex.h>
-#include <WinPic/WinPicPr/pic_prg.h>
-#include <Res/Resource.h>
+#include "../WinPic/WinPicPr/config.h"
+#include "../WinPic/WinPicPr/pic_hw.h"
+#include "../WinPic/WinPicPr/pic_hex.h"
+#include "../WinPic/WinPicPr/pic_prg.h"
+#include "../Res/Resource.h"
 
 //(*InternalHeaders(MainFrame)
 #include <wx/intl.h>
