@@ -79,11 +79,13 @@ void         CopyIso8859_1_TChar (wxChar *Dst, const char* psz, int Length);
 wxChar       *DupIso8859_1_TChar  (const char* psz);
 
 /* EOF <appl.h> */
-#ifndef _tcxxx_
-#define _tcxxx_ 1
+#ifndef __WXMSW__
+#ifndef _TCHAR_to_WXCHAR_
+#define _TCHAR_to_WXCHAR_ 1
 #define _tcscat wxStrcat
 #define _tcstol wxStrtol
 #define _tcslen wxStrlen
 #define _tcscpy wxStrcpy
 #define _stprintf wxSprintf
+#endif
 #endif
