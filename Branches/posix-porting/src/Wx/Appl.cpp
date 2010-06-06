@@ -22,19 +22,19 @@ void APPL_ShowMsg( int caller, int error_level, const wxChar *pszFormat, ... )
    */
 {
     va_list parameter;
-    wxChar szText[512];
+    wxString Text;
 
     va_start( parameter, pszFormat );
-    _vstprintf( szText, pszFormat, parameter );
+    Text.PrintfV(pszFormat, parameter );
     va_end(parameter);
 
     (void)caller;
 
-    MainFrame::SetStatusText(szText);
+    MainFrame::SetStatusText(Text);
     if(  (error_level>=127/*important*/)  /*&&  (ToolForm!=NULL)*/  )
-        wxMessageBox(szText);
+        wxMessageBox(Text);
 
-    APPL_LogEvent(szText);
+    APPL_LogEvent(Text);
 
 } // end APPL_ShowMsg()
 
@@ -43,22 +43,20 @@ void APPL_ShowMsg( int caller, int error_level, const wxChar *pszFormat, ... )
 void APPL_LogEvent( const wxChar * pszFormat, ... )  // logs an "event" with current timestamp
 {
   va_list arglist;
-  wxChar sz500[512];
-  wxChar *cp;
-
-  // Show the TIME of this event :
-  wxDateTime Now = wxDateTime::UNow();
-  _stprintf(sz500, _("%02d:%02d:%02d.%02d "), Now.GetHour(), Now.GetMinute(), Now.GetSecond(), Now.GetMillisecond());
-  cp = sz500+wxStrlen(sz500);
+  wxString Text;
 
   // Print to string and append to edit control
   va_start(arglist, pszFormat);
-  _vstprintf(cp, pszFormat, arglist);
+  Text.PrintfV(pszFormat, arglist);
   va_end(arglist);
+
+  // Show the TIME of this event :
+  wxDateTime Now = wxDateTime::UNow();
+  Text.Printf(_("%02d:%02d:%02d.%02d %s"), Now.GetHour(), Now.GetMinute(), Now.GetSecond(), Now.GetMillisecond(), Text.c_str());
 
 //  _tcscat(cp, _("\n"));
 
-  MainFrame::AddTextToLog(sz500);
+  MainFrame::AddTextToLog(Text);
 }
 
 
