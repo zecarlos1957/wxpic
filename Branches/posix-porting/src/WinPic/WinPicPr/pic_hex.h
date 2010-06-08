@@ -180,8 +180,8 @@ void PIC_HEX_ClearBuffers(void);
 
 
 /***************************************************************************/
-int PIC_HEX_LoadFile( const wxChar *fname );    // Loads a Microchip hex file
-int PIC_HEX_DumpHexFile( const wxChar *fname ); // Dumps buffers in Microchip HEX format
+int PIC_HEX_LoadFile( const wxString fname );    // Loads a Microchip hex file
+int PIC_HEX_DumpHexFile( const wxString fname ); // Dumps buffers in Microchip HEX format
 
 
 /***************************************************************************/

@@ -29,7 +29,7 @@
 typedef void(* T_HexLoadCallback)(uint32_t dwHexSourceLine,uint32_t dwLinearByteAddress, uint8_t bData); // callback for 'load file'
 
 //--------------- Prototypen ----------------------------------------
-CPROT long LoadHexFile( const wxString fname, T_HexLoadCallback pvLoadCallback, wxString sz80ErrorMessage );
+CPROT long LoadHexFile( const wxString fname, T_HexLoadCallback pvLoadCallback, wxString& sz80ErrorMessage );
       // loads data from an INTEL-HEX-file
 
 

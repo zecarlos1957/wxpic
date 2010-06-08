@@ -7,7 +7,7 @@
 //#include <tchar.h>
 #include "CommandOption.h"
 
-#include "time.h"
+#include <time.h>
 //#ifdef __cplusplus
 // #define CPROT extern "C"
 //#else

@@ -340,7 +340,7 @@ void MainFrame::DisconnectTarget(void)
 
 
 //---------------------------------------------------------------------------
-bool MainFrame::ReadPicAndDumpToFile(const wxChar *fn)
+bool MainFrame::ReadPicAndDumpToFile(const wxString fn)
 {
     bool ok;
     bool not_blank;
@@ -1234,7 +1234,7 @@ bool MainFrame::RunHexOpenDialog(void)
 
 
 //---------------------------------------------------------------------------
-bool MainFrame::LoadFileAndProgramPic(const wxChar *fn, bool program_too)
+bool MainFrame::LoadFileAndProgramPic(const wxString fn, bool program_too)
 {
 // FILE *fp;
     bool ok;
@@ -1247,7 +1247,7 @@ bool MainFrame::LoadFileAndProgramPic(const wxChar *fn, bool program_too)
         wxFile ReadTest(fn);
         if (!ReadTest.IsOpened())
         {
-            _stprintf(sz255Temp, _("Can't open hexfile \"%s\"") , fn);
+            _stprintf(sz255Temp, _("Can't open hexfile \"%s\"") , fn.c_str());
             APPL_ShowMsg(APPL_CALLER_MAIN,0, sz255Temp );
             //       if(ToolForm)
             //        ToolForm->ShowMsg( sz255Temp, TWMSG_ERROR );
@@ -1273,7 +1273,7 @@ bool MainFrame::LoadFileAndProgramPic(const wxChar *fn, bool program_too)
                   PicBuf_ArrayIndexToTargetAddress(PIC_BUF_DATA, PicBuf[PIC_BUF_DATA].i32LastUsedArrayIndex)
                  );
         cp = sz255Temp + _tcslen(sz255Temp);
-        _stprintf( const_cast<wxChar*>(cp), _(" (%s)"), fn );    // added 2006-03-26
+        _stprintf( const_cast<wxChar*>(cp), _(" (%s)"), fn.c_str() );    // added 2006-03-26
         APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz255Temp );
     }
     if (CommandOption.WinPic_i32CmdLineOption_OverrideConfigWord>=0)
@@ -1313,7 +1313,7 @@ bool MainFrame::LoadFileAndProgramPic(const wxChar *fn, bool program_too)
 
 
 //---------------------------------------------------------------------------
-bool MainFrame::DumpEverythingToHexFile(const wxChar *fn)
+bool MainFrame::DumpEverythingToHexFile(const wxString fn)
 {
 
     if ( CommandOption.WinPic_fCommandLineOption_QueryBeforeOverwritingFiles )

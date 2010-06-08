@@ -243,8 +243,8 @@ CPROT int   PicDev_GetDeviceInfoByName(const char *pszDeviceName, T_PicDeviceInf
 CPROT bool  PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo );
 CPROT const char *PicDev_GetDeviceNameByIdWord( uint16_t wDeviceIdWord, int iBitsPerInstruction );
 CPROT const char *PicDev_AlgorithmCodeToString(int iAlgorithm);
-CPROT int   PicDev_StringToAlgorithmCode(const char *pszAlgorithmName);
-CPROT int   PicDev_StringToVppVddSequenceCode(const char *pszVppVddSequence);
+CPROT int   PicDev_StringToAlgorithmCode(const wxString pszAlgorithmName);
+CPROT int   PicDev_StringToVppVddSequenceCode(const wxString pszVppVddSequence);
 CPROT const char *PicDev_VppVddSequenceCodeToString(int iVppVddSequence);
 CPROT int   PicDev_GetNrOfBitsPerIdLocation(void);
 CPROT int   PicDev_GetConfMemSize(void);   // better use PIC_DeviceInfo_iConfMemSize for speed reasons !
@@ -252,7 +252,7 @@ CPROT int   PicDev_IsConfigMemLocationValid(uint32_t dwCfgMemAddress);
 CPROT uint32_t PicDev_GetVerifyMaskForAddress(uint32_t dwTargetAddress);
 CPROT const wxChar *PicDev_GetInfoOnConfigMemory(uint32_t dwCfgMemAddress);
 CPROT const wxChar *PicDev_ConfigBitValueToString( T_PicConfigBitInfo *pConfigBitInfo, uint32_t dwConfigRegisterContent );
-CPROT bool  PicDev_ConfigBitStringToValue( T_PicConfigBitInfo *pConfigBitInfo, const wxChar *pszComboText, uint32_t *pdwDest );
+CPROT bool  PicDev_ConfigBitStringToValue( T_PicConfigBitInfo *pConfigBitInfo, const wxString pszComboText, uint32_t *pdwDest );
 CPROT void  PicDev_FillDefaultDeviceInfo(T_PicDeviceInfo *pDeviceInfo);
 CPROT void  PicDev_DumpDeviceListToFile( const wxChar *pszDumpFileName );
 

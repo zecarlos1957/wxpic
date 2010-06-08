@@ -2083,7 +2083,7 @@ const char *PicDev_AlgorithmCodeToString(int iAlgorithm)
 } // end PicDev_AlgorithmCodeToString()
 
 /***************************************************************************/
-int PicDev_StringToAlgorithmCode(wxString pszAlgorithmName)
+int PicDev_StringToAlgorithmCode(const wxString pszAlgorithmName)
 {
 	if (pszAlgorithmName == wxT("16Fxx"))					return PIC_ALGO_16FXX;
 	if (pszAlgorithmName == wxT("16Fxx_OLD_ERASE"))		return PIC_ALGO_16FXX_OLD_ERASE;
@@ -2120,7 +2120,7 @@ int PicDev_StringToAlgorithmCode(wxString pszAlgorithmName)
 
 
 /***************************************************************************/
-int PicDev_StringToVppVddSequenceCode( wxString pszVppVddSequence )
+int PicDev_StringToVppVddSequenceCode( const wxString pszVppVddSequence )
 {
 	 if ( pszVppVddSequence == wxT("Vdd_before_Vpp"))
 		  return PROGMODE_VDD_THEN_VPP;
@@ -2914,23 +2914,23 @@ bool PicDev_LoadPicDeviceDefinitionFromFile(
                 }
                 else if ( strcmp(pszKey, "EraseAlgo")== 0 )
                 {
-                    pDevInfo->wEraseAlgo = PicDev_StringToAlgorithmCode(pszValue);
+                    pDevInfo->wEraseAlgo = PicDev_StringToAlgorithmCode(wxString::FromAscii(pszValue));
                 }
                 else if ( strcmp(pszKey, "CodeProgAlgo")== 0 )
                 {
-                    pDevInfo->wCodeProgAlgo= PicDev_StringToAlgorithmCode(pszValue);
+                    pDevInfo->wCodeProgAlgo= PicDev_StringToAlgorithmCode(wxString::FromAscii(pszValue));
                 }
                 else if ( strcmp(pszKey, "ConfigProgAlgo")== 0 )
                 {
-                    pDevInfo->wConfigProgAlgo=PicDev_StringToAlgorithmCode(pszValue);
+                    pDevInfo->wConfigProgAlgo=PicDev_StringToAlgorithmCode(wxString::FromAscii(pszValue));
                 }
                 else if ( strcmp(pszKey, "DataProgAlgo")== 0 )
                 {
-                    pDevInfo->wDataProgAlgo= PicDev_StringToAlgorithmCode(pszValue);
+                    pDevInfo->wDataProgAlgo= PicDev_StringToAlgorithmCode(wxString::FromAscii(pszValue));
                 }
                 else if ( strcmp(pszKey, "VppVddSequence")== 0 )
                 {
-                    pDevInfo->wVppVddSequence= PicDev_StringToVppVddSequenceCode(pszValue);
+                    pDevInfo->wVppVddSequence= PicDev_StringToVppVddSequenceCode(wxString::FromAscii(pszValue));
                     // Note: the GUI uses .wVppVddSequence to check the state of the option
                     //       "raise Vdd before MCLR=Vpp" on the "Other Options" panel .
                     //    If does *NOT* change the checkmark automatically, but shows a
@@ -3736,8 +3736,7 @@ bool PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo )
     // If one of Microchip's device-definition files (*.DEV) exists,
     //  use the config bit definitions from that file (instead of "our own").
     // First look at the file extension to find out how it can be loaded..
-    if ( psrcPicDeviceInfo->sz80ConfigRegisterInfoFile != wxEmptyString )
-    {
+    if ( psrcPicDeviceInfo->sz80ConfigRegisterInfoFile.Len() != 0 ){
         if ( psrcPicDeviceInfo->sz80ConfigRegisterInfoFile.AfterLast('.')==wxT("dev") )
         {
                 // it MAY be one of Microchip's "dev"-files...
@@ -4055,7 +4054,8 @@ void PicDev_FillDefaultDeviceInfo(T_PicDeviceInfo *pDeviceInfo)
 {
     // Set "default" values which MAY be usable for MOST PICs,
     //     (may be overwritten later by reading from file, etc)
-    memset( pDeviceInfo, 0, sizeof(T_PicDeviceInfo) );  // cleanup
+    pDeviceInfo = new T_PicDeviceInfo;
+    //memset( pDeviceInfo, 0, sizeof(T_PicDeviceInfo) );  // cleanup
     pDeviceInfo->iCodeMemType = PIC_MT_FLASH;
     pDeviceInfo->iBitsPerInstruction = 14;
     pDeviceInfo->lCodeMemSize = 1024;

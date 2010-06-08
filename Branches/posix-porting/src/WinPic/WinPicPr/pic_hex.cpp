@@ -834,7 +834,7 @@ extern "C" void PIC_HEX_EnterByteInBuffer(   // callback for 'load file'..
 } // end PIC_HEX_LoadCallback()
 
 /***************************************************************************/
-int PIC_HEX_LoadFile(const wxChar *fname )  // Loads a Microchip hex file
+int PIC_HEX_LoadFile(const wxString fname )  // Loads a Microchip hex file
 {
   int  i32ParserErrorInLine;
   PicHex_i32ErrorInLine = 0;

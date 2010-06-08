@@ -325,9 +325,9 @@ class MainFrame: public wxFrame
         bool TestDelayRoutine(void);
         bool ProgramPic(void);
         bool VerifyPic(void);
-        bool DumpEverythingToHexFile(const wxChar *fn);
-        bool ReadPicAndDumpToFile(const wxChar *fn);
-        bool LoadFileAndProgramPic(const wxChar *fn, bool program_too);
+        bool DumpEverythingToHexFile(const wxString fn);
+        bool ReadPicAndDumpToFile(const wxString fn);
+        bool LoadFileAndProgramPic(const wxString fn, bool program_too);
 
         bool RunHexOpenDialog (void);
         void initAuto         (void);

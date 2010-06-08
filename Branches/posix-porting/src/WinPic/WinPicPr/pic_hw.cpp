@@ -55,6 +55,48 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define _I_AM_PIC_HW_ 1
 #include "pic_hw.h"   // Routines to drive the programmer hardware interface
 
+///Linux Port Helper
+#ifndef __WXMSW__
+	#include <errno.h>
+	#include <termios.h>
+	#include <unistd.h>
+	#include <fcntl.h>
+	#include <sys/ioctl.h>
+   #include <time.h>
+
+	typedef int HANDLE;
+	#define INVALID_HANDLE_VALUE EMFILE
+	typedef struct termios DCB;
+	typedef int64_t LONGLONG;
+	typedef int64_t LARGE_INTEGER;
+	typedef uint32_t DWORD;
+	#define SETDTR TIOCM_DTR
+	#define CLRDTR ~TIOCM_DTR
+	#define SETRTS TIOCM_RTS
+	#define CLRRTS ~TIOCM_RTS
+	#define SETBREAK TIOCM_ST
+	#define CLRBREAK ~TIOCM_ST
+	#define MS_CTS_ON TIOCM_CTS
+
+	long GetTickCount(){
+		timespec tm;
+		clock_gettime( CLOCK_MONOTONIC, &tm ) ;
+		return tm.tv_sec*1000+tm.tv_nsec/1000;
+	}
+
+	bool EscapeCommFunction( int fd, int flag){
+		int status;
+		ioctl(fd, TIOCMGET, &status);//Read status register
+		status &= ~flag;	//Reseting that bit to zero
+		status |= flag;	//Set that flag.
+		ioctl(fd, TIOCMSET, &status);//Write
+		}
+	bool GetCommModemStatus( int fd, uint32_t *flag ){
+		return ioctl(fd, TIOCMGET, &flag)==0;
+		}
+	int ReadIoPortByte(uint16_t){return 0;}
+	int WriteIoPortByte(uint16_t,uint16_t){return 0;}
+#endif
 
 //-----------  Global Vars -------------------------------------------------
 // (ugly old "C" style, but there will be only one instance running anyway)
@@ -136,40 +178,12 @@ HMODULE PicHw_hFilterPluginDLL=NULL; // handle to the interface plugin DLL,
 /***************************************************************************/
 /*  Controls COM port output signals to the PIC programmer                 */
 /***************************************************************************/
-#ifndef __WXMSW__
-	#include <errno.h>
-	#include <termios.h>
-	#include <unistd.h>
-	#include <fcntl.h>
-	#include <sys/ioctl.h>
-
-	typedef int HANDLE;
-	#define INVALID_HANDLE_VALUE EMFILE
-	typedef struct termios DCB;
-	typedef int64_t LONGLONG;
-	typedef int64_t LARGE_INTEGER;
-	typedef uint32_t DWORD;
-	#define SETDTR TIOCM_DTR
-	#define CLRDTR ~TIOCM_DTR
-	#define SETRTS TIOCM_RTS
-	#define CLRRTS ~TIOCM_RTS
-	#define SETBREAK TIOCM_ST
-	#define CLRBREAK ~TIOCM_ST
-	#define MS_CTS_ON TIOCM_CTS
-
-	bool EscapeCommFunction( int fd, int flag){
-		}
-	bool GetCommModemStatus( int fd, uint32_t *flag ){
-		return ioctl(fd, TIOCMGET, &flag)==0;
-		}
-
-
-
-#endif
  HANDLE  COM_hComPort = INVALID_HANDLE_VALUE;
 
  DCB  COM_dcb;
+ #ifdef __WXMSW__
  OVERLAPPED COM_sOverlappedIo = { 0,0,0,0,NULL }; // structure for OVERLAPPED I/O
+ #endif
  uint16_t COM_io_address = 0x0000;
  uint16_t PicHw_wDataControlBits;   // for data format reg.  (reg 03)
  uint16_t PicHw_wModemControlBits;  // for modem control reg (reg 04)
@@ -710,6 +724,7 @@ int PicHw_TestNotCTS(int iNewState) // inverted test bit. ignore iNewState.
 { return PicHw_Inv3State( PicHw_TestCTS( PicHw_Inv3State( iNewState ) ) ) ;
 }
 
+#ifdef __WXMSW__
 bool PicHw_UpdateComOutputBits(void)
   //  Writes the modified bits back to the serial output lines.
   //  Also keeps the TxD ouput toggling if required
@@ -799,7 +814,9 @@ bool PicHw_UpdateComOutputBits(void)
   return false;
 
 } // end PicHw_UpdateComOutputBits()
-
+#else
+bool PicHw_UpdateComOutputBits(void){}
+#endif
 
 
 // Special routines for programmers on the serial port.
