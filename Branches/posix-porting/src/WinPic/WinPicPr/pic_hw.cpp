@@ -70,7 +70,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 	typedef int64_t LONGLONG;
 	typedef int64_t LARGE_INTEGER;
 	typedef uint32_t DWORD;
-	enum{SETDTR=10, CLRDTR, SETRTS, CLRRTS, SETBREAK, CLRBREAK, MS_CTS_ON };
+	enum{SETDTR=TIOCM_DTR, CLRDTR, SETRTS=TIOCM_RTS, CLRRTS, SETBREAK=TIOCSBRK, CLRBREAK=TIOCCBRK, MS_CTS_ON=TIOCM_CTS };
 
 	long GetTickCount(){
 		timespec tm;
@@ -98,7 +98,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 		return true;
 		}
 	bool GetCommModemStatus( int fd, uint32_t *flag ){
-		return ioctl(fd, TIOCMGET, &flag)==0;
+		return ioctl(fd, TIOCMGET, flag)==0;
 		}
 	int ReadIoPortByte(uint16_t){return 0;}
 	int WriteIoPortByte(uint16_t,uint16_t){return 0;}
