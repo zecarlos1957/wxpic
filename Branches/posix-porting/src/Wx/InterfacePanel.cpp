@@ -360,7 +360,11 @@ void TInterfacePanel::UpdateInterfaceType(int interface_type)
         aInterfacePortChoice->Append(_("(unknown)"));
         for (i=1;i<=16;++i)
         {
+				#ifdef __WXMSW__
             aInterfacePortChoice->Append(wxString::Format(wxT("COM%d"),i));
+            #else
+            aInterfacePortChoice->Append(wxString::Format(wxT("/dev/ttyS%d"),i-1));
+            #endif
         }
         if (Config.iComPortNr>=0 && Config.iComPortNr<=16)
             aInterfacePortChoice->SetSelection(Config.iComPortNr);
