@@ -67,6 +67,10 @@ int  PicHw_iWrittenLptDataBits = -1;  // LPT port data bits which have been writ
      // with the port (which it does, at least under WinXP with a HP printer driver).
 int PicHw_iPresentVddSelection = false;
 
+#ifndef __WXMSW__
+///for silence LPT until serial port done
+typedef uint64_t* HMODULE;
+#endif
 //-- The Handle to the LPT driver
 HMODULE m_hOpenLibSys = NULL;
 
@@ -132,7 +136,38 @@ HMODULE PicHw_hFilterPluginDLL=NULL; // handle to the interface plugin DLL,
 /***************************************************************************/
 /*  Controls COM port output signals to the PIC programmer                 */
 /***************************************************************************/
+#ifndef __WXMSW__
+	#include <errno.h>
+	#include <termios.h>
+	#include <unistd.h>
+	#include <fcntl.h>
+	#include <sys/ioctl.h>
+
+	typedef int HANDLE;
+	#define INVALID_HANDLE_VALUE EMFILE
+	typedef struct termios DCB;
+	typedef int64_t LONGLONG;
+	typedef int64_t LARGE_INTEGER;
+	typedef uint32_t DWORD;
+	#define SETDTR TIOCM_DTR
+	#define CLRDTR ~TIOCM_DTR
+	#define SETRTS TIOCM_RTS
+	#define CLRRTS ~TIOCM_RTS
+	#define SETBREAK TIOCM_ST
+	#define CLRBREAK ~TIOCM_ST
+	#define MS_CTS_ON TIOCM_CTS
+
+	bool EscapeCommFunction( int fd, int flag){
+		}
+	bool GetCommModemStatus( int fd, uint32_t *flag ){
+		return ioctl(fd, TIOCMGET, &flag)==0;
+		}
+
+
+
+#endif
  HANDLE  COM_hComPort = INVALID_HANDLE_VALUE;
+
  DCB  COM_dcb;
  OVERLAPPED COM_sOverlappedIo = { 0,0,0,0,NULL }; // structure for OVERLAPPED I/O
  uint16_t COM_io_address = 0x0000;
@@ -145,7 +180,7 @@ HMODULE PicHw_hFilterPluginDLL=NULL; // handle to the interface plugin DLL,
        PicHw_fClockIsEnabled, PicHw_fDataIsEnabled;
  bool  PicHw_fTogglingTxD;
 
-
+#ifdef __WXMSW__
 bool COM_OpenPicPort(void)
 {
  wxChar szPort[10];
@@ -377,7 +412,11 @@ bool COM_OpenPicPort(void)
 
  return true;
 } // end COM_OpenPicPort()
+#else
+bool COM_OpenPicPort(void){}
+#endif
 
+#ifdef __WXMSW__
 bool COM_ClosePicPort(void)
 {
   DCB dcb;
@@ -400,6 +439,9 @@ bool COM_ClosePicPort(void)
    }
   return false;
 } // end COM_ClosePicPort()
+#else
+bool COM_ClosePicPort(void){}
+#endif
 
 uint16_t COM_GetPicDataBit(void)
 {
@@ -787,6 +829,8 @@ int PicHw_ToggleTXD(int iNewState)
 
 
 
+
+#ifdef __WXMSW__
 bool LPT_OpenPicPort(void)
 {
  bool fResult = true;
@@ -907,7 +951,11 @@ bool LPT_OpenPicPort(void)
 
   return fResult;
 } // end LPT_OpenPicPort()
+#else
+bool LPT_OpenPicPort(void){return false;}
+#endif
 
+#ifdef __WXMSW__
 void LPT_ClosePicPort(void)
 {
 // if(LPT_iLptPortHandle>0)
@@ -927,7 +975,9 @@ void LPT_ClosePicPort(void)
 
  PicHw_fLptPortOpened = false;
 } // end LPT_ClosePicPort()
-
+#else
+void LPT_ClosePicPort(void){}
+#endif
 
 bool PicHw_dummy(void)
 {
@@ -2229,7 +2279,7 @@ void PIC_HW_LongDelay_ms(int milliseconds)
       {
        PicHw_FeedChargePump(); // required to produce Vpp with a charge pump
        if(t1>tNextSleep)
-        { Sleep(10);           // ideally "Sleep" for 10ms every 30ms (-> 66% CPU load)
+        { wxMilliSleep(10);           // ideally "Sleep" for 10ms every 30ms (-> 66% CPU load)
           tNextSleep = t1 + (freq * 30 + 999) / 1000;
         }
        // Caution: Sleep(1) worked under Win98, but fails under XP !
@@ -2248,7 +2298,7 @@ void PIC_HW_LongDelay_ms(int milliseconds)
    }
   else  // no need to TOGGLE any pin while waiting -> give the CPU to another thread !
    {
-     Sleep(milliseconds);
+     wxMilliSleep(milliseconds);
    }
 } // end PIC_HW_LongDelay_ms()
 

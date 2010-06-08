@@ -17,7 +17,6 @@
 
 #ifndef PIC_HW_H
 #define PIC_HW_H
-
 #ifdef __cplusplus
  #define CPROT extern "C"
  // Note: It's 'extern "C"' , not 'extern "c"'
@@ -181,7 +180,6 @@ CPROT bool COM_SetPicVpp( bool vpp_high );
 CPROT bool COM_ClosePicPort(void);
 CPROT bool PicHw_UpdateComOutputBits(void);
 CPROT void PicHw_FeedChargePump(void); // required for "JDM 2" and others. Call periodically !
-
 
 /*------------- LPT-port access routines  ---------------------------------*/
 //      // First attempt in February 2002 after discovering that direct port
