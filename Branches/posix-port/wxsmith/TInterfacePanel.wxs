@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxPanel" name="TInterfacePanel">
+		<pos_arg>1</pos_arg>
+		<size_arg>1</size_arg>
+		<object class="wxBoxSizer" variable="BoxSizer14" member="no">
+			<orient>wxVERTICAL</orient>
+			<object class="sizeritem">
+				<object class="wxBoxSizer" variable="BoxSizer16" member="no">
+					<orient>wxVERTICAL</orient>
+					<object class="sizeritem">
+						<object class="wxBoxSizer" variable="BoxSizer15" member="no">
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_BUTTON7" variable="aInitInterfButton" member="yes">
+									<label>Initialize!</label>
+									<handler function="onInitInterfButtonClick" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>1</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_LPT_INTERF_HELP_BUTTON" variable="aLptInterfHelpButton" member="yes">
+									<label>Help on LPT interfaces</label>
+									<handler function="onLptInterfHelpButtonClick" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>1</border>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+					</object>
+					<object class="sizeritem">
+						<object class="wxBoxSizer" variable="BoxSizer17" member="no">
+							<object class="sizeritem">
+								<object class="wxStaticBoxSizer" variable="StaticBoxSizer5" member="no">
+									<label>Interface Test</label>
+									<object class="sizeritem">
+										<object class="wxBoxSizer" variable="BoxSizer18" member="no">
+											<orient>wxVERTICAL</orient>
+											<object class="sizeritem">
+												<object class="wxCheckBox" name="ID_CHECKBOX15" variable="aTestVppChk" member="yes">
+													<label>Vpp (+13V)</label>
+													<handler function="onTestXXXChkClick" entry="EVT_CHECKBOX" />
+												</object>
+												<flag>wxALL|wxALIGN_LEFT|wxALIGN_TOP</flag>
+												<border>1</border>
+											</object>
+											<object class="sizeritem">
+												<object class="wxCheckBox" name="ID_CHECKBOX16" variable="aTestVddChk" member="yes">
+													<label>Vdd on/off</label>
+													<handler function="onTestVddChkClick" entry="EVT_CHECKBOX" />
+												</object>
+												<flag>wxALL|wxALIGN_LEFT|wxALIGN_TOP</flag>
+												<border>1</border>
+											</object>
+											<object class="sizeritem">
+												<object class="wxCheckBox" name="ID_CHECKBOX17" variable="aTestClockChk" member="yes">
+													<label>Clock</label>
+													<handler function="onTestXXXChkClick" entry="EVT_CHECKBOX" />
+												</object>
+												<flag>wxALL|wxALIGN_LEFT|wxALIGN_TOP</flag>
+												<border>1</border>
+											</object>
+											<object class="sizeritem">
+												<object class="wxCheckBox" name="ID_CHECKBOX18" variable="aTestDataChk" member="yes">
+													<label>Data to PIC</label>
+													<handler function="onTestXXXChkClick" entry="EVT_CHECKBOX" />
+												</object>
+												<flag>wxALL|wxALIGN_LEFT|wxALIGN_TOP</flag>
+												<border>1</border>
+											</object>
+											<object class="sizeritem">
+												<object class="wxBoxSizer" variable="BoxSizer26" member="no">
+													<object class="sizeritem">
+														<object class="wxStaticText" name="ID_STATICTEXT15" variable="StaticText15" member="yes">
+															<label>Data In =</label>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="ID_STATICTEXT24" variable="aTestDataInText" member="yes">
+															<label>---</label>
+															<style>wxST_NO_AUTORESIZE|wxALIGN_LEFT</style>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>1</border>
+													</object>
+												</object>
+												<flag>wxALL|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL</flag>
+												<option>1</option>
+											</object>
+											<object class="sizeritem">
+												<object class="wxCheckBox" name="ID_CHECKBOX19" variable="aClockEnableChk" member="yes">
+													<label>Clock Enable</label>
+													<handler function="onClockEnableChkClick" entry="EVT_CHECKBOX" />
+												</object>
+												<flag>wxALL|wxALIGN_LEFT|wxALIGN_TOP</flag>
+												<border>1</border>
+											</object>
+											<object class="sizeritem">
+												<object class="wxCheckBox" name="ID_CHECKBOX20" variable="aDataEnableChk" member="yes">
+													<label>Data Enable</label>
+													<handler function="onDataEnableChkClick" entry="EVT_CHECKBOX" />
+												</object>
+												<flag>wxALL|wxALIGN_LEFT|wxALIGN_TOP</flag>
+												<border>1</border>
+											</object>
+											<object class="sizeritem">
+												<object class="wxCheckBox" name="ID_CHECKBOX21" variable="aPullMclrToGndChk" member="yes">
+													<label>Pull MCLR low</label>
+													<handler function="onPullMclrToGndChkClick" entry="EVT_CHECKBOX" />
+												</object>
+												<flag>wxALL|wxALIGN_LEFT|wxALIGN_TOP</flag>
+												<border>1</border>
+											</object>
+											<object class="sizeritem">
+												<object class="wxCheckBox" name="ID_CHECKBOX22" variable="aConnectICSPTargetChk" member="yes">
+													<label>Connect target</label>
+													<handler function="onConnectICSPTargetChkClick" entry="EVT_CHECKBOX" />
+												</object>
+												<flag>wxALL|wxALIGN_LEFT|wxALIGN_TOP</flag>
+												<border>1</border>
+											</object>
+										</object>
+										<flag>wxALL|wxALIGN_LEFT|wxALIGN_TOP</flag>
+										<option>1</option>
+									</object>
+									<object class="sizeritem">
+										<object class="wxBoxSizer" variable="BoxSizer19" member="no">
+											<orient>wxVERTICAL</orient>
+											<object class="sizeritem">
+												<object class="wxRadioBox" name="ID_RADIOBOX3" variable="aVddSelectRadio" member="yes">
+													<label>Vdd Select</label>
+													<content>
+														<item>low</item>
+														<item>norm (5V)</item>
+														<item>high</item>
+													</content>
+													<default>-1</default>
+													<style>wxRA_HORIZONTAL</style>
+													<handler function="onVddSelectRadioSelect" entry="EVT_RADIOBOX" />
+												</object>
+												<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+												<option>1</option>
+											</object>
+											<object class="sizeritem">
+												<object class="wxFlexGridSizer" variable="FlexGridSizer4" member="no">
+													<cols>2</cols>
+													<rows>2</rows>
+													<object class="sizeritem">
+														<object class="wxBitmapButton" name="ID_BITMAPBUTTON1" variable="aRedLedBitmap" member="yes">
+															<extra_code>aRedLedBitmap-&gt;SetBitmapLabel(*TResource::GetLedRedIcon());</extra_code>
+															<style>0</style>
+															<handler function="onRedLedBitmapClick" entry="EVT_BUTTON" />
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>1</border>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="ID_STATICTEXT16" variable="aRedLedText" member="yes">
+															<label>Red Led</label>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>1</border>
+													</object>
+													<object class="sizeritem">
+														<object class="wxBitmapButton" name="ID_BITMAPBUTTON2" variable="aGreenLedBitmap" member="yes">
+															<extra_code>aGreenLedBitmap-&gt;SetBitmapLabel(*TResource::GetLedGreenIcon());</extra_code>
+															<style>0</style>
+															<handler function="onGreenLedBitmapClick" entry="EVT_BUTTON" />
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>1</border>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="ID_STATICTEXT17" variable="aGreenLedText" member="yes">
+															<label>Green Led</label>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>1</border>
+													</object>
+												</object>
+												<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+											</object>
+											<object class="sizeritem">
+												<object class="wxStaticText" name="ID_STATICTEXT25" variable="aOkButtonText" member="yes">
+													<label>---</label>
+													<style>wxST_NO_AUTORESIZE</style>
+												</object>
+												<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+												<border>1</border>
+											</object>
+										</object>
+										<flag>wxALL|wxALIGN_LEFT|wxALIGN_TOP</flag>
+										<option>1</option>
+									</object>
+								</object>
+								<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+								<border>1</border>
+							</object>
+							<object class="sizeritem">
+								<object class="wxStaticBoxSizer" variable="StaticBoxSizer6" member="no">
+									<label>Interface Type</label>
+									<orient>wxVERTICAL</orient>
+									<object class="sizeritem">
+										<object class="wxChoice" name="ID_INTERFACE_TYPE_CHOICE" variable="aInterfaceTypeChoice" member="yes">
+											<handler function="onInterfaceTypeChoiceSelect" entry="EVT_CHOICE" />
+										</object>
+										<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+										<border>1</border>
+									</object>
+									<object class="sizeritem">
+										<object class="wxBoxSizer" variable="BoxSizer20" member="no">
+											<object class="sizeritem">
+												<object class="wxStaticText" name="ID_STATICTEXT18" variable="StaticText18" member="yes">
+													<label>on port</label>
+												</object>
+												<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+												<border>1</border>
+											</object>
+											<object class="sizeritem">
+												<object class="wxChoice" name="ID_INTERFACE_PORT_CHOICE" variable="aInterfacePortChoice" member="yes">
+													<handler function="onInterfacePortChoiceSelect" entry="EVT_CHOICE" />
+												</object>
+												<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+												<border>1</border>
+												<option>1</option>
+											</object>
+											<object class="spacer">
+												<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+												<border>1</border>
+												<size>5,-1</size>
+											</object>
+											<object class="sizeritem">
+												<object class="wxStaticText" name="ID_STATICTEXT19" variable="StaticText19" member="yes">
+													<label>Address:</label>
+												</object>
+												<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+												<border>1</border>
+											</object>
+											<object class="sizeritem">
+												<object class="wxTextCtrl" name="ID_IO_PORT_ADDRESS_EDIT" variable="aIoPortAddressEdit" member="yes">
+													<value>03F8</value>
+													<size>40,-1</size>
+													<enabled>0</enabled>
+													<style>wxTE_PROCESS_ENTER</style>
+													<handler function="onIoPortAddressEditTextEnter" entry="EVT_TEXT_ENTER" />
+												</object>
+												<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+												<border>1</border>
+											</object>
+										</object>
+										<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									</object>
+									<object class="sizeritem">
+										<object class="wxBoxSizer" variable="BoxSizer21" member="no">
+											<object class="sizeritem">
+												<object class="wxStaticText" name="ID_STATICTEXT20" variable="StaticText20" member="yes">
+													<label>Custom interface definition file</label>
+												</object>
+												<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+												<border>1</border>
+												<option>1</option>
+											</object>
+											<object class="sizeritem">
+												<object class="wxButton" name="ID_BUTTON10" variable="aCustomInterfSelectButton" member="yes">
+													<label>Select</label>
+													<handler function="onCustomInterfSelectButtonClick" entry="EVT_BUTTON" />
+												</object>
+												<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+												<border>1</border>
+											</object>
+										</object>
+										<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									</object>
+									<object class="sizeritem">
+										<object class="wxTextCtrl" name="ID_TEXTCTRL10" variable="aCustomDefFileText" member="yes" />
+										<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+										<border>1</border>
+									</object>
+									<object class="sizeritem">
+										<object class="wxStaticText" name="ID_INTERFACE_TYPE_TEXT" variable="aInterfaceTypeText" member="yes">
+											<label></label>
+											<style>wxST_NO_AUTORESIZE|wxSIMPLE_BORDER</style>
+										</object>
+										<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+										<border>1</border>
+									</object>
+									<object class="sizeritem">
+										<object class="wxBoxSizer" variable="BoxSizer22" member="no">
+											<object class="sizeritem">
+												<object class="wxStaticText" name="ID_STATICTEXT22" variable="StaticText22" member="yes">
+													<label>Extra delay before reading data line [us]</label>
+												</object>
+												<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+												<border>1</border>
+												<option>1</option>
+											</object>
+											<object class="sizeritem">
+												<object class="wxTextCtrl" name="ID_TEXTCTRL11" variable="aExtraRdDelayEdit" member="yes">
+													<size>40,-1</size>
+													<handler function="onSlowInterfaceChkClick" entry="EVT_TEXT" />
+												</object>
+												<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+												<border>1</border>
+											</object>
+										</object>
+										<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+										<option>1</option>
+									</object>
+									<object class="sizeritem">
+										<object class="wxBoxSizer" variable="BoxSizer23" member="no">
+											<object class="sizeritem">
+												<object class="wxStaticText" name="ID_STATICTEXT23" variable="StaticText23" member="yes">
+													<label>Extra lengthening for clock pulses [us]</label>
+												</object>
+												<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+												<border>1</border>
+												<option>1</option>
+											</object>
+											<object class="sizeritem">
+												<object class="wxTextCtrl" name="ID_TEXTCTRL12" variable="aExtraClkDelayEdit" member="yes">
+													<size>40,-1</size>
+													<handler function="onSlowInterfaceChkClick" entry="EVT_TEXT" />
+												</object>
+												<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+												<border>1</border>
+											</object>
+										</object>
+										<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									</object>
+									<object class="sizeritem">
+										<object class="wxCheckBox" name="ID_CHECKBOX23" variable="aSlowInterfaceChk" member="yes">
+											<label>slow mode (to check for timing problems)</label>
+											<handler function="onSlowInterfaceChkClick" entry="EVT_CHECKBOX" />
+										</object>
+										<flag>wxALL|wxALIGN_LEFT|wxALIGN_TOP</flag>
+										<border>1</border>
+									</object>
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>1</border>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_TOP</flag>
+			</object>
+		</object>
+	</object>
+</wxsmith>

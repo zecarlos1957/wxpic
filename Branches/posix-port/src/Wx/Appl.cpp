@@ -22,19 +22,19 @@ void APPL_ShowMsg( int caller, int error_level, const wxChar *pszFormat, ... )
    */
 {
     va_list parameter;
-    wxString Text;
+    wxChar szText[512];
 
     va_start( parameter, pszFormat );
-    Text.PrintfV(pszFormat, parameter );
+    _vstprintf( szText, pszFormat, parameter );
     va_end(parameter);
 
     (void)caller;
 
-    MainFrame::SetStatusText(Text);
+    MainFrame::SetStatusText(szText);
     if(  (error_level>=127/*important*/)  /*&&  (ToolForm!=NULL)*/  )
-        wxMessageBox(Text);
+        wxMessageBox(szText);
 
-    APPL_LogEvent(Text);
+    APPL_LogEvent(szText);
 
 } // end APPL_ShowMsg()
 
@@ -43,20 +43,22 @@ void APPL_ShowMsg( int caller, int error_level, const wxChar *pszFormat, ... )
 void APPL_LogEvent( const wxChar * pszFormat, ... )  // logs an "event" with current timestamp
 {
   va_list arglist;
-  wxString Text;
-
-  // Print to string and append to edit control
-  va_start(arglist, pszFormat);
-  Text.PrintfV(pszFormat, arglist);
-  va_end(arglist);
+  wxChar sz500[512];
+  wxChar *cp;
 
   // Show the TIME of this event :
   wxDateTime Now = wxDateTime::UNow();
-  Text.Printf(_("%02d:%02d:%02d.%02d %s"), Now.GetHour(), Now.GetMinute(), Now.GetSecond(), Now.GetMillisecond(), Text.c_str());
+  _stprintf(sz500, _("%02d:%02d:%02d.%02d "), Now.GetHour(), Now.GetMinute(), Now.GetSecond(), Now.GetMillisecond());
+  cp = sz500+_tcslen(sz500);
+
+  // Print to string and append to edit control
+  va_start(arglist, pszFormat);
+  _vstprintf(cp, pszFormat, arglist);
+  va_end(arglist);
 
 //  _tcscat(cp, _("\n"));
 
-  MainFrame::AddTextToLog(Text);
+  MainFrame::AddTextToLog(sz500);
 }
 
 
@@ -121,26 +123,26 @@ long HexStringToLongint(int nMaxDigits, const wxChar *pszSource)
  long lResult = 0;
  wxChar c;
  int i;
-  if(pszSource[0]==wxT('0') && pszSource[1]==wxT('x'))
+  if(pszSource[0]==_T('0') && pszSource[1]==_T('x'))
      pszSource += 2;
-  else if(pszSource[0]==wxT('$'))
+  else if(pszSource[0]==_T('$'))
      pszSource += 1;
 
   for(i=0; i<nMaxDigits; ++i)
    {
      c=pszSource[i];
-     if(c==wxT('\0') || c==wxT(' ') || c==wxT(',') )  // "early" end of the HEX string
+     if(c==_T('\0') || c==_T(' ') || c==_T(',') )  // "early" end of the HEX string
         return lResult;
 
      lResult <<= 4;  // shift "older, upper digits" 4 bits left
-     if(c>=wxT('0') && c<=wxT('9'))
-        lResult += (c-wxT('0'));
+     if(c>=_T('0') && c<=_T('9'))
+        lResult += (c-_T('0'));
      else
-     if(c>=wxT('a') && c<=wxT('f'))
-        lResult += (c-wxT('a')+10);
+     if(c>=_T('a') && c<=_T('f'))
+        lResult += (c-_T('a')+10);
      else
-     if(c>=wxT('A') && c<=wxT('F'))
-        lResult += (c-wxT('A')+10);
+     if(c>=_T('A') && c<=_T('F'))
+        lResult += (c-_T('A')+10);
      else
         return -1;  // not a valid HEX digit
    }
@@ -183,7 +185,7 @@ wxChar *DupIso8859_1_TChar (const char* psz)
 #endif
 }
 
-#ifndef __WXMSW__
+#ifndef __WXMSW__	//Posix Port emulation layer by E.U.A ;)
 void QueryPerformanceCounter( int64_t* cnt ){
 	timespec clk;
 	clock_gettime( CLOCK_MONOTONIC, &clk );
@@ -197,6 +199,36 @@ void QueryPerformanceFrequency( int64_t* frq ){
     clock_gettime( CLOCK_MONOTONIC, &end ) ;
 	*frq = (end.tv_nsec - start.tv_nsec)*1000 ;
 	}
+
+	long GetTickCount(){
+		timespec tm;
+		clock_gettime( CLOCK_MONOTONIC, &tm ) ;
+		return tm.tv_sec*1000+tm.tv_nsec/1000;
+	}
+
+	bool EscapeCommFunction( int fd, int flag){
+		int status;
+		ioctl(fd, TIOCMGET, &status);//Read status register
+		if( flag == SETDTR ){ status |= TIOCM_DTR; }
+		else if( flag == CLRDTR ){ status &= ~TIOCM_DTR; }
+		else if( flag == SETRTS ){ status |= TIOCM_RTS; }
+		else if( flag == CLRRTS ){ status &= ~TIOCM_RTS; }
+		else if( flag == SETBREAK ){
+			 ioctl (fd, TIOCSBRK, 0);
+			 return true;
+			 }
+		else if( flag == CLRBREAK ){
+			 ioctl (fd, TIOCCBRK, 0);
+			 return true;
+			 }
+		else if( flag == MS_CTS_ON ){ status |= TIOCM_CTS; }
+		ioctl(fd, TIOCMSET, &status);//Write
+		return true;
+		}
+
+	bool GetCommModemStatus( int fd, uint32_t *flag ){
+		return ioctl(fd, TIOCMGET, flag)==0;
+		}
 
 #endif
 
