@@ -16,7 +16,7 @@
 #include <wx/filename.h>
 #include "Appl.h"
 #include "Language.h"
-#include <Res\Resource.h>
+#include <Res/Resource.h>
 
 //(*AppHeaders
 #include <wx/image.h>

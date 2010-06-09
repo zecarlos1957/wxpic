@@ -935,7 +935,7 @@ int PIC_HEX_DumpHexFile(const wxChar *fname )
 {
  FILE *fp;
 // int  iBufNr;// TODO (death#1#): Could we change this with wxFILE thing? because of unicode on Linux
-  if ( (fp = fopen(fname, "w")) == NULL )
+  if ( (fp = fopen(wxString(fname).ToAscii(), "w")) == NULL )
    {
        return -1;
    }
