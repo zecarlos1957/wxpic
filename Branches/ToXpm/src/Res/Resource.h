@@ -17,9 +17,9 @@
 class TResource
 {
 public:
-#define ICON_DEF_GEN(name,size) static const wxIcon *Get ## name ## Icon ## size (void) { return the ## name ## Icon ## size; };
+#define ICON_DEF(name) static const wxIcon *Get ## name ## Icon (void) { return the ## name ## Icon; };
 #include "Icon.inc"
-#undef ICON_DEF_GEN
+#undef ICON_DEF
 
     static void Load   (void);
     static void Unload (void);
@@ -33,9 +33,9 @@ public:
     };
 
 private:
-#define ICON_DEF_GEN(name,size) static wxIcon *the ## name ## Icon ## size;
+#define ICON_DEF(name) static wxIcon *the ## name ## Icon;
 #include "Icon.inc"
-#undef ICON_DEF_GEN
+#undef ICON_DEF
 };
 
 #endif // RESOURCE_H_INCLUDED

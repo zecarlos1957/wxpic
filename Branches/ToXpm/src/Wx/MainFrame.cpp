@@ -113,7 +113,7 @@ MainFrame::MainFrame(void)
 {
     initAuto();
     initMore();
-    SetIcon(*TResource::GetaWxPicIcon32());
+    SetIcon(*TResource::GetWxPicIcon());
 }
 
 void MainFrame::initAuto (void)
@@ -307,13 +307,13 @@ void MainFrame::initMore (void)
     Connect(ID_READ_PROGRAM_TOOL,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&MainFrame::onReadMenuItemSelected);
 
     aToolBar = new wxToolBar(this, ID_TOOLBAR, wxDefaultPosition, wxDefaultSize, wxTB_HORIZONTAL|wxNO_BORDER, _T("ID_TOOLBAR"));
-    aOpenHexFileTool = aToolBar->AddTool(ID_OPEN_HEX_FILE_TOOL, _("Load HEX File"), *TResource::GetOpenIcon16(), wxNullBitmap, wxITEM_NORMAL, _("Load HEX file"), _("Load an Hex file in the buffer and Program"));
-    aSaveHexFileTool = aToolBar->AddTool(ID_SAVE_HEX_FILE_TOOL, _("Dump buffer to HEX file"), *TResource::GetSaveIcon16(), wxNullBitmap, wxITEM_NORMAL, _("Dump buffer to HEX file"), _("Save the Buffer to an Hex file"));
+    aOpenHexFileTool = aToolBar->AddTool(ID_OPEN_HEX_FILE_TOOL, _("Load HEX File"), *TResource::GetOpenIcon(), wxNullBitmap, wxITEM_NORMAL, _("Load HEX file"), _("Load an Hex file in the buffer and Program"));
+    aSaveHexFileTool = aToolBar->AddTool(ID_SAVE_HEX_FILE_TOOL, _("Dump buffer to HEX file"), *TResource::GetSaveIcon(), wxNullBitmap, wxITEM_NORMAL, _("Dump buffer to HEX file"), _("Save the Buffer to an Hex file"));
     aToolBar->AddSeparator();
-    aProgDevTool = aToolBar->AddTool(ID_RELOAD_PROG_TOOL, _("Reload and Program Device"), *TResource::GetChipReloadIcon16(), wxNullBitmap, wxITEM_NORMAL, _("Reload and Program Device"), _("Reload the Buffer from the last used Hex file and Program the Device"));
-    aProgDevTool = aToolBar->AddTool(ID_PROG_DEV_TOOL, _("Program Device"), *TResource::GetChipWriteIcon16(), wxNullBitmap, wxITEM_NORMAL, _("Program Device"), _("Program Device with the Buffer Content"));
-    aVerifyProgramTool = aToolBar->AddTool(ID_VERIFY_PROGRAM_TOOL, _("Verify Program"), *TResource::GetChipVerifyIcon16(), wxNullBitmap, wxITEM_NORMAL, _("Verify Program"), _("Verify that the device program is conform to the loaded buffers"));
-    aReadProgramTool = aToolBar->AddTool(ID_READ_PROGRAM_TOOL, _("Read Program"), *TResource::GetChipReadIcon16(), wxNullBitmap, wxITEM_NORMAL, _("Read Program"), _("Store in the buffers the program read in the device"));
+    aProgDevTool = aToolBar->AddTool(ID_RELOAD_PROG_TOOL, _("Reload and Program Device"), *TResource::GetChipReloadIcon(), wxNullBitmap, wxITEM_NORMAL, _("Reload and Program Device"), _("Reload the Buffer from the last used Hex file and Program the Device"));
+    aProgDevTool = aToolBar->AddTool(ID_PROG_DEV_TOOL, _("Program Device"), *TResource::GetChipWriteIcon(), wxNullBitmap, wxITEM_NORMAL, _("Program Device"), _("Program Device with the Buffer Content"));
+    aVerifyProgramTool = aToolBar->AddTool(ID_VERIFY_PROGRAM_TOOL, _("Verify Program"), *TResource::GetChipVerifyIcon(), wxNullBitmap, wxITEM_NORMAL, _("Verify Program"), _("Verify that the device program is conform to the loaded buffers"));
+    aReadProgramTool = aToolBar->AddTool(ID_READ_PROGRAM_TOOL, _("Read Program"), *TResource::GetChipReadIcon(), wxNullBitmap, wxITEM_NORMAL, _("Read Program"), _("Store in the buffers the program read in the device"));
     aToolBar->Realize();
     SetToolBar(aToolBar);
 
