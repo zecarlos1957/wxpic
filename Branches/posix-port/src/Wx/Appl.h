@@ -82,6 +82,13 @@ wxChar       *DupIso8859_1_TChar  (const char* psz);
 #ifndef _TCHAR_to_WXCHAR_
 #define _TCHAR_to_WXCHAR_ 1 //definition protector
 
+#include <errno.h>
+#include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <time.h>
+
 #define _tcscat wxStrcat
 #define _tcstol wxStrtol
 #define _tcslen wxStrlen
@@ -99,28 +106,20 @@ wxChar       *DupIso8859_1_TChar  (const char* psz);
 
 void QueryPerformanceCounter( int64_t* cnt );
 void QueryPerformanceFrequency( int64_t* frq );
+typedef int HANDLE;
+#define INVALID_HANDLE_VALUE EMFILE
+typedef struct termios DCB;
+typedef int64_t LONGLONG;
+typedef int64_t LARGE_INTEGER;
+typedef uint32_t DWORD;
+typedef uint64_t* HMODULE;
 
-	#include <errno.h>
-	#include <termios.h>
-	#include <unistd.h>
-	#include <fcntl.h>
-	#include <sys/ioctl.h>
-   #include <time.h>
-
-	typedef int HANDLE;
-	#define INVALID_HANDLE_VALUE EMFILE
-	typedef struct termios DCB;
-	typedef int64_t LONGLONG;
-	typedef int64_t LARGE_INTEGER;
-	typedef uint32_t DWORD;
-	typedef uint64_t* HMODULE;
-
-	enum{SETDTR=TIOCM_DTR, CLRDTR, SETRTS=TIOCM_RTS, CLRRTS, SETBREAK=TIOCSBRK, CLRBREAK=TIOCCBRK, MS_CTS_ON=TIOCM_CTS };
-	long GetTickCount(void);
-	bool EscapeCommFunction( int fd, int flag);
-	bool GetCommModemStatus( int fd, uint32_t *flag );
-	int ReadIoPortByte(uint16_t);
-	int WriteIoPortByte(uint16_t,uint16_t);
+enum{SETDTR=TIOCM_DTR, CLRDTR, SETRTS=TIOCM_RTS, CLRRTS, SETBREAK=TIOCSBRK, CLRBREAK=TIOCCBRK, MS_CTS_ON=TIOCM_CTS };
+long GetTickCount(void);
+bool EscapeCommFunction( int fd, int flag);
+bool GetCommModemStatus( int fd, uint32_t *flag );
+int ReadIoPortByte(uint16_t);
+int WriteIoPortByte(uint16_t,uint16_t);
 #endif
 
 /* EOF <appl.h> */
