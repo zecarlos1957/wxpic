@@ -3309,6 +3309,7 @@ bool PIC_PRG_ReadAll(
             for ( i=0; i<PIC_DeviceInfo.lCodeMemSize && i<PIC_BUF_CODE_SIZE; ++i )
             {
 //                PHWInfo.iCurrProgAddress = i; // added 2008-05 for the plugin-DLL
+					 printf( "Reading byte: %d\n" , i);
                 PIC_HW_SerialOut_Command6(PIC_DeviceInfo.iCmd_ReadProg, true );
                 if ( ( w = (PIC_HW_SerialRead_14Bit() & 0x3FFF)) != 0x3FFF )
                     prog_mem_last = i;
