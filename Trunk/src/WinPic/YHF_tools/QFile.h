@@ -23,7 +23,7 @@
 
 #include <wx/file.h>
 //#include <io.h>         // some file DEFINITIONS
-
+#include <stdint.h>
 //---------- Constants ------------------------------------------------------
 
 // Possible values for 'mode' in QFile_Open .

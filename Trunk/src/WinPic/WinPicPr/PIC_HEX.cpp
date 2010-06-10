@@ -39,8 +39,8 @@
 #include <stdlib.h>
 
 #include <Wx/Appl.h>       // APPL_ShowMsg(), etc
-#include "PIC_PRG.H"   // some infos in PIC_dev_param are required here !
-#include "LoadHex.H"   // newer, "universal" routine to load hex files (also for dsPIC)
+#include "PIC_PRG.h"   // some infos in PIC_dev_param are required here !
+#include "LoadHex.h"   // newer, "universal" routine to load hex files (also for dsPIC)
 
 #define _I_AM_PIC_HEX_ 1
 #include "PIC_HEX.h"
@@ -934,9 +934,8 @@ int PIC_HEX_DumpHexFile(const wxChar *fname )
   // Dumps buffers in Microchip HEX format.
 {
  FILE *fp;
-// int  iBufNr;
-
-  if ( (fp = _tfopen(fname, _T("w"))) == NULL )
+// int  iBufNr;// TODO (death#1#): Could we change this with wxFILE thing? because of unicode on Linux
+  if ( (fp = fopen(wxString(fname).ToAscii(), "w")) == NULL )
    {
        return -1;
    }

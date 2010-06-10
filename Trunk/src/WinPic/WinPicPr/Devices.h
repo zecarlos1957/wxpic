@@ -20,8 +20,8 @@
 
 #ifndef _DEVICES_H_
 #define _DEVICES_H_
-
-#include <tchar.h>
+#include <stdint.h>
+//#include <tchar.h> //No linux support for this
 
  // Possible values for T_PicConfigBitInfo.iFunction :
 #define CFGBIT_CUSTOM  0   // user-defined/"custom", which means none of the following...

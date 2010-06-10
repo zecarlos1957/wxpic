@@ -3,7 +3,7 @@
 /*     Part of Wolfgang Buescher's  simple PIC-Programmer for Windows.     */
 /*-------------------------------------------------------------------------*/
 
-#include "devices.h" // database with PIC device definitions + access routines
+#include "Devices.h" // database with PIC device definitions + access routines
 
 #ifdef __cplusplus      /* to call these routines from CPP modules : */
  #define CPROT extern "C"

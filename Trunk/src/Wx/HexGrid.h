@@ -12,6 +12,7 @@
 #define HEXGRID_H_INCLUDED
 
 #include <wx/grid.h>
+#include <stdint.h>
 
 class THexGrid : public wxGrid
 {

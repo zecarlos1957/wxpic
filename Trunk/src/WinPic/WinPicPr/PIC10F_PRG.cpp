@@ -28,11 +28,11 @@
 
 #include <wx/intl.h>
 #include "PIC_HW.h"     // Routines to drive the programmer hardware interface
-#include "devices.h"    // need T_PicDeviceInfo here !
-#include "config.h"     // permanently saved Config-structure
+#include "Devices.h"    // need T_PicDeviceInfo here !
+#include "Config.h"     // permanently saved Config-structure
 #include <Wx/Appl.h>       // APPL_ShowMsg(), etc
-#include "Pic_Hex.h"    // access routines to the "hex data buffer"
-#include "PIC_PRG.H"    // generic defines for programming routines
+#include "PIC_HEX.h"    // access routines to the "hex data buffer"
+#include "PIC_PRG.h"    // generic defines for programming routines
 #include "PIC10F_PRG.h" // header for the PIC10F20x programming algorithms
 
 

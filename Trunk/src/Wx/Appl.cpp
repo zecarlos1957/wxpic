@@ -22,19 +22,19 @@ void APPL_ShowMsg( int caller, int error_level, const wxChar *pszFormat, ... )
    */
 {
     va_list parameter;
-    wxChar szText[512];
+    wxString Text;
 
     va_start( parameter, pszFormat );
-    _vstprintf( szText, pszFormat, parameter );
+    Text.PrintfV(pszFormat, parameter );
     va_end(parameter);
 
     (void)caller;
 
-    MainFrame::SetStatusText(szText);
+    MainFrame::SetStatusText(Text);
     if(  (error_level>=127/*important*/)  /*&&  (ToolForm!=NULL)*/  )
-        wxMessageBox(szText);
+        wxMessageBox(Text);
 
-    APPL_LogEvent(szText);
+    APPL_LogEvent(Text);
 
 } // end APPL_ShowMsg()
 
@@ -43,22 +43,21 @@ void APPL_ShowMsg( int caller, int error_level, const wxChar *pszFormat, ... )
 void APPL_LogEvent( const wxChar * pszFormat, ... )  // logs an "event" with current timestamp
 {
   va_list arglist;
-  wxChar sz500[512];
-  wxChar *cp;
-
-  // Show the TIME of this event :
-  wxDateTime Now = wxDateTime::UNow();
-  _stprintf(sz500, _("%02d:%02d:%02d.%02d "), Now.GetHour(), Now.GetMinute(), Now.GetSecond(), Now.GetMillisecond());
-  cp = sz500+_tcslen(sz500);
+  wxString Text;
 
   // Print to string and append to edit control
   va_start(arglist, pszFormat);
-  _vstprintf(cp, pszFormat, arglist);
+  Text.PrintfV(pszFormat, arglist);
   va_end(arglist);
+
+  // Show the TIME of this event :
+  wxDateTime Now = wxDateTime::UNow();
+  wxString LogText;
+  LogText.Printf(_("%02d:%02d:%02d.%02d %s"), Now.GetHour(), Now.GetMinute(), Now.GetSecond(), Now.GetMillisecond(), Text.c_str());
 
 //  _tcscat(cp, _("\n"));
 
-  MainFrame::AddTextToLog(sz500);
+  MainFrame::AddTextToLog(LogText);
 }
 
 
@@ -184,3 +183,56 @@ wxChar *DupIso8859_1_TChar (const char* psz)
     return strdup(psz);
 #endif
 }
+
+#ifndef __WXMSW__	//Posix Port emulation layer by E.U.A ;)
+void QueryPerformanceCounter( int64_t* cnt ){
+	timespec clk;
+	clock_gettime( CLOCK_MONOTONIC, &clk );
+	*cnt = clk.tv_nsec +clk.tv_sec*100000000000ll;
+	}
+
+void QueryPerformanceFrequency( int64_t* frq ){
+	static int64_t result = 0;
+	if(result == 0){
+		timespec start, end;
+		clock_gettime( CLOCK_MONOTONIC, &start ) ;
+		usleep(10000);
+		clock_gettime( CLOCK_MONOTONIC, &end ) ;
+		result = (end.tv_nsec - start.tv_nsec)*100 ;
+		}
+	*frq = result;
+	}
+
+	long GetTickCount(){
+		timespec tm;
+		clock_gettime( CLOCK_MONOTONIC, &tm ) ;
+		return tm.tv_sec*1000+tm.tv_nsec/1000;
+	}
+
+	bool EscapeCommFunction( int fd, int flag){
+		int status;
+		ioctl(fd, TIOCMGET, &status);//Read status register
+		if( flag == SETDTR ){ status |= TIOCM_DTR; }
+		else if( flag == CLRDTR ){ status &= ~TIOCM_DTR; }
+		else if( flag == SETRTS ){ status |= TIOCM_RTS; }
+		else if( flag == CLRRTS ){ status &= ~TIOCM_RTS; }
+		else if( flag == SETBREAK ){
+			 ioctl (fd, TIOCSBRK, 0);
+			 return true;
+			 }
+		else if( flag == CLRBREAK ){
+			 ioctl (fd, TIOCCBRK, 0);
+			 return true;
+			 }
+		else if( flag == MS_CTS_ON ){ status |= TIOCM_CTS; }
+		ioctl(fd, TIOCMSET, &status);//Write
+		return true;
+		}
+
+	bool GetCommModemStatus( int fd, uint32_t *flag ){
+		return ioctl(fd, TIOCMGET, flag)==0;
+		}
+	int ReadIoPortByte(uint16_t){return 0;}
+	int WriteIoPortByte(uint16_t,uint16_t){return 0;}
+#endif
+

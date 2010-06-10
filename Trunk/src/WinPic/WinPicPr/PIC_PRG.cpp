@@ -101,14 +101,14 @@
 
 //#pragma hdrstop  // don't try to precompile the following headers (->chaos!!)
 
-#include "config.h"    // permanently saved Config-structure
-#include "devices.h"   // device information structure
+#include "Config.h"    // permanently saved Config-structure
+#include "Devices.h"   // device information structure
 #include <Wx/Appl.h>       // APPL_ShowMsg(), etc
 #include "PIC_HEX.h"   // HEX-file import, export  and buffers
 
 #include "PIC_HW.h"    // Routines to drive the programmer hardware interface
 
-#include "PIC16F716_PRG.H" // support for PIC16F716 since 2005-12 (what's different with that beast ?)
+#include "PIC16F716_PRG.h" // support for PIC16F716 since 2005-12 (what's different with that beast ?)
 #include "PIC10F_PRG.h" // support for PIC10F20x by W.Buescher (2005-05)
 #include "dsPIC_PRG.h"  // support dsPIC30 family by W.Buescher
 #include "PIC18F_PRG.h" // support for PIC18F devices by Martin van der Werff

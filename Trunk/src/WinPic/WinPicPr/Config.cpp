@@ -8,8 +8,8 @@
 
 
 #include <Wx/Appl.h>      // call the APPLication to display message strings
-#include "pic_hw.h"   // interface types etc for default values
-#include "pic_prg.h"
+#include "PIC_HW.h"   // interface types etc for default values
+#include "PIC_PRG.h"
 
 #define _I_AM_CONFIG_  /* for single-source-variables in CONFIG.H */
 #include "Config.h"

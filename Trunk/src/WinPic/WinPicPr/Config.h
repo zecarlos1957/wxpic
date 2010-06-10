@@ -3,9 +3,9 @@
 /*                                                                         */
 /*     Ported to WxPic by Philippe Chevrier                                */
 /*-------------------------------------------------------------------------*/
-#include <tchar.h>
+//#include <tchar.h> //No linux support for this
 #include <wx/confbase.h>
-
+#include <stdint.h>
 
 /*----------------- constants  --------------------------------------------*/
 #define CFG_INI_FILE_NAME  "settings.ini"

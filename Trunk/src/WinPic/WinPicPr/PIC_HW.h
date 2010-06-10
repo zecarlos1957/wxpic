@@ -35,6 +35,7 @@
 
 
 #include <wx/defs.h>
+#include <stdint.h>
 
 
 /*------------- Constants and other definitions ---------------------------*/

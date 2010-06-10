@@ -32,18 +32,20 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include <wx/intl.h> //-- intl.h must be included before OlsApiInit.h because it uses _T macro without declaring it
 
-#include <windows.h>
+#ifdef __WXMSW__
+	#include <windows.h>
+	#include <WinRing0/OlsApiInit.h>  //-- WinRing0 Header
+#endif
 
 #include <stdio.h>     // don't panic.. just required for sprintf !
 #include <wx/string.h>
 #include <wx/filename.h>
 #include <wx/xml/xml.h>
-#include <wx/intl.h>
 #include <wx/stdpaths.h>
-#include <WinRing0/OlsApiInit.h>  //-- WinRing0 Header
 
-#include "config.h"    // permanently saved Config-structure
+#include "Config.h"    // permanently saved Config-structure
 #include <Wx/Appl.h>      // call the APPLication to display message strings
 
 //#include <WinPic/smport/TSmPort.h>   // A.Weitzman's SMALL PORT plus WoBu's C++ wrapper
@@ -133,7 +135,9 @@ HMODULE PicHw_hFilterPluginDLL=NULL; // handle to the interface plugin DLL,
 /***************************************************************************/
  HANDLE  COM_hComPort = INVALID_HANDLE_VALUE;
  DCB  COM_dcb;
+ #ifdef __WXMSW__
  OVERLAPPED COM_sOverlappedIo = { 0,0,0,0,NULL }; // structure for OVERLAPPED I/O
+ #endif
  uint16_t COM_io_address = 0x0000;
  uint16_t PicHw_wDataControlBits;   // for data format reg.  (reg 03)
  uint16_t PicHw_wModemControlBits;  // for modem control reg (reg 04)
@@ -144,7 +148,7 @@ HMODULE PicHw_hFilterPluginDLL=NULL; // handle to the interface plugin DLL,
        PicHw_fClockIsEnabled, PicHw_fDataIsEnabled;
  bool  PicHw_fTogglingTxD;
 
-
+#ifdef __WXMSW__
 bool COM_OpenPicPort(void)
 {
  wxChar szPort[10];
@@ -399,6 +403,230 @@ bool COM_ClosePicPort(void)
    }
   return false;
 } // end COM_ClosePicPort()
+#else
+bool COM_OpenPicPort(void){
+ wxString szPort;
+ struct termios MyTermios;
+
+ //COMMTIMEOUTS MyCommTimeouts;
+
+ if( COM_hComPort != INVALID_HANDLE_VALUE )
+  { // if a COM-port has already been opened; close it (may be different now)
+    COM_ClosePicPort();
+  }
+
+ // Determine the I/O-port access for the serial port.
+ //  Unfortunately there is no uniform method to do this under Win98,
+ //  so we'll leave it to the USER to *carefully* enter the right port address.
+ switch(Config.iComPortNr)
+  {
+   case 1:  COM_io_address = 0x03F8; break;
+   case 2:  COM_io_address = 0x02F8; break;
+   case 3:  COM_io_address = 0x03E8; break;
+   case 4:  COM_io_address = 0x02E8; break;
+   default:
+//     if( PicHw_fUseSmallPort )
+//      { _tcscpy(PicHw_sz255LastError, _("illegal COM port number"));
+//        return false;
+//      }
+//     else // when *NOT* using direct port access, allow any COM-port number !
+//      {
+//      }
+     break;
+  }
+ // If a "non-standard" COM-port-number is in use, override the above guess:
+ if( Config.iComIoAddress>=PIC_HW_COM_ADDR_MIN && Config.iComIoAddress<=PIC_HW_COM_ADDR_MAX )
+  {
+  COM_io_address = Config.iComIoAddress;
+  }
+ else  // non-standard COM port number. It this a problem ?
+  {
+  // COM_io_address = 0x0000;
+  }
+
+ if( (COM_hComPort == INVALID_HANDLE_VALUE) && (Config.iComPortNr>0) )
+   {
+     //    The fdwShareMode parameter must be zero, opening the resource for exclusive access.
+     //    The fdwCreate parameter must specify the OPEN_EXISTING flag.
+     //    The hTemplateFile parameter must be NULL.
+     // Under WinXP (NT?), it seems to be impossible to do simulaneous
+     //    READ and WRITE operations without the OVERLAPPED hassle.
+
+     	int fd; /* File descriptor for the port */
+     	szPort = wxString(wxT("/dev/ttyS") )<< Config.iComPortNr-1;
+
+		fd = open(szPort.mb_str(), O_RDWR | O_NOCTTY | O_NDELAY);
+		if (fd == -1){
+			_tcscpy(PicHw_sz255LastError, _("Cannot open COM port"));
+			}
+		else
+			fcntl(fd, F_SETFL, 0);
+		COM_hComPort = fd;
+
+     if( tcgetattr( COM_hComPort, &MyTermios ) )
+      {
+        _tcscpy(PicHw_sz255LastError, _("Cannot read CommState."));
+        close(COM_hComPort);
+        COM_hComPort = INVALID_HANDLE_VALUE;
+        return false;
+      }
+
+
+     // To modify this configuration, a process specifies a DCB structure
+     // in a call to the SetCommState function.
+     // Members of the DCB structure specify the configuration settings
+     // such as the baud rate, the number of data bits per byte,
+     // and the number of stop bits per byte. Other DCB members specify special
+     // characters and enable parity checking and flow control.
+     // When a process needs to modify only a few of these configuration settings,
+     // it should first call GetCommState to fill in a DCB structure with the
+     // current configuration. Then the process can adjust the important values
+     // in the DCB structure and reconfigure the device by calling SetCommState
+     // and specifying the modified DCB structure.
+     //       (WB: that's exactly how it's done here.)
+     // This procedure ensures that the unmodified members of the DCB structure
+     // contain appropriate values. For example, a common error is to configure
+     // a device with a DCB structure in which the structure's XonChar member
+     // is equal to the XoffChar member. Some members of the DCB structure
+     // are different from those in previous versions of Microsoft Windows.
+     // In particular, the flags for controlling RTS (request-to-send)
+     // and DTR (data-terminal-ready) have changed.
+     //  WoBu: We set almost everything here to the driver package's "default"
+     //        value   so we know quite well what's going on,
+     //        regardless of the WINDOZE VERSION and System Settings on this PC !
+     //MyDCB.BaudRate = 115200; // ex: = 9600;  // Set the baudrate for the serial port,
+		cfsetispeed(&MyTermios, B115200);
+		cfsetospeed(&MyTermios, B115200);
+		MyTermios.c_cflag |= (CLOCAL | CREAD);
+
+        // just in case the TxD line will be "toggling" to drive a charge pump.
+     //MyDCB.fBinary = true;             // binary mode, no EOF check
+     //MyDCB.fParity = false;            // true=enable parity checking
+		//8N1
+		MyTermios.c_cflag &= ~PARENB;
+		MyTermios.c_cflag &= ~CSTOPB;
+		MyTermios.c_cflag &= ~CSIZE;
+		MyTermios.c_cflag |= CS8;
+
+
+		//MyTermios.c_cflag &= ~CRTSCTS;
+		MyTermios.c_cflag &= ~IXON;
+	//	MyTermios.c_cflag &= ~IXOFF;
+
+//     MyDCB.fOutxCtsFlow= false;        // no CTS output flow control
+//     MyDCB.fOutxDsrFlow= false;        // DSR output flow control
+    // MyDCB.fDtrControl=DTR_CONTROL_ENABLE; // DTR flow control type: DTR_CONTROL_ENABLE=0x01="leave it on"(!!)
+    // MyDCB.fDsrSensitivity=false;      // DSR sensitivity
+     //MyDCB.fTXContinueOnXoff=false;    // XOFF continues Tx
+     //MyDCB.fOutX = false;              // XON/XOFF out flow control
+     //MyDCB.fInX  = false;              // XON/XOFF in flow control
+     //MyDCB.fErrorChar= false;          // enable error replacement
+     //MyDCB.fNull = false;              // enable null stripping (false: don't throw away NULL bytes!)
+     //MyDCB.fRtsControl=RTS_CONTROL_ENABLE;  // RTS flow control ..
+     // RTS_CONTROL_ENABLE: Enable the RTS line when the device is opened and leave it on.
+     //MyDCB.fAbortOnError=false;        // abort reads/writes on error
+     //  MyDCB.fDummy2=MyDCB.fDummy2;  // reserved
+     //  MyDCB.wReserved=MyDCB.wReserved; // not currently used
+
+     //MyDCB.XonLim = 2048;    // transmit XON threshold (65535 geht unter WinXP nicht ?)
+     //MyDCB.XoffLim= 2048;    // transmit XOFF threshold
+     //MyDCB.ByteSize= 8;      // number of bits/byte, 4-8
+     //MyDCB.Parity  = 0;      // 0..4 = no,odd,even,mark,space  "parity"
+     //MyDCB.StopBits= 0;      // 0,1,2 = 1, 1.5, 2
+     //MyDCB.XonChar = 0x11;   // Tx and Rx XON character
+     //MyDCB.XoffChar= 0x13;   // Tx and Rx XOFF character
+     //MyDCB.ErrorChar=0x00;   // error replacement character
+     //MyDCB.EofChar = 0x00;   // end of input character
+     //MyDCB.EvtChar = 0x00;   // received event character
+     //  MyDCB.wReserved1=MyDCB.wReserved1; // reserved; do not use
+
+     if( tcsetattr( COM_hComPort, TCSANOW, &MyTermios ) )
+      {
+        _tcscpy(PicHw_sz255LastError, _("Cannot set CommState."));
+        close(COM_hComPort);
+        COM_hComPort = INVALID_HANDLE_VALUE;
+        return false;
+      }
+/*
+     // Now define the RX- and TX timeouts for calls to ReadFile and WriteFile.
+     // See Win32 Programmer's Reference on COMMTIMEOUTS.
+     MyCommTimeouts.ReadIntervalTimeout = 0;
+                 // Specifies the maximum time, in milliseconds,
+                 // allowed to elapse between the arrival of
+                 // two characters on the communications line.
+
+     MyCommTimeouts.ReadTotalTimeoutMultiplier = 0;
+                 // Specifies the multiplier, in milliseconds,
+                 // used to calculate the total time-out period
+                 // for read operations. For each read operation,
+                 // this value is multiplied by the requested
+                 // number of bytes to be read.
+
+     MyCommTimeouts.ReadTotalTimeoutConstant = 5; // ex: 20;
+                 // Specifies the constant, in milliseconds,
+                 // used to calculate the total time-out period
+                 // for read operations. For each read operation,
+                 // this value is added to the product of the
+                 // ReadTotalTimeoutMultiplier member and the
+                 // requested number of bytes.
+          // Modified 2007-08-27 because an USB<->RS-232 interface (*)
+          //  was INCREDIBLY SLOW in the EscapeCommFunction()
+          // (*) "Prolific USB-Serial" alias "BELKIN, Made In China" .. uuurgh
+
+     MyCommTimeouts.WriteTotalTimeoutMultiplier = 10; // ex: 80;
+                 // Specifies the multiplier, in milliseconds,
+                 // used to calculate the total time-out period
+                 // for write operations. For each write operation,
+                 // this value is multiplied by the number of bytes
+                 // to be written.
+                 // WB: should be somehow baudrate-dependent !
+
+     MyCommTimeouts.WriteTotalTimeoutConstant = 100;
+                 // Specifies the constant, in milliseconds,
+                 // used to calculate the total time-out period
+                 // for write operations. For each write operation,
+                 // this value is added to the product of the
+                 // WriteTotalTimeoutMultiplier member
+                 // and the number of bytes to be written.
+
+     // The SetCommTimeouts function sets the time-out parameters
+     // for all read and write operations on a specified communications device.
+     // (P.S. not really important yet, since we only "write" to the port
+     //  to keep the charge-pump in the JDM-interface happy)
+     if( ! SetCommTimeouts( COM_hComPort, &MyCommTimeouts ) )
+      {
+        _tcscpy(PicHw_sz255LastError, _("Cannot set CommTimeouts."));
+        CloseHandle(COM_hComPort);
+        COM_hComPort = INVALID_HANDLE_VALUE;
+        return false;
+      }
+*/
+   } // end if < need to open and parametrize serial port ? >
+
+ PicHw_wModemControlBits = 0x00;  // data to be written to register
+
+// if( PicHw_fUseSmallPort && (COM_io_address>0) )
+//  {
+//   // read initial state of the "data format register"  (which controls TXD)
+//   PicHw_wDataControlBits = SmallPort.ReadByte( (uint16_t)COM_io_address+3);
+//  }
+
+ return true;
+ }
+bool COM_ClosePicPort(void){
+	if( COM_hComPort != INVALID_HANDLE_VALUE ){
+	  int status;
+     ioctl(COM_hComPort, TIOCMGET, &status);
+	  status &= ~TIOCM_DTR;
+	  status &= ~TIOCM_RTS;
+     ioctl(COM_hComPort, TIOCMSET, &status);
+     close( COM_hComPort );
+     COM_hComPort = INVALID_HANDLE_VALUE;
+     return true;
+		}
+	return false;
+	}
+#endif
 
 uint16_t COM_GetPicDataBit(void)
 {
@@ -666,7 +894,7 @@ int PicHw_TestCTS(int iNewState) // test bit. ignore iNewState.
 int PicHw_TestNotCTS(int iNewState) // inverted test bit. ignore iNewState.
 { return PicHw_Inv3State( PicHw_TestCTS( PicHw_Inv3State( iNewState ) ) ) ;
 }
-
+#ifdef __WXMSW__
 bool PicHw_UpdateComOutputBits(void)
   //  Writes the modified bits back to the serial output lines.
   //  Also keeps the TxD ouput toggling if required
@@ -756,7 +984,90 @@ bool PicHw_UpdateComOutputBits(void)
   return false;
 
 } // end PicHw_UpdateComOutputBits()
+#else
+bool PicHw_UpdateComOutputBits(void){
 
+  // Update the signal levels on RTS, DTR, and TXD .
+  // WARNING: These outputs may not change their state at the very same time,
+  //     so DON'T RELY ON TWO CONTROL OUTPUTS CHANGING AT THE "SAME" TIME !
+  // Here the "dangerous-but-once-fastest" way to do it (using register access):
+//  if ( PicHw_fUseSmallPort )
+//   {
+//     if( COM_io_address>0 )
+//      {
+//        SmallPort.WriteByte(
+//          (uint16_t)COM_io_address+4,      // address of modem control register
+//           PicHw_wModemControlBits );  // data to be written to register
+//        SmallPort.WriteByte(
+//          (uint16_t)COM_io_address+3,      // address of data format register
+//           PicHw_wDataControlBits);    // data to be written to register
+//        if(PicHw_fTogglingTxD)
+//         { // If the state of the TxD line shall toggle (produce a square wave),
+//           // keep the transmit-shift-register filled with a 01010101-value .
+//           if( (SmallPort.ReadByte(     // check serial status register ...
+//               (uint16_t)COM_io_address+5 ) // address of serial status register
+//                           & 0x20 )!=0) // check 'transmit buffer empty' flag
+//            {  // transmit buffer empty -> put 0101.. pattern in TX buffer
+//              SmallPort.WriteByte(
+//                (uint16_t)COM_io_address,   // address of transmit buffer register
+//                             0x55 );    // byte to be transmitted
+//              QueryPerformanceCounter( (LARGE_INTEGER *) &PicHw_i64LastTimeOfTxdFeed );
+//            }
+//         } // end if(PicHw_fTogglingTxD)
+//
+//        return true;
+//       }
+//      else
+//       {
+//         _tcscpy(PicHw_sz255LastError, _("Invalid COM port address"));
+//         return false;
+//       }
+//   } // end if ( PicHw_fUseSmallPort )
+//  else
+   { if( COM_hComPort != INVALID_HANDLE_VALUE )
+      { // if only windows API routines are used,
+        // most signals have been updated immediately
+        // to avoid unnecessary calls of the EscapeCommFunction() here .
+        if(PicHw_fTogglingTxD)
+         { // If the state of the TxD line shall toggle (produce a square wave),
+           // keep the transmit-shift-register filled with a 01010101-value .
+           // Note: MUST USE NON-BLOCKING I/O HERE .
+           // See help system on WriteFile(), or google for ERROR_IO_PENDING .
+           char sz4Temp[4];
+           DWORD dwNumBytesWritten;
+           sz4Temp[0] = 0x55;
+           if( write( COM_hComPort, // handle to file to write to
+                      sz4Temp,   // pointer to data to write to file
+                      1))         // number of bytes to write)
+            { // Arrived here: WriteFile "failed" . But not really...
+              // Since we are using "overlapped" (=non-blocking) I/O here,
+              // it's totally ok that WriteFile fails if the tx buffer is full.
+              uint32_t dwError = errno;
+              if( dwError == EAGAIN )
+               { // everything perfect. WriteFile is still busy from the previous "write",
+                 // which means the charge pump in the JDM-interface is still
+                 // being fed with a square wave.
+                 // This code was just added for clarity, and to check if we really
+                 // got that "ERROR_IO_PENDING" message !
+                 dwError = dwError;   // <<< set breakpoint here
+
+               } // end if <WriteFile still busy from previous call >
+              else
+               { // arrived here: something REALLY wrong with 'WriteFile'. What ?
+                 dwError = dwError;   // <<< set breakpoint here
+               }
+            } // end if <WriteFile seems to have failed (for the serial port) >
+           QueryPerformanceCounter( (LARGE_INTEGER *) &PicHw_i64LastTimeOfTxdFeed );
+         } // end if(PicHw_fTogglingTxD)
+
+        return true;
+      }
+   }
+  _tcscpy(PicHw_sz255LastError, _("Cannot update COM port bits"));
+  return false;
+  }
+
+#endif
 
 
 // Special routines for programmers on the serial port.
@@ -785,7 +1096,7 @@ int PicHw_ToggleTXD(int iNewState)
          uint16_t PicHw_wLptCtrlBits;  // .. and to the CENTRONICS CONTROL PORT
 
 
-
+#ifdef __WXMSW__
 bool LPT_OpenPicPort(void)
 {
  bool fResult = true;
@@ -926,7 +1237,10 @@ void LPT_ClosePicPort(void)
 
  PicHw_fLptPortOpened = false;
 } // end LPT_ClosePicPort()
-
+#else
+bool LPT_OpenPicPort(void){return false;}
+void LPT_ClosePicPort(void){}
+#endif
 
 bool PicHw_dummy(void)
 {

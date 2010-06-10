@@ -10,22 +10,36 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "Resource.h"
+#ifdef USE_AUTOGEN_ICON_INCLUDE
+#include "Res/Icon.autogen"
+#else
+#include "Res/WxPic.xpm"
+#include "Res/ChipRead.xpm"
+#include "Res/ChipVerify.xpm"
+#include "Res/ChipWrite.xpm"
+#include "Res/ChipReload.xpm"
+#include "Res/LedGreen.xpm"
+#include "Res/LedRed.xpm"
+#include "Res/LedOff.xpm"
+#include "Res/Open.xpm"
+#include "Res/Save.xpm"
+#endif
 
 
-#define ICON_DEF_GEN(name,size)  wxIcon  *TResource::the ## name ## Icon ## size = NULL;
+#define ICON_DEF(name)  wxIcon  *TResource::the ## name ## Icon = NULL;
 #include "Icon.inc"
-#undef ICON_DEF_GEN
+#undef ICON_DEF
 
 /*static*/ void TResource::Load (void)
 {
-#define ICON_DEF_GEN(name,size) the ## name ## Icon ## size = new wxIcon(_T(#name), wxBITMAP_TYPE_ICO_RESOURCE, size, size);
+#define ICON_DEF(name) the ## name ## Icon = new wxIcon(name ## _xpm);
 #include "Icon.inc"
-#undef ICON_DEF_GEN
+#undef ICON_DEF
 }
 
 /*static*/ void TResource::Unload (void)
 {
-#define ICON_DEF_GEN(name,size) delete the ## name ## Icon ## size; the ## name ## Icon ## size = NULL;
+#define ICON_DEF(name) delete the ## name ## Icon; the ## name ## Icon = NULL;
 #include "Icon.inc"
-#undef ICON_DEF_GEN
+#undef ICON_DEF
 }

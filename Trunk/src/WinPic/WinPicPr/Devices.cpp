@@ -30,12 +30,11 @@
 #include <wx/intl.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
-
 //#include <stdio.h>      // don't panic.. just required for sprintf !
 
 #define _I_AM_DEVICES_
-#include "devices.h"   // header for THIS module
-#include "config.h"    // permanently saved Config-structure
+#include "Devices.h"   // header for THIS module
+#include "Config.h"    // permanently saved Config-structure
 #include <Wx/Appl.h>      // call the APPLication to display message strings
 //#include "YHF_MultiLang.h" // helper routines for multi-language support ( TE(str) )
 #include <WinPic/YHF_tools/QFile.h>     // W.B.'s "Quick-File" module to access text files
@@ -4145,7 +4144,8 @@ void WriteValue (wxFile &File, const char *Key, const char *Value)
 void WriteIntValue (wxFile &File, const char *Key, int Value)
 {
     char Buf[10];
-    _itoa(Value, Buf, 10);
+    //_itoa(Value, Buf, 10);
+    sprintf( Buf,"%d", Value );
     File.Write (Key, strlen(Key));
     File.Write ("=", 1);
     File.Write (Buf, strlen(Buf));
@@ -4170,7 +4170,7 @@ void PicDev_DumpDeviceListToFile( const wxChar *pszDumpFileName )
     wxFileName DumpFilename(wxStandardPaths::Get().GetExecutablePath());
     DumpFilename.SetFullName(pszDumpFileName);
     s = DumpFilename.GetFullPath();
-    DeleteFile( s );  // make sure we write into a "clean" file. No old scrap !
+    wxRemoveFile( s );  // make sure we write into a "clean" file. No old scrap !
     APPL_ShowMsg(APPL_CALLER_MAIN,0,_("Device list dumped to \"%s\""),s.c_str());
     wxFile IniFile(s, wxFile::write);
     WriteHeader(IniFile, "Info");
