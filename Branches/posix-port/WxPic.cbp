@@ -62,7 +62,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="WxWidget" />
+					<Add library="WxWidgets" />
 					<Add library="gdi32" />
 					<Add library="user32" />
 					<Add library="kernel32" />
