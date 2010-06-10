@@ -10,22 +10,23 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "Resource.h"
+//#include "Res/Icon.autogen"
 
 
-#define ICON_DEF_GEN(name,size)  wxIcon  *TResource::the ## name ## Icon ## size = NULL;
+#define ICON_DEF(name)  wxIcon  *TResource::the ## name ## Icon = NULL;
 #include "Icon.inc"
-#undef ICON_DEF_GEN
+#undef ICON_DEF
 
 /*static*/ void TResource::Load (void)
 {
-#define ICON_DEF_GEN(name,size) the ## name ## Icon ## size = new wxIcon(_T(#name), wxBITMAP_TYPE_ICO_RESOURCE, size, size);
+#define ICON_DEF(name) the ## name ## Icon = new wxIcon(name ## _xpm);
 #include "Icon.inc"
-#undef ICON_DEF_GEN
+#undef ICON_DEF
 }
 
 /*static*/ void TResource::Unload (void)
 {
-#define ICON_DEF_GEN(name,size) delete the ## name ## Icon ## size; the ## name ## Icon ## size = NULL;
+#define ICON_DEF(name) delete the ## name ## Icon; the ## name ## Icon = NULL;
 #include "Icon.inc"
-#undef ICON_DEF_GEN
+#undef ICON_DEF
 }

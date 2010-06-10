@@ -127,12 +127,12 @@ TInterfacePanel::TInterfacePanel(wxWindow* parent,wxWindowID id,const wxPoint& p
 	BoxSizer19->Add(aVddSelectRadio, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	FlexGridSizer4 = new wxFlexGridSizer(2, 2, 0, 0);
 	aRedLedBitmap = new wxBitmapButton(this, ID_BITMAPBUTTON1, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BITMAPBUTTON1"));
-	aRedLedBitmap->SetBitmapLabel(*TResource::GetLedRedIcon16());
+	aRedLedBitmap->SetBitmapLabel(*TResource::GetLedRedIcon());
 	FlexGridSizer4->Add(aRedLedBitmap, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
 	aRedLedText = new wxStaticText(this, ID_STATICTEXT16, _("Red Led"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT16"));
 	FlexGridSizer4->Add(aRedLedText, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
 	aGreenLedBitmap = new wxBitmapButton(this, ID_BITMAPBUTTON2, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BITMAPBUTTON2"));
-	aGreenLedBitmap->SetBitmapLabel(*TResource::GetLedGreenIcon16());
+	aGreenLedBitmap->SetBitmapLabel(*TResource::GetLedGreenIcon());
 	FlexGridSizer4->Add(aGreenLedBitmap, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
 	aGreenLedText = new wxStaticText(this, ID_STATICTEXT17, _("Green Led"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT17"));
 	FlexGridSizer4->Add(aGreenLedText, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
@@ -549,7 +549,7 @@ void TInterfacePanel::UpdateInterfaceInputSignalDisplay(void)
     i = PIC_HW_SetRedLed( -1/*don't change, just get state*/ );
     if (i != LastValueRed)
     {
-        aRedLedBitmap->SetBitmapLabel(*((i>0) ? TResource::GetLedRedIcon16() : TResource::GetLedOffIcon16()));
+        aRedLedBitmap->SetBitmapLabel(*((i>0) ? TResource::GetLedRedIcon() : TResource::GetLedOffIcon()));
         aRedLedText->Enable(i>=0);
         LastValueRed = i;
     }
@@ -567,7 +567,7 @@ void TInterfacePanel::UpdateInterfaceInputSignalDisplay(void)
     i = PIC_HW_SetGreenLed( -1/*don't change, just get state*/ );
     if (i != LastValueGreen)
     {
-        aGreenLedBitmap->SetBitmapLabel(*((i>0) ? TResource::GetLedGreenIcon16() : TResource::GetLedOffIcon16()));
+        aGreenLedBitmap->SetBitmapLabel(*((i>0) ? TResource::GetLedGreenIcon() : TResource::GetLedOffIcon()));
         aGreenLedText->Enable(i>=0);
     }
 //  if(i>=0)

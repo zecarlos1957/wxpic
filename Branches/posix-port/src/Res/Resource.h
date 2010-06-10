@@ -13,13 +13,23 @@
 #define RESOURCE_H_INCLUDED
 
 #include <wx/icon.h>
+#include "Res/WxPic.xpm"
+#include "Res/ChipRead.xpm"
+#include "Res/ChipVerify.xpm"
+#include "Res/ChipWrite.xpm"
+#include "Res/ChipReload.xpm"
+#include "Res/LedGreen.xpm"
+#include "Res/LedRed.xpm"
+#include "Res/LedOff.xpm"
+#include "Res/Open.xpm"
+#include "Res/Save.xpm"
 
 class TResource
 {
 public:
-#define ICON_DEF_GEN(name,size) static const wxIcon *Get ## name ## Icon ## size (void) { return the ## name ## Icon ## size; };
+#define ICON_DEF(name) static const wxIcon *Get ## name ## Icon (void) { return the ## name ## Icon; };
 #include "Icon.inc"
-#undef ICON_DEF_GEN
+#undef ICON_DEF
 
     static void Load   (void);
     static void Unload (void);
@@ -33,9 +43,9 @@ public:
     };
 
 private:
-#define ICON_DEF_GEN(name,size) static wxIcon *the ## name ## Icon ## size;
+#define ICON_DEF(name) static wxIcon *the ## name ## Icon;
 #include "Icon.inc"
-#undef ICON_DEF_GEN
+#undef ICON_DEF
 };
 
 #endif // RESOURCE_H_INCLUDED

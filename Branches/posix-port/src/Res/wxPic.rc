@@ -9,10 +9,6 @@
 // License:     GNU Lesser General Public License (LGPLv3)
 ///////////////////////////////////////////////////////////////////////////////
 
-#define ICON_16PX_32PX_DEF(name) ICON_16PX_DEF(name)
-#define ICON_DEF_GEN(name,size) name ICON "src/Res/" #name ".ico"
-#include "Icon.inc"
-#undef ICON_DEF
-
+name ICON "src/Res/aWxPic.ico"
 //-- Without version autogeneration procedure replace manifest.autogen by manually edited Res\\model.manifest
 1 24 "manifest.autogen"

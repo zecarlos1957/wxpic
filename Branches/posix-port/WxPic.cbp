@@ -149,8 +149,8 @@
 					<Add option="`wx-config --cflags`" />
 					<Add option="-DUNICODE" />
 					<Add option="-D_UNICODE" />
-					<Add option="-DUSE_SVN_VERSION" />
 					<Add option="-DCOMPILING_WINPIC" />
+					<Add directory="src" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
