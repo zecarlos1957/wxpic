@@ -52,11 +52,12 @@ void APPL_LogEvent( const wxChar * pszFormat, ... )  // logs an "event" with cur
 
   // Show the TIME of this event :
   wxDateTime Now = wxDateTime::UNow();
-  Text.Printf(_("%02d:%02d:%02d.%02d %s"), Now.GetHour(), Now.GetMinute(), Now.GetSecond(), Now.GetMillisecond(), Text.c_str());
+  wxString LogText;
+  LogText.Printf(_("%02d:%02d:%02d.%02d %s"), Now.GetHour(), Now.GetMinute(), Now.GetSecond(), Now.GetMillisecond(), Text.c_str());
 
 //  _tcscat(cp, _("\n"));
 
-  MainFrame::AddTextToLog(Text);
+  MainFrame::AddTextToLog(LogText);
 }
 
 
