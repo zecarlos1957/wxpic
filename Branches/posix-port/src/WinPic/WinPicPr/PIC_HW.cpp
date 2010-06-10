@@ -32,6 +32,8 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include <wx/intl.h> //-- intl.h must be included before OlsApiInit.h because it uses _T macro without declaring it
+
 #ifdef __WXMSW__
 	#include <windows.h>
 	#include <WinRing0/OlsApiInit.h>  //-- WinRing0 Header
@@ -41,7 +43,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <wx/string.h>
 #include <wx/filename.h>
 #include <wx/xml/xml.h>
-#include <wx/intl.h>
 #include <wx/stdpaths.h>
 
 #include "Config.h"    // permanently saved Config-structure
