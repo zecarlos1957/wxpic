@@ -13,16 +13,6 @@
 #define RESOURCE_H_INCLUDED
 
 #include <wx/icon.h>
-#include "Res/WxPic.xpm"
-#include "Res/ChipRead.xpm"
-#include "Res/ChipVerify.xpm"
-#include "Res/ChipWrite.xpm"
-#include "Res/ChipReload.xpm"
-#include "Res/LedGreen.xpm"
-#include "Res/LedRed.xpm"
-#include "Res/LedOff.xpm"
-#include "Res/Open.xpm"
-#include "Res/Save.xpm"
 
 class TResource
 {
