@@ -864,7 +864,8 @@ void TDeviceCfgPanel::onDevCfgGridCellChange(wxGridEvent& event)
     // .. and check the ADDRESS of this config bit, to mark this buffer entry as "used" :
 //  _tcsncpy(str80, SG_ConfigBits->Cells[configbitsCOL_ADDR][iGridRow].c_str(), 80 );
 //  cp = str80;
-    if (aDevCfgGrid->GetCellValue(iGridRow, configbitsCOL_ADDR).ToLong( (long*)&dwAddr, 16))
+    wxString EnteredValue = aDevCfgGrid->GetCellValue(iGridRow, configbitsCOL_ADDR);
+    if (EnteredValue.ToLong( (long*)&dwAddr, 16))
 //  if( PicHex_GetHexValueFromSource( &cp, &dwAddr ) )  // parsed a valid address ?
     {
         PicBuf_SetMemoryFlags(dwAddr, PicBuf_GetMemoryFlags(dwAddr) | PIC_BUFFER_FLAG_USED );
