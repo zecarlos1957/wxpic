@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>WxPic: Foire aux Questions</title>
+<link href="../WxPic.css" rel="stylesheet" type="text/css" />
+<link href="../WxPic.ico" rel="shortcut icon"/>
+</head>
+
+<body>
+<a name="Top" id="Top"></a>
+<div class="left-col">
+ <a href="http://wxpic.free.fr/"><img src="../LargeLogo.png" name="Logo" width="160" height="96" id="Logo" /></a>
+  <div class="toc">
+  <div>Sommaire</div>
+    <ul>
+      <!-- li><a href="#ButtonBar">La barre de boutons</a></li>
+      <li><a href="#Menu">Les menus</a></li>
+      <ul>
+      <li><a href="#FileMenu">Le menu Fichier</a></li>
+      <li><a href="#EditMenu">Le menu Edition</a></li>
+      <li><a href="#DeviceMenu">Le menu Composant</a></li>
+      <li><a href="#ToolsMenu">Le menu Outils</a></li -->
+      </ul>
+    </ul>
+    </div>
+</div>
+<ul class="top-menu">
+  <li><a href="index.htm">Index de l'Aide</a></li>
+  <li><a href="Menu.htm">Menus et Boutons</a></li>
+  <li><a href="Panel.htm">Pages</a></li>
+  <li class="local">FAQ</li>
+</ul>
+<div class="content">
+<h1>Foire Aux Questions</h1>
+<dl>
+<dt><a name="FoolAround" id="FoolAround"></a>J'utilise le port parallèle et j'ai obtenu l'erreur <span class="quote">WARNING ! Windows fooled around with the LPT port bits !</span></dt>
+<dd>La résolution de ce problème est décrite dans le <a href="Panel.htm#Fool">chapitre sur la Page de L'interface</a></dd>
+<dt><a name="Privileges" id="Privileges"></a>J'utilise VISTA et j'ai une erreur en utilisant le port parallèle</dt>
+<dd>Sous VISTA l'accès au port parallèle nécessite d'<a href="Panel.htm#Priv">enregistrer WxPic comme un programme privilégié</a>. Ceci n'est nécessaire que pour WxPic V1.1. A partir de la V1.1.1, ceci est fait automatiquement. Note: quand WxPic a correctement été enregistré comme un programme privilégié, manuellement (V1.1) ou automatiquement (V1.1.1+) un petit bouclier apparaît sur l'icône du programme. Et lorsque WxPic est lancé une demande de confirmation est demandée par la sécurité (sauf si ce mécanisme a été désactivé sur le PC).</dd>
+<dt><a name="MPLABDevice" id="MPLABDevice"></a>Une fois mon composant choisi j'obtiens l'erreur <span class="quote">Can't open file 'device\&lt;composant&gt;.dev'</span></dt>
+<dd>WxPic a besoind de la description détaillée des composants pour les programmer. Afin d'obtenir les description à jour WxPic utilise les fichiers fournis par <a href="http://www.microchip.com/" target="_blank">Michochip</a> dans l'atelier de développement <a href="http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&amp;nodeId=1406&amp;dDocName=en019469&amp;part=SW007002" target="_blank">MPLAB</a>. Ces fichiers étant sous copyright de Microchip, ils ne peuvent être fournis dans l'installation de WxPic. Il faut donc les télécharger séparément sur la page de <a href="http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&amp;nodeId=1406&amp;dDocName=en019469&amp;part=SW007002" target="_blank">MPLAB</a> et ensuite <a href="../Panel.htm#DevFiles">indiquer à WxPic où ces fichiers sont installés</a>. A noter que à partir de V1.1.1 l'erreur ne s'affiche plus dans une boîte de dialogue mais dans la barre d'état et le focus est positionné sur le champ qui indique la localisation des fichier MPLAB. Son titre est en rouge tant que le fichier pour le composant n'a pas été trouvé.</dd>
+</dl>
+<a class="return" href="#Top">Haut</a>
+</div>
+</body>
+</html>
