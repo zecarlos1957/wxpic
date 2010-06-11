@@ -8,6 +8,8 @@
 /* 2009-10-07: Replace SmallPort that is incompatible with VISTA and       */
 /*             PortTalk that causes a License issue by WinRing0            */
 /*             See WinRing0 License below                                  */
+/*                                                                         */
+/* 2010-6-10   Ported to Linux by Erdem U. Altinyurt                       */
 /*-------------------------------------------------------------------------*/
 
 /*Copyright (c) 2007-2009 OpenLibSys.org. All rights reserved.
@@ -1238,8 +1240,70 @@ void LPT_ClosePicPort(void)
  PicHw_fLptPortOpened = false;
 } // end LPT_ClosePicPort()
 #else
-bool LPT_OpenPicPort(void){return false;}
-void LPT_ClosePicPort(void){}
+bool LPT_OpenPicPort(void){
+    bool fResult = true;
+    wxString szPort;
+
+    if(PicHw_fLptPortOpened) {
+// if a LPT-port has already been opened; close it (may be different now)
+        LPT_ClosePicPort();
+    }
+    PicHw_fLptPortOpened = false;
+    switch(Config.iLptPortNr) {
+    case 1:
+        LPT_io_address = 0x0378;
+        break;
+    case 2:
+        LPT_io_address = 0x0278;
+        break;
+    default:
+        LPT_io_address = 0x0000;
+        break;
+    }
+
+    if(Config.iLptIoAddress != 0) {
+// use the "unusual" I/O address if there is something specified.
+        LPT_io_address = Config.iLptIoAddress;
+    }
+
+    if(LPT_io_address == 0) {
+        fResult = false;
+        _tcscpy(PicHw_sz255LastError, _("Illegal LPT port address"));
+    }
+
+// Open the LPT port to prevent other applications to fool around with it,
+    if(Config.iLptPortNr>=1 && Config.iLptPortNr<=4) {
+        szPort = wxString::Format( wxT("/dev/parport"), Config.iLptPortNr-1 );
+
+        if (Config.iVerboseMessages) {
+            wxString Log;
+            Log.Printf(_("Open %hs port"), szPort);
+            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, Log.c_str() );
+        }
+        LPT_pfileLptPort = fopen( szPort.mb_str(), "w" );
+        if(LPT_pfileLptPort==NULL){
+            _stprintf(PicHw_sz255LastError, _("Cannot occupy LPT port %d"), errno);
+//  fResult = false;  // no... try to use the port anyway !
+            if (Config.iVerboseMessages)
+                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, PicHw_sz255LastError );
+        }
+        else if (!PrivilegeRequested) {
+					//if (iopl(3)) {// is ultimate root access required?
+					if (ioperm(LPT_io_address,5,1)) {
+						APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("The user does not have the Load Driver Privilege.\n"));
+						PrivilegeRequested = true;
+						fResult = false;
+						}
+					}
+		}
+   PicHw_fLptPortOpened = fResult;
+   return fResult;
+	} // end LPT_OpenPicPort()
+
+void LPT_ClosePicPort(void){
+	if(LPT_pfileLptPort!=NULL)
+		fclose(LPT_pfileLptPort);
+	}
 #endif
 
 bool PicHw_dummy(void)
