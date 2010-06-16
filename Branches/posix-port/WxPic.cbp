@@ -132,11 +132,15 @@
 					<Add option="-D_UNICODE" />
 					<Add option="-DCOMPILING_WINPIC" />
 					<Add option="-DwxUSE_UNICODE" />
+					<Add option="-DUSE_SVN_VERSION" />
 					<Add directory="src" />
 				</Compiler>
 				<Linker>
 					<Add option="`/home/compile/wxWidgets-2.8.11/debug/wx-config --libs`" />
 				</Linker>
+				<ExtraCommands>
+					<Add before="./version_gen.sh" />
+				</ExtraCommands>
 			</Target>
 			<Target title="Release Linux">
 				<Option platforms="Unix;Mac;" />
@@ -159,6 +163,9 @@
 					<Add option="-s" />
 					<Add option="`wx-config --libs`" />
 				</Linker>
+				<ExtraCommands>
+					<Add before="./version_gen.sh" />
+				</ExtraCommands>
 			</Target>
 		</Build>
 		<Compiler>
@@ -238,6 +245,10 @@
 		<Unit filename="src/Wx/SVNVersion.h" />
 		<Unit filename="src/Wx/WxApp.cpp" />
 		<Unit filename="version.autogen" />
+		<Unit filename="version_gen.sh">
+			<Option target="Debug Linux" />
+			<Option target="Release Linux" />
+		</Unit>
 		<Unit filename="wxsmith/AboutU.wxs" />
 		<Unit filename="wxsmith/CodeMemPanel.wxs" />
 		<Unit filename="wxsmith/MainFrame.wxs" />
