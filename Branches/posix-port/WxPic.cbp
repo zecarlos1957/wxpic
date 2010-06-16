@@ -79,7 +79,6 @@
 				</ExtraCommands>
 			</Target>
 			<Target title="Debug-Mpatrol Win32">
-				<Option platforms="Windows;" />
 				<Option output="bin/Debug/WxPic" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
@@ -151,7 +150,9 @@
 					<Add option="`wx-config --cflags`" />
 					<Add option="-DUNICODE" />
 					<Add option="-D_UNICODE" />
+					<Add option="-DUSE_SVN_VERSION" />
 					<Add option="-DCOMPILING_WINPIC" />
+					<Add option="-DwxUSE_UNICODE" />
 					<Add directory="src" />
 				</Compiler>
 				<Linker>
