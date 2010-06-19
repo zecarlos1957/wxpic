@@ -339,10 +339,8 @@ void MainFrame::initMore (void)
 }
 
 
-MainFrame::~MainFrame()
-{
-    //(*Destroy(MainFrame)
-    //*)
+MainFrame::~MainFrame(){
+	TheIniFile.Flush();
 }
 
 

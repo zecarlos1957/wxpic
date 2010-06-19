@@ -232,7 +232,11 @@ void QueryPerformanceFrequency( int64_t* frq ){
 	bool GetCommModemStatus( int fd, uint32_t *flag ){
 		return ioctl(fd, TIOCMGET, flag)==0;
 		}
-	int ReadIoPortByte(uint16_t){return 0;}
-	int WriteIoPortByte(uint16_t,uint16_t){return 0;}
+	uint8_t ReadIoPortByte(uint16_t addr){
+		return inb(addr);
+		}
+	void WriteIoPortByte(uint16_t addr,uint16_t data){
+		outb(data,addr);
+		}
 #endif
 

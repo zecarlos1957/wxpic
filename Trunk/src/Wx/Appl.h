@@ -2,6 +2,7 @@
 /* APPL.h                                                                  */
 /*     Part of Wolfgang Buescher's  simple PIC-Programmer for Windows.     */
 /*     Ported to wxWidget by Philippe Chevrier                             */
+/*     Ported to Linux by Erdem U. Altinyurt                               */
 /*-------------------------------------------------------------------------*/
 
 //#include <tchar.h> //No linux support for this
@@ -86,8 +87,11 @@ wxChar       *DupIso8859_1_TChar  (const char* psz);
 #include <termios.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/ioctl.h>
 #include <time.h>
+#include <sys/io.h>
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #define _tcscat wxStrcat
 #define _tcstol wxStrtol
@@ -118,8 +122,8 @@ enum{SETDTR=TIOCM_DTR, CLRDTR, SETRTS=TIOCM_RTS, CLRRTS, SETBREAK=TIOCSBRK, CLRB
 long GetTickCount(void);
 bool EscapeCommFunction( int fd, int flag);
 bool GetCommModemStatus( int fd, uint32_t *flag );
-int ReadIoPortByte(uint16_t);
-int WriteIoPortByte(uint16_t,uint16_t);
+uint8_t ReadIoPortByte(uint16_t);
+void WriteIoPortByte(uint16_t,uint16_t);
 #endif
 
 /* EOF <appl.h> */

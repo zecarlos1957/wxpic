@@ -52,7 +52,7 @@
 // ----------------------------------------------------------------------------
 
 /// Name for map file.
-#define WXEXTHELP_MAPFILE   _T("wxhelp.map")
+#define WXEXTHELP_MAPFILE   _T("wxHelp.map")
 
 ///// Character introducing comments/documentation field in map file.
 //#define WXEXTHELP_COMMENTCHAR   ';'
