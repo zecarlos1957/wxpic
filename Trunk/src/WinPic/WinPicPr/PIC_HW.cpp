@@ -46,6 +46,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <wx/filename.h>
 #include <wx/xml/xml.h>
 #include <wx/stdpaths.h>
+#include <wx/utils.h>
 
 #include "Config.h"    // permanently saved Config-structure
 #include <Wx/Appl.h>      // call the APPLication to display message strings
@@ -1036,7 +1037,6 @@ bool PicHw_UpdateComOutputBits(void){
            // Note: MUST USE NON-BLOCKING I/O HERE .
            // See help system on WriteFile(), or google for ERROR_IO_PENDING .
            char sz4Temp[4];
-           DWORD dwNumBytesWritten;
            sz4Temp[0] = 0x55;
            if( write( COM_hComPort, // handle to file to write to
                       sz4Temp,   // pointer to data to write to file
@@ -1242,7 +1242,7 @@ void LPT_ClosePicPort(void)
 #else
 bool LPT_OpenPicPort(void){
     bool fResult = true;
-    wxString szPort;
+    wxString Port;
 
     if(PicHw_fLptPortOpened) {
 // if a LPT-port has already been opened; close it (may be different now)
@@ -1273,14 +1273,14 @@ bool LPT_OpenPicPort(void){
 
 // Open the LPT port to prevent other applications to fool around with it,
     if(Config.iLptPortNr>=1 && Config.iLptPortNr<=4) {
-        szPort = wxString::Format( wxT("/dev/parport"), Config.iLptPortNr-1 );
+        Port = wxString::Format( wxT("/dev/parport"), Config.iLptPortNr-1 );
 
         if (Config.iVerboseMessages) {
             wxString Log;
-            Log.Printf(_("Open %hs port"), szPort);
+            Log.Printf(_("Open %hs port"), Port.c_str());
             APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, Log.c_str() );
         }
-        LPT_pfileLptPort = fopen( szPort.mb_str(), "w" );
+        LPT_pfileLptPort = fopen( Port.mb_str(), "w" );
         if(LPT_pfileLptPort==NULL){
             _stprintf(PicHw_sz255LastError, _("Cannot occupy LPT port %d"), errno);
 //  fResult = false;  // no... try to use the port anyway !
@@ -1632,23 +1632,23 @@ T_PicHwFuncs PicHwFuncs[N_PIC_HW_FUNCS] =
    { PIC_INTF_TYPE_PIP84_V1  , // LPT port, used by SM6LKM, RB7 -> PAPER OUT
          // (Windoze XP fools around with the port after slopes on PAPER OUT)
      // SIGNAL INPUT vectors to hardware access routines...
-     {PicHw_TestNotPaperOut,NULL,NULL,NULL},        // Read serial data ("RB7") from 'PAPER OUT', inverted ("not PAPER OUT")
-     {PicHw_TestNotPrinterSelected,NULL,NULL,NULL}, // Read state of "button" on programming interface
+     {{PicHw_TestNotPaperOut,NULL,NULL,NULL}},        // Read serial data ("RB7") from 'PAPER OUT', inverted ("not PAPER OUT")
+     {{PicHw_TestNotPrinterSelected,NULL,NULL,NULL}}, // Read state of "button" on programming interface
 
      // SIGNAL OUTPUT vectors to hardware access routines...
-     {PicHw_SetNotD4,NULL,NULL,NULL},    // Vpp control: on,off, inverted     (D4)
-     {PicHw_SetNotD0,NULL,NULL,NULL},    // Vdd control: on,off, inverted     (D0)
-     {PicHw_SetD3   ,NULL,NULL,NULL},    // Clock      : D3, not inverted
-     {PicHw_SetD2   ,NULL,NULL,NULL},    // Data output: D2, not inverted
-     {PicHw_SetDummy,NULL,NULL,NULL},    // no tristate control for CLOCK
-     {PicHw_SetDummy,NULL,NULL,NULL},    // no tristate control for DATA
+     {{PicHw_SetNotD4,NULL,NULL,NULL}},    // Vpp control: on,off, inverted     (D4)
+     {{PicHw_SetNotD0,NULL,NULL,NULL}},    // Vdd control: on,off, inverted     (D0)
+     {{PicHw_SetD3   ,NULL,NULL,NULL}},    // Clock      : D3, not inverted
+     {{PicHw_SetD2   ,NULL,NULL,NULL}},    // Data output: D2, not inverted
+     {{PicHw_SetDummy,NULL,NULL,NULL}},    // no tristate control for CLOCK
+     {{PicHw_SetDummy,NULL,NULL,NULL}},    // no tristate control for DATA
      1 , // LOGIC(!) state of data-output-line while reading, usually 1 so PIC can pull this line down
-     {PicHw_SetDummy,NULL,NULL,NULL},    // PullMclrToGnd : not used here (only for AN589, D4)
-     {PicHw_SetNotD7,NULL,NULL,NULL},    // ConnectToTarget: D7, INVERTED
-     {PicHw_SetNotD1,NULL,NULL,NULL},    // Set Green Led (0=off, 1=on, -1=get current state)
-     {PicHw_SetDummy,NULL,NULL,NULL},    // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},    // PullMclrToGnd : not used here (only for AN589, D4)
+     {{PicHw_SetNotD7,NULL,NULL,NULL}},    // ConnectToTarget: D7, INVERTED
+     {{PicHw_SetNotD1,NULL,NULL,NULL}},    // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},    // Set Green Led (0=off, 1=on, -1=get current state)
 
-     {NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL}, // no selectable Vdd
+     {{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}}, // no selectable Vdd
 
      73 /* de DL4YHF (to check if nothing is missing in this struct) */
    }, // end PIC_INTF_TYPE_PIP84_V1
@@ -1656,22 +1656,22 @@ T_PicHwFuncs PicHwFuncs[N_PIC_HW_FUNCS] =
    { PIC_INTF_TYPE_PIP84_V2  , // LPT port, used by SM6LKM, RB7 -> ACKNOWLEDGE
             // (Windoze XP keeps cool if something happens on ACKNOWLEDGE)
      // SIGNAL INPUT vectors to hardware access routines...
-     {PicHw_TestNotPrinterAck,     NULL,NULL,NULL}, // Read from RB7 (PIC->PC): ACK, inverted
-     {PicHw_TestNotPrinterSelected,NULL,NULL,NULL}, // Read state of "button" on programming interface
+     {{PicHw_TestNotPrinterAck,     NULL,NULL,NULL}}, // Read from RB7 (PIC->PC): ACK, inverted
+     {{PicHw_TestNotPrinterSelected,NULL,NULL,NULL}}, // Read state of "button" on programming interface
 
      // SIGNAL OUTPUT vectors to hardware access routines...
-     {PicHw_SetNotD4,NULL,NULL,NULL},       // Vpp control inverted     (D4)
-     {PicHw_SetNotD0,NULL,NULL,NULL},       // Vdd control inverted     (D0)
-     {PicHw_SetD3,   NULL,NULL,NULL},       // Clock not inverted       (D3)
-     {PicHw_SetD2,   NULL,NULL,NULL},       // Data to RB7 not inverted (D2)
-     {PicHw_SetDummy,NULL,NULL,NULL},       // no tristate control for CLOCK
-     {PicHw_SetDummy,NULL,NULL,NULL},       // no tristate control for DATA
+     {{PicHw_SetNotD4,NULL,NULL,NULL}},       // Vpp control inverted     (D4)
+     {{PicHw_SetNotD0,NULL,NULL,NULL}},       // Vdd control inverted     (D0)
+     {{PicHw_SetD3,   NULL,NULL,NULL}},       // Clock not inverted       (D3)
+     {{PicHw_SetD2,   NULL,NULL,NULL}},       // Data to RB7 not inverted (D2)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // no tristate control for CLOCK
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // no tristate control for DATA
      1 , // LOGIC(!) state of data-output-line while reading, usually 1 so PIC can pull this line down
-     {PicHw_SetDummy,NULL,NULL,NULL},       // PullMclrToGnd : not used here (only for AN589, D4)
-     {PicHw_SetNotD7,NULL,NULL,NULL},       // ConnectToTarget: D7, INVERTED
-     {PicHw_SetNotD1,NULL,NULL,NULL},       // Set Green Led (0=off, 1=on, -1=get current state)
-     {PicHw_SetDummy,NULL,NULL,NULL},       // Set Green Led (0=off, 1=on, -1=get current state)
-     {NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL}, // no selectable Vdd
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // PullMclrToGnd : not used here (only for AN589, D4)
+     {{PicHw_SetNotD7,NULL,NULL,NULL}},       // ConnectToTarget: D7, INVERTED
+     {{PicHw_SetNotD1,NULL,NULL,NULL}},       // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // Set Green Led (0=off, 1=on, -1=get current state)
+     {{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}}, // no selectable Vdd
 
      73 /* de DL4YHF (to check if nothing is missing in this struct) */
    }, // end PIC_INTF_TYPE_PIP84_V2
@@ -1679,23 +1679,23 @@ T_PicHwFuncs PicHwFuncs[N_PIC_HW_FUNCS] =
    { PIC_INTF_TYPE_LKM_FLASHPR_V1  , // LPT port, used by SM6LKM, RB7 -> ACKNOWLEDGE
             // (Windoze XP keeps cool if something happens on ACKNOWLEDGE)
      // SIGNAL INPUT vectors to hardware access routines...
-     {PicHw_TestNotPrinterAck,     NULL,NULL,NULL}, // Read from RB7 (PIC->PC): ACK, inverted
-     {PicHw_TestNotPrinterSelected,NULL,NULL,NULL}, // Read state of "button" on programming interface
+     {{PicHw_TestNotPrinterAck,     NULL,NULL,NULL}}, // Read from RB7 (PIC->PC): ACK, inverted
+     {{PicHw_TestNotPrinterSelected,NULL,NULL,NULL}}, // Read state of "button" on programming interface
 
      // SIGNAL OUTPUT vectors to hardware access routines...
-     {PicHw_SetNotD4,NULL,NULL,NULL},       // Vpp control inverted     (D4)
-     {PicHw_SetD0,   NULL,NULL,NULL},       // Vdd control not inverted (D0)
-     {PicHw_SetD3,   NULL,NULL,NULL},       // Clock not inverted       (D3)
-     {PicHw_SetD2,   NULL,NULL,NULL},       // Data to RB7 not inverted (D2)
-     {PicHw_SetDummy,NULL,NULL,NULL},       // no tristate control for CLOCK
-     {PicHw_SetDummy,NULL,NULL,NULL},       // no tristate control for DATA
+     {{PicHw_SetNotD4,NULL,NULL,NULL}},       // Vpp control inverted     (D4)
+     {{PicHw_SetD0,   NULL,NULL,NULL}},       // Vdd control not inverted (D0)
+     {{PicHw_SetD3,   NULL,NULL,NULL}},       // Clock not inverted       (D3)
+     {{PicHw_SetD2,   NULL,NULL,NULL}},       // Data to RB7 not inverted (D2)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // no tristate control for CLOCK
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // no tristate control for DATA
      1 , // LOGIC(!) state of data-output-line while reading, usually 1 so PIC can pull this line down
-     {PicHw_SetDummy,NULL,NULL,NULL},       // PullMclrToGnd : not used here (only for AN589, D4)
-     {PicHw_SetNotD7,NULL,NULL,NULL},       // ConnectToTarget: D7, INVERTED since 2003-01
-     {PicHw_SetNotD1,NULL,NULL,NULL},       // Set Green Led (0=off, 1=on, -1=get current state)
-     {PicHw_SetDummy,NULL,NULL,NULL},       // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // PullMclrToGnd : not used here (only for AN589, D4)
+     {{PicHw_SetNotD7,NULL,NULL,NULL}},       // ConnectToTarget: D7, INVERTED since 2003-01
+     {{PicHw_SetNotD1,NULL,NULL,NULL}},       // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // Set Green Led (0=off, 1=on, -1=get current state)
 
-     {NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL}, // no selectable Vdd
+     {{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}}, // no selectable Vdd
 
      73 /* de DL4YHF (to check if nothing is missing in this struct) */
    }, // end PIC_INTF_TYPE_LKM_FLASHPR_V1
@@ -1703,185 +1703,185 @@ T_PicHwFuncs PicHwFuncs[N_PIC_HW_FUNCS] =
   // 2004-01-27 : All TAIT-stype interfaces corrected (?) without being able to test them (!)
    { PIC_INTF_TYPE_TAIT_7406_4066, // parallel, by David Tait, 1st way = 7406 / 4066 :
      // SIGNAL INPUT vectors to hardware access routines...
-     {PicHw_TestNotPrinterAck, NULL,NULL,NULL}, // read serial data from the PIC via PAPER OUT, INVERTED
-     {PicHw_SetDummy,       NULL,NULL,NULL},  // Read state of "button" on programming interface (n/a)
+     {{PicHw_TestNotPrinterAck, NULL,NULL,NULL}}, // read serial data from the PIC via PAPER OUT, INVERTED
+     {{PicHw_SetDummy,       NULL,NULL,NULL}},  // Read state of "button" on programming interface (n/a)
 
      // SIGNAL OUTPUT vectors to hardware access routines...
-     {PicHw_SetNotD3,NULL,NULL,NULL},       // Vpp control: on,off, inverted by 7406 (D3)
-     {PicHw_SetNotD2,NULL,NULL,NULL},       // Vdd control: on,off, inverted by 7406 (D2)
-     {PicHw_SetNotD1,NULL,NULL,NULL},       // Clock      : D1, inverted by 7406
-     {PicHw_SetNotD0,NULL,NULL,NULL},       // Data output: D0, inverted by 7406
-     {PicHw_SetDummy,NULL,NULL,NULL},       // no tristate control for CLOCK
-     {PicHw_SetDummy,NULL,NULL,NULL},       // no tristate control for DATA
+     {{PicHw_SetNotD3,NULL,NULL,NULL}},       // Vpp control: on,off, inverted by 7406 (D3)
+     {{PicHw_SetNotD2,NULL,NULL,NULL}},       // Vdd control: on,off, inverted by 7406 (D2)
+     {{PicHw_SetNotD1,NULL,NULL,NULL}},       // Clock      : D1, inverted by 7406
+     {{PicHw_SetNotD0,NULL,NULL,NULL}},       // Data output: D0, inverted by 7406
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // no tristate control for CLOCK
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // no tristate control for DATA
      1 , // LOGIC(!) state of data-output-line while reading, usually 1 so PIC can pull this line down
-     {PicHw_SetDummy,NULL,NULL,NULL},       // PullMclrToGnd : not used here (only for AN589, D4)
-     {PicHw_SetNotD7,NULL,NULL,NULL},       // ConnectToTarget: D7, INVERTED
-     {PicHw_SetDummy,NULL,NULL,NULL},       // Set Green Led (0=off, 1=on, -1=get current state)
-     {PicHw_SetDummy,NULL,NULL,NULL},       // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // PullMclrToGnd : not used here (only for AN589, D4)
+     {{PicHw_SetNotD7,NULL,NULL,NULL}},       // ConnectToTarget: D7, INVERTED
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // Set Green Led (0=off, 1=on, -1=get current state)
 
-     {NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL}, // no selectable Vdd
+     {{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}}, // no selectable Vdd
 
      73 /* de DL4YHF (to check if nothing is missing in this struct) */
    },
 
    { PIC_INTF_TYPE_TAIT_7407_4066, // parallel, by David Tait, 2nd way = 7407 / 4066 :
      // SIGNAL INPUT vectors to hardware access routines...
-     {PicHw_TestPrinterAck,  NULL,NULL,NULL},    // Read from RB7 (PIC->PC): Paper Out, not inverted
-     {PicHw_SetDummy, NULL,NULL,NULL},    // Read state of "button" on programming interface (n/a)
+     {{PicHw_TestPrinterAck,  NULL,NULL,NULL}},    // Read from RB7 (PIC->PC): Paper Out, not inverted
+     {{PicHw_SetDummy, NULL,NULL,NULL}},    // Read state of "button" on programming interface (n/a)
 
      // SIGNAL OUTPUT vectors to hardware access routines...
-     {PicHw_SetD3,   NULL,NULL,NULL},       // Vpp control: D3, not inverted
-     {PicHw_SetD2,   NULL,NULL,NULL},       // Vdd control: D2, not inverted
-     {PicHw_SetD1,   NULL,NULL,NULL},       // Clock      : D1, not inverted (7407 is a non-inverting driver)
-     {PicHw_SetD0,   NULL,NULL,NULL},       // Data output: D0, not inverted (7407 is a non-inverting driver)
-     {PicHw_SetDummy,NULL,NULL,NULL},       // no tristate control for CLOCK
-     {PicHw_SetDummy,NULL,NULL,NULL},       // no tristate control for DATA
+     {{PicHw_SetD3,   NULL,NULL,NULL}},       // Vpp control: D3, not inverted
+     {{PicHw_SetD2,   NULL,NULL,NULL}},       // Vdd control: D2, not inverted
+     {{PicHw_SetD1,   NULL,NULL,NULL}},       // Clock      : D1, not inverted (7407 is a non-inverting driver)
+     {{PicHw_SetD0,   NULL,NULL,NULL}},       // Data output: D0, not inverted (7407 is a non-inverting driver)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // no tristate control for CLOCK
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // no tristate control for DATA
      1 , // LOGIC(!) state of data-output-line while reading, usually 1 so PIC can pull this line down
-     {PicHw_SetDummy,NULL,NULL,NULL},       // PullMclrToGnd : not used here (only for AN589, D4)
-     {PicHw_SetD7,NULL,NULL,NULL},          // ConnectToTarget: D7, not inverted
-     {PicHw_SetDummy,NULL,NULL,NULL},       // Set Green Led (0=off, 1=on, -1=get current state)
-     {PicHw_SetDummy,NULL,NULL,NULL},       // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // PullMclrToGnd : not used here (only for AN589, D4)
+     {{PicHw_SetD7,NULL,NULL,NULL}},          // ConnectToTarget: D7, not inverted
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // Set Green Led (0=off, 1=on, -1=get current state)
 
-     {NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL}, // no selectable Vdd
+     {{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}}, // no selectable Vdd
 
      73 /* de DL4YHF (to check if nothing is missing in this struct) */
    },
 
    { PIC_INTF_TYPE_TAIT_7406_PNP , // parallel, by David Tait, 3rd way = 7406 / PNP  :
      // SIGNAL INPUT vectors to hardware access routines...
-     {PicHw_TestNotPrinterAck,NULL,NULL,NULL},      // Read from RB7 (PIC->PC): ACK, inverted
-     {PicHw_SetDummy,NULL,NULL,NULL},        // Read state of "button" on programming interface (n/a)
+     {{PicHw_TestNotPrinterAck,NULL,NULL,NULL}},      // Read from RB7 (PIC->PC): ACK, inverted
+     {{PicHw_SetDummy,NULL,NULL,NULL}},        // Read state of "button" on programming interface (n/a)
 
      // SIGNAL OUTPUT vectors to hardware access routines...
-     {PicHw_SetD3   ,NULL,NULL,NULL},       // Vpp control: D3, NOT inverted (actually inverted TWO times)
-     {PicHw_SetD2   ,NULL,NULL,NULL},       // Vdd control: D2, NOT inverted (actually inverted TWO times)
-     {PicHw_SetNotD1,NULL,NULL,NULL},       // Clock      : D1, inverted
-     {PicHw_SetNotD0,NULL,NULL,NULL},       // Data output: D0, inverted
-     {PicHw_SetDummy,NULL,NULL,NULL},       // no tristate control for CLOCK
-     {PicHw_SetDummy,NULL,NULL,NULL},       // no tristate control for DATA
+     {{PicHw_SetD3   ,NULL,NULL,NULL}},       // Vpp control: D3, NOT inverted (actually inverted TWO times)
+     {{PicHw_SetD2   ,NULL,NULL,NULL}},       // Vdd control: D2, NOT inverted (actually inverted TWO times)
+     {{PicHw_SetNotD1,NULL,NULL,NULL}},       // Clock      : D1, inverted
+     {{PicHw_SetNotD0,NULL,NULL,NULL}},       // Data output: D0, inverted
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // no tristate control for CLOCK
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // no tristate control for DATA
      1 , // LOGIC(!) state of data-output-line while reading, usually 1 so PIC can pull this line down
-     {PicHw_SetDummy,NULL,NULL,NULL},       // PullMclrToGnd : not used here (only for AN589, D4)
-     {PicHw_SetNotD7,NULL,NULL,NULL},       // ConnectToTarget: D7, INVERTED
-     {PicHw_SetDummy,NULL,NULL,NULL},       // Set Green Led (0=off, 1=on, -1=get current state)
-     {PicHw_SetDummy,NULL,NULL,NULL},       // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // PullMclrToGnd : not used here (only for AN589, D4)
+     {{PicHw_SetNotD7,NULL,NULL,NULL}},       // ConnectToTarget: D7, INVERTED
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // Set Green Led (0=off, 1=on, -1=get current state)
 
-     {NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL}, // no selectable Vdd
+     {{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}}, // no selectable Vdd
 
      73 /* de DL4YHF (to check if nothing is missing in this struct) */
    },
 
    { PIC_INTF_TYPE_TAIT_7407_PNP , // parallel, by David Tait, 4th way = 7407 / PNP  :
      // SIGNAL INPUT vectors to hardware access routines...
-     {PicHw_TestPrinterAck, NULL,NULL,NULL}, // Read from RB7 (PIC->PC): ACK, not inverted
-     {PicHw_SetDummy,NULL,NULL,NULL},        // Read state of "button" on programming interface (n/a)
+     {{PicHw_TestPrinterAck, NULL,NULL,NULL}}, // Read from RB7 (PIC->PC): ACK, not inverted
+     {{PicHw_SetDummy,NULL,NULL,NULL}},        // Read state of "button" on programming interface (n/a)
 
      // SIGNAL OUTPUT vectors to hardware access routines...
-     {PicHw_SetNotD3,NULL,NULL,NULL},       // Vpp control: D3, inverted (once by PNP transistor)
-     {PicHw_SetNotD2,NULL,NULL,NULL},       // Vdd control: D2, inverted (once by PNP transistor)
-     {PicHw_SetD1,   NULL,NULL,NULL},       // Clock      : D1, not inverted (7407 is non-inverting buffer)
-     {PicHw_SetD0,   NULL,NULL,NULL},       // Data output: D0, not inverted (7407 is non-inverting buffer)
-     {PicHw_SetDummy,NULL,NULL,NULL},       // no tristate control for CLOCK
-     {PicHw_SetDummy,NULL,NULL,NULL},       // no tristate control for DATA
+     {{PicHw_SetNotD3,NULL,NULL,NULL}},       // Vpp control: D3, inverted (once by PNP transistor)
+     {{PicHw_SetNotD2,NULL,NULL,NULL}},       // Vdd control: D2, inverted (once by PNP transistor)
+     {{PicHw_SetD1,   NULL,NULL,NULL}},       // Clock      : D1, not inverted (7407 is non-inverting buffer)
+     {{PicHw_SetD0,   NULL,NULL,NULL}},       // Data output: D0, not inverted (7407 is non-inverting buffer)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // no tristate control for CLOCK
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // no tristate control for DATA
      1 , // LOGIC(!) state of data-output-line while reading, usually 1 so PIC can pull this line down
-     {PicHw_SetDummy,NULL,NULL,NULL},       // PullMclrToGnd : not used here (only for AN589, D4)
-     {PicHw_SetD7,NULL,NULL,NULL},     // ConnectToTarget: D7 (not on original Tate interface !)
-     {PicHw_SetDummy,NULL,NULL,NULL},  // Set Green Led (0=off, 1=on, -1=get current state)
-     {PicHw_SetDummy,NULL,NULL,NULL},  // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},       // PullMclrToGnd : not used here (only for AN589, D4)
+     {{PicHw_SetD7,NULL,NULL,NULL}},     // ConnectToTarget: D7 (not on original Tate interface !)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // Set Green Led (0=off, 1=on, -1=get current state)
 
-     {NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL}, // no selectable Vdd
+     {{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}}, // no selectable Vdd
 
      73 /* de DL4YHF (to check if nothing is missing in this struct) */
    },
 
    { PIC_INTF_TYPE_LPT_AN589     , // parallel, by Microchip's "AN589" = ? ? ?
      // SIGNAL INPUT vectors to hardware access routines...
-     {PicHw_TestPrinterAck,NULL,NULL,NULL},  // read serial data from the PIC
-     {PicHw_SetDummy,NULL,NULL,NULL}, // Read state of "button" on programming interface (n/a)
+     {{PicHw_TestPrinterAck,NULL,NULL,NULL}},  // read serial data from the PIC
+     {{PicHw_SetDummy,NULL,NULL,NULL}}, // Read state of "button" on programming interface (n/a)
 
      // SIGNAL OUTPUT vectors to hardware access routines...
-     {PicHw_SetD3,   NULL,NULL,NULL},  // Vpp
-     {PicHw_SetDummy,NULL,NULL,NULL},  // Vdd
-     {PicHw_SetD1,   NULL,NULL,NULL},  // Clock (through NON-inverting buffer)
-     {PicHw_SetD0,   NULL,NULL,NULL},  // Data  (through NON-inverting buffer)
-     {PicHw_SetNotD5,NULL,NULL,NULL},  // tristate control for CLOCK
-     {PicHw_SetNotD2,NULL,NULL,NULL},  // tristate control for DATA
+     {{PicHw_SetD3,   NULL,NULL,NULL}},  // Vpp
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // Vdd
+     {{PicHw_SetD1,   NULL,NULL,NULL}},  // Clock (through NON-inverting buffer)
+     {{PicHw_SetD0,   NULL,NULL,NULL}},  // Data  (through NON-inverting buffer)
+     {{PicHw_SetNotD5,NULL,NULL,NULL}},  // tristate control for CLOCK
+     {{PicHw_SetNotD2,NULL,NULL,NULL}},  // tristate control for DATA
      // (Application Note 589 uses a 74LS244 which has two INVERTING tristate
      //  control inputs; H=high-Z, L=enable )
      1 , // LOGIC(!) state of data-output-line while reading, usually 1 so PIC can pull this line down
-     {PicHw_SetD4,   NULL,NULL,NULL},  // PullMclrToGnd : only used here for AN589, D4=H means "pull down"
-     {PicHw_SetDummy,NULL,NULL,NULL},  //  int (*ConnectToTarget)(void);
-     {PicHw_SetDummy,NULL,NULL,NULL},  // Set Green Led (0=off, 1=on, -1=get current state)
-     {PicHw_SetDummy,NULL,NULL,NULL},  // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetD4,   NULL,NULL,NULL}},  // PullMclrToGnd : only used here for AN589, D4=H means "pull down"
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  //  int (*ConnectToTarget)(void);
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // Set Green Led (0=off, 1=on, -1=get current state)
 
-     {NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL}, // no selectable Vdd
+     {{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}}, // no selectable Vdd
 
      73 /* de DL4YHF (to check if nothing is missing in this struct) */
    },
    { PIC_INTF_TYPE_LPT_NOPPP     , // parallel NOPPP
      // SIGNAL INPUT vectors to hardware access routines...
-     {PicHw_TestPrinterBusy,NULL,NULL,NULL},  // read serial data from the PIC
-     {PicHw_SetDummy,NULL,NULL,NULL}, // Read state of "button" on programming interface (n/a)
+     {{PicHw_TestPrinterBusy,NULL,NULL,NULL}},  // read serial data from the PIC
+     {{PicHw_SetDummy,NULL,NULL,NULL}}, // Read state of "button" on programming interface (n/a)
 
      // SIGNAL OUTPUT vectors to hardware access routines...
-     {PicHw_SetNotD0,NULL,NULL,NULL},  // Vpp
-     {PicHw_SetDummy,NULL,NULL,NULL},  // Vdd
-     {PicHw_SetPrinterStrobe,NULL,NULL,NULL},  // Clock
-     {PicHw_SetPrinterALF,PicHw_SetPrinterSelect,NULL,NULL},  // Data
-     {PicHw_SetDummy,NULL,NULL,NULL},  // tristate control for CLOCK
-     {PicHw_SetDummy,NULL,NULL,NULL},  // tristate control for DATA
+     {{PicHw_SetNotD0,NULL,NULL,NULL}},  // Vpp
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // Vdd
+     {{PicHw_SetPrinterStrobe,NULL,NULL,NULL}},  // Clock
+     {{PicHw_SetPrinterALF,PicHw_SetPrinterSelect,NULL,NULL}},  // Data
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // tristate control for CLOCK
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // tristate control for DATA
      1 , // LOGIC(!) state of data-output-line while reading, usually 1 so PIC can pull this line down
-     {PicHw_SetDummy,NULL,NULL,NULL},  // PullMclrToGnd
-     {PicHw_SetDummy,NULL,NULL,NULL},  //  int (*ConnectToTarget)(void);
-     {PicHw_SetDummy,NULL,NULL,NULL},  // Set Green Led (0=off, 1=on, -1=get current state)
-     {PicHw_SetDummy,NULL,NULL,NULL},  // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // PullMclrToGnd
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  //  int (*ConnectToTarget)(void);
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // Set Green Led (0=off, 1=on, -1=get current state)
 
-     {NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL}, // no selectable Vdd
+     {{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}}, // no selectable Vdd
 
      73 /* de DL4YHF (to check if nothing is missing in this struct) */
    },
    { PIC_INTF_TYPE_CUSTOM_LPT,  // DEFAULTS for a custom interface on LPT port..
 
      // SIGNAL INPUT vectors to hardware access routines...
-     {PicHw_TestNotPrinterAck,NULL,NULL,NULL},     // Read from RB7 (PIC->PC): ACK, inverted
-     {PicHw_SetDummy,NULL,NULL,NULL},  // Read state of "button" on programming interface (n/a)
+     {{PicHw_TestNotPrinterAck,NULL,NULL,NULL}},     // Read from RB7 (PIC->PC): ACK, inverted
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // Read state of "button" on programming interface (n/a)
 
      // SIGNAL OUTPUT vectors to hardware access routines...
-     {PicHw_SetNotD4,NULL,NULL,NULL},  // Vpp control inverted     (D4)
-     {PicHw_SetNotD0,NULL,NULL,NULL},  // Vdd control inverted     (D0)
-     {PicHw_SetD3,   NULL,NULL,NULL},  // Clock not inverted       (D3)
-     {PicHw_SetD2,   NULL,NULL,NULL},  // Data to RB7 not inverted (D2)
-     {PicHw_SetDummy,NULL,NULL,NULL},  // no tristate control for CLOCK
-     {PicHw_SetDummy,NULL,NULL,NULL},  // no tristate control for DATA
+     {{PicHw_SetNotD4,NULL,NULL,NULL}},  // Vpp control inverted     (D4)
+     {{PicHw_SetNotD0,NULL,NULL,NULL}},  // Vdd control inverted     (D0)
+     {{PicHw_SetD3,   NULL,NULL,NULL}},  // Clock not inverted       (D3)
+     {{PicHw_SetD2,   NULL,NULL,NULL}},  // Data to RB7 not inverted (D2)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // no tristate control for CLOCK
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // no tristate control for DATA
      1 , // LOGIC(!) state of data-output-line while reading, usually 1 so PIC can pull this line down
-     {PicHw_SetDummy,NULL,NULL,NULL},  // PullMclrToGnd : not used here (only for AN589, D4)
-     {PicHw_SetNotD7,NULL,NULL,NULL},  // ConnectToTarget: D7, INVERTED
-     {PicHw_SetNotD1,NULL,NULL,NULL},  // Set Green Led (0=off, 1=on, -1=get current state)
-     {PicHw_SetDummy,NULL,NULL,NULL},  // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // PullMclrToGnd : not used here (only for AN589, D4)
+     {{PicHw_SetNotD7,NULL,NULL,NULL}},  // ConnectToTarget: D7, INVERTED
+     {{PicHw_SetNotD1,NULL,NULL,NULL}},  // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // Set Green Led (0=off, 1=on, -1=get current state)
 
-     {NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL}, // no selectable Vdd
+     {{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}}, // no selectable Vdd
 
      73 /* de DL4YHF (to check if nothing is missing in this struct) */
    }, // end PIC_INTF_TYPE_CUSTOM_LPT
    { PIC_INTF_TYPE_CUSTOM_COM,  // DEFAULTS for a custom interface on serial port..
 
      // SIGNAL INPUT vectors to hardware access routines...
-     {PicHw_TestNotPrinterAck,NULL,NULL,NULL}, // Read from RB7 (PIC->PC): ACK, inverted
-     {PicHw_SetDummy,NULL,NULL,NULL},  // Read state of "button" on programming interface (n/a)
+     {{PicHw_TestNotPrinterAck,NULL,NULL,NULL}}, // Read from RB7 (PIC->PC): ACK, inverted
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // Read state of "button" on programming interface (n/a)
 
      // SIGNAL OUTPUT vectors to hardware access routines...
-     {PicHw_SetNotD4,NULL,NULL,NULL},  // Vpp control inverted     (D4)
-     {PicHw_SetNotD0,NULL,NULL,NULL},  // Vdd control inverted     (D0)
-     {PicHw_SetD3,   NULL,NULL,NULL},  // Clock not inverted       (D3)
-     {PicHw_SetD2,   NULL,NULL,NULL},  // Data to RB7 not inverted (D2)
-     {PicHw_SetDummy,NULL,NULL,NULL},  // no tristate control for CLOCK
-     {PicHw_SetDummy,NULL,NULL,NULL},  // no tristate control for DATA
+     {{PicHw_SetNotD4,NULL,NULL,NULL}},  // Vpp control inverted     (D4)
+     {{PicHw_SetNotD0,NULL,NULL,NULL}},  // Vdd control inverted     (D0)
+     {{PicHw_SetD3,   NULL,NULL,NULL}},  // Clock not inverted       (D3)
+     {{PicHw_SetD2,   NULL,NULL,NULL}},  // Data to RB7 not inverted (D2)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // no tristate control for CLOCK
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // no tristate control for DATA
      1 , // LOGIC(!) state of data-output-line while reading, usually 1 so PIC can pull this line down
-     {PicHw_SetDummy,NULL,NULL,NULL},  // PullMclrToGnd : not used here (only for AN589, D4)
-     {PicHw_SetNotD7,NULL,NULL,NULL},  // ConnectToTarget: D7, INVERTED
-     {PicHw_SetNotD1,NULL,NULL,NULL},  // Set Green Led (0=off, 1=on, -1=get current state)
-     {PicHw_SetDummy,NULL,NULL,NULL},  // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // PullMclrToGnd : not used here (only for AN589, D4)
+     {{PicHw_SetNotD7,NULL,NULL,NULL}},  // ConnectToTarget: D7, INVERTED
+     {{PicHw_SetNotD1,NULL,NULL,NULL}},  // Set Green Led (0=off, 1=on, -1=get current state)
+     {{PicHw_SetDummy,NULL,NULL,NULL}},  // Set Green Led (0=off, 1=on, -1=get current state)
 
-     {NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL}, // no selectable Vdd
+     {{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}},{{NULL,NULL,NULL,NULL}}, // no selectable Vdd
 
      73 /* de DL4YHF (to check if nothing is missing in this struct) */
    } // end PIC_INTF_TYPE_CUSTOM_COM
@@ -2606,7 +2606,8 @@ void PIC_HW_LongDelay_ms(int milliseconds)
       {
        PicHw_FeedChargePump(); // required to produce Vpp with a charge pump
        if(t1>tNextSleep)
-        { Sleep(10);           // ideally "Sleep" for 10ms every 30ms (-> 66% CPU load)
+        {
+          wxMilliSleep(10);           // ideally "Sleep" for 10ms every 30ms (-> 66% CPU load)
           tNextSleep = t1 + (freq * 30 + 999) / 1000;
         }
        // Caution: Sleep(1) worked under Win98, but fails under XP !
@@ -2625,7 +2626,7 @@ void PIC_HW_LongDelay_ms(int milliseconds)
    }
   else  // no need to TOGGLE any pin while waiting -> give the CPU to another thread !
    {
-     Sleep(milliseconds);
+     wxMilliSleep(milliseconds);
    }
 } // end PIC_HW_LongDelay_ms()
 

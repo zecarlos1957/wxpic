@@ -105,7 +105,6 @@ wxChar       *DupIso8859_1_TChar  (const char* psz);
 #define _tcstol wxStrtol
 #define _stprintf wxSprintf
 #define stricmp strcasecmp
-#define Sleep wxMilliSleep
 #endif
 
 void QueryPerformanceCounter( int64_t* cnt );

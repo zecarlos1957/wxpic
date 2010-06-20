@@ -3213,7 +3213,7 @@ enum McDev_Token   // not "Mäc Dev", but Microchip DEV-file tokens :
 typedef struct
 {
     McDev_Token tok;
-    char *pszSym;
+    const char *pszSym;
 } T_PicDevSymTable;
 T_PicDevSymTable McDev_TopLevelSymbols[] =
 { { McDev_TOK_vpp,        "vpp"    },   { McDev_TOK_vdd,        "vdd"    },

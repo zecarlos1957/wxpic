@@ -98,6 +98,7 @@
 
 #include <stdio.h>     // don't panic.. just required for sprintf !
 #include <wx/intl.h>
+#include <wx/utils.h>
 
 //#pragma hdrstop  // don't try to precompile the following headers (->chaos!!)
 
@@ -180,7 +181,7 @@ void PIC_PRG_Init(void)
 bool PIC_PRG_SetDeviceType(T_PicDeviceInfo *pDeviceInfo )
 {
     bool fResult = false;
-    char *cp;
+    const char *cp;
     int  iSuffix;
     uint32_t dwFamily, dwWriteBufSize_bytes, dwEraseBufSize_bytes; // for PIC18Fxxx(x)
 
@@ -1340,7 +1341,7 @@ bool PIC_PRG_Program16FXX(   // Also used for 12FXX (but can't change the name t
         }
         if ( PIC_PRG_iSimulateOnly )
         {
-            Sleep(10);
+            wxMilliSleep(10);
         }
         else
         {
@@ -1481,7 +1482,7 @@ bool PIC_PRG_ProgramCode16F630(
         }
         if ( PIC_PRG_iSimulateOnly )
         {
-            Sleep(10);
+            wxMilliSleep(10);
         }
         else
         {
@@ -1556,7 +1557,7 @@ bool PIC_PRG_Program16F87X(
         }
         else // PIC_PRG_iSimulateOnly
         {
-            Sleep(10);
+            wxMilliSleep(10);
         }
         APPL_ShowProgress( (100*i) / n );
         if (APPL_iUserBreakFlag)
@@ -1731,7 +1732,7 @@ bool PIC_PRG_Program16F7X7(
         }
         if ( PIC_PRG_iSimulateOnly )
         {
-            Sleep(10);
+            wxMilliSleep(10);
         }
         APPL_ShowProgress( (100*iLocationCounter) / n );
         if (APPL_iUserBreakFlag)
@@ -1860,7 +1861,7 @@ bool PIC_PRG_Program16F81X(
         }
         if ( PIC_PRG_iSimulateOnly )
         {
-            Sleep(10);
+            wxMilliSleep(10);
         }
         APPL_ShowProgress( (100*iLocationCounter) / n );
 #if(0)
@@ -2026,7 +2027,7 @@ bool PIC_PRG_ProgramConfigMem_16F81X(
         }
         else //  PIC_PRG_iSimulateOnly
         {
-            Sleep(10);
+            wxMilliSleep(10);
         }
         APPL_ShowProgress( 100 );
     } // end if <program CONFIG WORD ? >
@@ -2126,7 +2127,7 @@ bool PIC_PRG_Program16F87XA(
         }
         if ( PIC_PRG_iSimulateOnly )
         {
-            Sleep(10);
+            wxMilliSleep(10);
         }
         APPL_ShowProgress( (100*iLocationCounter) / n );
     } // end for(iLocationCounter..)
@@ -2274,7 +2275,7 @@ bool PIC_PRG_ProgramConfigMem_16F87XA(
         }
         else //  PIC_PRG_iSimulateOnly
         {
-            Sleep(10);
+            wxMilliSleep(10);
         }
         APPL_ShowProgress( 100 );
     } // end if <program CONFIG WORD ? >
@@ -2389,7 +2390,7 @@ void PIC_PRG_Eprom14ProgCycle(uint16_t w)
 {
     if ( PIC_PRG_iSimulateOnly )
     {
-        Sleep(5);
+        wxMilliSleep(5);
         return;
     }
 
