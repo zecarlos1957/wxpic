@@ -1,5 +1,5 @@
 /* XPM */
-static char * ChipVerify_xpm[] = {
+static const char * ChipVerify_xpm[] = {
 "16 16 40 1",
 " 	c None",
 ".	c #8F2DFF",
