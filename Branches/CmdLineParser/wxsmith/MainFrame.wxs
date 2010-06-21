@@ -5,7 +5,6 @@
 		<parent_arg>0</parent_arg>
 		<id_arg>0</id_arg>
 		<handler function="OnClose" entry="EVT_CLOSE" />
-		<handler function="onChar" entry="EVT_CHAR" />
 		<object class="wxBoxSizer" variable="MainBoxSizer" member="no">
 			<orient>wxVERTICAL</orient>
 			<object class="sizeritem">

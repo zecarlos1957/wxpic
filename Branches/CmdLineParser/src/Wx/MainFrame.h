@@ -49,9 +49,9 @@ class MainFrame: public wxFrame
 		MainFrame(void);
 		virtual ~MainFrame();
 
-		static void CreateAndShow (void);
+		static bool CreateAndShow (void);
 		static void SetStatusText (const wxString &Text);
-		static void AddTextToLog  (const wxChar    *szText);
+		static void AddTextToLog  (const wxChar   *szText);
 		static void ShowProgress  (int             pPercentage);
 
 		 // "usages" of the message panel ( m_iMessagePanelUsage, Pnl_Message->Caption)
@@ -300,13 +300,13 @@ class MainFrame: public wxFrame
 		void onDumpBufferMenuItemSelected(wxCommandEvent& event);
 		void onMPLabDevDirButtonClick(wxCommandEvent& event);
 		void onDriverRadioSelect(wxCommandEvent& event);
-		void onChar(wxKeyEvent& event);
 		void onRedLedBitmapClick(wxCommandEvent& event);
 		void onGreenLedBitmapClick(wxCommandEvent& event);
 		void onLanguageChoiceSelect(wxCommandEvent& event);
 		void OnButton6Click(wxCommandEvent& event);
 		void onHelpOnIdButtonClick(wxCommandEvent& event);
 		//*)
+		void onChar(wxKeyEvent& event);
         void onMenuOpen(wxMenuEvent &pEvent);
 
         wxString aEmptyMRFname;

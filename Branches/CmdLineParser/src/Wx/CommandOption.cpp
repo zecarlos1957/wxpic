@@ -7,6 +7,7 @@
 #include "Appl.h"
 #include <WinPic/WinPicPr/Config.h>
 #include <wx/string.h>
+#include <wx/cmdline.h>
 
 //-- Definition of the single instance
 TCommandOption CommandOption;
@@ -27,106 +28,127 @@ TCommandOption::TCommandOption(void)
         , WinPic_iTestMode    (0)
 {}
 
+static const wxChar theProgramSwitchName  [] = wxT("p");
+static const wxChar theEraseSwitchName    [] = wxT("e");
+static const wxChar theNoDelaySwitchName  [] = wxT("nodelay");
+static const wxChar theReadSwitchName     [] = wxT("r");
+static const wxChar theOverwriteSwitchName[] = wxT("overwrite");
+static const wxChar theVerifySwitchName   [] = wxT("v");
+static const wxChar theDeviceOptionName   [] = wxT("device");
+static const wxChar theConfigOptionName   [] = wxT("config_word");
+static const wxChar theQuitOptionName     [] = wxT("q");
 
-void TCommandOption::Load (const wxApp *App)
+static const wxCmdLineEntryDesc theCmdLineDesc[] =
 {
-    wxString s;
+    { wxCMD_LINE_PARAM,  NULL,                   NULL, _("input or output HEX file"),                                               wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+    { wxCMD_LINE_SWITCH, theProgramSwitchName,   NULL, _("Program the device with content of the HEX file") },
+    { wxCMD_LINE_SWITCH, theEraseSwitchName,     NULL, _("Erase the device") },
+    { wxCMD_LINE_SWITCH, theNoDelaySwitchName,   NULL, _("Do not wait before starting the operations") },
+    { wxCMD_LINE_SWITCH, theReadSwitchName,      NULL, _("Read the device and write the result to the HEX file") },
+    { wxCMD_LINE_SWITCH, theOverwriteSwitchName, NULL, _("Do not ask before writing the HEX file when it already exists") },
+    { wxCMD_LINE_SWITCH, theVerifySwitchName,    NULL, _("Verify the device") },
+    { wxCMD_LINE_OPTION, theDeviceOptionName,    NULL, _("Model of the device to program (default=last used)"),                     wxCMD_LINE_VAL_STRING, wxCMD_LINE_NEEDS_SEPARATOR },
+    { wxCMD_LINE_OPTION, theConfigOptionName,    NULL, _("Overrides the config word value read in the HEX file (4 Hexa digits)"),   wxCMD_LINE_VAL_STRING, wxCMD_LINE_NEEDS_SEPARATOR },
+    { wxCMD_LINE_OPTION, theQuitOptionName,      NULL, _("Quit WxPic at the end of the operation waiting specified delay (0-9 s)"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_NEEDS_SEPARATOR },
+    { wxCMD_LINE_NONE }
+};
 
-    wxChar sz255Command[256];
-    wxChar *cp;
 
-    // Parse all arguments from the command line.
-    //     Most likely, this will be an instruction to LOAD a file
-    //     which will be programmed into the device later, etc.
-    // There will DELIBERATELY be a certain delay between executing all args.
-    for (int iCmdArgumentIndex = 1;
-            iCmdArgumentIndex < App->argc;
-            ++iCmdArgumentIndex)
+
+bool TCommandOption::Load (const wxApp *pApp)
+{
+    wxString Error;
+    wxCmdLineParser Parser(theCmdLineDesc, pApp->argc, pApp->argv);
+    for(;;) //-- Will never loop (exit through break or return at first pass)
     {
-        _tcsncpy(sz255Command, App->argv[iCmdArgumentIndex], 255 );
-        APPL_ShowMsg( APPL_CALLER_MAIN, 0, _("Parsing argument from command line : \"%s\""), sz255Command );
-        cp = sz255Command;
-        if (_tcsncmp(cp,_T("/nodelay"),8)==0)
-        {
+        wxString OptionValue;
+        if (Parser.Parse() != 0)
+            return false;
+
+        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Info: Parsing argument from command line") );
+        if (Parser.Found(theNoDelaySwitchName))
             WinPic_fCommandLineOption_NoDelay = true;
-        }
-        else if (_tcsncmp(cp,_T("/tm="),4)==0) // "/tm=" = test mode
+        if (Parser.Found(theDeviceOptionName, &OptionValue))
         {
-            cp+=4;
-            WinPic_iTestMode = HexStringToLongint(4, cp);
-            if ( WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-                APPL_LogEvent( _("ParseCommandLine: GUI-Speed-Test enabled") );
-        }
-        else if (_tcsncmp(cp,_T("/overwrite"),10)==0)
-        {
-            // "/overwrite"  =  "don't ask silly questions if an already existing file
-            //                   would be overwritten"
-            WinPic_fCommandLineOption_QueryBeforeOverwritingFiles = false;
-        }
-        else if (_tcsncmp(cp,_T("/device="),8)==0)
-        {
-            cp+=8;
-            // The configuration has been loaded EARLIER,
-            // so it makes sense to override the PIC DEVICE here :
-            wxCharBuffer Device = wxString(cp).mb_str(wxConvISO8859_1);
-            if (strcmp( Device, Config.sz40DeviceName)!=0)
+            const wxWX2MBbuf DeviceName = OptionValue.mb_str(wxConvISO8859_1);
+            if (strcmp( DeviceName, Config.sz40DeviceName) != 0)
             {
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, _("Info: Device set to \"%s\" via command line ."), cp );
+                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Info: Device set to \"%s\" via command line"), OptionValue.c_str() );
+                strncpy(Config.sz40DeviceName, DeviceName, 40);
             }
-            strncpy(Config.sz40DeviceName, Device, 40);
         }
-        else if (_tcsncmp(cp,_T("/config_word="),13)==0)
+        if (Parser.Found(theConfigOptionName, &OptionValue))
         {
-            cp+=13;
-            WinPic_i32CmdLineOption_OverrideConfigWord = HexStringToLongint(4, cp);
+            long NewConfig = HexStringToLongint(4, OptionValue.c_str());
+            if (NewConfig >= 0)
+                WinPic_i32CmdLineOption_OverrideConfigWord = NewConfig;
+            else
+            {
+                Error.Printf(_("Error: Invalid Config Word value = %s (ignored)"), OptionValue.c_str() );
+                break;
+            }
         }
-        else if (_tcsncmp(cp,_T("/e"),2)==0)
+        if (Parser.Found(theEraseSwitchName))
         {
-            // /e = "erase"
             WinPic_fCommandLineOption_Erase   = true;
             WinPic_fCommandLineMode           = true;
         }
-        else if (_tcsncmp(cp,_T("/p"),2)==0)
+        if (Parser.Found(theProgramSwitchName))
         {
-            // /p = "program"
             WinPic_fCommandLineOption_Program = true;
             WinPic_fCommandLineMode           = true;
         }
-        else if (_tcsncmp(cp,_T("/q"),2)==0)
+        if (Parser.Found(theReadSwitchName))
         {
-            // /q = "quit"
-            WinPic_fCommandLineOption_Quit    = true;
-            WinPic_fCommandLineMode           = true;
-            if ( cp[2]==_T('=') && cp[3]>_T('0') && cp[4]<=_T('9')  )
-            {
-                // "additional number of SECONDS before quitting" ?
-                WinPic_i200msToQuit = (cp[3]-_T('0')) * 5;
-            }
-        }
-        else if (_tcsncmp(cp,_T("/r"),2)==0)
-        {
-            // /r = "read"
             WinPic_fCommandLineOption_Read    = true;
             WinPic_fCommandLineMode           = true;
         }
-        else if (_tcsncmp(cp,_T("/v"),2)==0)
+        if (Parser.Found(theVerifySwitchName))
         {
-            // /v = "verify"
             WinPic_fCommandLineOption_Verify  = true;
             WinPic_fCommandLineMode           = true;
         }
-        else // none of these commands, guess the string is a FILENAME..
+        long Second;
+        if (Parser.Found(theQuitOptionName, &Second))
         {
-            _tcscpy( Config.sz255HexFileName, cp );
-            // Since 2004-01-09:  If the filename was the *ONLY* parameter,
-            //                    automatically set the 'LOAD' flag
-            //                    to simplify drag-and-drop on WinPic's icon.
-            if ( App->argc == 1 )
+            if (Second < 0)
             {
-                if ( wxFileExists(Config.sz255HexFileName) )
-                    WinPic_fCommandLineOption_Load = true;
+                Error.Printf(_("Error: Invalid quit duration value = %ld (must be positive or 0)"), Second );
+                break;
             }
+            WinPic_i200msToQuit = Second * 5;
+            WinPic_fCommandLineOption_Quit    = true;
+            WinPic_fCommandLineMode           = true;
         }
-    } // end for <all command line arguments>
+        if (Parser.Found(theOverwriteSwitchName))
+        {
+            WinPic_fCommandLineOption_QueryBeforeOverwritingFiles = false;
+            if (!WinPic_fCommandLineOption_Read)
+                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Info: Overwrite option ignored (no read option)") );
+        }
+        if (Parser.GetParamCount() > 0)
+        {
+            OptionValue = Parser.GetParam();
+            if (OptionValue.Len() > 255)
+            {
+                Error = _("Error: File name too long (max length=255)");
+                break;
+            }
+            wxStrcpy(Config.sz255HexFileName, OptionValue.c_str());
+            if (!WinPic_fCommandLineOption_Read
+            &&  (WinPic_fCommandLineOption_Program | WinPic_fCommandLineOption_Verify)
+              || ( !WinPic_fCommandLineOption_Quit && wxFileExists(OptionValue) ))
+                WinPic_fCommandLineOption_Load = true;
+        }
+        else if (WinPic_fCommandLineOption_Program | WinPic_fCommandLineOption_Verify | WinPic_fCommandLineOption_Read)
+        {
+            Error = _("Error: Missing HEX file name parameter");
+            break;
+        }
+        return true;
+    }
+    Parser.SetLogo(Error);
+    Parser.Usage();
+    return false;
 } // end WinPic_ParseCommandLine()
 

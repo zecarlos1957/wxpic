@@ -293,7 +293,6 @@ void MainFrame::initAuto (void)
     Connect(ID_ABOUT_MENU_ITEM,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::onAboutMenuItemSelected);
     Connect(ID_TIMER,wxEVT_TIMER,(wxObjectEventFunction)&MainFrame::onTimerTrigger);
     Connect(wxID_ANY,wxEVT_CLOSE_WINDOW,(wxObjectEventFunction)&MainFrame::OnClose);
-    Connect(wxID_ANY,wxEVT_CHAR,(wxObjectEventFunction)&MainFrame::onChar);
     //*)
 }
 
@@ -305,6 +304,7 @@ void MainFrame::initMore (void)
     Connect(ID_PROG_DEV_TOOL,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&MainFrame::onProgramMenuItemSelected);
     Connect(ID_VERIFY_PROGRAM_TOOL,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&MainFrame::onVerifyMenuItemSelected);
     Connect(ID_READ_PROGRAM_TOOL,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&MainFrame::onReadMenuItemSelected);
+    wxTheApp->Connect(wxID_ANY,wxEVT_KEY_DOWN,(wxObjectEventFunction)&MainFrame::onChar, NULL, this);
 
     aToolBar = new wxToolBar(this, ID_TOOLBAR, wxDefaultPosition, wxDefaultSize, wxTB_HORIZONTAL|wxNO_BORDER, _T("ID_TOOLBAR"));
     aOpenHexFileTool = aToolBar->AddTool(ID_OPEN_HEX_FILE_TOOL, _("Load HEX File"), *TResource::GetOpenIcon(), wxNullBitmap, wxITEM_NORMAL, _("Load HEX file"), _("Load an Hex file in the buffer and Program"));
@@ -1680,7 +1680,7 @@ void MainFrame::onChar(wxKeyEvent& event)
     int Key = event.GetKeyCode();
     bool Handled = false;
    // See help on OnKeyDown : "KeyPreview" must be set !
-   if(Key==13)
+   if((Key==13) || (Key == WXK_NUMPAD_ENTER))
     {
       if(  (PIC_PRG_iBatchProgState == BATCH_PROG_WAIT_START)
         || (PIC_PRG_iBatchProgState == BATCH_PROG_WAIT_START2) )
@@ -1689,7 +1689,7 @@ void MainFrame::onChar(wxKeyEvent& event)
 //         Key=0; // handled
        }
     }
-   if(Key==27)
+   else if(Key==27)
     {
       APPL_iUserBreakFlag = 1;  // signal for the programming routines to leave all loops
       if( CommandOption.WinPic_fCommandLineMode )

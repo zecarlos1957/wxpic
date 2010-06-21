@@ -27,7 +27,7 @@ public:
     int  WinPic_iTestMode;
 
     TCommandOption(void);
-    void Load (const wxApp *App);
+    bool Load (const wxApp *pApp);
 };
 
 extern TCommandOption CommandOption;
