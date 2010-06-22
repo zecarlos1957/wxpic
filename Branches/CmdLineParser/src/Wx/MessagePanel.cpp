@@ -49,6 +49,7 @@ void TMessagePanel::onClearMsgButtonClick(wxCommandEvent& event)
     aMessageLog->Clear();
     MainFrame::TheMainFrame->aStatusBar->SetStatusText(_T(""));
     MainFrame::TheMainFrame->m_iMessagePanelUsage = MainFrame::MP_USAGE_NOTHING;
+    MainFrame::TheMainFrame->aLogCount = 0;
 }
 //---------------------------------------------------------------------------
 
