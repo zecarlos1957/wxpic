@@ -46,10 +46,10 @@ static const wxCmdLineEntryDesc theCmdLineDesc[] =
     { wxCMD_LINE_SWITCH, theNoDelaySwitchName,   NULL, _("Do not wait before starting the operations") },
     { wxCMD_LINE_SWITCH, theReadSwitchName,      NULL, _("Read the device and write the result to the HEX file") },
     { wxCMD_LINE_SWITCH, theOverwriteSwitchName, NULL, _("Do not ask before writing the HEX file when it already exists") },
-    { wxCMD_LINE_SWITCH, theVerifySwitchName,    NULL, _("Verify the device") },
-    { wxCMD_LINE_OPTION, theDeviceOptionName,    NULL, _("Model of the device to program (default=last used)"),                     wxCMD_LINE_VAL_STRING, wxCMD_LINE_NEEDS_SEPARATOR },
+    { wxCMD_LINE_SWITCH, theVerifySwitchName,    NULL, _("Verify the device is programmed as defined in the HEX file") },
+    { wxCMD_LINE_OPTION, theDeviceOptionName,    NULL, _("Define the model of the device (default=last used)"),                     wxCMD_LINE_VAL_STRING, wxCMD_LINE_NEEDS_SEPARATOR },
     { wxCMD_LINE_OPTION, theConfigOptionName,    NULL, _("Overrides the config word value read in the HEX file (4 Hexa digits)"),   wxCMD_LINE_VAL_STRING, wxCMD_LINE_NEEDS_SEPARATOR },
-    { wxCMD_LINE_OPTION, theQuitOptionName,      NULL, _("Quit WxPic at the end of the operation waiting specified delay (0-9 s)"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_NEEDS_SEPARATOR },
+    { wxCMD_LINE_OPTION, theQuitOptionName,      NULL, _("Quit WxPic at the end of the operations waiting specified delay in second"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_NEEDS_SEPARATOR },
     { wxCMD_LINE_NONE }
 };
 
@@ -84,7 +84,7 @@ bool TCommandOption::Load (const wxApp *pApp)
                 WinPic_i32CmdLineOption_OverrideConfigWord = NewConfig;
             else
             {
-                Error.Printf(_("Error: Invalid Config Word value = %s (ignored)"), OptionValue.c_str() );
+                Error.Printf(_("Error: Invalid Config Word value = %s"), OptionValue.c_str() );
                 break;
             }
         }
@@ -136,8 +136,8 @@ bool TCommandOption::Load (const wxApp *pApp)
             }
             wxStrcpy(Config.sz255HexFileName, OptionValue.c_str());
             if (!WinPic_fCommandLineOption_Read
-            &&  (WinPic_fCommandLineOption_Program | WinPic_fCommandLineOption_Verify)
-              || ( !WinPic_fCommandLineOption_Quit && wxFileExists(OptionValue) ))
+            &&  ((WinPic_fCommandLineOption_Program | WinPic_fCommandLineOption_Verify)
+              || ( !WinPic_fCommandLineOption_Quit && wxFileExists(OptionValue) ) ))
                 WinPic_fCommandLineOption_Load = true;
         }
         else if (WinPic_fCommandLineOption_Program | WinPic_fCommandLineOption_Verify | WinPic_fCommandLineOption_Read)
