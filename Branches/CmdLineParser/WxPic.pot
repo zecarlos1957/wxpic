@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-22 13:45+0200\n"
+"POT-Creation-Date: 2010-06-23 10:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2111,93 +2111,98 @@ msgid "Load HEX File"
 msgstr ""
 
 # P1
-#: src\Wx\MainFrame-2.cpp:1219 src\Wx\MainFrame.cpp:1719
+#: src\Wx\MainFrame-2.cpp:1223 src\Wx\MainFrame.cpp:1719
 msgid "HEX files (INHX8M, *.hex)|*.hex"
 msgstr ""
 
+# P1
+#: src\Wx\MainFrame-2.cpp:1226
+msgid "HEX files (INHX8M, *.hex)|*.hex;*.HEX|*.HEX"
+msgstr ""
+
 # P2
-#: src\Wx\MainFrame-2.cpp:1251
+#: src\Wx\MainFrame-2.cpp:1260
 #, c-format
 msgid "Can't open hexfile \"%s\""
 msgstr ""
 
 # P3
-#: src\Wx\MainFrame-2.cpp:1272
+#: src\Wx\MainFrame-2.cpp:1281
 #, c-format
 msgid "Results from LoadHex: LastProgAdr=0x%06lX LastDataAdr=0x%06lX"
 msgstr ""
 
 # P3
-#: src\Wx\MainFrame-2.cpp:1277
+#: src\Wx\MainFrame-2.cpp:1286
 #, c-format
 msgid " (%s)"
 msgstr ""
 
 # P2
-#: src\Wx\MainFrame-2.cpp:1286
+#: src\Wx\MainFrame-2.cpp:1295
 #, c-format
 msgid "Info: Config word set to 0x%06lX from command line ."
 msgstr ""
 
 # P2
-#: src\Wx\MainFrame-2.cpp:1298
+#: src\Wx\MainFrame-2.cpp:1307
 msgid "Aborting LoadAndProgram because of error(s)"
 msgstr ""
 
 # P2
-#: src\Wx\MainFrame-2.cpp:1324
+#: src\Wx\MainFrame-2.cpp:1333
 msgid ""
 "Dump would overwrite existing file.\n"
 "  Erase old file ?"
 msgstr ""
 
 # P2
-#: src\Wx\MainFrame-2.cpp:1325
+#: src\Wx\MainFrame-2.cpp:1334
 msgid "Confirm overwrite"
 msgstr ""
 
 # P2
-#: src\Wx\MainFrame-2.cpp:1336
+#: src\Wx\MainFrame-2.cpp:1345
 msgid "Can't create hexfile"
 msgstr ""
 
 # P2
-#: src\Wx\MainFrame-2.cpp:1352
+#: src\Wx\MainFrame-2.cpp:1361
 msgid ".. stopped parsing cmd-line"
 msgstr ""
 
 # P3
-#: src\Wx\MainFrame-2.cpp:1361
+#: src\Wx\MainFrame-2.cpp:1370
 msgid "Update all tabs: CODE memory .."
 msgstr ""
 
 # P3
-#: src\Wx\MainFrame-2.cpp:1364
+#: src\Wx\MainFrame-2.cpp:1373
 msgid "Update all tabs: DATA memory .."
 msgstr ""
 
 # P3
-#: src\Wx\MainFrame-2.cpp:1367
+#: src\Wx\MainFrame-2.cpp:1376
 msgid "Update all tabs: ID and Config memory dump .."
 msgstr ""
 
 # P3
-#: src\Wx\MainFrame-2.cpp:1370
+#: src\Wx\MainFrame-2.cpp:1379
 msgid "Update all tabs: Device/Config tab .."
 msgstr ""
 
 # P3
-#: src\Wx\MainFrame-2.cpp:1373
+#: src\Wx\MainFrame-2.cpp:1382
 msgid "Update all tabs: Interface display .."
 msgstr ""
 
 # P3
-#: src\Wx\MainFrame-2.cpp:1376
+#: src\Wx\MainFrame-2.cpp:1385
 msgid "Update all tabs: Options display .."
 msgstr ""
 
 # P3
-#: src\Wx\MainFrame-2.cpp:1381
+#: src\Wx\MainFrame-2.cpp:1390
 msgid "Update all tabs: DONE ."
 msgstr ""
 
