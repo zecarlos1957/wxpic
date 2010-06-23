@@ -1210,13 +1210,19 @@ bool MainFrame::VerifyPic(void)
 } // end MainFrame::VerifyPic()
 //---------------------------------------------------------------------------
 
-
+static const wxChar *theHexFileFilter =
+#ifdef __WXMSW__
+	_("HEX files (INHX8M, *.hex)|*.hex");
+#else
+	//-- when case is sensitive, accept both cases
+	_("HEX files (INHX8M, *.hex)|*.hex;*.HEX|*.HEX");
+#endif
 //---------------------------------------------------------------------------
 bool MainFrame::RunHexOpenDialog(void)
 {
     /* see help on TOpenDialog - beware: Win XP saves a history in the registry (HOLY SHIT) */
     aFileDialog->SetMessage(_("Load HEX File"));
-    aFileDialog->SetWildcard(_("HEX files (INHX8M, *.hex)|*.hex"));
+    aFileDialog->SetWildcard(theHexFileFilter);
     wxFileName DefaultFile(Config.sz255HexFileName);
     aFileDialog->SetFilename(DefaultFile.GetFullName());
     if ( DefaultFile.FileExists() )
