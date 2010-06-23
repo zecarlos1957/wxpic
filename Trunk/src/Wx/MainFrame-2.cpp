@@ -40,18 +40,19 @@
 #define MAX_MESSAGES_IN_LOG     500
 
 
-/*static*/ void MainFrame::CreateAndShow (void)
+/*static*/ bool MainFrame::CreateAndShow (void)
 {
     TheMainFrame = new MainFrame();
     //-- Overwrite the loaded configuration with the command parameters
-    CommandOption.Load(wxTheApp);
+    if (!CommandOption.Load(wxTheApp))
+        return false;
 
 
     // Initialize the memory buffers and other stuff...
     if ( ! PIC_HEX_Init() ) // Initialize buffers for program + data memory  (#1)
     {
         TheMainFrame->Close();     // buffer-init failed ? Almost impossible under windows !
-        return;
+        return false;
     }
     PIC_PRG_Init();  // Set default PIC type and type-dependent infos (#2)
     if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
@@ -73,7 +74,7 @@
         APPL_LogEvent( _("CreateForm: done") );
 
     TheMainFrame->Show();
-
+    return true;
 }
 
 
@@ -1215,7 +1216,16 @@ bool MainFrame::RunHexOpenDialog(void)
 {
     /* see help on TOpenDialog - beware: Win XP saves a history in the registry (HOLY SHIT) */
     aFileDialog->SetMessage(_("Load HEX File"));
-    aFileDialog->SetWildcard(_("HEX files (INHX8M, *.hex)|*.hex"));
+    //-- Note the following string cannot be static to avoid translation
+    //-- to be performed before the language selection
+    const wxChar *theHexFileFilter =
+    #ifdef __WXMSW__
+        _("HEX files (INHX8M, *.hex)|*.hex");
+    #else
+        //-- when case is sensitive, accept both cases
+        _("HEX files (INHX8M, *.hex)|*.hex;*.HEX|*.HEX");
+    #endif
+    aFileDialog->SetWildcard(theHexFileFilter);
     wxFileName DefaultFile(Config.sz255HexFileName);
     aFileDialog->SetFilename(DefaultFile.GetFullName());
     if ( DefaultFile.FileExists() )

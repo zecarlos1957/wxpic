@@ -188,25 +188,17 @@ wxChar *DupIso8859_1_TChar (const char* psz)
 void QueryPerformanceCounter( int64_t* cnt ){
 	timespec clk;
 	clock_gettime( CLOCK_MONOTONIC, &clk );
-	*cnt = clk.tv_nsec +clk.tv_sec*100000000000ll;
+	*cnt = clk.tv_nsec +clk.tv_sec*1000000000ll;
 	}
 
 void QueryPerformanceFrequency( int64_t* frq ){
-	static int64_t result = 0;
-	if(result == 0){
-		timespec start, end;
-		clock_gettime( CLOCK_MONOTONIC, &start ) ;
-		usleep(10000);
-		clock_gettime( CLOCK_MONOTONIC, &end ) ;
-		result = (end.tv_nsec - start.tv_nsec)*100 ;
-		}
-	*frq = result;
+	*frq = 1000000000LL;
 	}
 
 	long GetTickCount(){
 		timespec tm;
 		clock_gettime( CLOCK_MONOTONIC, &tm ) ;
-		return tm.tv_sec*1000+tm.tv_nsec/1000;
+		return tm.tv_sec*1000+tm.tv_nsec/1000000;
 	}
 
 	bool EscapeCommFunction( int fd, int flag){

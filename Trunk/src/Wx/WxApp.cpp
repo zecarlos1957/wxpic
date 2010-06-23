@@ -66,7 +66,7 @@ bool MyApp::OnInit()
     //*)
 
     if (wxsOK)
-        MainFrame::CreateAndShow();
+        wxsOK = MainFrame::CreateAndShow();
 
     return wxsOK;
 }
