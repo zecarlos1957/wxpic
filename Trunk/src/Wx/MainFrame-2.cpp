@@ -27,6 +27,7 @@
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 #include <wx/settings.h>
+#include <wx/file.h>
 
 #include <WinPic/WinPicPr/PIC_HEX.h>
 #include <WinPic/WinPicPr/PIC_HW.h>
