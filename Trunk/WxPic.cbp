@@ -24,9 +24,14 @@
 					<Add option="-DCOMPILING_WINPIC" />
 					<Add directory="src" />
 					<Add directory="%wxWidgets%\include" />
+					<Add directory="%wxWidgets%\lib\gcc_libwxpic\mswud" />
 				</Compiler>
 				<Linker>
-					<Add library="WxWidgetsD" />
+					<Add library="wxmsw28ud_core" />
+					<Add library="wxmsw28ud_adv" />
+					<Add library="wxbase28ud_xml" />
+					<Add library="wxbase28ud" />
+					<Add library="wxexpatd" />
 					<Add library="gdi32" />
 					<Add library="user32" />
 					<Add library="kernel32" />
@@ -36,7 +41,8 @@
 					<Add library="comdlg32" />
 					<Add library="comctl32" />
 					<Add library="rpcrt4" />
-					<Add directory="%wxWidgets%\lib" />
+					<Add library="winspool" />
+					<Add directory="%wxWidgets%\lib\gcc_libwxpic" />
 				</Linker>
 				<ExtraCommands>
 					<Add before="c:\Tools\Bin\BuildVersion.bat" />
@@ -59,10 +65,15 @@
 					<Add option="-DCOMPILING_WINPIC" />
 					<Add directory="src" />
 					<Add directory="%wxWidgets%\include" />
+					<Add directory="%wxWidgets%\lib\gcc_libwxpic\mswu" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="WxWidgets" />
+					<Add library="wxmsw28u_core" />
+					<Add library="wxmsw28u_adv" />
+					<Add library="wxbase28u_xml" />
+					<Add library="wxbase28u" />
+					<Add library="wxexpat" />
 					<Add library="gdi32" />
 					<Add library="user32" />
 					<Add library="kernel32" />
@@ -72,7 +83,9 @@
 					<Add library="comdlg32" />
 					<Add library="comctl32" />
 					<Add library="rpcrt4" />
+					<Add library="winspool" />
 					<Add directory="%wxWidgets%\lib" />
+					<Add directory="%wxWidgets%\lib\gcc_libwxpic" />
 				</Linker>
 				<ExtraCommands>
 					<Add before="c:\Tools\Bin\BuildVersion.bat" />
@@ -96,9 +109,14 @@
 					<Add option="-DCOMPILING_WINPIC" />
 					<Add directory="src" />
 					<Add directory="%wxWidgets%\include" />
+					<Add directory="%wxWidgets%\lib\gcc_libwxpic\mswud" />
 				</Compiler>
 				<Linker>
-					<Add library="WxWidgetD" />
+					<Add library="wxmsw28ud_core" />
+					<Add library="wxmsw28ud_adv" />
+					<Add library="wxbase28ud_xml" />
+					<Add library="wxbase28ud" />
+					<Add library="wxexpatd" />
 					<Add library="mpatrol" />
 					<Add library="bfd" />
 					<Add library="iberty" />
@@ -112,7 +130,9 @@
 					<Add library="comdlg32" />
 					<Add library="comctl32" />
 					<Add library="rpcrt4" />
+					<Add library="winspool" />
 					<Add directory="%wxWidgets%\lib" />
+					<Add directory="%wxWidgets%\lib\gcc_libwxpic" />
 				</Linker>
 				<ExtraCommands>
 					<Add before="c:\Tools\Bin\BuildVersion.bat" />
