@@ -569,6 +569,7 @@ void TInterfacePanel::UpdateInterfaceInputSignalDisplay(void)
     {
         aGreenLedBitmap->SetBitmapLabel(*((i>0) ? TResource::GetLedGreenIcon() : TResource::GetLedOffIcon()));
         aGreenLedText->Enable(i>=0);
+        LastValueGreen = i;
     }
 //  if(i>=0)
 //    { Lab_GreenLED->Enabled = true;
@@ -594,6 +595,7 @@ void TInterfacePanel::UpdateInterfaceInputSignalDisplay(void)
             aOkButtonText->Enable(false);
             aOkButtonText->SetLabel(_("(no button)"));
         }
+        LastValueButton = i;
     }
 
     if (MainFrame::TheMainFrame->m_Updating>0)
