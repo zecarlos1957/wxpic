@@ -19,7 +19,6 @@
 #include <../resources/Resource.h>
 
 //(*AppHeaders
-#include "src\Wx\MainFrame.h"
 #include <wx/image.h>
 //*)
 
@@ -63,14 +62,7 @@ bool MyApp::OnInit()
     SetTopWindow(MainFrame::TheMainFrame);
 
     //(*AppInitialize
-    bool wxsOK = true;
     wxInitAllImageHandlers();
-    if ( wxsOK )
-    {
-    MainFrame* Frame = new MainFrame(0);
-    Frame->Show();
-    SetTopWindow(Frame);
-    }
     //*)
 
     if (wxsOK)
