@@ -2,7 +2,7 @@
 #include "MainFrame.h"
 #include "Appl.h"
 #include "Language.h"
-#include <Res/Resource.h>
+#include <../resources/Resource.h>
 
 //(*InternalHeaders(TInterfacePanel)
 #include <wx/intl.h>
@@ -12,8 +12,8 @@
 #include <wx/msgdlg.h>
 #include <wx/stdpaths.h>
 
-#include <WinPic/WinPicPr/Config.h>
-#include <WinPic/WinPicPr/PIC_HW.h>
+#include <WinPicPr/Config.h>
+#include <WinPicPr/PIC_HW.h>
 
 //(*IdInit(TInterfacePanel)
 const long TInterfacePanel::ID_BUTTON7 = wxNewId();

@@ -2,7 +2,7 @@
 #include "MainFrame.h"
 #include "Appl.h"
 #include "Language.h"
-#include <Res/Resource.h>
+#include <../resources/Resource.h>
 
 //(*InternalHeaders(TConfigMemoryPanel)
 #include <wx/intl.h>
@@ -10,7 +10,7 @@
 //*)
 #include <wx/settings.h>
 
-#include <WinPic/WinPicPr/PIC_HEX.h>
+#include <WinPicPr/PIC_HEX.h>
 
 //(*IdInit(TConfigMemoryPanel)
 const long TConfigMemoryPanel::ID_CFG_MEM_GRID = wxNewId();

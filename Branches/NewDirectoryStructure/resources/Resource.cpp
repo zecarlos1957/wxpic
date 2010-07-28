@@ -11,18 +11,18 @@
 
 #include "Resource.h"
 #ifdef USE_AUTOGEN_ICON_INCLUDE
-#include "Res/Icon.autogen"
+#include "Icon.autogen"
 #else
-#include "Res/WxPic.xpm"
-#include "Res/ChipRead.xpm"
-#include "Res/ChipVerify.xpm"
-#include "Res/ChipWrite.xpm"
-#include "Res/ChipReload.xpm"
-#include "Res/LedGreen.xpm"
-#include "Res/LedRed.xpm"
-#include "Res/LedOff.xpm"
-#include "Res/Open.xpm"
-#include "Res/Save.xpm"
+#include "WxPic.xpm"
+#include "ChipRead.xpm"
+#include "ChipVerify.xpm"
+#include "ChipWrite.xpm"
+#include "ChipReload.xpm"
+#include "LedGreen.xpm"
+#include "LedRed.xpm"
+#include "LedOff.xpm"
+#include "Open.xpm"
+#include "Save.xpm"
 #endif
 
 

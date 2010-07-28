@@ -28,7 +28,7 @@
 //*)
 #include <wx/toolbar.h>
 #include <wx/config.h>
-#include <WinPic/WinPicPr/Devices.h>
+#include <WinPicPr/Devices.h>
 #include "MemAddrGetter.h"
 #include "AboutU.h"
 #include "CodeMemPanel.h"

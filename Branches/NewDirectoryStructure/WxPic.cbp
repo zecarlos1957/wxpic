@@ -8,8 +8,8 @@
 		<Build>
 			<Target title="Debug Win32">
 				<Option platforms="Windows;" />
-				<Option output="bin\Debug\WxPic" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Debug\" />
+				<Option output="bin/Debug/WxPic" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
@@ -23,8 +23,8 @@
 					<Add option="-DUSE_SVN_VERSION" />
 					<Add option="-DCOMPILING_WINPIC" />
 					<Add directory="src" />
-					<Add directory="%wxWidgets%\include" />
-					<Add directory="%wxWidgets%\lib\gcc_libwxpic\mswud" />
+					<Add directory="%wxWidgets%/include" />
+					<Add directory="%wxWidgets%/lib/gcc_libwxpic/mswud" />
 				</Compiler>
 				<Linker>
 					<Add library="wxmsw28ud_core" />
@@ -42,7 +42,7 @@
 					<Add library="comctl32" />
 					<Add library="rpcrt4" />
 					<Add library="winspool" />
-					<Add directory="%wxWidgets%\lib\gcc_libwxpic" />
+					<Add directory="%wxWidgets%/lib/gcc_libwxpic" />
 				</Linker>
 				<ExtraCommands>
 					<Add before="c:\Tools\Bin\BuildVersion.bat" />
@@ -50,8 +50,8 @@
 			</Target>
 			<Target title="Release Win32">
 				<Option platforms="Windows;" />
-				<Option output="bin\Release\WxPic" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Release\" />
+				<Option output="bin/Release/WxPic" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
@@ -64,8 +64,8 @@
 					<Add option="-DUSE_SVN_VERSION" />
 					<Add option="-DCOMPILING_WINPIC" />
 					<Add directory="src" />
-					<Add directory="%wxWidgets%\include" />
-					<Add directory="%wxWidgets%\lib\gcc_libwxpic\mswu" />
+					<Add directory="%wxWidgets%/include" />
+					<Add directory="%wxWidgets%/lib/gcc_libwxpic/mswu" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -84,8 +84,8 @@
 					<Add library="comctl32" />
 					<Add library="rpcrt4" />
 					<Add library="winspool" />
-					<Add directory="%wxWidgets%\lib" />
-					<Add directory="%wxWidgets%\lib\gcc_libwxpic" />
+					<Add directory="%wxWidgets%/lib" />
+					<Add directory="%wxWidgets%/lib/gcc_libwxpic" />
 				</Linker>
 				<ExtraCommands>
 					<Add before="c:\Tools\Bin\BuildVersion.bat" />
@@ -93,8 +93,8 @@
 			</Target>
 			<Target title="Debug-Mpatrol Win32">
 				<Option platforms="Windows;" />
-				<Option output="bin\Debug\WxPic" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Debug\" />
+				<Option output="bin/Debug/WxPic" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
@@ -108,8 +108,8 @@
 					<Add option="-DUSE_SVN_VERSION" />
 					<Add option="-DCOMPILING_WINPIC" />
 					<Add directory="src" />
-					<Add directory="%wxWidgets%\include" />
-					<Add directory="%wxWidgets%\lib\gcc_libwxpic\mswud" />
+					<Add directory="%wxWidgets%/include" />
+					<Add directory="%wxWidgets%/lib/gcc_libwxpic/mswud" />
 				</Compiler>
 				<Linker>
 					<Add library="wxmsw28ud_core" />
@@ -131,8 +131,8 @@
 					<Add library="comctl32" />
 					<Add library="rpcrt4" />
 					<Add library="winspool" />
-					<Add directory="%wxWidgets%\lib" />
-					<Add directory="%wxWidgets%\lib\gcc_libwxpic" />
+					<Add directory="%wxWidgets%/lib" />
+					<Add directory="%wxWidgets%/lib/gcc_libwxpic" />
 				</Linker>
 				<ExtraCommands>
 					<Add before="c:\Tools\Bin\BuildVersion.bat" />
@@ -140,8 +140,8 @@
 			</Target>
 			<Target title="Debug Linux">
 				<Option platforms="Unix;Mac;" />
-				<Option output="bin\DebugLinux\WxPic" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\DebugLinux\" />
+				<Option output="bin/DebugLinux/WxPic" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/DebugLinux/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
@@ -161,8 +161,8 @@
 			</Target>
 			<Target title="Release Linux">
 				<Option platforms="Unix;Mac;" />
-				<Option output="bin\ReleaseLinux\WxPic" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\ReleaseLinux\" />
+				<Option output="bin/ReleaseLinux/WxPic" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/ReleaseLinux/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
@@ -183,91 +183,78 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="src\Res\Icon.inc" />
-		<Unit filename="src\Res\Resource.cpp" />
-		<Unit filename="src\Res\Resource.h" />
-		<Unit filename="src\Res\wxPic.rc">
-			<Option compilerVar="WINDRES" />
-			<Option target="Debug Win32" />
-			<Option target="Release Win32" />
-			<Option target="Debug-Mpatrol Win32" />
-		</Unit>
-		<Unit filename="src\WinPic\WinPicPr\Config.cpp" />
-		<Unit filename="src\WinPic\WinPicPr\Config.h" />
-		<Unit filename="src\WinPic\WinPicPr\Devices.cpp" />
-		<Unit filename="src\WinPic\WinPicPr\Devices.h" />
-		<Unit filename="src\WinPic\WinPicPr\LoadHex.cpp">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src\WinPic\WinPicPr\LoadHex.h" />
-		<Unit filename="src\WinPic\WinPicPr\PIC10F_PRG.cpp" />
-		<Unit filename="src\WinPic\WinPicPr\PIC10F_PRG.h" />
-		<Unit filename="src\WinPic\WinPicPr\PIC16F716_PRG.H" />
-		<Unit filename="src\WinPic\WinPicPr\PIC16F716_PRG.cpp">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src\WinPic\WinPicPr\PIC16F7x_PRG.cpp">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src\WinPic\WinPicPr\PIC16F7x_PRG.h" />
-		<Unit filename="src\WinPic\WinPicPr\PIC18F_PRG.cpp" />
-		<Unit filename="src\WinPic\WinPicPr\PIC18F_PRG.h" />
-		<Unit filename="src\WinPic\WinPicPr\PIC_HEX.cpp" />
-		<Unit filename="src\WinPic\WinPicPr\PIC_HEX.h" />
-		<Unit filename="src\WinPic\WinPicPr\PIC_HW.cpp" />
-		<Unit filename="src\WinPic\WinPicPr\PIC_HW.h" />
-		<Unit filename="src\WinPic\WinPicPr\PIC_PRG.cpp" />
-		<Unit filename="src\WinPic\WinPicPr\PIC_PRG.h" />
-		<Unit filename="src\WinPic\WinPicPr\SpecHwIo.h" />
-		<Unit filename="src\WinPic\WinPicPr\dsPIC_PRG.cpp" />
-		<Unit filename="src\WinPic\WinPicPr\dsPIC_PRG.h" />
-		<Unit filename="src\WinPic\YHF_tools\QFile.cpp" />
-		<Unit filename="src\WinPic\YHF_tools\QFile.h" />
-		<Unit filename="src\WinRing0\OlsApiInit.h" />
-		<Unit filename="src\WinRing0\OlsApiInitDef.h" />
-		<Unit filename="src\WinRing0\OlsDef.h" />
-		<Unit filename="src\Wx\AboutU.cpp" />
-		<Unit filename="src\Wx\AboutU.h" />
-		<Unit filename="src\Wx\Appl.cpp" />
-		<Unit filename="src\Wx\Appl.h" />
-		<Unit filename="src\Wx\CodeMemPanel.cpp" />
-		<Unit filename="src\Wx\CodeMemPanel.h" />
-		<Unit filename="src\Wx\CommandOption.cpp" />
-		<Unit filename="src\Wx\CommandOption.h" />
-		<Unit filename="src\Wx\ConfigMemoryPanel.cpp" />
-		<Unit filename="src\Wx\ConfigMemoryPanel.h" />
-		<Unit filename="src\Wx\DataMemPanel.cpp" />
-		<Unit filename="src\Wx\DataMemPanel.h" />
-		<Unit filename="src\Wx\DeviceCfgPanel.cpp" />
-		<Unit filename="src\Wx\DeviceCfgPanel.h" />
-		<Unit filename="src\Wx\HelpCtrl.cpp" />
-		<Unit filename="src\Wx\HelpCtrl.h" />
-		<Unit filename="src\Wx\HexGrid.cpp" />
-		<Unit filename="src\Wx\HexGrid.h" />
-		<Unit filename="src\Wx\InterfacePanel.cpp" />
-		<Unit filename="src\Wx\InterfacePanel.h" />
-		<Unit filename="src\Wx\Language.cpp" />
-		<Unit filename="src\Wx\Language.h" />
-		<Unit filename="src\Wx\MainFrame-2.cpp" />
-		<Unit filename="src\Wx\MainFrame.cpp" />
-		<Unit filename="src\Wx\MainFrame.h" />
-		<Unit filename="src\Wx\MemAddrGetter.cpp" />
-		<Unit filename="src\Wx\MemAddrGetter.h" />
-		<Unit filename="src\Wx\MessagePanel.cpp" />
-		<Unit filename="src\Wx\MessagePanel.h" />
-		<Unit filename="src\Wx\OptionPanel.cpp" />
-		<Unit filename="src\Wx\OptionPanel.h" />
-		<Unit filename="src\Wx\SVNVersion.h" />
-		<Unit filename="src\Wx\WxApp.cpp" />
-		<Unit filename="wxsmith\AboutU.wxs" />
-		<Unit filename="wxsmith\CodeMemPanel.wxs" />
-		<Unit filename="wxsmith\MainFrame.wxs" />
-		<Unit filename="wxsmith\TConfigMemoryPanel.wxs" />
-		<Unit filename="wxsmith\TDataMemPanel.wxs" />
-		<Unit filename="wxsmith\TDeviceCfgPanel.wxs" />
-		<Unit filename="wxsmith\TInterfacePanel.wxs" />
-		<Unit filename="wxsmith\TMessagePanel.wxs" />
-		<Unit filename="wxsmith\TOptionPanel.wxs" />
+		<Unit filename="resources/Icon.inc" />
+		<Unit filename="resources/Resource.cpp" />
+		<Unit filename="resources/wxsmith/AboutU.wxs" />
+		<Unit filename="resources/wxsmith/CodeMemPanel.wxs" />
+		<Unit filename="resources/wxsmith/MainFrame.wxs" />
+		<Unit filename="resources/wxsmith/TConfigMemoryPanel.wxs" />
+		<Unit filename="resources/wxsmith/TDataMemPanel.wxs" />
+		<Unit filename="resources/wxsmith/TDeviceCfgPanel.wxs" />
+		<Unit filename="resources/wxsmith/TInterfacePanel.wxs" />
+		<Unit filename="resources/wxsmith/TMessagePanel.wxs" />
+		<Unit filename="resources/wxsmith/TOptionPanel.wxs" />
+		<Unit filename="src/AboutU.cpp" />
+		<Unit filename="src/AboutU.h" />
+		<Unit filename="src/Appl.cpp" />
+		<Unit filename="src/Appl.h" />
+		<Unit filename="src/CodeMemPanel.cpp" />
+		<Unit filename="src/CodeMemPanel.h" />
+		<Unit filename="src/CommandOption.cpp" />
+		<Unit filename="src/CommandOption.h" />
+		<Unit filename="src/ConfigMemoryPanel.cpp" />
+		<Unit filename="src/ConfigMemoryPanel.h" />
+		<Unit filename="src/DataMemPanel.cpp" />
+		<Unit filename="src/DataMemPanel.h" />
+		<Unit filename="src/DeviceCfgPanel.cpp" />
+		<Unit filename="src/DeviceCfgPanel.h" />
+		<Unit filename="src/HelpCtrl.cpp" />
+		<Unit filename="src/HelpCtrl.h" />
+		<Unit filename="src/HexGrid.cpp" />
+		<Unit filename="src/HexGrid.h" />
+		<Unit filename="src/InterfacePanel.cpp" />
+		<Unit filename="src/InterfacePanel.h" />
+		<Unit filename="src/Language.cpp" />
+		<Unit filename="src/Language.h" />
+		<Unit filename="src/MainFrame-2.cpp" />
+		<Unit filename="src/MainFrame.cpp" />
+		<Unit filename="src/MainFrame.h" />
+		<Unit filename="src/MemAddrGetter.cpp" />
+		<Unit filename="src/MemAddrGetter.h" />
+		<Unit filename="src/MessagePanel.cpp" />
+		<Unit filename="src/MessagePanel.h" />
+		<Unit filename="src/OptionPanel.cpp" />
+		<Unit filename="src/OptionPanel.h" />
+		<Unit filename="src/SVNVersion.h" />
+		<Unit filename="src/WinPicPr/Config.cpp" />
+		<Unit filename="src/WinPicPr/Config.h" />
+		<Unit filename="src/WinPicPr/Devices.cpp" />
+		<Unit filename="src/WinPicPr/Devices.h" />
+		<Unit filename="src/WinPicPr/LoadHex.cpp" />
+		<Unit filename="src/WinPicPr/LoadHex.h" />
+		<Unit filename="src/WinPicPr/PIC10F_PRG.cpp" />
+		<Unit filename="src/WinPicPr/PIC10F_PRG.h" />
+		<Unit filename="src/WinPicPr/PIC16F716_PRG.cpp" />
+		<Unit filename="src/WinPicPr/PIC16F716_PRG.h" />
+		<Unit filename="src/WinPicPr/PIC16F7x_PRG.cpp" />
+		<Unit filename="src/WinPicPr/PIC16F7x_PRG.h" />
+		<Unit filename="src/WinPicPr/PIC18F_PRG.cpp" />
+		<Unit filename="src/WinPicPr/PIC18F_PRG.h" />
+		<Unit filename="src/WinPicPr/PIC_HEX.cpp" />
+		<Unit filename="src/WinPicPr/PIC_HEX.h" />
+		<Unit filename="src/WinPicPr/PIC_HW.cpp" />
+		<Unit filename="src/WinPicPr/PIC_HW.h" />
+		<Unit filename="src/WinPicPr/PIC_PRG.cpp" />
+		<Unit filename="src/WinPicPr/PIC_PRG.h" />
+		<Unit filename="src/WinPicPr/SpecHwIo.h" />
+		<Unit filename="src/WinPicPr/dsPIC_PRG.cpp" />
+		<Unit filename="src/WinPicPr/dsPIC_PRG.h" />
+		<Unit filename="src/WinRing0/OlsApiInit.h" />
+		<Unit filename="src/WinRing0/OlsApiInitDef.h" />
+		<Unit filename="src/WinRing0/OlsDef.h" />
+		<Unit filename="src/WxApp.cpp" />
+		<Unit filename="src/YHF_tools/QFile.cpp" />
+		<Unit filename="src/YHF_tools/QFile.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

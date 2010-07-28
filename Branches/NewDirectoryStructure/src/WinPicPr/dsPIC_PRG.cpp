@@ -38,7 +38,7 @@
 
 #include "PIC_HW.h"    // Routines to drive the programmer hardware interface
 #include "Config.h"
-#include <Wx/Appl.h>
+#include <Appl.h>
 
 #include "dsPIC_PRG.h" // header for the dsPIC programming algorithms
 

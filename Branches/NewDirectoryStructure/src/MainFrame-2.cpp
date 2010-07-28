@@ -29,14 +29,14 @@
 #include <wx/settings.h>
 #include <wx/file.h>
 
-#include <WinPic/WinPicPr/PIC_HEX.h>
-#include <WinPic/WinPicPr/PIC_HW.h>
-#include <WinPic/WinPicPr/PIC_PRG.h>
-#include <WinPic/WinPicPr/dsPIC_PRG.h>
-#include <WinPic/WinPicPr/PIC16F7x_PRG.h>
-#include <WinPic/WinPicPr/PIC10F_PRG.h>
-#include <WinPic/WinPicPr/PIC18F_PRG.h>
-#include <WinPic/WinPicPr/Config.h>
+#include <WinPicPr/PIC_HEX.h>
+#include <WinPicPr/PIC_HW.h>
+#include <WinPicPr/PIC_PRG.h>
+#include <WinPicPr/dsPIC_PRG.h>
+#include <WinPicPr/PIC16F7x_PRG.h>
+#include <WinPicPr/PIC10F_PRG.h>
+#include <WinPicPr/PIC18F_PRG.h>
+#include <WinPicPr/Config.h>
 
 #define MAX_MESSAGES_IN_LOG     500
 

@@ -38,7 +38,7 @@
 #include "PIC_HW.h"     // Routines to drive the programmer hardware interface
 #include "Devices.h"    // need T_PicDeviceInfo here !
 #include "Config.h"     // permanently saved Config-structure
-#include <Wx/Appl.h>       // APPL_ShowMsg(), etc
+#include <Appl.h>       // APPL_ShowMsg(), etc
 #include "PIC_HEX.h"    // access routines to the "hex data buffer"
 #include "PIC_PRG.h"    // generic defines for programming routines
 #include "PIC16F7x_PRG.h" // header for the PIC16F7x programming algorithms

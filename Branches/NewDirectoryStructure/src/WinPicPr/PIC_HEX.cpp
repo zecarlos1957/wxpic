@@ -38,7 +38,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <Wx/Appl.h>       // APPL_ShowMsg(), etc
+#include <Appl.h>       // APPL_ShowMsg(), etc
 #include "PIC_PRG.h"   // some infos in PIC_dev_param are required here !
 #include "LoadHex.h"   // newer, "universal" routine to load hex files (also for dsPIC)
 

@@ -26,8 +26,8 @@
 //#include <io.h>
 //#include <fcntl.h>
 #include <wx/intl.h>
-#include "Wx/Appl.h"
-#include <WinPic/YHF_tools/QFile.h>        // W.B.'s "Quick-File" module
+#include "Appl.h"
+#include <YHF_tools/QFile.h>        // W.B.'s "Quick-File" module
 
 #include "LoadHex.h"      // W.B.'s Hex-File-Import [ LoadHexFile() by DL4YHF ]
 

@@ -49,7 +49,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <wx/utils.h>
 
 #include "Config.h"    // permanently saved Config-structure
-#include <Wx/Appl.h>      // call the APPLication to display message strings
+#include <Appl.h>      // call the APPLication to display message strings
 
 //#include <WinPic/smport/TSmPort.h>   // A.Weitzman's SMALL PORT plus WoBu's C++ wrapper
 //                       // (to replace the good old inportb() & outportb() )

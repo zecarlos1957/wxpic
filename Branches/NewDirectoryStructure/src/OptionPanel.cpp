@@ -12,9 +12,9 @@
 #include <wx/colordlg.h>
 #include <wx/settings.h>
 
-#include <WinPic/WinPicPr/Config.h>
-#include <WinPic/WinPicPr/PIC_PRG.h>
-#include <WinPic/WinPicPr/PIC_HW.h>
+#include <WinPicPr/Config.h>
+#include <WinPicPr/PIC_PRG.h>
+#include <WinPicPr/PIC_HW.h>
 
 //(*IdInit(TOptionPanel)
 const long TOptionPanel::ID_PROG_CODE_MEM_CHK = wxNewId();

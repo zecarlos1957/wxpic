@@ -104,7 +104,7 @@
 
 #include "Config.h"    // permanently saved Config-structure
 #include "Devices.h"   // device information structure
-#include <Wx/Appl.h>       // APPL_ShowMsg(), etc
+#include <Appl.h>       // APPL_ShowMsg(), etc
 #include "PIC_HEX.h"   // HEX-file import, export  and buffers
 
 #include "PIC_HW.h"    // Routines to drive the programmer hardware interface

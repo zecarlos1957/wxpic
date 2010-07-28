@@ -52,7 +52,7 @@
 
 #include "PIC_HW.h"
 #include "PIC18F_PRG.h"
-#include <Wx/Appl.h>
+#include <Appl.h>
 
 #define PIC18F_CORE_INSTRUCTION              0
 #define PIC18F_SHIFT_OUT_TABLAT_REGISTER     2

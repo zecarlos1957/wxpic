@@ -36,7 +36,7 @@
 
 #include "QFile.h"        // header for this module
 #include <wx/log.h>
-#include <Wx/Appl.h>
+#include <Appl.h>
 //-------- Some red tape required in many windoze app's -----------
 
 

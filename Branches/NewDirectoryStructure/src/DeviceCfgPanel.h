@@ -11,7 +11,7 @@
 #include <wx/choice.h>
 //*)
 
-#include <WinPic/WinPicPr/Devices.h>
+#include <WinPicPr/Devices.h>
 
 class TDeviceCfgPanel: public wxPanel
 {

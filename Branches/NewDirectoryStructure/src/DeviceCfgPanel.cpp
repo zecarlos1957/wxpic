@@ -10,9 +10,9 @@
 #include <wx/settings.h>
 #include <wx/msgdlg.h>
 
-#include <WinPic/WinPicPr/Config.h>
-#include <WinPic/WinPicPr/PIC_PRG.h>
-#include <WinPic/WinPicPr/PIC_HEX.h>
+#include <WinPicPr/Config.h>
+#include <WinPicPr/PIC_PRG.h>
+#include <WinPicPr/PIC_HEX.h>
 
 enum
 {

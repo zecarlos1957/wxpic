@@ -7,7 +7,7 @@
 #include <wx/app.h>
 
 
-#include <Wx/Appl.h>      // call the APPLication to display message strings
+#include <Appl.h>      // call the APPLication to display message strings
 #include "PIC_HW.h"   // interface types etc for default values
 #include "PIC_PRG.h"
 

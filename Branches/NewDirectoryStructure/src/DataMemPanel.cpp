@@ -6,7 +6,7 @@
 #include <wx/string.h>
 //*)
 
-#include <WinPic/WinPicPr/PIC_HEX.h>
+#include <WinPicPr/PIC_HEX.h>
 
 //(*IdInit(TDataMemPanel)
 const long TDataMemPanel::ID_DATA_MEM_GRID = wxNewId();
