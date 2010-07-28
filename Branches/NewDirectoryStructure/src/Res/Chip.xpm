@@ -1,0 +1,30 @@
+/* XPM */
+ {
+/* columns rows colors chars-per-pixel */
+"16 16 8 1",
+"  c black",
+". c #6D6D6D6D6D6D",
+"X c red",
+"o c #B4B490900101",
+"O c #99998E8E6E6E",
+"+ c #FFFFEFEF4040",
+"@ c #D6D6D7D7D7D7",
+"# c #FFFFFFFFFFFF",
+/* pixels */
+"##########+#####",
+"########++o#####",
+"########+++++++o",
+"###  ###+++++++o",
+"#    XX#+++++++o",
+".    XX#+++++++o",
+" #.  XX#oooooooo",
+"   #.XXXXX   ###",
+"@OO  XXXXX     #",
+"#OO OO #.       ",
+"#OO@OO   #.     ",
+"#O@#OO@OO  #.   ",
+"#O@#O@#OO OO . O",
+"####O@#OO@OO  #O",
+"#######O@#OO@###",
+"#######O@#O@####"
+};
