@@ -263,15 +263,15 @@
 			<wxsmith version="1">
 				<gui name="wxWidgets" src="WxApp.cpp" main="-- None --" init_handlers="necessary" language="CPP" />
 				<resources>
-					<wxFrame wxs="wxsmith/MainFrame.wxs" src="src\Wx\MainFrame.cpp" hdr="src\Wx\MainFrame.h" name="MainFrame" language="CPP" />
-					<wxDialog wxs="wxsmith/AboutU.wxs" src="src\Wx\AboutU.cpp" hdr="src\Wx\AboutU.h" name="TAbtForm" language="CPP" />
-					<wxPanel wxs="wxsmith/CodeMemPanel.wxs" src="src\Wx\CodeMemPanel.cpp" hdr="src\Wx\CodeMemPanel.h" name="TCodeMemPanel" language="CPP" />
-					<wxPanel wxs="wxsmith/TDataMemPanel.wxs" src="src\Wx\DataMemPanel.cpp" hdr="src\Wx\DataMemPanel.h" name="TDataMemPanel" language="CPP" />
-					<wxPanel wxs="wxsmith/TDeviceCfgPanel.wxs" src="src\Wx\DeviceCfgPanel.cpp" hdr="src\Wx\DeviceCfgPanel.h" name="TDeviceCfgPanel" language="CPP" />
-					<wxPanel wxs="wxsmith/TConfigMemoryPanel.wxs" src="src\Wx\ConfigMemoryPanel.cpp" hdr="src\Wx\ConfigMemoryPanel.h" name="TConfigMemoryPanel" language="CPP" />
-					<wxPanel wxs="wxsmith/TOptionPanel.wxs" src="src\Wx\OptionPanel.cpp" hdr="src\Wx\OptionPanel.h" name="TOptionPanel" language="CPP" />
-					<wxPanel wxs="wxsmith/TInterfacePanel.wxs" src="src\Wx\InterfacePanel.cpp" hdr="src\Wx\InterfacePanel.h" name="TInterfacePanel" language="CPP" />
-					<wxPanel wxs="wxsmith/TMessagePanel.wxs" src="src\Wx\MessagePanel.cpp" hdr="src\Wx\MessagePanel.h" name="TMessagePanel" language="CPP" />
+					<wxFrame wxs="wxsmith/MainFrame.wxs" src="src\MainFrame.cpp" hdr="src\MainFrame.h" name="MainFrame" language="CPP" />
+					<wxDialog wxs="wxsmith/AboutU.wxs" src="src\AboutU.cpp" hdr="src\AboutU.h" name="TAbtForm" language="CPP" />
+					<wxPanel wxs="wxsmith/CodeMemPanel.wxs" src="src\CodeMemPanel.cpp" hdr="src\CodeMemPanel.h" name="TCodeMemPanel" language="CPP" />
+					<wxPanel wxs="wxsmith/TDataMemPanel.wxs" src="src\DataMemPanel.cpp" hdr="src\DataMemPanel.h" name="TDataMemPanel" language="CPP" />
+					<wxPanel wxs="wxsmith/TDeviceCfgPanel.wxs" src="src\DeviceCfgPanel.cpp" hdr="src\DeviceCfgPanel.h" name="TDeviceCfgPanel" language="CPP" />
+					<wxPanel wxs="wxsmith/TConfigMemoryPanel.wxs" src="src\ConfigMemoryPanel.cpp" hdr="src\ConfigMemoryPanel.h" name="TConfigMemoryPanel" language="CPP" />
+					<wxPanel wxs="wxsmith/TOptionPanel.wxs" src="src\OptionPanel.cpp" hdr="src\OptionPanel.h" name="TOptionPanel" language="CPP" />
+					<wxPanel wxs="wxsmith/TInterfacePanel.wxs" src="src\InterfacePanel.cpp" hdr="src\InterfacePanel.h" name="TInterfacePanel" language="CPP" />
+					<wxPanel wxs="wxsmith/TMessagePanel.wxs" src="src\MessagePanel.cpp" hdr="src\MessagePanel.h" name="TMessagePanel" language="CPP" />
 				</resources>
 			</wxsmith>
 		</Extensions>
