@@ -81,18 +81,21 @@ void TLanguage::doSetLanguage (int pLanguage)
 
 
 /*static*/
-void TLanguage::SetHelp (const wxString &pHelpDefDir)
+bool TLanguage::SetHelp (const wxString &pHelpDefDir)
 {
     //-- Construit le fichier de map par défaut quand aucun fichier n'est spécifié
-    wxString HelpDir = pHelpDefDir;
-    if (HelpDir.IsEmpty())
-    {
-        wxFileName Temp;
-        Temp.Assign(wxStandardPaths::Get().GetExecutablePath());
-        Temp.AppendDir(HELP_DEFAULT_DIR_NAME);
-        HelpDir = Temp.GetPath();
-    }
-    theSingleton->aIsHelpValid = theSingleton->aHelpController.Initialize(HelpDir);
+    	wxString HelpDir = pHelpDefDir;
+		if (HelpDir.IsEmpty()){
+			wxFileName Temp;
+			Temp.Assign(wxStandardPaths::Get().GetExecutablePath());
+			Temp.AppendDir(HELP_DEFAULT_DIR_NAME);
+			HelpDir = Temp.GetPath();
+			}
+		if( wxFile::Exists(HelpDir) ){ //Silences error if diretory doesn't exists.
+			theSingleton->aIsHelpValid = theSingleton->aHelpController.Initialize(HelpDir);
+			return true;
+			}
+	return false;
 }
 
 

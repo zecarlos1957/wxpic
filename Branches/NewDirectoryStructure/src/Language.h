@@ -45,7 +45,8 @@ public:
     //-- if no current language Help Dir in the form <pHelpDefDir>/<currentLanguage> is found
     //-- The map file wxHelp must be present in any Help directory
     //-- If the provided directory path is empty it is replaced the Help SubDir of the application executable directory
-    static void                 SetHelp             (const wxString &pHelpDefDir = wxEmptyString);
+    //-- Returns true on success, false on failure.
+    static bool                 SetHelp             (const wxString &pHelpDefDir = wxEmptyString);
 
     //-- Return the best Help controller found for the set Language
     //-- (or NULL when no Help data found or not set by SetHelp)
