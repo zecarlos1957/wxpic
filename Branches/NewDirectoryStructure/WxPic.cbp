@@ -183,9 +183,17 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="Makefile">
+			<Option target="Debug Linux" />
+			<Option target="Release Linux" />
+		</Unit>
 		<Unit filename="resources/Icon.inc" />
 		<Unit filename="resources/Resource.cpp" />
 		<Unit filename="resources/Resource.h" />
+		<Unit filename="resources/wxpic.desktop">
+			<Option target="Debug Linux" />
+			<Option target="Release Linux" />
+		</Unit>
 		<Unit filename="src/AboutU.cpp" />
 		<Unit filename="src/AboutU.h" />
 		<Unit filename="src/Appl.cpp" />
