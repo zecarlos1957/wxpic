@@ -48,7 +48,6 @@
 			<object class="sizeritem">
 				<object class="wxGauge" name="ID_PROGRESS_GAUGE" variable="aProgressGauge" member="yes">
 					<size>-1,8</size>
-					<hidden>1</hidden>
 					<style>wxGA_SMOOTH</style>
 				</object>
 				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -137,7 +136,7 @@
 				<object class="wxMenuItem" name="ID_ENAB_HEX_EDIT_MENU_ITEM" variable="aEnabHexEditMenuItem" member="yes">
 					<label>&amp;Enable HEX editor</label>
 					<handler function="onEnabHexEditMenuItemSelected" entry="EVT_MENU" />
-					<check>1</check>
+					<checkable>1</checkable>
 				</object>
 				<object class="wxMenuItem" name="ID_APPLY_EDIT_MENU_ITEM" variable="aApplyEditMenuItem" member="yes">
 					<label>&amp;Apply edits</label>
@@ -198,7 +197,7 @@
 				<object class="wxMenuItem" name="ID_BATCH_PRG_MENU_ITEM" variable="aBatchPrgMenuItem" member="yes">
 					<label>&amp;Start Batch Programming</label>
 					<handler function="onBatchPrgMenuItemSelected" entry="EVT_MENU" />
-					<check>1</check>
+					<checkable>1</checkable>
 				</object>
 				<object class="wxMenu" name="ID_SPECIAL_SUB_MENU" variable="aSpecialMenuItem" member="yes">
 					<label>S&amp;pecial</label>
