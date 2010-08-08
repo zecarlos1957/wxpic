@@ -152,7 +152,7 @@ class MainFrame: public wxFrame
         bool                m_update_id_and_config_display;
         int                 m_Updating;
         int                 m_iMessagePanelUsage;
-        bool                m_progress_visible;
+//        bool                m_progress_visible;
         int                 m_progress_activity_timer;
         bool                m_fPicDeviceConflict;
         bool                m_fReloadAndProgClicked;

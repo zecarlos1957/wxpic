@@ -84,7 +84,7 @@ void MainFrame::ShowProgressGauge(bool visible)
     if (aProgressGauge->IsShown() != visible)
     {
         aProgressGauge->Show(visible);
-        GetSizer()->SetSizeHints(this);
+        this->Layout();
         Refresh();
     }
 }

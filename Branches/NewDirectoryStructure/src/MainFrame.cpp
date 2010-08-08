@@ -649,7 +649,7 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
 
         // Turn the progress bar off if there is no more activity.
         // (ugly but easy, don't have to care for turning it off elsewhere !)
-        if (m_progress_visible)
+        if (aProgressGauge->IsShown())
         {
             if (m_progress_activity_timer>0)
                 --m_progress_activity_timer;
