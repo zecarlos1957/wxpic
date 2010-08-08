@@ -84,8 +84,8 @@ void MainFrame::ShowProgressGauge(bool visible)
     if (aProgressGauge->IsShown() != visible)
     {
         aProgressGauge->Show(visible);
-        this->Layout();
-        Refresh();
+        Layout();
+        wxYieldIfNeeded(); //Will draw changes to main screen
     }
 }
 
@@ -137,7 +137,7 @@ void MainFrame::SaveLayout (void)
     TheIniFile.Write(_T("Left"),  WindowRect.GetLeft  ());
     TheIniFile.Write(_T("Top"),   WindowRect.GetTop   ());
     TheIniFile.Write(_T("Width"), WindowRect.GetWidth ());
-//    TheIniFile.Write(_T("Height"),WindowRect.GetHeight());
+    TheIniFile.Write(_T("Height"),WindowRect.GetHeight());
     TheIniFile.Write(_T("CodeMemBgColor"), aCodeMemTab->aCodeMemGrid->GetDefaultCellBackgroundColour().GetAsString(wxC2S_HTML_SYNTAX));
     TheIniFile.Write(_T("CodeMemFgColor"), aCodeMemTab->aCodeMemGrid->GetDefaultCellTextColour().GetAsString(wxC2S_HTML_SYNTAX));
     TheIniFile.Write(_T("DataMemBgColor"), aDataMemTab->aDataMemGrid->GetDefaultCellBackgroundColour().GetAsString(wxC2S_HTML_SYNTAX));
@@ -180,7 +180,7 @@ void MainFrame::LoadLayout (void)
     SetSize(TheIniFile.Read(_T("Left"),   -1),
             TheIniFile.Read(_T("Top"),    -1),
             TheIniFile.Read(_T("Width"),  -1),
-            /*TheIniFile.Read(_T("Height"), */-1/*)*/);
+            TheIniFile.Read(_T("Height"), -1));
 
     wxColour Color;
     if (Color.Set(TheIniFile.Read(_T("CodeMemBgColor"), _T("#000000"))))

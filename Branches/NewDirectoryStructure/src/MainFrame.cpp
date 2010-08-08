@@ -141,6 +141,7 @@ void MainFrame::initAuto (void)
     aNotebook->AddPage(aMessageTab, _("Messages"), false);
     MainBoxSizer->Add(aNotebook, 1, wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 7);
     aProgressGauge = new wxGauge(this, ID_PROGRESS_GAUGE, 100, wxDefaultPosition, wxSize(-1,8), wxGA_SMOOTH, wxDefaultValidator, _T("ID_PROGRESS_GAUGE"));
+    aProgressGauge->Hide();
     MainBoxSizer->Add(aProgressGauge, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
     SetSizer(MainBoxSizer);
     MenuBar = new wxMenuBar();
