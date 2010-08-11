@@ -30,7 +30,6 @@
 #include <wx/config.h>
 #include <WinPicPr/Devices.h>
 #include "MemAddrGetter.h"
-#include "AboutU.h"
 #include "CodeMemPanel.h"
 #include "DataMemPanel.h"
 #include "DeviceCfgPanel.h"
@@ -157,8 +156,6 @@ class MainFrame: public wxFrame
         bool                m_fPicDeviceConflict;
         bool                m_fReloadAndProgClicked;
         wxString            m_original_title;
-
-        TAbtForm           *aAboutDialog;
 
         static MainFrame   *TheMainFrame;
 

@@ -31,7 +31,8 @@
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 #include <wx/msgdlg.h>
-
+#include <wx/aboutdlg.h>
+#include "SVNVersion.h"
 
 MainFrame *MainFrame::TheMainFrame = NULL;
 wxConfig   MainFrame::TheIniFile(APPLICATION_NAME);
@@ -109,7 +110,6 @@ MainFrame::MainFrame(void)
         : aLogCount(0)
         , m_fMaySaveSettings(true)
         , m_fReloadAndProgClicked(false)
-        , aAboutDialog(NULL)
 {
     initAuto();
     initMore();
@@ -1279,13 +1279,56 @@ void MainFrame::onVerifyMenuItemSelected(wxCommandEvent& event)
 void MainFrame::onAboutMenuItemSelected(wxCommandEvent& event)
 //void MainFrame::About1Click(TObject *Sender)
 {
-    if (aAboutDialog == NULL)
-        aAboutDialog = new TAbtForm(this);
-    aAboutDialog->ShowModal();
-//  AbtForm->ShowModal();
-}
-//---------------------------------------------------------------------------
+	wxAboutDialogInfo myAbout;
+	myAbout.AddDeveloper( _T("Author of wxPic, Philippe Chevrier") );
+	myAbout.AddDeveloper( _T("Author of original WinPic, Wolfgang Buescher (DL4YHF)") );
+	myAbout.AddDeveloper( _T("PIC18Fxxxx by Martin van der Werff") );
+	myAbout.AddDeveloper( _T("PIC12F508 by Leonid Lisovskiy") );
+	myAbout.AddDeveloper( _T("PIC12F609/615, 16F610/616 by Andrew Kibler") );
+	myAbout.AddDeveloper( _T("Linux port & pack by Erdem U. Altinyurt") );
+	myAbout.SetLicense( _T("wxPic is PIC Microcontroller Programmer utility.\n"
+             "Copyright (C) 2009  Philippe Chevrier\n"
+             "\n"
+             "Permission to use, copy, and distribute this software and its documentation \n"
+             "for any purpose and without fee is hereby granted, provided that the above \n"
+             "copyright notice and disclaimer appear in all copies and supporting documentation. \n"
+             "\n"
+             "Namings for products in the software and this manual, that are registered trademarks, \n"
+             "are not separately marked. The same applies to copyrighted material. \n"
+             "Therefore the missing (r) or (c) character does not implicate, that the naming is a free trade name.\n"
+             "Furthermore the used names do not indicate patent rights or anything similar. \n"
+             "\n"
+             "WinRing0 License: \n"
+             "Copyright (c) 2007-2009 OpenLibSys.org. All rights reserved.\n"
+             "Redistribution and use in source and binary forms, with or without\n"
+             "modification, are permitted provided that the following conditions are met:\n"
+             "1. Redistributions of source code must retain the above copyright\n"
+             "notice, this list of conditions and the following disclaimer.\n"
+             "2. Redistributions in binary form must reproduce the above copyright\n"
+             "notice, this list of conditions and the following disclaimer in the\n"
+             "documentation and/or other materials provided with the distribution.\n"
+             "\n"
+             "\nDisclaimer:\n"
+             "This software is provided ''as is'' and any express or implied warranties, \n"
+             "including, but not limited to, the implied warranties of merchantability and fitness \n"
+             "for a particular purpose are disclaimed. in no event shall the author and contributors \n"
+             "be liable for any direct, indirect, incidental, special, exemplary, or consequential damages \n"
+             "(including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;\n"
+             "or business interruption ) however caused and on any theory of liability, whether in contract,\n"
+             "strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software,\n"
+             "even if advised of the possibility of such damage."
+             ));
 
+	myAbout.SetCopyright( _T( "Copyright (C) 2009 Philippe Chevrier" ) );
+	myAbout.SetDescription( _("wxPic is PIC Microcontroller Programmer") );
+	myAbout.SetName( _T("wxPIC") );
+	if (SVN_MANAGED){
+		myAbout.SetVersion( wxString( _T("")) << SVN_VERSION << _T(" Rev.") << SVN_REVISION) ;
+		}
+	myAbout.SetWebSite( _T("http://wxpic.sourceforge.net"));
+	myAbout.AddTranslator(_T("French:\tPhilippe Chevrier") );
+	wxAboutBox( myAbout );
+}
 
 void MainFrame::onHelpIndexMenuItemSelected(wxCommandEvent& event)
 //void MainFrame::Index1Click(TObject *Sender)
