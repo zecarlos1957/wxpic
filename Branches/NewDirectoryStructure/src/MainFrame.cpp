@@ -1286,9 +1286,8 @@ void MainFrame::onAboutMenuItemSelected(wxCommandEvent& event)
 	myAbout.AddDeveloper( _T("PIC12F508 by Leonid Lisovskiy") );
 	myAbout.AddDeveloper( _T("PIC12F609/615, 16F610/616 by Andrew Kibler") );
 	myAbout.AddDeveloper( _T("Linux port & pack by Erdem U. Altinyurt") );
-	myAbout.SetLicense( _T("wxPic is PIC Microcontroller Programmer utility.\n"
-             "Copyright (C) 2009  Philippe Chevrier\n"
-             "\n"
+
+   wxString License = _T("\n"
              "Permission to use, copy, and distribute this software and its documentation \n"
              "for any purpose and without fee is hereby granted, provided that the above \n"
              "copyright notice and disclaimer appear in all copies and supporting documentation. \n"
@@ -1317,8 +1316,14 @@ void MainFrame::onAboutMenuItemSelected(wxCommandEvent& event)
              "or business interruption ) however caused and on any theory of liability, whether in contract,\n"
              "strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software,\n"
              "even if advised of the possibility of such damage."
-             ));
-
+             );
+//
+//   if( wxFileName::FileExists("./doc/License.txt") )
+//      License = TLanguage::GetFileText("./doc/License.txt");
+//   elif( wxFileName::FileExists("/usr/share/doc/packages/wxpic/License.txt") )
+//      License = TLanguage::GetFileText("/usr/share/doc/packages/wxpic/License.txt");
+//
+   myAbout.SetLicense( _T("wxPic is PIC Microcontroller Programmer utility.\nCopyright (C) 2009  Philippe Chevrier\n") + License );
 	myAbout.SetCopyright( _T( "Copyright (C) 2009 Philippe Chevrier" ) );
 	myAbout.SetDescription( _("wxPic is PIC Microcontroller Programmer") );
 	myAbout.SetName( _T("wxPIC") );

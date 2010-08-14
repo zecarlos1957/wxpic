@@ -194,8 +194,6 @@
 			<Option target="Debug Linux" />
 			<Option target="Release Linux" />
 		</Unit>
-		<Unit filename="src/AboutU.cpp" />
-		<Unit filename="src/AboutU.h" />
 		<Unit filename="src/Appl.cpp" />
 		<Unit filename="src/Appl.h" />
 		<Unit filename="src/CodeMemPanel.cpp" />
