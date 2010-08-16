@@ -11,7 +11,7 @@
 #include <wx/settings.h>
 #include <wx/msgdlg.h>
 #include <wx/stdpaths.h>
-
+#include <wx/dir.h>
 #include <WinPicPr/Config.h>
 #include <WinPicPr/PIC_HW.h>
 
@@ -358,15 +358,31 @@ void TInterfacePanel::UpdateInterfaceType(int interface_type)
         aInterfacePortChoice->Enable();
         aInterfacePortChoice->Clear();
         aInterfacePortChoice->Append(_("(unknown)"));
+#ifdef __WXMSW__
         for (i=1;i<=16;++i)
         {
             aInterfacePortChoice->Append(wxString::Format(_T("COM%d"),i));
         }
+#else
+			wxString device_path;
+			wxDir temp_dir(wxT("/dev"));
+			if(temp_dir.GetFirst( &device_path, wxString(wxT("ttyS*") )) )
+				do{
+				aInterfacePortChoice->Append( wxT("/dev/") + device_path );
+				}while( temp_dir.GetNext( &device_path ) );
+			if(temp_dir.GetFirst( &device_path, wxString(wxT("ttyUSB*") )) )
+				do{
+				aInterfacePortChoice->Append( wxT("/dev/") + device_path );
+				}while( temp_dir.GetNext( &device_path ) );
+#endif
+
         if (Config.iComPortNr>=0 && Config.iComPortNr<=16)
             aInterfacePortChoice->SetSelection(Config.iComPortNr);
         else
             aInterfacePortChoice->SetSelection(0);
+
         aIoPortAddressEdit->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT));
+
         if ( Config.iComIoAddress != 0 )
         {
             // use a "non-standard" I/O-address for the COM-port, entered manually:
@@ -972,6 +988,10 @@ void TInterfacePanel::onInterfacePortChoiceSelect(wxCommandEvent& event)
             Config.iComIoAddress = 0;
         }
         Config.iComPortNr = aInterfacePortChoice->GetSelection();
+        wxString portname = aInterfacePortChoice->GetString( aInterfacePortChoice->GetSelection() );
+        _tcsncpy(Config.sz40ComPortName, portname.c_str(), 40 );
+        Config.sz40ComPortName[40]=_T('\0');
+        //memcpy( Config.sz40ComPortName, portname.GetStringData(), portname.Length() );
 //     Config.iComPortNr = Combo_InterfacePort->ItemIndex;
         aIoPortAddressEdit->Clear();
         aIoPortAddressEdit->Disable();

@@ -63,6 +63,11 @@ void CFG_Load(wxConfigBase &IniFile) /* Loads configuration data from a file */
 
   IniFile.SetPath(_T("/Config/COM84_INTERFACE"));
   IniFile.Read(_T("ComPortNumber"), &Config.iComPortNr, Config.iComPortNr );
+#ifndef __WXMSW
+  IniFile.Read(_T("ComPortName"), &s, Config.sz40ComPortName );
+  _tcsncpy(Config.sz40ComPortName, s.c_str(), 40 ) ;
+  Config.sz40ComPortName[40]=_T('\0');  // keep strings terminated !
+#endif
   IniFile.Read(_T("UnusualIoAddress"), &Config.iComIoAddress, 0 );
 
   IniFile.SetPath(_T("/Config/LPT_INTERFACE"));
@@ -121,6 +126,9 @@ void CFG_Save(wxConfigBase &IniFile) /* Saves the APPLICATION'S configuration in
 
   IniFile.SetPath(_T("/Config/COM84_INTERFACE"));
   IniFile.Write(_T("ComPortNumber"), Config.iComPortNr );
+#ifndef __WXMSW
+  IniFile.Write(_T("ComPortName"), Config.sz40ComPortName );
+#endif
   IniFile.Write(_T("UnusualIoAddress"), Config.iComIoAddress );
 
   IniFile.SetPath(_T("/Config/LPT_INTERFACE"));

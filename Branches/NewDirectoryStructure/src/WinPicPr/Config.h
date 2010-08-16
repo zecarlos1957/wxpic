@@ -27,6 +27,9 @@
 typedef struct  // T_CONFIG structure, used for var Config .
 {
   int iComPortNr;  // used for the COM84 programmer
+#ifndef __WXMSW__
+  wxChar sz40ComPortName[41];
+#endif
   int iComIoAddress; // only used if iComPortNr==0; otherwise COM1=0x03F8 etc (see pic_hw.cpp)
   int iLptPortNr;  // used for the TAIT-style programmer + "PIP84" (used by SM6LKM)
   int iLptIoAddress; // can be modified for LPT3, LPT4 etc.  0="standard" value

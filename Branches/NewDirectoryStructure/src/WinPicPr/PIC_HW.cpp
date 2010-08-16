@@ -418,35 +418,6 @@ bool COM_OpenPicPort(void){
     COM_ClosePicPort();
   }
 
- // Determine the I/O-port access for the serial port.
- //  Unfortunately there is no uniform method to do this under Win98,
- //  so we'll leave it to the USER to *carefully* enter the right port address.
- switch(Config.iComPortNr)
-  {
-   case 1:  COM_io_address = 0x03F8; break;
-   case 2:  COM_io_address = 0x02F8; break;
-   case 3:  COM_io_address = 0x03E8; break;
-   case 4:  COM_io_address = 0x02E8; break;
-   default:
-//     if( PicHw_fUseSmallPort )
-//      { _tcscpy(PicHw_sz255LastError, _("illegal COM port number"));
-//        return false;
-//      }
-//     else // when *NOT* using direct port access, allow any COM-port number !
-//      {
-//      }
-     break;
-  }
- // If a "non-standard" COM-port-number is in use, override the above guess:
- if( Config.iComIoAddress>=PIC_HW_COM_ADDR_MIN && Config.iComIoAddress<=PIC_HW_COM_ADDR_MAX )
-  {
-  COM_io_address = Config.iComIoAddress;
-  }
- else  // non-standard COM port number. It this a problem ?
-  {
-  // COM_io_address = 0x0000;
-  }
-
  if( (COM_hComPort == INVALID_HANDLE_VALUE) && (Config.iComPortNr>0) )
    {
      //    The fdwShareMode parameter must be zero, opening the resource for exclusive access.
@@ -456,7 +427,7 @@ bool COM_OpenPicPort(void){
      //    READ and WRITE operations without the OVERLAPPED hassle.
 
      	int fd; /* File descriptor for the port */
-     	szPort = wxString(wxT("/dev/ttyS") )<< Config.iComPortNr-1;
+     	szPort = wxString( Config.sz40ComPortName );
 
 		fd = open(szPort.mb_str(), O_RDWR | O_NOCTTY | O_NDELAY);
 		if (fd == -1){
@@ -607,12 +578,6 @@ bool COM_OpenPicPort(void){
    } // end if < need to open and parametrize serial port ? >
 
  PicHw_wModemControlBits = 0x00;  // data to be written to register
-
-// if( PicHw_fUseSmallPort && (COM_io_address>0) )
-//  {
-//   // read initial state of the "data format register"  (which controls TXD)
-//   PicHw_wDataControlBits = SmallPort.ReadByte( (uint16_t)COM_io_address+3);
-//  }
 
  return true;
  }
