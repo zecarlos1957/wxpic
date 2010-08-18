@@ -683,16 +683,7 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
             aConfigMemoryTab->UpdateIdAndConfMemDisplay();
         }
 
-        /* if Interface type or port number has been changed: */
-        if (aInterfaceTab->m_displayed_interface_type != PIC_HW_interface.type)
-        {
-            aInterfaceTab->m_displayed_interface_type = PIC_HW_interface.type;
-            aInterfaceTab->UpdateInterfaceType(PIC_HW_interface.type);
-            aInterfaceTab->UpdateInterfaceTestDisplay();
-            aOptionTab->UpdateOptionsDisplay();
-        }
-
-        /* if code protectiong, watchdog, oscillator configuration has changed: */
+        /* if code protection, watchdog, oscillator configuration has changed: */
         if (   ( aDeviceCfgTab->m_displayed_config_word[0]  != PicBuf_GetConfigWord(0) )
                 ||( aDeviceCfgTab->m_displayed_config_word[1]  != PicBuf_GetConfigWord(1) )
                 ||( strncmp(aDeviceCfgTab->m_sz40DisplayedDeviceName, PIC_DeviceInfo.sz40DeviceName,40)!=0 )

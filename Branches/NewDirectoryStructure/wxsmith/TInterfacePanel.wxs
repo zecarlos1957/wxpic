@@ -235,8 +235,9 @@
 												<size>5,-1</size>
 											</object>
 											<object class="sizeritem">
-												<object class="wxStaticText" name="ID_STATICTEXT19" variable="StaticText19" member="yes">
+												<object class="wxStaticText" name="ID_ADDRESS_TEXT" variable="aAddressText" member="yes">
 													<label>Address:</label>
+													<enabled>0</enabled>
 												</object>
 												<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 												<border>1</border>

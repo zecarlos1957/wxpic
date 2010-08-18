@@ -13,6 +13,13 @@
 #include <wx/button.h>
 //*)
 
+enum EInterfacePortType
+{
+    portUNDEFINED = -1,
+    portPARALLEL,
+    portSERIAL,
+};
+
 class TInterfacePanel: public wxPanel
 {
 	public:
@@ -29,12 +36,12 @@ class TInterfacePanel: public wxPanel
 		wxRadioBox* aVddSelectRadio;
 		wxStaticText* aInterfaceTypeText;
 		wxTextCtrl* aIoPortAddressEdit;
+		wxStaticText* aAddressText;
 		wxButton* aLptInterfHelpButton;
 		wxCheckBox* aTestVppChk;
 		wxCheckBox* aConnectICSPTargetChk;
 		wxStaticText* aGreenLedText;
 		wxChoice* aInterfaceTypeChoice;
-		wxStaticText* StaticText19;
 		wxTextCtrl* aExtraClkDelayEdit;
 		wxStaticText* StaticText18;
 		wxCheckBox* aDataEnableChk;
@@ -55,14 +62,11 @@ class TInterfacePanel: public wxPanel
 		wxTextCtrl* aCustomDefFileText;
 		//*)
 
-        int                 aIntfItemIndex2InterfaceType[100];
-        int                 m_displayed_interface_type;
-        bool                m_fUseSerialPort;
+        EInterfacePortType  aPortType;
 
-        void UpdateInterfaceType(int interface_type);
+        void UpdateInterfaceType(void);
         void UpdateInterfaceTestDisplay(void);
         void UpdateInterfaceInputSignalDisplay(void);
-        void SetInterfaceInternal(int iInterfaceType);
         bool UnlockEditFieldForIOPortAddress(void);
         bool TestTheInterface(void);
 
@@ -90,7 +94,7 @@ class TInterfacePanel: public wxPanel
 		static const long ID_INTERFACE_TYPE_CHOICE;
 		static const long ID_STATICTEXT18;
 		static const long ID_INTERFACE_PORT_CHOICE;
-		static const long ID_STATICTEXT19;
+		static const long ID_ADDRESS_TEXT;
 		static const long ID_IO_PORT_ADDRESS_EDIT;
 		static const long ID_STATICTEXT20;
 		static const long ID_BUTTON10;
@@ -105,6 +109,18 @@ class TInterfacePanel: public wxPanel
 
 	private:
 
+        //-- Status of the couple fields aAddressText and aIoPortAddressEdit
+        enum EIoAddressUsage
+        {
+            usageNONE,        //-- Disabled and empty
+            usageDISPLAY,     //-- Disable displaying standard port number
+            usageINPUT,       //-- Enabled allowing input of non-standard port number
+            usageINPUT_WARN,  //-- Enable for input and the entry is weird but confirmed
+            usageINPUT_ERROR, //-- Enable for input but the entry is too weird to be used
+        };
+        EIoAddressUsage aCurIoAddressUsage;
+        int             aCurIoAddress;
+        bool            aAcceptAllIoAddresses;
 		//(*Handlers(TInterfacePanel)
 		void onInitInterfButtonClick(wxCommandEvent& event);
 		void onLptInterfHelpButtonClick(wxCommandEvent& event);
@@ -123,8 +139,13 @@ class TInterfacePanel: public wxPanel
 		void onIoPortAddressEditTextEnter(wxCommandEvent& event);
 		void onSlowInterfaceChkClick(wxCommandEvent& event);
 		//*)
-        void onIoPortAddressGetFocus(wxFocusEvent &pEvent);
-
+        void onIoPortAddressGetFocus (wxFocusEvent &pEvent);
+        void onIoPortAddressKillFocus(wxFocusEvent &pEvent);
+        //-- Update IO Port address display
+        void updateIoAddressDisplay(EIoAddressUsage pUsage);
+        void copyPortSelectionToConfig (void);
+        void changeIoPortAddress (void);
+        EIoAddressUsage setLptPortAddress (void);
 		DECLARE_EVENT_TABLE()
 };
 

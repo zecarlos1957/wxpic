@@ -45,23 +45,26 @@
   // WinPicPr.cpp !
   // DO NOT MODIFY (which would make user setting files incompatible)
   // but ADD NEW TYPES AT THE END OF THIS LIST !
-#define PIC_INTF_TYPE_UNKNOWN   0
-#define PIC_INTF_TYPE_COM84     1 // serial, clock=RTS, data=DTR+CTS, Vpp=TXD (not exactly the same as "JDM" ! )
-#define PIC_INTF_TYPE_PIP84_V1  2       // parallel, used by SM6LKM, RB7->PAPER OUT
-#define PIC_INTF_TYPE_PIP84_V2  3       // parallel, used by SM6LKM, RB7->ACKNOWLEDGE
-#define PIC_INTF_TYPE_LKM_FLASHPR_V1 4  // parallel "Flash PIC programmer" by SM6LKM, 2002-09-29
-#define PIC_INTF_TYPE_TAIT_7406_4066 5  // parallel, by David Tait, 1st way
-#define PIC_INTF_TYPE_TAIT_7407_4066 6  // parallel, by David Tait, 2nd way
-#define PIC_INTF_TYPE_TAIT_7406_PNP  7  // parallel, by David Tait, 3rd way
-#define PIC_INTF_TYPE_TAIT_7407_PNP  8  // parallel, by David Tait, 4th way
-#define PIC_INTF_TYPE_LPT_AN589      9  // parallel, by Microchip's Application Note "AN589"
-#define PIC_INTF_TYPE_CUSTOM_LPT    10  // "custom" interface on parallel port
-#define PIC_INTF_TYPE_CUSTOM_COM    11  // "custom" interface on serial port
+enum EInterfaceType
+{
+    PIC_INTF_TYPE_UNKNOWN, //   0
+    PIC_INTF_TYPE_COM84, //     1 // serial, clock=RTS, data=DTR+CTS, Vpp=TXD (not exactly the same as "JDM" ! )
+    PIC_INTF_TYPE_PIP84_V1, //  2       // parallel, used by SM6LKM, RB7->PAPER OUT
+    PIC_INTF_TYPE_PIP84_V2, //  3       // parallel, used by SM6LKM, RB7->ACKNOWLEDGE
+    PIC_INTF_TYPE_LKM_FLASHPR_V1, //  4  // parallel "Flash PIC programmer" by SM6LKM, 2002-09-29
+    PIC_INTF_TYPE_TAIT_7406_4066, //  5  // parallel, by David Tait, 1st way
+    PIC_INTF_TYPE_TAIT_7407_4066, // 6  // parallel, by David Tait, 2nd way
+    PIC_INTF_TYPE_TAIT_7406_PNP, //  7  // parallel, by David Tait, 3rd way
+    PIC_INTF_TYPE_TAIT_7407_PNP, //  8  // parallel, by David Tait, 4th way
+    PIC_INTF_TYPE_LPT_AN589, //      9  // parallel, by Microchip's Application Note "AN589"
+    PIC_INTF_TYPE_CUSTOM_LPT, //    10  // "custom" interface on parallel port
+    PIC_INTF_TYPE_CUSTOM_COM, //    11  // "custom" interface on serial port
 
-#define PIC_INTF_TYPE_JDM2          12  // similar to COM84, but uses a tricky way to eliminate external power supply
-#define PIC_INTF_TYPE_LPT_NOPPP     13  // NOPPP parallel
-//#define PIC_INTF_TYPE_PLUGIN_DLL 13
-#define PIC_INTF_TYPE_MAX        14
+    PIC_INTF_TYPE_JDM2, //          12  // similar to COM84, but uses a tricky way to eliminate external power supply
+    PIC_INTF_TYPE_LPT_NOPPP, //     13  // NOPPP parallel
+// PIC_INTF_TYPE_PLUGIN_DLL 14
+    PIC_INTF_TYPE_MAX,
+};
 
 #define PIC_HW_COM_ADDR_MIN  0x0200   /* min I/O address for COM port */
 #define PIC_HW_COM_ADDR_MAX  0x03F8   /* max I/O address for COM port */

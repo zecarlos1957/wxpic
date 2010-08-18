@@ -141,7 +141,6 @@ HMODULE PicHw_hFilterPluginDLL=NULL; // handle to the interface plugin DLL,
  #ifdef __WXMSW__
  OVERLAPPED COM_sOverlappedIo = { 0,0,0,0,NULL }; // structure for OVERLAPPED I/O
  #endif
- uint16_t COM_io_address = 0x0000;
  uint16_t PicHw_wDataControlBits;   // for data format reg.  (reg 03)
  uint16_t PicHw_wModemControlBits;  // for modem control reg (reg 04)
  LONGLONG PicHw_i64LastTimeOfTxdFeed; // timestamp of last call to PicHw_UpdateComOutputBits()
@@ -154,7 +153,6 @@ HMODULE PicHw_hFilterPluginDLL=NULL; // handle to the interface plugin DLL,
 #ifdef __WXMSW__
 bool COM_OpenPicPort(void)
 {
- wxChar szPort[10];
  DCB MyDCB;
  COMMTIMEOUTS MyCommTimeouts;
 
@@ -164,49 +162,9 @@ bool COM_OpenPicPort(void)
   }
 
 
- // Determine the I/O-port access for the serial port.
- //  Unfortunately there is no uniform method to do this under Win98,
- //  so we'll leave it to the USER to *carefully* enter the right port address.
- switch(Config.iComPortNr)
-  {
-   case 1:  COM_io_address = 0x03F8; break;
-   case 2:  COM_io_address = 0x02F8; break;
-   case 3:  COM_io_address = 0x03E8; break;
-   case 4:  COM_io_address = 0x02E8; break;
-   default:
-//     if( PicHw_fUseSmallPort )
-//      { _tcscpy(PicHw_sz255LastError, _("illegal COM port number"));
-//        return false;
-//      }
-//     else // when *NOT* using direct port access, allow any COM-port number !
-//      {
-//      }
-     break;
-  }
- // If a "non-standard" COM-port-number is in use, override the above guess:
- if( Config.iComIoAddress>=PIC_HW_COM_ADDR_MIN && Config.iComIoAddress<=PIC_HW_COM_ADDR_MAX )
-  { COM_io_address = Config.iComIoAddress;
-  }
- else  // non-standard COM port number. It this a problem ?
-  {
-   COM_io_address = 0x0000;  // don't access I/O-port
-//   if( PicHw_fUseSmallPort )  // yes, it's a problem because we need the ADDRESS ...
-//    {
-//     if( Config.iComIoAddress != 0 )
-//      { _stprintf(PicHw_sz255LastError, _("illegal I/O-address for COM port. Allowed: %04lX..%04lX"),
-//                 PIC_HW_COM_ADDR_MIN, PIC_HW_COM_ADDR_MAX );
-//        return false;
-//      }
-//    } // else : NO PROBLEM if only Windows API routines are used .
-  }
-
  // Open the COM port with a windoze API routine (!) .
- //   No matter if we really use the windows API routines,
- //   open the COM port to prevent other applications fooling around with it .
- //  Under Win XP, the "direct port accesses" *FAILED* if the port was not opened !
- if( (COM_hComPort == INVALID_HANDLE_VALUE) && (Config.iComPortNr>0) )
+ if( (COM_hComPort == INVALID_HANDLE_VALUE) )
    {
-
      // A process uses the CreateFile function to open a handle
      // to a communications resource.
      // For example, specifying COM1 opens a handle to a serial port,
@@ -229,9 +187,8 @@ bool COM_OpenPicPort(void)
      // Under Win95, there were no problems !!!
      memset( &COM_sOverlappedIo, 0, sizeof(OVERLAPPED)); // structure for OVERLAPPED I/O
      COM_sOverlappedIo.hEvent = ::CreateEvent( NULL, true, false, NULL );
-     _stprintf( szPort, _T("COM%d"), Config.iComPortNr );
      COM_hComPort = CreateFile(
-        szPort,                        // pointer to name of the file
+        Config.sz40ComPortName,        // pointer to name of the file
         GENERIC_READ | GENERIC_WRITE,  // access (read-write) mode
         0,                             // share mode
         NULL,                          // pointer to security attributes
@@ -375,11 +332,6 @@ bool COM_OpenPicPort(void)
 
  PicHw_wModemControlBits = 0x00;  // data to be written to register
 
-// if( PicHw_fUseSmallPort && (COM_io_address>0) )
-//  {
-//   // read initial state of the "data format register"  (which controls TXD)
-//   PicHw_wDataControlBits = SmallPort.ReadByte( (uint16_t)COM_io_address+3);
-//  }
 
  return true;
 } // end COM_OpenPicPort()
@@ -418,7 +370,7 @@ bool COM_OpenPicPort(void){
     COM_ClosePicPort();
   }
 
- if( (COM_hComPort == INVALID_HANDLE_VALUE) && (Config.iComPortNr>0) )
+ if( (COM_hComPort == INVALID_HANDLE_VALUE) )
    {
      //    The fdwShareMode parameter must be zero, opening the resource for exclusive access.
      //    The fdwCreate parameter must specify the OPEN_EXISTING flag.
@@ -598,24 +550,6 @@ bool COM_ClosePicPort(void){
 
 uint16_t COM_GetPicDataBit(void)
 {
-// uint32_t b; // Note: It seems to be impossible to avoid the useless warning
-  // "blabla may lose significant digits" when passing BYTE arguments. So use a uint32_t here.
-
-//  if ( PicHw_fUseSmallPort && (COM_io_address>0) )
-//   {
-//    // The following delay of 2.5 us seems to be required for read operations with JDM2 .
-//    // The CALLER ( PIC_HW_GetDataBit ) takes care of this since 2005-11 by adding
-//    // a user-adjustable delay time, so every homebrewer can tweak "his" interface
-//    // for maximum speed (quite important if you have a dsPIC with > 64kBYTE code)
-//    // ex: if (PIC_HW_interface.type==PIC_INTF_TYPE_JDM2)
-//    //  { for(b = 0; b<5; ++b)
-//    //     { PIC_HW_Delay_500ns();
-//    //     }
-//    //  } // end < Extrawurst für JDM2 >
-//    b = SmallPort.ReadByte( COM_io_address+6); // address of modem status register
-//    return (b&0x10) != 0; // bit 4 of modem status = CTS = serial data from PIC
-//   }
-//  else  // try to sense the current state of the CTS line with a win API function:
   if( COM_hComPort != INVALID_HANDLE_VALUE )
    {
     // The GetCommModemStatus function retrieves modem control-register values.
@@ -634,18 +568,6 @@ uint16_t COM_GetPicDataBit(void)
 bool COM_SetPicClockAndData( bool clock_high, bool data_high ) /* only for "COM84" + "JDM" */
 { bool fResult = true;
 
-  // The "incompatible-but-once-fastest" way to set the signal levels on RTS and DTR:
-//  if( PicHw_fUseSmallPort && (COM_io_address>0) )
-//   {
-//    if( data_high   ) PicHw_wModemControlBits |= 0x01;  // DTR high
-//                 else PicHw_wModemControlBits &=~0x01;  // DTR low
-//    if( clock_high  ) PicHw_wModemControlBits |= 0x02;  // RTS high
-//                 else PicHw_wModemControlBits &=~0x02;  // RTS low
-//    SmallPort.WriteByte( (uint16_t)COM_io_address+4,  // address of modem control register
-//                       PicHw_wModemControlBits);  // data to be written to port
-//    return true;
-//   }
-//  else  // try to sense the current state of the CTS line with a win API function:
   if( COM_hComPort != INVALID_HANDLE_VALUE )
    {
        // > The EscapeCommFunction function directs a specified
@@ -697,16 +619,6 @@ bool COM_SetPicVpp( bool vpp_high )
 
   // The only way to set a CONSTANT level on TXD is the "BREAK"-signal:
 
-  // Here the "dangerous-but-once-fastest" way to do it (using register access):
-//  if ( PicHw_fUseSmallPort && (COM_io_address>0) )
-//   {
-//    // ex: PicHw_wDataControlBits = SmallPort.ReadByte( (uint16_t)COM_io_address+3); // address of data format register
-//    if(vpp_high) PicHw_wDataControlBits |=  0x40;  // BREAK on,  continuous high pegel on TXD
-//          else   PicHw_wDataControlBits &=  ~0x40; // BREAK ok,  TXD controlled by serial output
-//    SmallPort.WriteByte( (uint16_t)COM_io_address+3,  // address of data format register
-//                 PicHw_wDataControlBits);         // data to be written to port
-//    return true;
-//   }
   if( COM_hComPort != INVALID_HANDLE_VALUE )
    {
      // a more compatible way to set the state of the TXD output, using Win API only,
@@ -833,17 +745,7 @@ int PicHw_TestCTS(int iNewState) // test bit. ignore iNewState.
 {  // To read back the signal on the CTS input at the serial port,
    // poll the Modem Status Register (0x10 = mask for "CTS").
    // Used for serial data from PIC to PC in the "COM84" programmer.
-// uint32_t b;
 
-//  // Here the "dangerous-but-once-fastest" way to do it (using register access):
-//  if ( PicHw_fUseSmallPort && (COM_io_address>0) )
-//   {
-//    // Note: It seems to be impossible to avoid the useless warning
-//    //       "blabla may lose significant digits" when passing BYTE arguments
-//    b = SmallPort.ReadByte( COM_io_address+6); // address of modem status register
-//    return (b&0x10) != 0; // bit 4 of modem status = CTS = serial data from PIC
-//   }
-//  else  // try to sense the current state of the CTS line with a win API function:
   if( COM_hComPort != INVALID_HANDLE_VALUE )
    {
     // The GetCommModemStatus function retrieves modem control-register values.
@@ -873,40 +775,6 @@ bool PicHw_UpdateComOutputBits(void)
   // Update the signal levels on RTS, DTR, and TXD .
   // WARNING: These outputs may not change their state at the very same time,
   //     so DON'T RELY ON TWO CONTROL OUTPUTS CHANGING AT THE "SAME" TIME !
-  // Here the "dangerous-but-once-fastest" way to do it (using register access):
-//  if ( PicHw_fUseSmallPort )
-//   {
-//     if( COM_io_address>0 )
-//      {
-//        SmallPort.WriteByte(
-//          (uint16_t)COM_io_address+4,      // address of modem control register
-//           PicHw_wModemControlBits );  // data to be written to register
-//        SmallPort.WriteByte(
-//          (uint16_t)COM_io_address+3,      // address of data format register
-//           PicHw_wDataControlBits);    // data to be written to register
-//        if(PicHw_fTogglingTxD)
-//         { // If the state of the TxD line shall toggle (produce a square wave),
-//           // keep the transmit-shift-register filled with a 01010101-value .
-//           if( (SmallPort.ReadByte(     // check serial status register ...
-//               (uint16_t)COM_io_address+5 ) // address of serial status register
-//                           & 0x20 )!=0) // check 'transmit buffer empty' flag
-//            {  // transmit buffer empty -> put 0101.. pattern in TX buffer
-//              SmallPort.WriteByte(
-//                (uint16_t)COM_io_address,   // address of transmit buffer register
-//                             0x55 );    // byte to be transmitted
-//              QueryPerformanceCounter( (LARGE_INTEGER *) &PicHw_i64LastTimeOfTxdFeed );
-//            }
-//         } // end if(PicHw_fTogglingTxD)
-//
-//        return true;
-//       }
-//      else
-//       {
-//         _tcscpy(PicHw_sz255LastError, _("Invalid COM port address"));
-//         return false;
-//       }
-//   } // end if ( PicHw_fUseSmallPort )
-//  else
    { if( COM_hComPort != INVALID_HANDLE_VALUE )
       { // if only windows API routines are used,
         // most signals have been updated immediately
@@ -958,40 +826,6 @@ bool PicHw_UpdateComOutputBits(void){
   // Update the signal levels on RTS, DTR, and TXD .
   // WARNING: These outputs may not change their state at the very same time,
   //     so DON'T RELY ON TWO CONTROL OUTPUTS CHANGING AT THE "SAME" TIME !
-  // Here the "dangerous-but-once-fastest" way to do it (using register access):
-//  if ( PicHw_fUseSmallPort )
-//   {
-//     if( COM_io_address>0 )
-//      {
-//        SmallPort.WriteByte(
-//          (uint16_t)COM_io_address+4,      // address of modem control register
-//           PicHw_wModemControlBits );  // data to be written to register
-//        SmallPort.WriteByte(
-//          (uint16_t)COM_io_address+3,      // address of data format register
-//           PicHw_wDataControlBits);    // data to be written to register
-//        if(PicHw_fTogglingTxD)
-//         { // If the state of the TxD line shall toggle (produce a square wave),
-//           // keep the transmit-shift-register filled with a 01010101-value .
-//           if( (SmallPort.ReadByte(     // check serial status register ...
-//               (uint16_t)COM_io_address+5 ) // address of serial status register
-//                           & 0x20 )!=0) // check 'transmit buffer empty' flag
-//            {  // transmit buffer empty -> put 0101.. pattern in TX buffer
-//              SmallPort.WriteByte(
-//                (uint16_t)COM_io_address,   // address of transmit buffer register
-//                             0x55 );    // byte to be transmitted
-//              QueryPerformanceCounter( (LARGE_INTEGER *) &PicHw_i64LastTimeOfTxdFeed );
-//            }
-//         } // end if(PicHw_fTogglingTxD)
-//
-//        return true;
-//       }
-//      else
-//       {
-//         _tcscpy(PicHw_sz255LastError, _("Invalid COM port address"));
-//         return false;
-//       }
-//   } // end if ( PicHw_fUseSmallPort )
-//  else
    { if( COM_hComPort != INVALID_HANDLE_VALUE )
       { // if only windows API routines are used,
         // most signals have been updated immediately

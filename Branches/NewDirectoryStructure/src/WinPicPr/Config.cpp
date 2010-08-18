@@ -20,8 +20,12 @@ void CFG_Init(void)
 {
   memset( &Config, 0, sizeof(Config) );
   Config.pic_interface_type = PIC_INTF_TYPE_COM84;
-  Config.iComPortNr = 1;    // enter your favorite COM port number here ;-)
-  Config.iComIoAddress = 0; // do NOT use a non-standard I/O address for the COM port
+  _tcscpy( Config.sz40ComPortName,
+#ifdef __WXMSW__
+           wxT("COM1"));
+#else
+           wxT("/dev/ttyS0"));
+#endif
   strcpy(Config.sz40DeviceName, "PIC??????");
   Config.dwUnknownCodeMemorySize = 4096;  // used for PIC_DEV_TYPE_UNKNOWN..
   Config.dwUnknownDataMemorySize = 256;   // ..for a trial to program exotic types
@@ -62,16 +66,12 @@ void CFG_Load(wxConfigBase &IniFile) /* Loads configuration data from a file */
 //  IniFile.Read("ProgModeSequence", &PIC_dev_param.iProgModeSequence, 0); // 0=PROGMODE_VDD_THEN_VPP (usually except for DS41173b)
 
   IniFile.SetPath(_T("/Config/COM84_INTERFACE"));
-  IniFile.Read(_T("ComPortNumber"), &Config.iComPortNr, Config.iComPortNr );
-#ifndef __WXMSW
   IniFile.Read(_T("ComPortName"), &s, Config.sz40ComPortName );
   _tcsncpy(Config.sz40ComPortName, s.c_str(), 40 ) ;
   Config.sz40ComPortName[40]=_T('\0');  // keep strings terminated !
-#endif
-  IniFile.Read(_T("UnusualIoAddress"), &Config.iComIoAddress, 0 );
 
   IniFile.SetPath(_T("/Config/LPT_INTERFACE"));
-  IniFile.Read(_T("LptPortNumber"),    &Config.iLptPortNr,    Config.iLptPortNr );
+  IniFile.Read(_T("LptPortNumber"),    &Config.iLptPortNr,    1 );
   IniFile.Read(_T("UnusualIoAddress"), &Config.iLptIoAddress, 0 );
 
   IniFile.SetPath(_T("/Config/SESSION"));
@@ -125,11 +125,7 @@ void CFG_Save(wxConfigBase &IniFile) /* Saves the APPLICATION'S configuration in
   // IniFile.Write(_T("ProgModeSequence"), PIC_dev_param.iProgModeSequence );
 
   IniFile.SetPath(_T("/Config/COM84_INTERFACE"));
-  IniFile.Write(_T("ComPortNumber"), Config.iComPortNr );
-#ifndef __WXMSW
   IniFile.Write(_T("ComPortName"), Config.sz40ComPortName );
-#endif
-  IniFile.Write(_T("UnusualIoAddress"), Config.iComIoAddress );
 
   IniFile.SetPath(_T("/Config/LPT_INTERFACE"));
   IniFile.Write(_T("LptPortNumber"),    Config.iLptPortNr );

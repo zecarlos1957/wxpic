@@ -55,6 +55,8 @@
         TheMainFrame->Close();     // buffer-init failed ? Almost impossible under windows !
         return false;
     }
+    //-- Initialise the interface panel
+    TheMainFrame->aInterfaceTab->UpdateInterfaceType();
     PIC_PRG_Init();  // Set default PIC type and type-dependent infos (#2)
     if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
         APPL_LogEvent( _("CreateForm: Setting PIC-Device") );

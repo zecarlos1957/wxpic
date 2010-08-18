@@ -37,7 +37,7 @@ const long TInterfacePanel::ID_STATICTEXT25 = wxNewId();
 const long TInterfacePanel::ID_INTERFACE_TYPE_CHOICE = wxNewId();
 const long TInterfacePanel::ID_STATICTEXT18 = wxNewId();
 const long TInterfacePanel::ID_INTERFACE_PORT_CHOICE = wxNewId();
-const long TInterfacePanel::ID_STATICTEXT19 = wxNewId();
+const long TInterfacePanel::ID_ADDRESS_TEXT = wxNewId();
 const long TInterfacePanel::ID_IO_PORT_ADDRESS_EDIT = wxNewId();
 const long TInterfacePanel::ID_STATICTEXT20 = wxNewId();
 const long TInterfacePanel::ID_BUTTON10 = wxNewId();
@@ -50,12 +50,39 @@ const long TInterfacePanel::ID_TEXTCTRL12 = wxNewId();
 const long TInterfacePanel::ID_CHECKBOX23 = wxNewId();
 //*)
 
+static struct
+{
+    int           InterfaceType;
+    const wxChar *InterfaceName;
+} InterfaceTab[PIC_INTF_TYPE_MAX] = {
+    { PIC_INTF_TYPE_UNKNOWN,        _("(unknown)") },
+    { PIC_INTF_TYPE_COM84,          _("COM84 programmer for serial port") },
+    { PIC_INTF_TYPE_JDM2,           _("JDM (2) for serial port") },
+    { PIC_INTF_TYPE_PIP84_V1,       _("PIP84 by SM6LKM, Data->PAPER (Pin12)") },
+    { PIC_INTF_TYPE_PIP84_V2,       _("PIP84 by SM6LKM, Data->ACK (Pin10)")  },
+    { PIC_INTF_TYPE_LKM_FLASHPR_V1, _("PIC Flash prog by SM6LKM (2002-10)") },
+    { PIC_INTF_TYPE_TAIT_7406_4066, _("Tait, 7406(inverter)+4066(switch)") },
+    { PIC_INTF_TYPE_TAIT_7407_4066, _("Tait, 7407(driver) + 4066(switch)") },
+    { PIC_INTF_TYPE_TAIT_7406_PNP,  _("Tait, 7406(inverter)+PNP transistor") },
+    { PIC_INTF_TYPE_TAIT_7407_PNP,  _("Tait, 7407(driver) + PNP transistor") },
+    { PIC_INTF_TYPE_LPT_AN589,      _("Microchip AN589") },
+    { PIC_INTF_TYPE_LPT_NOPPP,      _("NOPPP") },
+    { PIC_INTF_TYPE_CUSTOM_LPT,     _("Custom, on LPT port, defined by FILE") },
+    { PIC_INTF_TYPE_CUSTOM_COM,     _("Custom, on COM port, defined by FILE") },
+};
+
+static int InterfaceType2PortSelection [PIC_INTF_TYPE_MAX];
+
 BEGIN_EVENT_TABLE(TInterfacePanel,wxPanel)
 	//(*EventTable(TInterfacePanel)
 	//*)
 END_EVENT_TABLE()
 
 TInterfacePanel::TInterfacePanel(wxWindow* parent,wxWindowID id,const wxPoint& pos,const wxSize& size, long style, const wxString& name)
+: aPortType            (portUNDEFINED)
+, aCurIoAddressUsage   (usageNONE)
+, aCurIoAddress        (0)
+, aAcceptAllIoAddresses(false)
 {
 	//(*Initialize(TInterfacePanel)
 	wxFlexGridSizer* FlexGridSizer4;
@@ -150,8 +177,9 @@ TInterfacePanel::TInterfacePanel(wxWindow* parent,wxWindowID id,const wxPoint& p
 	aInterfacePortChoice = new wxChoice(this, ID_INTERFACE_PORT_CHOICE, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_INTERFACE_PORT_CHOICE"));
 	BoxSizer20->Add(aInterfacePortChoice, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
 	BoxSizer20->Add(5,-1,0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 1);
-	StaticText19 = new wxStaticText(this, ID_STATICTEXT19, _("Address:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT19"));
-	BoxSizer20->Add(StaticText19, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
+	aAddressText = new wxStaticText(this, ID_ADDRESS_TEXT, _("Address:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ADDRESS_TEXT"));
+	aAddressText->Disable();
+	BoxSizer20->Add(aAddressText, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
 	aIoPortAddressEdit = new wxTextCtrl(this, ID_IO_PORT_ADDRESS_EDIT, _("03F8"), wxDefaultPosition, wxSize(40,-1), wxTE_PROCESS_ENTER, wxDefaultValidator, _T("ID_IO_PORT_ADDRESS_EDIT"));
 	aIoPortAddressEdit->Disable();
 	BoxSizer20->Add(aIoPortAddressEdit, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 1);
@@ -209,9 +237,14 @@ TInterfacePanel::TInterfacePanel(wxWindow* parent,wxWindowID id,const wxPoint& p
 	Connect(ID_TEXTCTRL12,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&TInterfacePanel::onSlowInterfaceChkClick);
 	Connect(ID_CHECKBOX23,wxEVT_COMMAND_CHECKBOX_CLICKED,(wxObjectEventFunction)&TInterfacePanel::onSlowInterfaceChkClick);
 	//*)
-    aIoPortAddressEdit->Connect(wxID_ANY, wxEVT_SET_FOCUS, (wxObjectEventFunction)&TInterfacePanel::onIoPortAddressGetFocus, NULL, GetEventHandler());
-    m_fUseSerialPort          = false;
-    m_displayed_interface_type= -1;
+    aIoPortAddressEdit->Connect(wxID_ANY, wxEVT_SET_FOCUS,  (wxObjectEventFunction)&TInterfacePanel::onIoPortAddressGetFocus,  NULL, GetEventHandler());
+    aIoPortAddressEdit->Connect(wxID_ANY, wxEVT_KILL_FOCUS, (wxObjectEventFunction)&TInterfacePanel::onIoPortAddressKillFocus, NULL, GetEventHandler());
+
+    for (int i = 0; i < PIC_INTF_TYPE_MAX; ++i)
+    {
+        aInterfaceTypeChoice->Append(InterfaceTab[i].InterfaceName);
+        InterfaceType2PortSelection[InterfaceTab[i].InterfaceType] = i;
+    }
 }
 
 TInterfacePanel::~TInterfacePanel()
@@ -222,263 +255,137 @@ TInterfacePanel::~TInterfacePanel()
 
 
 //---------------------------------------------------------------------------
-void TInterfacePanel::UpdateInterfaceType(int interface_type)
+
+static bool WinPic_fAcceptAllIoAddresses = false;
+
+static bool IsWeirdLptPortAddr (int pPortAddress)
+{
+    return (pPortAddress != 0)
+        && (pPortAddress != 0x0278)
+        && (pPortAddress != 0x0378)
+        && (pPortAddress != 0x02BC)
+        && (pPortAddress != 0x03BC)
+        && (pPortAddress != 0xB800);
+}
+
+TInterfacePanel::EIoAddressUsage TInterfacePanel::setLptPortAddress (void)
+{
+    EIoAddressUsage Result;
+    switch(Config.iLptPortNr)
+    {
+        case 1:
+            Config.iLptIoAddress = 0x0378;
+            Result = usageDISPLAY;
+            break;
+        case 2:
+            Config.iLptIoAddress = 0x0278;
+            Result = usageDISPLAY;
+            break;
+        default:
+            if (Config.iLptIoAddress == 0)
+                Config.iLptIoAddress = 0x0378;
+            Result = usageINPUT;
+            if (IsWeirdLptPortAddr(Config.iLptIoAddress))
+            {
+                aAcceptAllIoAddresses = true;
+                Result = usageINPUT_WARN;
+            }
+    }
+    return Result;
+}
+
+
+static uint32_t IsSerialInterface =
+    (true  << PIC_INTF_TYPE_UNKNOWN) +
+    (true  << PIC_INTF_TYPE_COM84) +
+    (true  << PIC_INTF_TYPE_JDM2) +
+    (false << PIC_INTF_TYPE_PIP84_V1) +
+    (false << PIC_INTF_TYPE_PIP84_V2) +
+    (false << PIC_INTF_TYPE_LKM_FLASHPR_V1) +
+    (false << PIC_INTF_TYPE_TAIT_7406_4066) +
+    (false << PIC_INTF_TYPE_TAIT_7407_4066) +
+    (false << PIC_INTF_TYPE_TAIT_7406_PNP) +
+    (false << PIC_INTF_TYPE_TAIT_7407_PNP) +
+    (false << PIC_INTF_TYPE_LPT_AN589) +
+    (false << PIC_INTF_TYPE_LPT_NOPPP) +
+    (false << PIC_INTF_TYPE_CUSTOM_LPT) +
+    (true  << PIC_INTF_TYPE_CUSTOM_COM);
+
+//---------------------------------------------------------------------------
+void TInterfacePanel::UpdateInterfaceType(void)
 {
     int i;
-    wxChar str80[81];
     ++(MainFrame::TheMainFrame->m_Updating);
+    if ((Config.pic_interface_type >= PIC_INTF_TYPE_MAX)
+    ||  (Config.pic_interface_type < 0))
+        Config.pic_interface_type = 0;
 
-    // Set the Items in the interface selection combo (TComboBox.Items = TStrings)
-    // Note: This is only the bloody user interface !
-    aInterfaceTypeChoice->Clear();
-    aInterfaceTypeChoice->Append( _("(unknown)") );
-    aIntfItemIndex2InterfaceType[0]=0;
-    aInterfaceTypeChoice->Append( _("COM84 programmer for serial port") );
-    aIntfItemIndex2InterfaceType[1]=PIC_INTF_TYPE_COM84;
-    aInterfaceTypeChoice->Append( _("JDM (2) for serial port") );
-    aIntfItemIndex2InterfaceType[2]=PIC_INTF_TYPE_JDM2;
-    aInterfaceTypeChoice->Append( _("PIP84 by SM6LKM, Data->PAPER (Pin12)") );
-    aIntfItemIndex2InterfaceType[3]= PIC_INTF_TYPE_PIP84_V1;
-    aInterfaceTypeChoice->Append( _("PIP84 by SM6LKM, Data->ACK (Pin10)") );
-    aIntfItemIndex2InterfaceType[4]= PIC_INTF_TYPE_PIP84_V2;
-    aInterfaceTypeChoice->Append( _("PIC Flash prog by SM6LKM (2002-10)" ));
-    aIntfItemIndex2InterfaceType[5]= PIC_INTF_TYPE_LKM_FLASHPR_V1;
-    aInterfaceTypeChoice->Append( _("Tait, 7406(inverter)+4066(switch)" ));
-    aIntfItemIndex2InterfaceType[6]= PIC_INTF_TYPE_TAIT_7406_4066;
-    aInterfaceTypeChoice->Append( _("Tait, 7407(driver) + 4066(switch)") );
-    aIntfItemIndex2InterfaceType[7]= PIC_INTF_TYPE_TAIT_7407_4066;
-    aInterfaceTypeChoice->Append( _("Tait, 7406(inverter)+PNP transistor") );
-    aIntfItemIndex2InterfaceType[8]= PIC_INTF_TYPE_TAIT_7406_PNP;
-    aInterfaceTypeChoice->Append( _("Tait, 7407(driver) + PNP transistor") );
-    aIntfItemIndex2InterfaceType[9]= PIC_INTF_TYPE_TAIT_7407_PNP;
-    aInterfaceTypeChoice->Append( _("Microchip AN589") );
-    aIntfItemIndex2InterfaceType[10]= PIC_INTF_TYPE_LPT_AN589;
-    aInterfaceTypeChoice->Append( _("NOPPP") );
-    aIntfItemIndex2InterfaceType[11]= PIC_INTF_TYPE_LPT_NOPPP;
-    aInterfaceTypeChoice->Append( _("Custom, on LPT port, defined by FILE") );
-    aIntfItemIndex2InterfaceType[12]= PIC_INTF_TYPE_CUSTOM_LPT;
-    aInterfaceTypeChoice->Append( _("Custom, on COM port, defined by FILE") );
-    aIntfItemIndex2InterfaceType[13]= PIC_INTF_TYPE_CUSTOM_COM;
-//    aInterfaceTypeChoice->Append( _("Custom, on any port, from plugin-DLL") );
-//    aIntfItemIndex2InterfaceType[13]= PIC_INTF_TYPE_PLUGIN_DLL;
+    aInterfaceTypeText->SetLabel((PIC_HW_SetInterfaceType(Config.pic_interface_type))
+                                 ? wxString(_("Interface Type ok."))
+                                 : _("Interface error: ") + wxString(PicHw_sz255LastError));
 
-    int Index;
-    switch (interface_type) // a PIC_INTF_TYPE_xxx - constant
+    EInterfacePortType IsSerialPort = ((IsSerialInterface>>Config.pic_interface_type) & true) ? portSERIAL : portPARALLEL;
+    if (IsSerialPort != aPortType)
     {
-    case PIC_INTF_TYPE_COM84:     // serial, clock=RTS, data=DTR+CTS, Vpp=TXD
-        Index = 1;
-        m_fUseSerialPort = true;
-        break;
-    case PIC_INTF_TYPE_JDM2:      // serial, clock=RTS, data=DTR+CTS, Vpp=TXD,
-        // plus some precautions to charge / discharge two capacitors
-        Index = 2;
-        m_fUseSerialPort = true;
-        break;
-    case PIC_INTF_TYPE_PIP84_V1:         // parallel, used by SM6LKM, RB7->PAPER
-        Index = 3;
-        m_fUseSerialPort = false;
-        break;
-    case PIC_INTF_TYPE_PIP84_V2:         // parallel, used by SM6LKM, RB7->ACKN
-        Index = 4;
-        m_fUseSerialPort = false;
-        break;
-    case PIC_INTF_TYPE_LKM_FLASHPR_V1:
-        Index = 5;
-        m_fUseSerialPort = false;
-        break;
-    case PIC_INTF_TYPE_TAIT_7406_4066:   // parallel, by David Tait, 1st way
-        Index = 6;
-        m_fUseSerialPort = false;
-        break;
-    case PIC_INTF_TYPE_TAIT_7407_4066:   // parallel, by David Tait, 2nd way
-        Index = 7;
-        m_fUseSerialPort = false;
-        break;
-    case PIC_INTF_TYPE_TAIT_7406_PNP :   // parallel, by David Tait, 3rd way
-        Index = 8;
-        m_fUseSerialPort = false;
-        break;
-    case PIC_INTF_TYPE_TAIT_7407_PNP :   // parallel, by David Tait, 4th way
-        Index = 9;
-        m_fUseSerialPort = false;
-        break;
-    case PIC_INTF_TYPE_LPT_AN589:  // parallel, Microchip's Application Note "AN589"
-        Index = 10;
-        m_fUseSerialPort = false;
-        break;
-    case PIC_INTF_TYPE_LPT_NOPPP:  // parallel, NOPPP
-        Index = 11;
-        m_fUseSerialPort = false;
-        break;
-    case PIC_INTF_TYPE_CUSTOM_LPT:  // "custom" interface on LPT, I/O lines defined by file
-        Index = 12;
-        m_fUseSerialPort = false;
-        break;
-    case PIC_INTF_TYPE_CUSTOM_COM:  // "custom" interface on COM, I/O lines defined by file
-        Index = 13;
-        m_fUseSerialPort = true;
-        break;
-//    case PIC_INTF_TYPE_PLUGIN_DLL:  // "custom" interface on any port, using a plugin-DLL
-//        Index = 13;
-//        m_fUseSerialPort = false;
-//        break;
+        aPortType = IsSerialPort;
 
-    default:
-        m_fUseSerialPort = false;
-        Index = 0;
-        aInterfaceTypeText->SetLabel(_("Illegal interface code number"));
-        break;
-    } // end switch(m_displayed_interface_type)
-    aInterfaceTypeChoice->SetSelection(Index);
-
-    aCustomDefFileText->SetValue(Config.sz255InterfaceSupportFile);
-    if (  (interface_type==PIC_INTF_TYPE_CUSTOM_LPT)
-            ||(interface_type==PIC_INTF_TYPE_CUSTOM_COM) )
-    {
-        aCustomDefFileText->Enable();
-//     aCustomDefFileText->Color = clWindow;
-    }
-//    else if ( interface_type==PIC_INTF_TYPE_PLUGIN_DLL )
-//    {
-//        aCustomDefFileText->SetValue(Config.sz80InterfacePluginDLL);
-//        aCustomDefFileText->Enable();
-////     aCustomDefFileText->Color = clWindow;
-//    }
-    else
-    {
-        aCustomDefFileText->Enable(false);
-//     aCustomDefFileText->Color = clBtnFace;
-    }
-
-//  Combo_InterfacePort->Color = clWindow;
-//    MainFrame::TheMainFrame->aOptionTab->aDriverRadio->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT));
-//  Rb_UseWinAPIOnly->Color = clBtnFace;
-    if (m_fUseSerialPort)
-    {
-        aInterfacePortChoice->Enable();
-        aInterfacePortChoice->Clear();
-        aInterfacePortChoice->Append(_("(unknown)"));
-#ifdef __WXMSW__
-        for (i=1;i<=16;++i)
+        //-- Change of port type: rebuild the list
+        //----------------------------------------
+        if (aPortType == portSERIAL)
         {
-            aInterfacePortChoice->Append(wxString::Format(_T("COM%d"),i));
-        }
+            aInterfacePortChoice->Clear();
+            wxString DeviceName;
+
+#ifdef __WXMSW__
+            for (i=0;i<16;++i)
+                aInterfacePortChoice->Append(wxString::Format(_T("COM%d"),i));
 #else
-			wxString device_path;
-			wxDir temp_dir(wxT("/dev"));
-			if(temp_dir.GetFirst( &device_path, wxString(wxT("ttyS*") )) )
-				do{
-				aInterfacePortChoice->Append( wxT("/dev/") + device_path );
-				}while( temp_dir.GetNext( &device_path ) );
-			if(temp_dir.GetFirst( &device_path, wxString(wxT("ttyUSB*") )) )
-				do{
-				aInterfacePortChoice->Append( wxT("/dev/") + device_path );
-				}while( temp_dir.GetNext( &device_path ) );
+            wxString device_path;
+            wxDir temp_dir(wxT("/dev"));
+            static const wxChar *SerialPortDevNames [] = { wxT("ttyS*"), wxT("ttyUSB*") };
+            for (int i = 0; i < sizeof(SerialPortDevNames)/sizeof(wxChar*)); ++i)
+            {
+                if(temp_dir.GetFirst( &device_path, SerialPortDevNames[i] ) )
+                    do{
+                        aInterfacePortChoice->Append( wxT("/dev/") + device_path );
+                    }while( temp_dir.GetNext( &device_path ) );
+            }
+            if (aInterfacePortChoice->IsEmpty())
+                aInterfacePortChoice->Append( _("None") );
 #endif
 
-        if (Config.iComPortNr>=0 && Config.iComPortNr<=16)
-            aInterfacePortChoice->SetSelection(Config.iComPortNr);
-        else
-            aInterfacePortChoice->SetSelection(0);
-
-        aIoPortAddressEdit->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT));
-
-        if ( Config.iComIoAddress != 0 )
-        {
-            // use a "non-standard" I/O-address for the COM-port, entered manually:
-            _stprintf(str80,_T("%04X"),(int)Config.iComIoAddress);
-            aIoPortAddressEdit->Disable();
-//        Ed_IoPortAddress->ReadOnly = false;
-//        Ed_IoPortAddress->Color = clWindow;
-        }
-        else
-        {
-            // use a "standard" COM-port with the default I/O address :
-            switch ( Config.iComPortNr )
+            if (!aInterfacePortChoice->SetStringSelection(Config.sz40ComPortName))
             {
-            case 1:
-                _tcscpy(str80, _T("03F8"));
-                break;
-            case 2:
-                _tcscpy(str80, _T("02F8"));
-                break;
-            case 3:
-                _tcscpy(str80, _T("03E8"));
-                break;
-            case 4:
-                _tcscpy(str80, _T("02E8"));
-                break;
-            default:
-                _tcscpy(str80, _("-std-"));
-                break;
+                aInterfacePortChoice->SetSelection(0);
+                copyPortSelectionToConfig();
             }
-            aIoPortAddressEdit->Enable();
-//        Ed_IoPortAddress->ReadOnly = true;
-//        Ed_IoPortAddress->Color = clBtnFace;
         }
-        aIoPortAddressEdit->SetValue(str80);
-//    Ed_IoPortAddress->Text = str80;
-
-//        if ( Config.iComPortNr>4 && (MainFrame::TheMainFrame->aOptionTab->aDriverRadio->GetSelection() != TOptionPanel::radioDriverUSE_WIN_API_ONLY) )
-//        {
-//            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("COM ports above 4 can be accessed via windows API only (on Options tab) !") );
-//            MainFrame::TheMainFrame->m_iMessagePanelUsage = MainFrame::MP_USAGE_ERROR;
-//            aInterfacePortChoice->SetForegroundColour(*wxRED);
-//            MainFrame::TheMainFrame->aOptionTab->aDriverRadio->SetForegroundColour(*wxRED);
-//        }
-    }
-    else  // not serial but parallel port ?
-//        if ( interface_type != PIC_INTF_TYPE_PLUGIN_DLL )
+        else  // not serial but parallel port ?
+    //        if ( interface_type != PIC_INTF_TYPE_PLUGIN_DLL )
         {
-            aInterfacePortChoice->Enable();
             aInterfacePortChoice->Clear();
-            aInterfacePortChoice->Append(_("(unknown)") );
+            aInterfacePortChoice->Append(_("(at address)") );
             aInterfacePortChoice->Append(_T("LPT1"));
             aInterfacePortChoice->Append(_T("LPT2"));
             aInterfacePortChoice->SetSelection(Config.iLptPortNr);
-
-            if (Config.iLptIoAddress == 0)
-                _tcscpy(str80, _("-std-"));
-            else
-                _stprintf(str80,_T("%04X"),Config.iLptIoAddress);
-            aIoPortAddressEdit->SetValue(str80);
-//    Ed_IoPortAddress->SetValue(str80);
-            aIoPortAddressEdit->Enable();
-//    Ed_IoPortAddress->Color = clWindow;
-
-            // To drive an interface on the LPT port, WinPic must use
-            // SMPORT or PORTTALK. So the option "use windows API only"
-            // doesn't work here. Inform the user about this problem :
-//            if (MainFrame::TheMainFrame->aOptionTab->aDriverRadio->GetSelection() == TOptionPanel::radioDriverUSE_WIN_API_ONLY)
-//            {
-//                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _( "LPT port interface requires SMPORT or PortTalk (on Options tab) !") );
-//                MainFrame::TheMainFrame->m_iMessagePanelUsage = MainFrame::MP_USAGE_ERROR;
-//                aInterfacePortChoice->SetForegroundColour(*wxRED);
-////       Combo_InterfacePort->Color = clRed;
-//            }
         } // end if < interface on LPT port >
 //        else
 //        {
 //            // neither SERIAL nor PARALLEL port (but a hardware-access driver in a DLL)
-//            aInterfacePortChoice->Clear();
-//            aInterfacePortChoice->Disable();
-////    Combo_InterfacePort->Items->Clear();
-////    Combo_InterfacePort->Enabled = false;
-//            aIoPortAddressEdit->Clear();
-//            aIoPortAddressEdit->Disable();
-////    Ed_IoPortAddress->Text = "";
-////    Ed_IoPortAddress->ReadOnly = true;
-////    Ed_IoPortAddress->Color = clBtnFace;
 //        } // end else < neither serial nor parallel port >
+    }
+
+    aInterfaceTypeChoice->SetSelection(InterfaceType2PortSelection[Config.pic_interface_type]);
+
+    aCustomDefFileText->SetValue(Config.sz255InterfaceSupportFile);
+    aCustomDefFileText->Enable((Config.pic_interface_type==PIC_INTF_TYPE_CUSTOM_LPT)
+            ||(Config.pic_interface_type==PIC_INTF_TYPE_CUSTOM_COM));
+
+    updateIoAddressDisplay((aPortType == portSERIAL) ? usageNONE : setLptPortAddress());
+
     aExtraRdDelayEdit ->SetValue(wxString::Format(_T("%d"), Config.iExtraRdDelay_us ));
     aExtraClkDelayEdit->SetValue(wxString::Format(_T("%d"), Config.iExtraClkDelay_us));
-//  Ed_ExtraRdDelay->Text = IntToStr(Config.iExtraRdDelay_us);
-//  Ed_ExtraClkDelay->Text= IntToStr(Config.iExtraClkDelay_us);
-    aSlowInterfaceChk->SetValue(Config.iSlowInterface);
-//  Chk_SlowInterface->Checked = Config.iSlowInterface;
-
-
-    UpdateInterfaceTestDisplay();
+    aSlowInterfaceChk ->SetValue(Config.iSlowInterface);
 
     if (MainFrame::TheMainFrame->m_Updating>0)
         --(MainFrame::TheMainFrame->m_Updating);
@@ -486,6 +393,93 @@ void TInterfacePanel::UpdateInterfaceType(int interface_type)
 } // end UpdateInterfaceType()
 //---------------------------------------------------------------------------
 
+void TInterfacePanel::updateIoAddressDisplay(EIoAddressUsage pUsage)
+{
+    wxChar str80[81];
+    bool Enable = (pUsage >= usageINPUT);
+    if (Enable != (aCurIoAddressUsage >= usageINPUT))
+    {
+        aIoPortAddressEdit->Enable(Enable);
+        aAddressText->Enable(Enable);
+    }
+    if ((pUsage != aCurIoAddressUsage)
+    &&  ((pUsage > usageINPUT) || (aCurIoAddressUsage > usageINPUT)))
+    {
+        static const wxColour Orange(0xFF,0x7F,0x00);
+        wxColour Colour;
+        switch (pUsage)
+        {
+        case usageNONE:
+        case usageDISPLAY:
+        case usageINPUT:
+            Colour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT);
+            break;
+        case usageINPUT_WARN:
+            Colour = Orange;
+            break;
+        case usageINPUT_ERROR:
+            Colour = *wxRED;
+            wxBell();
+            break;
+        }
+        aIoPortAddressEdit->SetForegroundColour(Colour);
+        aIoPortAddressEdit->Refresh();
+    }
+    bool Empty = (pUsage == usageNONE);
+    if (Empty)
+    {
+        if (aCurIoAddressUsage != usageNONE)
+            aIoPortAddressEdit->SetValue(wxEmptyString);
+        aCurIoAddress = 0;
+    }
+    else if (Config.iLptIoAddress != aCurIoAddress)
+    {
+        _stprintf(str80,_T("%04X"), Config.iLptIoAddress);
+        aIoPortAddressEdit->SetValue(str80);
+        aCurIoAddress = Config.iLptIoAddress;
+    }
+    aCurIoAddressUsage = pUsage;
+}
+
+//---------------------------------------------------------------------------
+void TInterfacePanel::changeIoPortAddress (void)
+{
+    long PortAddr;
+
+    if (MainFrame::TheMainFrame->m_Updating)
+        return;
+
+    EIoAddressUsage IoAddressUsage;
+
+    if (!aIoPortAddressEdit->GetValue().ToLong(&PortAddr,16))
+        IoAddressUsage = usageINPUT_ERROR;  // someone entered an invalid hex word .. ignore
+
+    else if (aPortType == portPARALLEL)
+    {   //-- PARALLEL port ("LPT")
+        if (IsWeirdLptPortAddr(PortAddr))
+        {
+            // VERY unusual address for an LPT port..
+            if ( WinPic_fAcceptAllIoAddresses )
+            {
+                // Accept the address "under protest"
+                IoAddressUsage = usageINPUT_WARN;
+                Config.iLptIoAddress = PortAddr;
+            }
+            else // do NOT accept the address (leave it unchanged)
+                IoAddressUsage = usageINPUT_ERROR;
+        }
+        else
+        {
+            IoAddressUsage = usageINPUT;
+            Config.iLptIoAddress = PortAddr;
+        }
+    }
+    else // SERIAL ("COM")
+        wxASSERT_MSG(false,_T("Editing of Port Address not allowed with serial port"));
+
+    //-- Render the IO Address status
+    updateIoAddressDisplay(IoAddressUsage);
+}
 
 //---------------------------------------------------------------------------
 void TInterfacePanel::UpdateInterfaceTestDisplay(void)
@@ -558,8 +552,6 @@ void TInterfacePanel::UpdateInterfaceInputSignalDisplay(void)
         aTestDataInText->SetLabel((i>=0)?wxString::Format(_T("%d"),i):wxString(_("n/a")));
         LastValueDataIn = i;
     }
-//  if(i>=0) aTestDataInText->Caption = IntToStr( i );
-//      else aTestDataInText->Caption = _("n/a");
 
     static int LastValueRed = -2;
     i = PIC_HW_SetRedLed( -1/*don't change, just get state*/ );
@@ -569,15 +561,6 @@ void TInterfacePanel::UpdateInterfaceInputSignalDisplay(void)
         aRedLedText->Enable(i>=0);
         LastValueRed = i;
     }
-//  if(i>=0)
-//    {
-//      aRedLEDText->Enabled = true;
-//      Shp_RedLED->Brush->Color = (i==0)?clGray:clRed;
-//    }
-//   else
-//    { Lab_RedLED->Enabled = false;
-//      Shp_RedLED->Brush->Color = clLtGray;
-//    }
 
     static int LastValueGreen = -2;
     i = PIC_HW_SetGreenLed( -1/*don't change, just get state*/ );
@@ -587,14 +570,6 @@ void TInterfacePanel::UpdateInterfaceInputSignalDisplay(void)
         aGreenLedText->Enable(i>=0);
         LastValueGreen = i;
     }
-//  if(i>=0)
-//    { Lab_GreenLED->Enabled = true;
-//      Shp_GreenLED->Brush->Color = (i==0)?clGray:clLime;
-//    }
-//   else
-//    { Lab_GreenLED->Enabled = false;
-//      Shp_GreenLED->Brush->Color = clLtGray;
-//    }
 
     static int LastValueButton = -2;
     i = PicHw_GetOkButtonState();
@@ -617,27 +592,6 @@ void TInterfacePanel::UpdateInterfaceInputSignalDisplay(void)
     if (MainFrame::TheMainFrame->m_Updating>0)
         --(MainFrame::TheMainFrame->m_Updating);
 }
-//---------------------------------------------------------------------------
-
-
-//---------------------------------------------------------------------------
-void TInterfacePanel::SetInterfaceInternal(int iInterfaceType)
-{
-    aInterfaceTypeText->SetLabel((PIC_HW_SetInterfaceType(iInterfaceType))
-                                 ? wxString(_("SetInterfaceType ok."))
-                                 : _("Error in SetIntf() : ") + wxString(PicHw_sz255LastError));
-//  if(PIC_HW_SetInterfaceType( iInterfaceType ) )
-//         Txt_InterfaceType->Caption = TE( "SetInterfaceType ok." );
-//    else Txt_InterfaceType->Caption = TE( "Error in SetIntf() : " )
-//                     + wxString(PicHw_sz255LastError);
-    Config.pic_interface_type = PIC_HW_interface.type; // after checking..
-    UpdateInterfaceType(iInterfaceType);
-    MainFrame::TheMainFrame->aOptionTab->UpdateOptionsDisplay();
-} // end SetInterfaceInternal()
-
-
-
-static bool WinPic_fAcceptAllIoAddresses = false;
 
 //---------------------------------------------------------------------------
 bool TInterfacePanel::UnlockEditFieldForIOPortAddress(void)
@@ -653,21 +607,12 @@ bool TInterfacePanel::UnlockEditFieldForIOPortAddress(void)
                 _( "WxPic WARNING" ),
                 wxICON_EXCLAMATION | wxOK | wxCANCEL ) != wxOK ))
     {
-        Config.iComIoAddress = 0;    // disable this dangerous input field again
         WinPic_fAcceptAllIoAddresses = false;
-        UpdateInterfaceType(m_displayed_interface_type);
+        UpdateInterfaceType();
         aInterfacePortChoice->SetFocus();
         return false;
     }
     WinPic_fAcceptAllIoAddresses = true;
-    aIoPortAddressEdit->Enable();
-//  Ed_IoPortAddress->ReadOnly = false;
-//  Ed_IoPortAddress->Color = clWindow;
-    if (aIoPortAddressEdit->GetValue() == _("-std-"))
-        aIoPortAddressEdit->ChangeValue(wxEmptyString);
-//  if( Ed_IoPortAddress->Text == "-std-" )
-//   {  Ed_IoPortAddress->Text = "";
-//   }
     return true;
 
 } // end UnlockEditFieldForIOPortAddress()
@@ -777,19 +722,7 @@ bool TInterfacePanel::TestTheInterface(void)
 void TInterfacePanel::onInitInterfButtonClick(wxCommandEvent& event)
 //void ::Btn_InitInterfaceClick(TObject *Sender)
 {
-    int iInterfaceType;
-
-    iInterfaceType = aInterfaceTypeChoice->GetSelection();
-//  iInterfaceType = Combo_InterfaceType->ItemIndex;
-    if (iInterfaceType<0) iInterfaceType=0;
-    iInterfaceType = aIntfItemIndex2InterfaceType[iInterfaceType];
-
-//    if ( iInterfaceType == PIC_INTF_TYPE_PLUGIN_DLL )
-//        _tcsncpy( Config.sz80InterfacePluginDLL,   aCustomDefFileText->GetValue().c_str(), 80 );
-//    else
-        _tcsncpy( Config.sz255InterfaceSupportFile, aCustomDefFileText->GetValue().c_str(), 80 );
-    PIC_HW_SetInterfaceType( iInterfaceType );
-    UpdateInterfaceType(PIC_HW_interface.type);
+    UpdateInterfaceType();
     TestTheInterface();
     MainFrame::TheMainFrame->aOptionTab->UpdateOptionsDisplay();
 }
@@ -798,12 +731,10 @@ void TInterfacePanel::onInitInterfButtonClick(wxCommandEvent& event)
 
 
 void TInterfacePanel::onLptInterfHelpButtonClick(wxCommandEvent& event)
-//void ::Btn_HelpLptInterfaceClick(TObject *Sender)
 {
     wxHelpControllerBase *Help = TLanguage::GetHelpController();
     if (Help != NULL)
         Help->DisplaySection(TResource::HELPID_LPT_INTERFACES);
-//  Application->HelpContext(HELPID_LPT_INTERFACES);
 }
 //---------------------------------------------------------------------------
 
@@ -811,7 +742,6 @@ void TInterfacePanel::onLptInterfHelpButtonClick(wxCommandEvent& event)
 
 //---------------------------------------------------------------------------
 void TInterfacePanel::onTestXXXChkClick(wxCommandEvent& event)
-//void ::Chk_TestXXXClick(TObject *Sender)
 {
     if (MainFrame::TheMainFrame->m_Updating>0)
         return;
@@ -832,7 +762,6 @@ void TInterfacePanel::onTestXXXChkClick(wxCommandEvent& event)
 
 
 void TInterfacePanel::onTestVddChkClick(wxCommandEvent& event)
-//void MainFrame::Chk_TestVddClick(TObject *Sender)
 {
     if (MainFrame::TheMainFrame->m_Updating>0)
         return;
@@ -847,7 +776,6 @@ void TInterfacePanel::onTestVddChkClick(wxCommandEvent& event)
 
 
 void TInterfacePanel::onClockEnableChkClick(wxCommandEvent& event)
-//void ::Chk_ClockEnableClick(TObject *Sender)
 {
     if (MainFrame::TheMainFrame->m_Updating>0)
         return;
@@ -862,7 +790,6 @@ void TInterfacePanel::onClockEnableChkClick(wxCommandEvent& event)
 
 
 void TInterfacePanel::onDataEnableChkClick(wxCommandEvent& event)
-//void ::Chk_DataEnableClick(TObject *Sender)
 {
     if (MainFrame::TheMainFrame->m_Updating>0)
         return;
@@ -877,7 +804,6 @@ void TInterfacePanel::onDataEnableChkClick(wxCommandEvent& event)
 
 
 void TInterfacePanel::onPullMclrToGndChkClick(wxCommandEvent& event)
-//void ::Chk_PullMclrToGndClick(TObject *Sender)
 {
     // since 2003-01-22 ...  for "AN589" where D4=HIGH pulls MCLR active LOW
     if (MainFrame::TheMainFrame->m_Updating>0)
@@ -889,7 +815,6 @@ void TInterfacePanel::onPullMclrToGndChkClick(wxCommandEvent& event)
 
 
 void TInterfacePanel::onConnectICSPTargetChkClick(wxCommandEvent& event)
-//void ::Chk_ConnectICSPTargetClick(TObject *Sender)
 {
     if (MainFrame::TheMainFrame->m_Updating>0)
         return;
@@ -904,7 +829,6 @@ void TInterfacePanel::onConnectICSPTargetChkClick(wxCommandEvent& event)
 
 
 void TInterfacePanel::onVddSelectRadioSelect(wxCommandEvent& event)
-//void ::RB_VddLowClick(TObject *Sender)
 {
     if (MainFrame::TheMainFrame->m_Updating>0)
         return;
@@ -917,8 +841,6 @@ void TInterfacePanel::onVddSelectRadioSelect(wxCommandEvent& event)
 
 
 void TInterfacePanel::onRedLedBitmapClick(wxCommandEvent& event)
-//void ::Shp_RedLEDMouseDown(TObject *Sender,
-//      TMouseButton Button, TShiftState Shift, int X, int Y)
 {
    PIC_HW_SetRedLed( 1-PIC_HW_SetRedLed(-1) );
 }
@@ -926,8 +848,6 @@ void TInterfacePanel::onRedLedBitmapClick(wxCommandEvent& event)
 
 
 void TInterfacePanel::onGreenLedBitmapClick(wxCommandEvent& event)
-//void ::Shp_GreenLEDMouseDown(TObject *Sender,
-//      TMouseButton Button, TShiftState Shift, int X, int Y)
 {
    PIC_HW_SetGreenLed( 1-PIC_HW_SetGreenLed(-1) );
 }
@@ -936,7 +856,6 @@ void TInterfacePanel::onGreenLedBitmapClick(wxCommandEvent& event)
 
 
 void TInterfacePanel::onInterfaceTypeChoiceSelect(wxCommandEvent& event)
-//void ::Combo_InterfaceTypeChange(TObject *Sender)
 {
     int iInterfaceType;
 
@@ -946,16 +865,18 @@ void TInterfacePanel::onInterfaceTypeChoiceSelect(wxCommandEvent& event)
         return;
 
     iInterfaceType = aInterfaceTypeChoice->GetSelection();
-//  iInterfaceType = Combo_InterfaceType->ItemIndex;
     if (iInterfaceType<0) iInterfaceType=0;
-    iInterfaceType = aIntfItemIndex2InterfaceType[iInterfaceType];
+    iInterfaceType = InterfaceTab[iInterfaceType].InterfaceType;
+
     _tcsncpy(
 //        (iInterfaceType == PIC_INTF_TYPE_PLUGIN_DLL) ? Config.sz80InterfacePluginDLL :
         Config.sz255InterfaceSupportFile, aCustomDefFileText->GetValue().c_str(), 256 );
 //  if( iInterfaceType == PIC_INTF_TYPE_PLUGIN_DLL )
 //       strncpy( Config.sz80InterfacePluginDLL,   Ed_CustomInterfaceDefFile->Text.c_str(), 80 );
 //  else strncpy( Config.sz255InterfaceSupportFile, Ed_CustomInterfaceDefFile->Text.c_str(), 256 );
-    SetInterfaceInternal( iInterfaceType );
+    Config.pic_interface_type = iInterfaceType;
+    UpdateInterfaceType();
+//    MainFrame::TheMainFrame->aOptionTab->UpdateOptionsDisplay();
     Config_changed |= APPL_CALLER_SAVE_CFG ;  // save on exit
 }
 //---------------------------------------------------------------------------
@@ -963,127 +884,49 @@ void TInterfacePanel::onInterfaceTypeChoiceSelect(wxCommandEvent& event)
 
 
 void TInterfacePanel::onInterfacePortChoiceSelect(wxCommandEvent& event)
-//void ::Combo_InterfacePortChange(TObject *Sender)
 {
-// char str80[81];
-    int iInterfaceType;
-
     if (MainFrame::TheMainFrame->m_Updating)
         return;
     if ( APPL_i32CustomizeOptions & APPL_CUST_NO_INTERFACE_SELECTION )
         return;
 
-    iInterfaceType = aInterfaceTypeChoice->GetSelection();
-//  iInterfaceType = Combo_InterfaceType->ItemIndex;
-    if (iInterfaceType<0) iInterfaceType=0;
-    iInterfaceType = aIntfItemIndex2InterfaceType[ iInterfaceType ];
+    copyPortSelectionToConfig();
+    UpdateInterfaceType();
+}
+//---------------------------------------------------------------------------
 
-    // ex: strncpy(Config.sz255InterfaceSupportFile, Ed_CustomInterfaceDefFile->Text.c_str(), 256);
-    if ( m_fUseSerialPort )
+
+void TInterfacePanel::copyPortSelectionToConfig (void)
+{
+    if ( aPortType == portSERIAL )
     {
-        if ( Config.iComPortNr != aInterfacePortChoice->GetSelection() )
-//     if( Config.iComPortNr != Combo_InterfacePort->ItemIndex )
-        {
-            // forget "unusual" I/O-address when changing port number :
-            Config.iComIoAddress = 0;
-        }
-        Config.iComPortNr = aInterfacePortChoice->GetSelection();
-        wxString portname = aInterfacePortChoice->GetString( aInterfacePortChoice->GetSelection() );
+        wxString portname = aInterfacePortChoice->GetStringSelection();
         _tcsncpy(Config.sz40ComPortName, portname.c_str(), 40 );
         Config.sz40ComPortName[40]=_T('\0');
-        //memcpy( Config.sz40ComPortName, portname.GetStringData(), portname.Length() );
-//     Config.iComPortNr = Combo_InterfacePort->ItemIndex;
-        aIoPortAddressEdit->Clear();
-        aIoPortAddressEdit->Disable();
-//     Ed_IoPortAddress->Text = "";
-//     Ed_IoPortAddress->ReadOnly = true;
     }
     else // not SERIAL but PARALLEL interface... please don't ask for USB ;-)
     {
         Config.iLptPortNr = aInterfacePortChoice->GetSelection();
-//     Config.iLptPortNr = Combo_InterfacePort->ItemIndex;
     }
-    SetInterfaceInternal( iInterfaceType );
     Config_changed |= APPL_CALLER_SAVE_CFG ;  // save changes on exit
-}
 //---------------------------------------------------------------------------
-
+}
 
 void TInterfacePanel::onIoPortAddressEditTextEnter(wxCommandEvent& event)
-//void ::Ed_IoPortAddressChange(TObject *Sender)
 {
-// char str8[9];
-    long PortAddr;
-
-    if (MainFrame::TheMainFrame->m_Updating)
-        return;
-
-
-    if (!aIoPortAddressEdit->GetValue().ToLong(&PortAddr,16))
-    {
-        aExtraRdDelayEdit->SetBackgroundColour(wxColour(0xFF,0x80,0x80));
-        return;
-    }
-    aExtraRdDelayEdit->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
-//  strncpy(str8,Ed_IoPortAddress->Text.c_str(), 8);
-//  l = HexStringToLongint(4, str8);  // PC's "I/O"-adresses have no more than 16 bit !
-//  if(l<0) return; // someone entered an invalid hex word .. ignore
-
-    if (m_fUseSerialPort)
-    {
-        if ( (PortAddr<PIC_HW_COM_ADDR_MIN) || (PortAddr>PIC_HW_COM_ADDR_MAX)
-                || ( (PortAddr & 0x007) != 0) )  // lower 3 bits of address should be zero ( addr = n * 8 )
-        {
-            // VERY unusual address for a COM port.. paint it red
-            aIoPortAddressEdit->SetForegroundColour(*wxRED);
-            wxBell();
-//       Ed_IoPortAddress->Color = clRed;
-        }
-        else
-        {
-            aIoPortAddressEdit->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT));
-//       Ed_IoPortAddress->Color = clWindow;
-            Config.iComIoAddress = PortAddr;
-        }
-    }
-    else // not SERIAL ("COM") , but PARALLEL port ("LPT") :
-    {
-        if (PortAddr!=0 && PortAddr!=0x0278 && PortAddr!=0x0378 && PortAddr!= 0x02BC && PortAddr!=0x03BC && PortAddr!=0xB800)
-        {
-            // VERY unusual address for an LPT port..
-            if ( WinPic_fAcceptAllIoAddresses )
-            {
-                // Accept the address "under protest"
-                aIoPortAddressEdit->SetForegroundColour(wxColour(0xFF,0x7F,0x00)); // orange
-//          Ed_IoPortAddress->Color = (TColor)0x00007FFF; // orange
-                if ( PortAddr!=0 )
-                {
-                    Config.iLptIoAddress = PortAddr;
-                }
-            }
-            else // do NOT accept the address (leave it unchanged)
-            {
-                aIoPortAddressEdit->SetForegroundColour(*wxRED);
-                wxBell();
-//            Ed_IoPortAddress->Color = clRed;
-            }
-        }
-        else
-        {
-            aIoPortAddressEdit->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT));
-//       Ed_IoPortAddress->Color = clWindow;
-            Config.iLptIoAddress = PortAddr;
-        }
-    } // end else < COM or LPT ? >
+    changeIoPortAddress();
 }
+
+void TInterfacePanel::onIoPortAddressKillFocus(wxFocusEvent &pEvent)
+{
+    changeIoPortAddress();
+}
+
 //---------------------------------------------------------------------------
 
-
 void TInterfacePanel::onCustomInterfSelectButtonClick(wxCommandEvent& event)
-//void ::Btn_SelectCustomInterfaceClick(TObject *Sender)
 {
     wxString sFname;
-    int interface_type;
 
     if (MainFrame::TheMainFrame->m_Updating)
         return;
@@ -1093,17 +936,10 @@ void TInterfacePanel::onCustomInterfSelectButtonClick(wxCommandEvent& event)
 
     ++(MainFrame::TheMainFrame->m_Updating);
 
-    interface_type = aInterfaceTypeChoice->GetSelection();
-//  interface_type = Combo_InterfaceType->ItemIndex;
-    if (interface_type<0)
-        interface_type=0;
-    interface_type = aIntfItemIndex2InterfaceType[interface_type];
-
 
     // see help on TOpenDialog .
     MainFrame::TheMainFrame->aFileDialog->SetMessage(_( "Load custom interface definition file" ));
     MainFrame::TheMainFrame->aFileDialog->SetWindowStyle(wxFD_FILE_MUST_EXIST | wxFD_OPEN);
-//  OpenDialog->Title = TE( "Load custom interface definition file (don't change dir)" );
     wxFileName Filename (wxStandardPaths::Get().GetExecutablePath());
 //    if ( interface_type == PIC_INTF_TYPE_PLUGIN_DLL )
 //    {
@@ -1116,23 +952,9 @@ void TInterfacePanel::onCustomInterfSelectButtonClick(wxCommandEvent& event)
 //    else
     {
         MainFrame::TheMainFrame->aFileDialog->SetWildcard(_("Xml files (*.xml)|*.xml"));
-//        Filename.AppendDir(_T("interfaces"));
-//       OpenDialog->DefaultExt = "ini";
-//     OpenDialog->InitialDir = ExtractFilePath(Application->ExeName) + "interfaces";
-//     OpenDialog->Filter = "INI files (*.ini)|*.ini";
     }
     MainFrame::TheMainFrame->aFileDialog->SetDirectory(Filename.GetFullPath());
     MainFrame::TheMainFrame->aFileDialog->SetFilename(aCustomDefFileText->GetValue());
-    // Warning: TOpenDialog is buggy ! Sometimes, if there is something fishy with 'FileName',
-    //          it simply won't open ?  Cured ONE of these situations as follows:
-    // ex:  OpenDialog->FileName = OpenDialog->InitialDir + "\\" + Ed_CustomInterfaceDefFile->Text;
-//  sFname = OpenDialog->InitialDir + "\\" + Ed_CustomInterfaceDefFile->Text;
-//  if( FileExists(sFname) )
-//    {
-//        OpenDialog->FileName = sFname;  // rotten dialog ... didn't open when filename was empty !
-//    }
-//  else
-//    {
 //      if( interface_type == PIC_INTF_TYPE_PLUGIN_DLL )
 //          OpenDialog->FileName = OpenDialog->InitialDir + "\\*.dll";
 //      else
@@ -1142,17 +964,16 @@ void TInterfacePanel::onCustomInterfSelectButtonClick(wxCommandEvent& event)
 //  OpenDialog->Options.Clear();
 //  OpenDialog->Options << ofFileMustExist << ofHideReadOnly << ofNoChangeDir << ofShowHelp;
     if (MainFrame::TheMainFrame->aFileDialog->ShowModal() == wxID_OK)
-//  if (OpenDialog->Execute())
     {
         Filename.Assign(MainFrame::TheMainFrame->aFileDialog->GetPath());
-//    Ed_CustomInterfaceDefFile->Text = ExtractFileName(OpenDialog->FileName);
         _tcsncpy(
 //            (interface_type == PIC_INTF_TYPE_PLUGIN_DLL)?Config.sz80InterfacePluginDLL:
             Config.sz255InterfaceSupportFile, Filename.GetFullPath(), 256);
 //    if( interface_type == PIC_INTF_TYPE_PLUGIN_DLL )
 //         strncpy( Config.sz80InterfacePluginDLL,   Ed_CustomInterfaceDefFile->Text.c_str(), 80 );
 //    else strncpy( Config.sz255InterfaceSupportFile, Ed_CustomInterfaceDefFile->Text.c_str(), 256 );
-        SetInterfaceInternal(Config.pic_interface_type);
+
+        UpdateInterfaceType();
         Config_changed |= APPL_CALLER_SAVE_CFG ;  // save on exit
     }
 
@@ -1166,7 +987,6 @@ void TInterfacePanel::onCustomInterfSelectButtonClick(wxCommandEvent& event)
 
 //---------------------------------------------------------------------------
 void TInterfacePanel::onSlowInterfaceChkClick(wxCommandEvent& event)
-//void ::InterfaceTimingChanged(TObject *Sender)
 {
     if (MainFrame::TheMainFrame->m_Updating)
         return;
@@ -1179,9 +999,6 @@ void TInterfacePanel::onSlowInterfaceChkClick(wxCommandEvent& event)
     }
     else
         aExtraRdDelayEdit->SetBackgroundColour(wxColour(0xFF,0x80,0x80));
-//  Config.iExtraRdDelay_us = StrToIntDef(Ed_ExtraRdDelay->Text, Config.iExtraRdDelay_us);
-//  if( Config.iExtraRdDelay_us<0 )     Config.iExtraRdDelay_us = 0;
-//  if( Config.iExtraRdDelay_us>10000 ) Config.iExtraRdDelay_us = 10000;
     if (aExtraClkDelayEdit->GetValue().ToLong(&ExtraDelay,10))
     {
         Config.iExtraClkDelay_us = std::max(0L, std::min(10000L, ExtraDelay));
@@ -1189,19 +1006,13 @@ void TInterfacePanel::onSlowInterfaceChkClick(wxCommandEvent& event)
     }
     else
         aExtraClkDelayEdit->SetBackgroundColour(wxColour(0xFF,0x80,0x80));
-//  Config.iExtraClkDelay_us= StrToIntDef(Ed_ExtraClkDelay->Text,Config.iExtraClkDelay_us);
-//  if( Config.iExtraClkDelay_us<0 )    Config.iExtraClkDelay_us = 0;
-//  if( Config.iExtraClkDelay_us>10000) Config.iExtraClkDelay_us = 10000;
     Config.iSlowInterface  = aSlowInterfaceChk->GetValue();
-//  Config.iSlowInterface = Chk_SlowInterface->Checked;
-//    PHWInfo.iSlowInterface = Config.iSlowInterface;
 }
 //---------------------------------------------------------------------------
 
 
 
 void TInterfacePanel::onIoPortAddressGetFocus(wxFocusEvent &pEvent)
-//void ::Ed_IoPortAddressClick(TObject *Sender)
 {
     if ( !MainFrame::TheMainFrame->m_Updating )
     {
