@@ -332,17 +332,6 @@ void TOptionPanel::UpdateOptionsDisplay(void)
     // can be specified here - so we don't have to copy those *.DEV-files :
     aMplabDevDirEdit->ChangeValue(Config.sz255MplabDevDir);
 
-    // Since 2005-11-05, the port access driver can be selected :
-    // possible values for T_CONFIG.iWhichPortAccessDriver :
-//    aDriverRadio->SetSelection(Config.iWhichPortAccessDriver);
-//   Rb_UseSMPORT->Checked = (Config.iWhichPortAccessDriver==CFG_PORTACCESS_SMPORT);
-//   Rb_UsePortTalk->Checked=(Config.iWhichPortAccessDriver==CFG_PORTACCESS_PORTTALK);
-//#ifndef USE_PORTTALK  /* AllowIoWrapper.cpp not included for copyright reasons ? */
-//   Rb_UsePortTalk->Enabled= false; /* added 2005-11-05, see TSmPort.cpp for details */
-//#endif // ! USE_PORTTALK
-//   Rb_PortAccessGranted->Checked=(Config.iWhichPortAccessDriver==CFG_PORTACCESS_ALREADY_GRANTED);
-//   Rb_UseWinAPIOnly->Checked=(Config.iWhichPortAccessDriver==CFG_PORTACCESS_USE_API_ONLY);
-
     // group "Debugging"...
     aSimulateOnlyChk->SetValue(PIC_PRG_iSimulateOnly);
     aVerboseMsgsChk->SetValue(Config.iVerboseMessages);
@@ -357,7 +346,6 @@ void TOptionPanel::UpdateOptionsDisplay(void)
 
 //---------------------------------------------------------------------------
 void TOptionPanel::onProgOptionChanged(wxCommandEvent& event)
-//void ::ProgOptionsChanged(TObject *Sender)
 {
     if (MainFrame::TheMainFrame->m_Updating) return;
 
@@ -380,25 +368,11 @@ void TOptionPanel::onProgOptionChanged(wxCommandEvent& event)
 
     _tcsncpy( Config.sz255MplabDevDir, aMplabDevDirEdit->GetValue().c_str(), 255 );
 
-    // Since 2005-11-05, the port access driver can be selected ...
-    //  but changing this will become effective after restarting WinPic only !
-//    Config.iWhichPortAccessDriver = aDriverRadio->GetSelection();
-//  if( Rb_UseWinAPIOnly->Checked )
-//     Config.iWhichPortAccessDriver=CFG_PORTACCESS_USE_API_ONLY;
-//  else if(Rb_UseSMPORT->Checked)
-//     Config.iWhichPortAccessDriver=CFG_PORTACCESS_SMPORT;
-//  else if(Rb_UsePortTalk->Checked)
-//     Config.iWhichPortAccessDriver=CFG_PORTACCESS_PORTTALK;
-//  else if(Rb_PortAccessGranted->Checked)
-//     Config.iWhichPortAccessDriver=CFG_PORTACCESS_ALREADY_GRANTED;
-
     // From group "Debugging" ...
     PIC_PRG_iSimulateOnly= aSimulateOnlyChk->GetValue();
     Config.iVerboseMessages=aVerboseMsgsChk->GetValue();
 
-    // From group "Algorithm" ... (removed as it became empty)
-
-
+    ConfigChanged = true ;  // save on exit
 } // end MainFrame::ProgOptionsChanged()
 //---------------------------------------------------------------------------
 
@@ -406,65 +380,32 @@ void TOptionPanel::onProgOptionChanged(wxCommandEvent& event)
 
 ////---------------------------------------------------------------------------
 void TOptionPanel::onLanguageChoiceSelect(wxCommandEvent& event)
-//void ::CB_LanguageChange(TObject *Sender)
 {
     MainFrame::TheLanguageName = aLanguageChoice->GetStringSelection();
     wxMessageBox(_("WxPic must be restarted to take into account the new language selection"), _("WxPic restart needed to apply language"));
-// wxString s;
-// int i;
-// char *cp;
-// if( m_Updating )
-//     return;
-// ++m_Updating;
-// i = CB_Language->ItemIndex;
-// if(i>=0)
-//  { s = CB_Language->Items->Strings[i];
-//    cp = strchr( s.c_str(), '(');
-//    if(cp)
-//     { YHF_SetLanguage( cp+1/*NewLanguage*/ , NULL/*auto-detect file name*/,
-//                        true ) ; // true = may translate the application's forms now
-//       UpdateDeviceConfigTab( true/*update HEX display also*/ );
-//     }
-//  }
-// --m_Updating;
+    ConfigChanged = true;
 }
-////---------------------------------------------------------------------------
-//
-////---------------------------------------------------------------------------
-//void MainFrame::MI_DumpTranslatorClick(TObject *Sender)
-//{
-//   YHF_DumpTranslatorFile( "translation_test.txt" );
-//   APPL_ShowMsg( APPL_CALLER_MAIN, 0,
-//       "Dumped translation table into \"translation_test.txt\"" );
-//}
-////---------------------------------------------------------------------------
-//
 
 
 
 //---------------------------------------------------------------------------
 void TOptionPanel::onCodeMemColourButtonClick(wxCommandEvent& event)
-//void ::Pnl_CodeMemColorsClick(TObject *Sender)
 {
 // uint32_t dwRGBcolor;
     wxColourData &Colour = aColourDialog->GetColourData();
     Colour.SetColour(aCodeMemColourButton->GetForegroundColour());
     aColourDialog->SetLabel(_("Code Memory Text"));
-//  dwRGBcolor = (uint32_t)Pnl_CodeMemColors->Font->Color;
     if (aColourDialog->ShowModal() == wxID_OK)
-//  if( YHF_ChooseColor(Handle, "Code Memory Text", &dwRGBcolor ) )
     {
         aCodeMemColourButton->SetForegroundColour(Colour.GetColour());
-//       Pnl_CodeMemColors->Font->Color = (TColor)dwRGBcolor;
+        ConfigChanged = true;
     }
     Colour.SetColour(aCodeMemColourButton->GetBackgroundColour());
     aColourDialog->SetLabel(_("Code Memory Background"));
-//  dwRGBcolor = (uint32_t)Pnl_CodeMemColors->Color;
     if (aColourDialog->ShowModal() == wxID_OK)
-//  if( YHF_ChooseColor(Handle, "Code Memory Background", &dwRGBcolor ) )
     {
         aCodeMemColourButton->SetBackgroundColour(Colour.GetColour());
-//       Pnl_CodeMemColors->Color = (TColor)dwRGBcolor;
+        ConfigChanged = true;
     }
     MainFrame::TheMainFrame->aCodeMemTab->UpdateCodeMemDisplay();
 }
@@ -474,27 +415,21 @@ void TOptionPanel::onCodeMemColourButtonClick(wxCommandEvent& event)
 
 //---------------------------------------------------------------------------
 void TOptionPanel::onDataMemColourButtonClick(wxCommandEvent& event)
-//void ::Pnl_DataMemColorsClick(TObject *Sender)
 {
-// uint32_t dwRGBcolor;
     wxColourData &Colour = aColourDialog->GetColourData();
     Colour.SetColour(aDataMemColourButton->GetForegroundColour());
     aColourDialog->SetLabel(_("Data Memory Text"));
-//  dwRGBcolor = (uint32_t)Pnl_DataMemColors->Font->Color;
     if (aColourDialog->ShowModal() == wxID_OK)
-//  if( YHF_ChooseColor(Handle, "Data Memory Text", &dwRGBcolor ) )
     {
         aDataMemColourButton->SetForegroundColour(Colour.GetColour());
-//       Pnl_DataMemColors->Font->Color = (TColor)dwRGBcolor;
+        ConfigChanged = true;
     }
     Colour.SetColour(aDataMemColourButton->GetBackgroundColour());
     aColourDialog->SetLabel(_("Data Memory Background"));
-//  dwRGBcolor = (uint32_t)Pnl_DataMemColors->Color;
     if (aColourDialog->ShowModal() == wxID_OK)
-//  if( YHF_ChooseColor(Handle, "Data Memory Background", &dwRGBcolor ) )
     {
         aDataMemColourButton->SetBackgroundColour(Colour.GetColour());
-//       Pnl_DataMemColors->Color = (TColor)dwRGBcolor;
+        ConfigChanged = true;
     }
     MainFrame::TheMainFrame->aDataMemTab->UpdateDataMemDisplay();
 }
@@ -505,19 +440,12 @@ void TOptionPanel::onDataMemColourButtonClick(wxCommandEvent& event)
 
 //---------------------------------------------------------------------------
 void TOptionPanel::onMPLabDevDirButtonClick(wxCommandEvent& event)
-//void ::Btn_MplabDevDirClick(TObject *Sender)
 {
     aDirDialog->SetPath(aMplabDevDirEdit->GetValue());
     aDirDialog->SetMessage(_("Select MPLAB 'Device' folder"));
-//  char folderName[MAX_PATH+1];
-//  strncpy( folderName, Ed_MplabDevDir->Text.c_str(), MAX_PATH );
-//  folderName[sizeof(folderName)-1] = '\0';
     if (aDirDialog->ShowModal() == wxID_OK)
-//  if( YHF_BrowseFolder( Handle, _("Select MPLAB 'Device' folder"),
-//                        folderName, MAX_PATH ) )
     {
         aMplabDevDirEdit->ChangeValue(aDirDialog->GetPath());
-//       Ed_MplabDevDir->Text = folderName;
         updateMPLabDevDir(aDirDialog->GetPath());
     }
 }
@@ -546,27 +474,12 @@ void TOptionPanel::updateMPLabDevDir (const wxString &pDirPath)
 {
     _tcsncpy( Config.sz255MplabDevDir, pDirPath.c_str(), 255 );
     TDeviceCfgPanel::SetDevice(PIC_DeviceInfo.sz40DeviceName);
+    ConfigChanged = true;
 }
 
-////---------------------------------------------------------------------------
-//void TOptionPanel::onDriverRadioSelect(wxCommandEvent& event)
-////void MainFrame::PortAccessDriverChanged(TObject *Sender)
-//{
-//    if ( !MainFrame::TheMainFrame->m_Updating )
-//    {
-//        onProgOptionChanged(event);
-////     ProgOptionsChanged(Sender);
-//        MainFrame::TheMainFrame->aStatusBar->SetStatusText(_("Must restart WxPic to make changes effective"));
-//        MainFrame::TheMainFrame->aInterfaceTab->UpdateInterfaceType(MainFrame::TheMainFrame->aInterfaceTab->m_displayed_interface_type);
-//    }
-//}
-////---------------------------------------------------------------------------
-//
-//
 
 //---------------------------------------------------------------------------
 void TOptionPanel::onStartTestButtonClick(wxCommandEvent& event)
-//void ::Btn_StartTestClick(TObject *Sender)
 {
     if ( CommandOption.WinPic_iTestMode )
         CommandOption.WinPic_iTestMode = 0;
@@ -576,7 +489,6 @@ void TOptionPanel::onStartTestButtonClick(wxCommandEvent& event)
         if (TestMode != 0)
             CommandOption.WinPic_iTestMode = TestMode;
     }
-//      CommandOption.WinPic_iTestMode = StrToIntDef( Ed_TestNr->Text, 0 );
     switch ( CommandOption.WinPic_iTestMode ) // any special "one-shot"-test ?
     {
     case 1:
@@ -599,12 +511,10 @@ void TOptionPanel::onStartTestButtonClick(wxCommandEvent& event)
     if ( CommandOption.WinPic_iTestMode )
     {
         aStartTestButton->SetLabel(_("Stop test"));
-//        Btn_StartTest->Caption = "Stop test";
     }
     else
     {
         aStartTestButton->SetLabel(_("Start test"));
-//        Btn_StartTest->Caption = "Start test";
     }
 }
 //---------------------------------------------------------------------------

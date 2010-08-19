@@ -187,7 +187,10 @@ bool PIC_PRG_SetDeviceType(T_PicDeviceInfo *pDeviceInfo )
 
 // Emergency brake for the code memory size...
     if (Config.dwUnknownCodeMemorySize > PIC_BUF_CODE_SIZE)
+    {
         Config.dwUnknownCodeMemorySize = PIC_BUF_CODE_SIZE;
+        ConfigChanged = true ;  // save on exit
+    }
 
     if (pDeviceInfo)
         PIC_DeviceInfo = *pDeviceInfo;

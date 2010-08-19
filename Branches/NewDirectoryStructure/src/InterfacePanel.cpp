@@ -318,7 +318,10 @@ void TInterfacePanel::UpdateInterfaceType(void)
     ++(MainFrame::TheMainFrame->m_Updating);
     if ((Config.pic_interface_type >= PIC_INTF_TYPE_MAX)
     ||  (Config.pic_interface_type < 0))
+    {
         Config.pic_interface_type = 0;
+        ConfigChanged = true;
+    }
 
     aInterfaceTypeText->SetLabel((PIC_HW_SetInterfaceType(Config.pic_interface_type))
                                  ? wxString(_("Interface Type ok."))
@@ -464,6 +467,7 @@ void TInterfacePanel::changeIoPortAddress (void)
                 // Accept the address "under protest"
                 IoAddressUsage = usageINPUT_WARN;
                 Config.iLptIoAddress = PortAddr;
+                ConfigChanged = true ;  // save on exit
             }
             else // do NOT accept the address (leave it unchanged)
                 IoAddressUsage = usageINPUT_ERROR;
@@ -472,6 +476,7 @@ void TInterfacePanel::changeIoPortAddress (void)
         {
             IoAddressUsage = usageINPUT;
             Config.iLptIoAddress = PortAddr;
+            ConfigChanged = true ;  // save on exit
         }
     }
     else // SERIAL ("COM")
@@ -835,6 +840,7 @@ void TInterfacePanel::onVddSelectRadioSelect(wxCommandEvent& event)
     Config.iIdleSupplyVoltage = aVddSelectRadio->GetSelection(); /* low supply voltage (typically 2.X volts) */
     if (! PIC_HW_SelectVdd( Config.iIdleSupplyVoltage ) )
         MainFrame::AddTextToLog( _("PIC- Select Vdd failed") );
+    ConfigChanged = true ;  // save on exit
 }
 //---------------------------------------------------------------------------
 
@@ -877,7 +883,7 @@ void TInterfacePanel::onInterfaceTypeChoiceSelect(wxCommandEvent& event)
     Config.pic_interface_type = iInterfaceType;
     UpdateInterfaceType();
 //    MainFrame::TheMainFrame->aOptionTab->UpdateOptionsDisplay();
-    Config_changed |= APPL_CALLER_SAVE_CFG ;  // save on exit
+    ConfigChanged = true ;  // save on exit
 }
 //---------------------------------------------------------------------------
 
@@ -908,7 +914,7 @@ void TInterfacePanel::copyPortSelectionToConfig (void)
     {
         Config.iLptPortNr = aInterfacePortChoice->GetSelection();
     }
-    Config_changed |= APPL_CALLER_SAVE_CFG ;  // save changes on exit
+    ConfigChanged = true ;  // save changes on exit
 //---------------------------------------------------------------------------
 }
 
@@ -974,7 +980,7 @@ void TInterfacePanel::onCustomInterfSelectButtonClick(wxCommandEvent& event)
 //    else strncpy( Config.sz255InterfaceSupportFile, Ed_CustomInterfaceDefFile->Text.c_str(), 256 );
 
         UpdateInterfaceType();
-        Config_changed |= APPL_CALLER_SAVE_CFG ;  // save on exit
+        ConfigChanged = true ;  // save on exit
     }
 
     if ( MainFrame::TheMainFrame->m_Updating )
@@ -1007,6 +1013,7 @@ void TInterfacePanel::onSlowInterfaceChkClick(wxCommandEvent& event)
     else
         aExtraClkDelayEdit->SetBackgroundColour(wxColour(0xFF,0x80,0x80));
     Config.iSlowInterface  = aSlowInterfaceChk->GetValue();
+    ConfigChanged = true ;  // save on exit
 }
 //---------------------------------------------------------------------------
 

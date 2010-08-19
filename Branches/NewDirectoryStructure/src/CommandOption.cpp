@@ -75,6 +75,7 @@ bool TCommandOption::Load (const wxApp *pApp)
             {
                 APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Info: Device set to \"%s\" via command line"), OptionValue.c_str() );
                 strncpy(Config.sz40DeviceName, DeviceName, 40);
+                ConfigChanged = true ;  // save on exit
             }
         }
         if (Parser.Found(theConfigOptionName, &OptionValue))

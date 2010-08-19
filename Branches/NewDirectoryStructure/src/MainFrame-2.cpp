@@ -1239,7 +1239,7 @@ bool MainFrame::RunHexOpenDialog(void)
     if ( aFileDialog->ShowModal() == wxID_OK)
     {
         _tcscpy( Config.sz255HexFileName, aFileDialog->GetPath().c_str() );
-        Config_changed |= APPL_CALLER_SAVE_CFG;
+        ConfigChanged = true;
         return true;
     }
     return false;

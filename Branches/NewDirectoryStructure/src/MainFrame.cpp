@@ -859,7 +859,7 @@ void MainFrame::LoadMRF(int iMRFindex)
     if (s != _T(""))
     {
         _tcscpy( Config.sz255HexFileName, s.c_str() );
-        Config_changed |= APPL_CALLER_SAVE_CFG;
+        ConfigChanged = true;
         if ( LoadFileAndProgramPic( s.c_str(), false/*load only, don't program*/ ) )
         {
             // only if there was no "load"-error, show the normal tool-window again
@@ -1938,7 +1938,7 @@ void MainFrame::OnClose(wxCloseEvent& event)
         }
     }
 
-    if ( m_fMaySaveSettings )
+    if ( m_fMaySaveSettings && ConfigChanged )
     {
         SaveLayout();
         strncpy(Config.sz40DeviceName, PIC_DeviceInfo.sz40DeviceName, 40) ;

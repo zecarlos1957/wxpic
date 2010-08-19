@@ -32,7 +32,7 @@ void CFG_Init(void)
 
   _tcscpy( Config.sz255HexFileName, _T("test.hex") );
   _tcscpy( Config.sz255InterfaceSupportFile, _T("MyProg.ini") );
-  Config.sz80InterfacePluginDLL[0] = '\0';
+//  Config.sz80InterfacePluginDLL[0] = '\0';
   Config.sz255MplabDevDir[0] = '\0';      // don't read DEV-files from MPLAB directly
   Config.iExtraRdDelay_us  = 3; // seemed to be important for the JDM2, when using PortTalk access
   Config.iExtraClkDelay_us = 2; // "       "   " ...  (2005-11-07)
@@ -43,7 +43,7 @@ void CFG_Init(void)
 
   Config.iSlowInterface = 0;    // hardly required any longer since the above "fine-tuning" delays
   Config.iIdleSupplyVoltage = 1/*norm*/ ;
-  Config_changed = 0x0000;
+  ConfigChanged = false;
 }
 
 void CFG_Load(wxConfigBase &IniFile) /* Loads configuration data from a file */
@@ -54,8 +54,8 @@ void CFG_Load(wxConfigBase &IniFile) /* Loads configuration data from a file */
   IniFile.Read(_T("InterfaceType"), &Config.pic_interface_type, Config.pic_interface_type);
   IniFile.Read(_T("SupportFile"), &s, wxEmptyString);
   _tcsncpy(Config.sz255InterfaceSupportFile, s.c_str(), 256);
-  IniFile.Read(_T("PluginDLL"),   &s, wxEmptyString);
-  _tcsncpy(Config.sz80InterfacePluginDLL  , s.c_str(), 80);
+//  IniFile.Read(_T("PluginDLL"),   &s, wxEmptyString);
+//  _tcsncpy(Config.sz80InterfacePluginDLL  , s.c_str(), 80);
   IniFile.Read(_T("ExtraRdDelay_us"), &Config.iExtraRdDelay_us, Config.iExtraRdDelay_us);
   IniFile.Read(_T("ExtraClkDelay_us"), &Config.iExtraClkDelay_us, Config.iExtraClkDelay_us);
   IniFile.Read(_T("SlowClockPulses"), &Config.iSlowInterface, 0 );
@@ -106,7 +106,7 @@ void CFG_Load(wxConfigBase &IniFile) /* Loads configuration data from a file */
   IniFile.Read(_T("UnknownCodeSize"), (long*)&Config.dwUnknownCodeMemorySize,   Config.dwUnknownCodeMemorySize );
   IniFile.Read(_T("UnknownDataSize"), (long*)&Config.dwUnknownDataMemorySize, Config.dwUnknownDataMemorySize );
 
-  Config_changed = 0x0000;
+  ConfigChanged = false;
 }
 
 void CFG_Save(wxConfigBase &IniFile) /* Saves the APPLICATION'S configuration in a file */
@@ -114,7 +114,7 @@ void CFG_Save(wxConfigBase &IniFile) /* Saves the APPLICATION'S configuration in
   IniFile.SetPath(_T("/Config/INTERFACE"));
   IniFile.Write(_T("InterfaceType"),    Config.pic_interface_type);
   IniFile.Write(_T("SupportFile"),      Config.sz255InterfaceSupportFile);
-  IniFile.Write(_T("PluginDLL"),        Config.sz80InterfacePluginDLL );
+//  IniFile.Write(_T("PluginDLL"),        Config.sz80InterfacePluginDLL );
   IniFile.Write(_T("ExtraRdDelay_us"),  Config.iExtraRdDelay_us);
   IniFile.Write(_T("ExtraClkDelay_us"), Config.iExtraClkDelay_us);
   IniFile.Write(_T("SlowClockPulses"),  Config.iSlowInterface );
@@ -153,7 +153,7 @@ void CFG_Save(wxConfigBase &IniFile) /* Saves the APPLICATION'S configuration in
   IniFile.Write(_T("UnknownCodeSize"),(long)Config.dwUnknownCodeMemorySize);
   IniFile.Write(_T("UnknownDataSize"),(long)Config.dwUnknownDataMemorySize);
 
-  Config_changed &= ~APPL_CALLER_SAVE_CFG;
+  ConfigChanged = false;
 }
 
 

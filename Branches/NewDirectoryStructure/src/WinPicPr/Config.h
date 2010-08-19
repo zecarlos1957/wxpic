@@ -40,7 +40,7 @@ typedef struct  // T_CONFIG structure, used for var Config .
   int iIdleSupplyVoltage;  // added 2005-09-29 for "production grade" - programmers
 
   wxChar sz255InterfaceSupportFile[256]; // only applicable for 'custom' interfaces defined in an INI file
-  wxChar sz80InterfacePluginDLL[81];   // only applicable for 'custom' interfaces using a plugin-DLL
+//  wxChar sz80InterfacePluginDLL[81];   // only applicable for 'custom' interfaces using a plugin-DLL
   wxChar sz255MplabDevDir[256];     // path to MPLAB's 'DEVICE'-folder
 
   int iProgramWhat;         // PIC_PROGRAM_ALL for example
@@ -81,7 +81,7 @@ typedef struct  // T_CONFIG structure, used for var Config .
 #endif
 
 EXTERN T_CONFIG Config;
-EXTERN int Config_changed;
+EXTERN bool ConfigChanged;
 
 
 /*---------------- prototypes ---------------------------------------------*/
