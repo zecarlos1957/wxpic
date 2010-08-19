@@ -17,9 +17,9 @@ OBJECTS=$(SOURCES:.cpp=.o)
 MOBJECTS=$(LANGUAGES:.po=.mo)
 
 LANGUAGEDIRS=fr
-LANGUAGES=$(wildcard Lang/*/wxpic.po)
-EXECUTABLE=wxpic
-EXECUTABLE_WIN=wxpic.exe
+LANGUAGES=$(wildcard Lang/*/WxPic.po)
+EXECUTABLE=WxPic
+EXECUTABLE_WIN=WxPic.exe
 
 DESTDIR		=
 PREFIX		= $(DESTDIR)/usr
