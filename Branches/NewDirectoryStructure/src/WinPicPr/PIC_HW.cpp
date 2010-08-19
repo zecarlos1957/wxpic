@@ -947,7 +947,7 @@ bool LPT_OpenPicPort(void)
     {
         wxString Log;
         Log.Printf(_("Open %hs port"), szPort);
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, Log.c_str() );
+        APPL_ShowMsg( 0, Log.c_str() );
     }
     LPT_pfileLptPort = fopen( szPort, "w" );
     if(LPT_pfileLptPort==NULL)
@@ -955,7 +955,7 @@ bool LPT_OpenPicPort(void)
       _stprintf(PicHw_sz255LastError, _("Cannot occupy LPT port %d"), errno);
       //  fResult = false;  // no... try to use the port anyway !
         if (Config.iVerboseMessages)
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, PicHw_sz255LastError );
+            APPL_ShowMsg( 0, PicHw_sz255LastError );
      }
 
     HANDLE TokenHandle;
@@ -963,7 +963,7 @@ bool LPT_OpenPicPort(void)
      {
         if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES|TOKEN_QUERY, &TokenHandle))
         {
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Failed to get the security token"));
+            APPL_ShowMsg( 0, _("Failed to get the security token"));
             PrivilegeRequested = true;
         }
      }
@@ -972,7 +972,7 @@ bool LPT_OpenPicPort(void)
      {
         if ( !LookupPrivilegeValue(NULL, SE_LOAD_DRIVER_NAME, &Luid ) )        // receives LUID of privilege
         {
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Failed to find Load Driver privilege ID!!!"));
+            APPL_ShowMsg( 0, _("Failed to find Load Driver privilege ID!!!"));
             PrivilegeRequested = true;
         }
      }
@@ -985,7 +985,7 @@ bool LPT_OpenPicPort(void)
 
         if ( !AdjustTokenPrivileges(TokenHandle, false, &Tp, sizeof(TOKEN_PRIVILEGES), (PTOKEN_PRIVILEGES) NULL, (PDWORD) NULL) )
         {
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Failed to get the Load Driver Privilege"));
+            APPL_ShowMsg( 0, _("Failed to get the Load Driver Privilege"));
             PrivilegeRequested = true;
         }
      }
@@ -993,7 +993,7 @@ bool LPT_OpenPicPort(void)
      {
         if (GetLastError() == ERROR_NOT_ALL_ASSIGNED)
         {
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("The user does not have the Load Driver Privilege.\n"));
+            APPL_ShowMsg( 0, _("The user does not have the Load Driver Privilege.\n"));
               return false;
         }
      }
@@ -1003,10 +1003,10 @@ bool LPT_OpenPicPort(void)
 		_tcscpy(PicHw_sz255LastError, _("Error Initialize WinRing0\n"));
 		fResult = false;
         if (Config.iVerboseMessages)
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, PicHw_sz255LastError );
+            APPL_ShowMsg( 0, PicHw_sz255LastError );
 	}
 	else if (Config.iVerboseMessages)
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("WinRing0 initialized") );
+        APPL_ShowMsg( 0, _("WinRing0 initialized") );
 
    } // end if <looks like a valid LPT-port *NUMBER* to try to occupy it>
   // NB: .. unfortunately this does not stop windoze from fooling around with the port !
@@ -1030,11 +1030,11 @@ void LPT_ClosePicPort(void)
   { fclose(LPT_pfileLptPort);
     LPT_pfileLptPort = NULL;
     if (Config.iVerboseMessages)
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("LPT port released") );
+        APPL_ShowMsg( 0, _("LPT port released") );
   }
   	DeinitOpenLibSys(&m_hOpenLibSys);
     if (Config.iVerboseMessages)
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("WinRing0 de-initialized") );
+        APPL_ShowMsg( 0, _("WinRing0 de-initialized") );
 
  PicHw_fLptPortOpened = false;
 } // end LPT_ClosePicPort()
@@ -1077,19 +1077,19 @@ bool LPT_OpenPicPort(void){
         if (Config.iVerboseMessages) {
             wxString Log;
             Log.Printf(_("Open %hs port"), Port.c_str());
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, Log.c_str() );
+            APPL_ShowMsg( 0, Log.c_str() );
         }
         LPT_pfileLptPort = fopen( Port.mb_str(), "w" );
         if(LPT_pfileLptPort==NULL){
             _stprintf(PicHw_sz255LastError, _("Cannot occupy LPT port %d"), errno);
 //  fResult = false;  // no... try to use the port anyway !
             if (Config.iVerboseMessages)
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, PicHw_sz255LastError );
+                APPL_ShowMsg( 0, PicHw_sz255LastError );
         }
         else if (!PrivilegeRequested) {
 					//if (iopl(3)) {// is ultimate root access required?
 					if (ioperm(LPT_io_address,5,1)) {
-						APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("The user does not have the Load Driver Privilege.\n"));
+						APPL_ShowMsg( 0, _("The user does not have the Load Driver Privilege.\n"));
 						PrivilegeRequested = true;
 						fResult = false;
 						}
@@ -1913,8 +1913,7 @@ bool PicHw_ReadCustomProgrammerDefsFromIniFile(const wxChar *pszFileName, T_PicH
 //     // If not, we'll close and destroy the window here:
 //     if( PHWInfo.dwhPluginWindow != 0 )
 //      {
-//        APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-//           _("Hardware Interface plugin didn't destroy its control panel !") );
+//        APPL_ShowMsg( 0, _("Hardware Interface plugin didn't destroy its control panel !") );
 //        DestroyWindow( (HWND)PHWInfo.dwhPluginWindow );  // DANGEROUS !!
 //        PHWInfo.dwhPluginWindow = 0;
 //      }
@@ -1933,7 +1932,7 @@ bool PicHw_ReadCustomProgrammerDefsFromIniFile(const wxChar *pszFileName, T_PicH
 //     FreeLibrary( PicHw_hFilterPluginDLL );
 //     PicHw_hFilterPluginDLL = NULL; // forget the DLL handle, it's no longer valid
 //     PHWInfo.dwhPluginDll = 0;
-//     APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, _("Unloaded plugin \"%s\" ."), PHWInfo.sz255PluginFileName );
+//     APPL_ShowMsg( 0, _("Unloaded plugin \"%s\" ."), PHWInfo.sz255PluginFileName );
 //   } // end if ( PicHw_hFilterPluginDLL != NULL )
 //} // end PicHw_UnloadInterfaceDLL()
 
@@ -2068,7 +2067,7 @@ bool PicHw_SelectProgrammerHardware(
      //  HAS BEEN DELETED BY ACCIDENT - TRY YOURSELF BY REMOVING THE "73"-INITIALIZER:
      //  NO ERROR MESSAGE DURING COMPILATION, so check this table during runtime !
      if (PicHwFuncs[i].iTest73 != 73)
-      { APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, _("Error in PicHwFuncs[%d], missing initializer ?"), i );
+      { APPL_ShowMsg( 0, _("Error in PicHwFuncs[%d], missing initializer ?"), i );
         break; //-- If a shift occured in the table, the remaining is likely to be shifted too. No need to check.
       }
 
@@ -2115,7 +2114,7 @@ bool PicHw_SelectProgrammerHardware(
 //        return false;
 //      }
 //     else
-//      { APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, _("Loaded interface driver %s ."), s.c_str() );
+//      { APPL_ShowMsg( 0, _("Loaded interface driver %s ."), s.c_str() );
 //        return true;
 //      }
 //   } // end if( iInterfaceType == PIC_INTF_TYPE_PLUGIN_DLL )
@@ -2323,8 +2322,8 @@ void PIC_HW_SingleTimingLoopCalibration(void)
   PIC_HW_dwCount50ns = (PIC_HW_dwCount500ns+5) / 10;
 
 #ifdef DEBUG_TIMING
-  APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, "TimingLoopTest took %.3f sec\n", duration);
-  APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, "Count for 500 ns = %d\n", count500ns);
+  APPL_ShowMsg( 0, "TimingLoopTest took %.3f sec\n", duration);
+  APPL_ShowMsg( 0, "Count for 500 ns = %d\n", count500ns);
 #endif
 } // end PIC_HW_SingleTimingLoopCalibration()
 
@@ -2366,7 +2365,7 @@ void PIC_HW_Delay_us(int microseconds)
   else
    { t2 = t1 + 10 * microseconds;
      ++ran_wild_before;
-     APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, _("WARNING: \"PERFORMANCE COUNTER\" does not work !!"));
+     APPL_ShowMsg( 0, _("WARNING: \"PERFORMANCE COUNTER\" does not work !!"));
    }
   if( microseconds >= 500 )
    { PicHw_FeedChargePump();  // required to produce Vpp with a charge pump (JDM)
@@ -2378,7 +2377,7 @@ void PIC_HW_Delay_us(int microseconds)
   if( (emgcy_tmo <= 0) && (ran_wild_before<2) )
    {
      ++ran_wild_before;
-     APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, _("WARNING: PROGRAMMING TIMER RUNNING WILD !"));
+     APPL_ShowMsg( 0, _("WARNING: PROGRAMMING TIMER RUNNING WILD !"));
    }
 
 } // end ..Delay_us()

@@ -296,7 +296,7 @@ void PIC10F_IncrAddress(int iNrOfSteps)
 
   if(iNrOfSteps<0)  // added by L.Lisovskiy 2006-03-28
    {
-     APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, _("PIC10F Prog: INVALID address increment=%ld !"),  iNrOfSteps);
+     APPL_ShowMsg( 0, _("PIC10F Prog: INVALID address increment=%ld !"),  iNrOfSteps);
      return;
    }
 
@@ -340,14 +340,12 @@ void PIC10F_CompareToVerify( uint16_t wReadValue, uint16_t *pwMemFlags )
            ++PIC10F_iNrOfErrors;
            *pwMemFlags |= PIC_BUFFER_FLAG_VFY_ERROR;
            if( PIC10F_iNrOfErrors < 20 )
-            { APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-                _( "Verify Error: %06lX: read %06lX, wanted %06lX" ),
+            { APPL_ShowMsg( 0, _( "Verify Error: %06lX: read %06lX, wanted %06lX" ),
                 (long)PIC10F_iCurrTargetAddress, (long)wReadValue, (long)dwTemp );
             }
          }
         else // oscal value different from buffer contents ..
-         { APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-                _("Info: different OSCCAL values: read=%06lX, buffer=%06lX"),
+         { APPL_ShowMsg( 0, _("Info: different OSCCAL values: read=%06lX, buffer=%06lX"),
                 (long)wReadValue, (long)dwTemp );
          }
       }
@@ -448,18 +446,15 @@ bool PIC10F_ReadAll(
   // Check the OSCCAL values. The PIC10F20x only has this poor 4-MHz-RC-oscillator,
   // proper calibration is important for many applications !
   if( (!fReadProtected) && ((PIC10F_wReadOscCalibWord&0x0F00) != 0x0C00) )
-   { APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-       _("PIC10F Prog Warning: OSCCAL value (%03lX) looks invalid !"),
+   { APPL_ShowMsg( 0, _("PIC10F Prog Warning: OSCCAL value (%03lX) looks invalid !"),
        (long)PIC10F_wReadOscCalibWord );
    }
   if( (!fReadProtected) && (PIC10F_wReadOscCalibWord != PIC10F_wReadOscCalibBackup ) )
-   { APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-       _("PIC10F Prog Warning: OSCCAL value (%03lX) not equal to OSCCAL BACKUP (%03lX) !"),
+   { APPL_ShowMsg( 0, _("PIC10F Prog Warning: OSCCAL value (%03lX) not equal to OSCCAL BACKUP (%03lX) !"),
        (long)PIC10F_wReadOscCalibWord, (long)PIC10F_wReadOscCalibBackup );
    }
   else if( (PIC10F_wReadOscCalibBackup & 0x0F00) != 0x0C00 )
-   { APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-       _("PIC10F Prog Warning: OSCCAL BACKUP value (%03lX) looks invalid !"),
+   { APPL_ShowMsg( 0, _("PIC10F Prog Warning: OSCCAL BACKUP value (%03lX) looks invalid !"),
        (long)PIC10F_wReadOscCalibBackup );
    }
 
@@ -500,10 +495,9 @@ bool PIC10F_ProgAndVerifyOneLocation(
     { // report programming failure :
       wMemFlags |= PIC_BUFFER_FLAG_PRG_ERROR;
       if( fMayShowErrorMessage )
-       { APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-             _( "Verify Error: %06lX: read %06lX, wanted %06lX" ),
-             (long)iAddress,  (long)wRead,   (long)wData  );
-       }
+            APPL_ShowMsg( 0, _( "Verify Error: %06lX: read %06lX, wanted %06lX" ),
+                (long)iAddress,  (long)wRead,   (long)wData  );
+
       fResult = false;
     }
   else
@@ -572,14 +566,12 @@ bool PIC10F_ProgramAll(
   //  ( it was 0x0CF4 in a sample received from SM6LKM ) .
   if( (PIC10F_wReadOscCalibBackup & 0x0F00) != 0x0C00)
    {  // not a MOVLW instruction (binary: 1100 kkkk kkkk ) !
-      APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-       _("PIC10F Prog Warning: Read BACKUP OSCCAL value (%03lX) looks invalid !"),
+      APPL_ShowMsg( 0, _("PIC10F Prog Warning: Read BACKUP OSCCAL value (%03lX) looks invalid !"),
        (long)PIC10F_wReadOscCalibBackup );
 
       if( (PIC10F_wReadOscCalibWord & 0x0F00) != 0x0C00 )
        { // both BACKUP AND(!) MAIN OSCCAL word look bad..
-         APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-             _("PIC10F Warning: Both OSCCAL (%03lX) and OSCCAL BACKUP (%03lX) look invalid !"),
+         APPL_ShowMsg( 0, _("PIC10F Warning: Both OSCCAL (%03lX) and OSCCAL BACKUP (%03lX) look invalid !"),
              (long)PIC10F_wReadOscCalibWord, (long)PIC10F_wReadOscCalibBackup );
          // Use the OSCCAL values from the MEMORY BUFFER ,
          //  and make sure it contains a valid MOVLW opcode .
@@ -597,29 +589,23 @@ bool PIC10F_ProgramAll(
              else
               {
                  if( Config.iDontCareForOsccal )
-                  { APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-                     _("PIC10F: Option \"Don't care for OSCCAL\" set, using a 'default' OSCCAL word !!"));
+                  { APPL_ShowMsg( 0, _("PIC10F: Option \"Don't care for OSCCAL\" set, using a 'default' OSCCAL word !!"));
                     PIC10F_wReadOscCalibWord = PIC10F_wReadOscCalibBackup = 0x0C00;
                   }
                  else
-                  { APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-                     _("PIC10F: Abort programming (nothing erased). No valid OSCCAL value found !"));
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-                     _("        Enter a valid BACKUP OSCCAL VALUE (like 0x0CF4)"));
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-                     _("        on the Config Register Tab, then try again !"));
+                  { APPL_ShowMsg( 0, _("PIC10F: Abort programming (nothing erased). No valid OSCCAL value found !"));
+                    APPL_ShowMsg( 0, _("        Enter a valid BACKUP OSCCAL VALUE (like 0x0CF4)"));
+                    APPL_ShowMsg( 0, _("        on the Config Register Tab, then try again !"));
                     return false;    // don't try to erase the chip, there is something fishy in here !
                   }
               }
           }
-         APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-              _("PIC10F Warning: Using OSCCAL (%03lX) and OSCCAL BACKUP (%03lX) from buffer !"),
+         APPL_ShowMsg( 0, _("PIC10F Warning: Using OSCCAL (%03lX) and OSCCAL BACKUP (%03lX) from buffer !"),
               (long)PIC10F_wReadOscCalibWord, (long)PIC10F_wReadOscCalibBackup );
        }
       else // BACKUP OSCCAL looks bad, but MAIN OSCCAL value looks good :
        {
-         APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-           _("PIC10F Warning: Replaced bad BACKUP OSCCAL value with main OSCCAL value (%03lX) !"),
+         APPL_ShowMsg( 0, _("PIC10F Warning: Replaced bad BACKUP OSCCAL value with main OSCCAL value (%03lX) !"),
            (long)PIC10F_wReadOscCalibWord );
          PIC10F_wReadOscCalibBackup = PIC10F_wReadOscCalibWord;
        }
@@ -629,8 +615,7 @@ bool PIC10F_ProgramAll(
    }
 
   if( (!fWasProtected) && (PIC10F_wReadOscCalibWord != PIC10F_wReadOscCalibBackup ) )
-   { APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-       _("PIC10F Prog Warning: OSCCAL value (%03lX) not equal to OSCCAL BACKUP (%03lX) !"),
+   { APPL_ShowMsg( 0, _("PIC10F Prog Warning: OSCCAL value (%03lX) not equal to OSCCAL BACKUP (%03lX) !"),
        (long)PIC10F_wReadOscCalibWord, (long)PIC10F_wReadOscCalibBackup );
    }
 
@@ -638,16 +623,14 @@ bool PIC10F_ProgramAll(
   if( fWasProtected )
    {  // if the chip WAS protected, the OSCCAL value (which is part of the code memory)
       // cannot have been read successfully.
-      APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-        _("PIC10F Prog: PIC was protected, using OSCCAL BACKUP value (%03lX) !"),
+      APPL_ShowMsg( 0, _("PIC10F Prog: PIC was protected, using OSCCAL BACKUP value (%03lX) !"),
         (long)PIC10F_wReadOscCalibBackup );
       PIC10F_wReadOscCalibWord = 0x0C00 | ( PIC10F_wReadOscCalibBackup & 0x00FF);
    }
   else // was NOT protected, OSCCAL value should be valid !
   if( (PIC10F_wReadOscCalibWord & 0x0F00) != 0x0C00 )
    {  // not a MOVLW instruction (binary: 1100 kkkk kkkk ) !
-      APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-        _("PIC10F Prog Warning: Replaced OSCCAL value (%03lX) with OSCCAL BACKUP (%03lX) !"),
+      APPL_ShowMsg( 0, _("PIC10F Prog Warning: Replaced OSCCAL value (%03lX) with OSCCAL BACKUP (%03lX) !"),
         (long)PIC10F_wReadOscCalibWord, (long)PIC10F_wReadOscCalibBackup );
       PIC10F_wReadOscCalibWord = 0x0C00 | ( PIC10F_wReadOscCalibBackup & 0x00FF);
    }

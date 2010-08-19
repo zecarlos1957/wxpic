@@ -65,7 +65,7 @@ bool TCommandOption::Load (const wxApp *pApp)
         if (Parser.Parse() != 0)
             return false;
 
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Info: Parsing argument from command line") );
+        APPL_ShowMsg( 0, _("Info: Parsing argument from command line") );
         if (Parser.Found(theNoDelaySwitchName))
             WinPic_fCommandLineOption_NoDelay = true;
         if (Parser.Found(theDeviceOptionName, &OptionValue))
@@ -73,7 +73,7 @@ bool TCommandOption::Load (const wxApp *pApp)
             const wxWX2MBbuf DeviceName = OptionValue.mb_str(wxConvISO8859_1);
             if (strcmp( DeviceName, Config.sz40DeviceName) != 0)
             {
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Info: Device set to \"%s\" via command line"), OptionValue.c_str() );
+                APPL_ShowMsg( 0, _("Info: Device set to \"%s\" via command line"), OptionValue.c_str() );
                 strncpy(Config.sz40DeviceName, DeviceName, 40);
                 ConfigChanged = true ;  // save on exit
             }
@@ -125,7 +125,7 @@ bool TCommandOption::Load (const wxApp *pApp)
         {
             WinPic_fCommandLineOption_QueryBeforeOverwritingFiles = false;
             if (!WinPic_fCommandLineOption_Read)
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Info: Overwrite option ignored (no read option)") );
+                APPL_ShowMsg( 0, _("Info: Overwrite option ignored (no read option)") );
         }
         if (Parser.GetParamCount() > 0)
         {

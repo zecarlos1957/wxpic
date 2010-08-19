@@ -2146,7 +2146,7 @@ int PicDev_StringToAlgorithmCode(const char * pszAlgorithmName)
         return PIC_ALGO_UNKNOWN;
 
     _stprintf(sz80Temp, _T("Unknown algorithm name : \"%hs\" !"), pszAlgorithmName);
-    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+    APPL_ShowMsg( 0, sz80Temp );
     return  PIC_ALGO_UNKNOWN;
 } // end PicDev_StringToAlgorithmCode()
 
@@ -2798,7 +2798,7 @@ bool PicDev_LoadPicDeviceDefinitionFromFile(
     //  Open the file to see what's in it ...
     if ( ! myQFile.QFile_Open( PicDev_GetDeviceFileName(), QFILE_O_RDONLY ) )
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("ERROR: Cannot find %s ."), PicDev_GetDeviceFileName() );
+        APPL_ShowMsg( 0, _("ERROR: Cannot find %s ."), PicDev_GetDeviceFileName() );
         return false;
     }
 
@@ -2842,7 +2842,7 @@ bool PicDev_LoadPicDeviceDefinitionFromFile(
                 if ( strncmp(pszKey, "info", 4) == 0 )
                 {
                     if ( pszValue[0] && fMayShowInfo )
-                        APPL_ShowMsg(APPL_CALLER_MAIN,0,_("Info: %hs"), pszValue );
+                        APPL_ShowMsg( 0, _("Info: %hs"), pszValue );
                 }
                 else if ( strcmp(pszKey, "DeviceName")== 0 )
                 {
@@ -3128,16 +3128,16 @@ bool PicDev_LoadPicDeviceDefinitionFromFile(
                 }
                 else
                 {
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                                  _("ERROR: Unknown key \"%hs\" in section %hs ."), pszKey, sz80Section  );
+                    APPL_ShowMsg( 0, _("ERROR: Unknown key \"%hs\" in section %hs ."),
+                                 pszKey, sz80Section  );
                 }
             } // end if( pszValue )
         } // end while < more lines in this section >
     } // end if ( fFoundSection )
     else
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                      _("ERROR: Section %hs not found in device database ."), sz80Section );
+        APPL_ShowMsg( 0, _("ERROR: Section %hs not found in device database ."),
+                     sz80Section );
     }
 
 
@@ -3737,7 +3737,7 @@ bool PicDev_LoadMcDevFile( const wxChar *pszDevFileName )
         Diag.Printf(_("Couldn't find \"%s\", please borrow/copy from MPLAB !"), pszDevFileName );
     }
 
-    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, Diag.c_str() );
+    APPL_ShowMsg( 0, Diag.c_str() );
 
     return fResult;
 } // end PicDev_LoadMcDevFile()
@@ -4013,8 +4013,7 @@ int PicDev_GetDeviceInfoByName(const char *pszDeviceName,
     if ( i>=0 )
     {
         iFileTableIndex = i+iCountOfBuiltInDevices;
-        APPL_ShowMsg(APPL_CALLER_MAIN,0,
-                     _("Info: Loading definitions for \"%hs\" from %s .") ,
+        APPL_ShowMsg( 0, _("Info: Loading definitions for \"%hs\" from %s .") ,
                      pszDeviceName, PicDev_GetDeviceFileName() );
         if ( PicDev_LoadPicDeviceDefinitionFromFile(
                     pszDeviceName, // name of a new PIC DEVICE (not a filename!)
@@ -4037,7 +4036,7 @@ int PicDev_GetDeviceInfoByName(const char *pszDeviceName,
     {
         if (BuiltInPicDeviceInfo[i].iCheck73!=73)
         {
-            APPL_ShowMsg(APPL_CALLER_MAIN, 0, _("Error in built-in PIC device list, \"%hs\"."),
+            APPL_ShowMsg( 0, _("Error in built-in PIC device list, \"%hs\"."),
                          BuiltInPicDeviceInfo[i].sz40DeviceName );
         }
 
@@ -4171,7 +4170,7 @@ void PicDev_DumpDeviceListToFile( const wxChar *pszDumpFileName )
     DumpFilename.SetFullName(pszDumpFileName);
     s = DumpFilename.GetFullPath();
     wxRemoveFile( s );  // make sure we write into a "clean" file. No old scrap !
-    APPL_ShowMsg(APPL_CALLER_MAIN,0,_("Device list dumped to \"%s\""),s.c_str());
+    APPL_ShowMsg( 0, _("Device list dumped to \"%s\""), s.c_str());
     wxFile IniFile(s, wxFile::write);
     WriteHeader(IniFile, "Info");
     WriteValue(IniFile,"i1","Dump of built-in device info table");

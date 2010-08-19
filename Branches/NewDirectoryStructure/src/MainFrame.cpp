@@ -429,31 +429,8 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
 
             aInterfaceTab->TestTheInterface();  // try to find out if the interface is there
             TestDelayRoutine();  // check the programmer's DELAY routine
-//            if ( SmallPort.AccessFailed() ) // tell the application if an access failed
-//            {
-//                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-//                              _("I/O-port access failed. Try a different access driver (SMPORT or PortTalk) !") );
-//                aOptionTab->aDriverRadio->SetForegroundColour(*wxRED);
-//                aNotebook->SetSelection(TS_Options);
-//            }
 
-//      YHF_UpdateLanguageCombo( CB_Language );  // searches for all translation files, and fills language list
-//      YHF_TranslateAllForms();   // originally tried this in FormCreate() but didn't work properly
-//      if( YHF_iLanguageTestMode )
-//       { _("end of table");  // must be found at the end of the translation table, otherwise corrupted
-//       }
-//      if(ToolForm)
-//       { ToolForm->Left = ToolWin_iX1;
-//         ToolForm->Top  = ToolWin_iY1;
-//         if(ToolWin_iVisible)
-//          { ToolForm->Show();
-//            SetFocus();  // focus back to main window !
-//          }
-//         UpdateToolWindow(); // must not call this in the main form's FormCreate method, so call it here !
-//       }
-            // Fill the "Part"-combo list. This was formerly done
-            //  in UpdateDeviceConfigTab(), but as the device list grew the routine
-            //  got very slow (most likely due to the usage of an INI file ).
+            // Fill the "Part"-combo list.
             aDeviceCfgTab->aPartNameChoice->Clear();
             for (i=0; PicDev_GetDeviceInfoByIndex( i, &MyDeviceInfo ) >= 0; ++i )
             {
@@ -525,18 +502,17 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
                             if ( PIC_iHaveErasedCalibration
                                     && ((PIC_DeviceInfo.wCfgmask_bandgap != 0) || (PIC_DeviceInfo.lAddressOscCal >= 0)) )
                             {
-                                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                                              _("Device has been erased. PROGRAM TO RESTORE CALIB BITS !!") ); // used more than once !
+                                APPL_ShowMsg( 0, _("Device has been erased. PROGRAM TO RESTORE CALIB BITS !!") ); // used more than once !
                                 m_iMessagePanelUsage = MP_USAGE_WARNING;
                             }
                             else
                             {
-                                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Device has been erased.") );  // used more than once !
+                                APPL_ShowMsg( 0, _("Device has been erased.") );  // used more than once !
                                 m_iMessagePanelUsage = MP_USAGE_INFO;
                             }
                         }
                         else
-                            APPL_ShowMsg( APPL_CALLER_MAIN, 0, _("Erasing FAILED !") );
+                            APPL_ShowMsg( 0, _("Erasing FAILED !") );
 
                         CommandOption.WinPic_fCommandLineOption_Erase = false; // done.
                     } // end if( WinPic_fCommandLineOption_Erase )
@@ -550,8 +526,8 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
                             }
                             else
                             {
-                                APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-                                              _("Loaded file \"%s\" through command line ."), Config.sz255HexFileName );
+                                APPL_ShowMsg( 0, _("Loaded file \"%s\" through command line ."),
+                                            Config.sz255HexFileName );
                             }
                             CommandOption.WinPic_fCommandLineOption_Load = false; // done.
                         } // end if( WinPic_fCommandLineOption_Load )
@@ -713,8 +689,7 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
             break; // end case < no BATCH PROGRAMMING mode >
 
         case BATCH_PROG_PREP_START:
-            APPL_ShowMsg(APPL_CALLER_MAIN,0,
-                         _("BATCH PROG: Insert device or connect ICSP, then press Enter or OK !") );
+            APPL_ShowMsg( 0, _("BATCH PROG: Insert device or connect ICSP, then press Enter or OK !") );
             PIC_PRG_iBatchProgState = BATCH_PROG_WAIT_START;
             break;
 
@@ -737,8 +712,7 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
             break;
 
         case BATCH_PROG_STARTED:
-            APPL_ShowMsg(APPL_CALLER_MAIN,0,
-                         _("BATCH PROG: please wait..") );
+            APPL_ShowMsg( 0, _("BATCH PROG: please wait..") );
             ProgramPic();  // try to program all data which have been loaded before.
             aInterfaceTab->UpdateInterfaceTestDisplay();
             PIC_PRG_iBatchProgState = BATCH_PROG_PREP_START;
@@ -746,8 +720,7 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
 
         case BATCH_PROG_TERMINATE:
             PIC_PRG_iBatchProgState = BATCH_PROG_OFF;
-            APPL_ShowMsg(APPL_CALLER_MAIN,0,
-                         _("BATCH PROG: terminated batch mode.") );
+            APPL_ShowMsg( 0, _("BATCH PROG: terminated batch mode.") );
             break;
 
         default:
@@ -771,8 +744,7 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
         {
             if (siLptFooledCount<10)
             {
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                              _("WARNING ! Windows fooled around with the LPT port bits !") );
+                APPL_ShowMsg( 0, _("WARNING ! Windows fooled around with the LPT port bits !") );
                 ++siLptFooledCount;
             }
         }
@@ -979,8 +951,7 @@ void MainFrame::onProgramCfgMenuItemSelected(wxCommandEvent& event)
                         wxICON_EXCLAMATION | wxYES_NO | wxCANCEL);
             if (Choice == wxCANCEL)
             {
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                              _("Programming CONFIG-WORD cancelled.") );
+                APPL_ShowMsg( 0, _("Programming CONFIG-WORD cancelled.") );
                 return;
             }
             else if (Choice == wxYES)
@@ -990,15 +961,13 @@ void MainFrame::onProgramCfgMenuItemSelected(wxCommandEvent& event)
             }
             else
             {
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                              _("Old Bandgap 0x%04X will be overwritten with 0x%04X"),
+                APPL_ShowMsg( 0, _("Old Bandgap 0x%04X will be overwritten with 0x%04X"),
                               PIC_lBandgapCalibrationBits, CurBandgapValue );
                 PIC_lBandgapCalibrationBits = CurBandgapValue;
             }
         }
     }
-    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                  _("Programming CONFIG-WORD") );
+    APPL_ShowMsg( 0, _("Programming CONFIG-WORD") );
     dwTemp4[0] = PicBuf_GetConfigWord(0);
     dwTemp4[1] = PicBuf_GetConfigWord(1);
     if (PIC_PRG_Program( dwTemp4, // program config word(s) :
@@ -1010,13 +979,11 @@ void MainFrame::onProgramCfgMenuItemSelected(wxCommandEvent& event)
                          PIC_DeviceInfo.iCmd_ReadProg,
                          PIC_DeviceInfo.lConfWordAdr))
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                      _("Programming CONFIG-WORD done.") );
+        APPL_ShowMsg( 0, _("Programming CONFIG-WORD done.") );
     }
     else
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                      _("Programming CONFIG-WORD FAILED.") );
+        APPL_ShowMsg( 0, _("Programming CONFIG-WORD FAILED.") );
     }
 
     if (Config.iDisconnectAfterProg)
@@ -1029,8 +996,7 @@ void MainFrame::onProgramCfgMenuItemSelected(wxCommandEvent& event)
 void MainFrame::onProgramIdMenuItemSelected(wxCommandEvent& event)
 //void MainFrame::MI_ProgIDlocsClick(TObject *Sender)
 {
-    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                  _("Programming ID-locations") );
+    APPL_ShowMsg( 0, _("Programming ID-locations") );
     if (PIC_PRG_Program(PicBuf[PIC_BUF_CONFIG].pdwData,
                         4, // number of words to be programmed
                         4, // Row size for config memory
@@ -1039,13 +1005,11 @@ void MainFrame::onProgramIdMenuItemSelected(wxCommandEvent& event)
                         PIC_DeviceInfo.iCmd_ReadProg, // 'read' command pattern (for verifying)
                         PIC_DeviceInfo.lConfMemBase)) // target start address
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                      _("Programming ID-LOCATIONS done.") );
+        APPL_ShowMsg( 0, _("Programming ID-LOCATIONS done.") );
     }
     else
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                      _("Programming ID-LOCATIONS FAILED.") );
+        APPL_ShowMsg( 0, _("Programming ID-LOCATIONS FAILED.") );
     }
 
     if (Config.iDisconnectAfterProg)
@@ -1083,20 +1047,19 @@ void MainFrame::onEraseMenuItemSelected(wxCommandEvent& event)
             if ( PIC_iHaveErasedCalibration
                     && ((PIC_DeviceInfo.wCfgmask_bandgap != 0) || (PIC_DeviceInfo.lAddressOscCal >= 0)) )
             {
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                              _("Device has been erased. PROGRAM TO RESTORE CALIB BITS !!") );
+                APPL_ShowMsg( 0, _("Device has been erased. PROGRAM TO RESTORE CALIB BITS !!") );
                 m_iMessagePanelUsage = MP_USAGE_WARNING;
             }
             else
             {
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, pszMsg );
+                APPL_ShowMsg( 0, pszMsg );
                 m_iMessagePanelUsage = MP_USAGE_INFO;
             }
         }
         else
         {
             pszMsg = _( "Erasing FAILED !" );
-            APPL_ShowMsg( APPL_CALLER_MAIN, 0, pszMsg );
+            APPL_ShowMsg( 0, pszMsg );
 //        if(ToolForm) ToolForm->ShowMsg( pszMsg, TWMSG_ERROR );
         }
     }
@@ -1135,29 +1098,26 @@ void MainFrame::onReadMenuItemSelected(wxCommandEvent& event)
     if ( !ok )
     {
         // reading not ok, for any strange reason it was "aborted" ...
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _( "Action aborted") );
+        APPL_ShowMsg( 0, _( "Action aborted") );
         m_iMessagePanelUsage = MP_USAGE_ERROR;
         return;
     }
 
     if ( !not_blank ) // not not blank means "blank", aka "completely empty"..
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                      _( "Reading PIC FAILED (maybe blank)." ) );
+        APPL_ShowMsg( 0, _( "Reading PIC FAILED (maybe blank)." ) );
         m_iMessagePanelUsage = MP_USAGE_WARNING;
     }
     else  // reading ok, AND the PIC is *not* blank ...
     {
         if ( m_fPicDeviceConflict )
         {
-            APPL_ShowMsg(APPL_CALLER_PIC_PRG,0,
-                         _( "Reading done, Conflict: selected device = %hs,  read = %hs" ),
+            APPL_ShowMsg( 0, _( "Reading done, Conflict: selected device = %hs,  read = %hs" ),
                          PIC_DeviceInfo.sz40DeviceName, aConfigMemoryTab->m_sz80DetectedPicDevName );
         }
         else
         {
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                          _( "Reading PIC ok.") );
+            APPL_ShowMsg( 0, _( "Reading PIC ok.") );
         }
         m_iMessagePanelUsage = MP_USAGE_INFO;
     }
@@ -1169,12 +1129,9 @@ void MainFrame::onBlankCheckMenuItemSelected(wxCommandEvent& event)
 {
     bool read_ok, not_blank;
     const wxChar *pszMsg;
-// int  iErrorState;
     PIC_PRG_iBatchProgState = BATCH_PROG_OFF;
     pszMsg = _( "Blank Checking ..." );
     aStatusBar->SetStatusText(pszMsg);
-//  if(ToolForm)
-//    ToolForm->ShowMsg( pszMsg, TWMSG_NO_ERROR );
     m_iMessagePanelUsage = MP_USAGE_BUSY;
     Update();
     APPL_iUserBreakFlag = 0;
@@ -1185,21 +1142,17 @@ void MainFrame::onBlankCheckMenuItemSelected(wxCommandEvent& event)
         if (not_blank)
         {
             pszMsg = _( "Device is NOT blank.");
-//       iErrorState = TWMSG_ERROR;
         }
         else
         {
             pszMsg = _( "Device is blank.");
-//       iErrorState = TWMSG_SUCCESS;
         }
     }
     else  // reading not ok, for any strange reason it was "aborted" ...
     {
         pszMsg = _( "Action aborted");
-//     iErrorState = TWMSG_ERROR;
     }
-    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, pszMsg );
-//  if(ToolForm) ToolForm->ShowMsg( pszMsg, iErrorState );
+    APPL_ShowMsg( 0, pszMsg );
     m_iMessagePanelUsage = MP_USAGE_INFO;
 }
 //---------------------------------------------------------------------------
@@ -1516,37 +1469,6 @@ bool MainFrame::ApplyCodeMemoryEdits(void)
     aCodeMemTab->aCodeMemAddrGetter1.ApplyChange();
     aCodeMemTab->aCodeMemAddrGetter2.ApplyChange();
     return true;
-// int i;
-// wxString s;
-// char sz80Msg[81];
-// bool fOk = true;
-//
-//  // Convert CODE MEMORY hex dump into buffer data
-//  for(i=0; (i<REd_CodeMem->Lines->Count) && fOk; ++i) // see TRichEdit
-//   { s = REd_CodeMem->Lines->Strings[i];
-//     if( ! WinPic_ApplyHexDumpLine( s.c_str() ) )
-//      {
-//        sprintf(sz80Msg,
-//             TE( "Cannot parse line %d in CODE MEMORY dump." ),
-//             (int)i+1);
-//        APPL_ShowMsg(APPL_CALLER_MAIN,0,sz80Msg);
-//        fOk = false;
-//        break;
-//      }
-//   }
-//
-//
-//  if(fOk)
-//   {
-//     if(REd_CodeMem->Modified)
-//        APPL_ShowMsg(APPL_CALLER_MAIN,0,
-//             TE( "Applied edits in CODE-MEMORY-dump." ) );
-//     m_update_code_mem_display = true;
-//   }
-//
-//  REd_CodeMem->Modified = false;
-//
-//  return fOk;
 }
 
 
@@ -1555,36 +1477,6 @@ bool MainFrame::ApplyDataMemoryEdits(void)
 {
     aDataMemTab->aDataMemAddrGetter.ApplyChange();
     return true;
-// int i;
-// wxString s;
-// char sz80Msg[81];
-// bool fOk = true;
-//
-//
-//  // Convert DATA MEMORY hex dump into buffer data
-//  for(i=0; (i<REd_DataMem->Lines->Count) && fOk; ++i) // see TRichEdit
-//   { s = REd_DataMem->Lines->Strings[i];
-//     if( ! WinPic_ApplyHexDumpLine( s.c_str() ) )
-//      {
-//        sprintf(sz80Msg,
-//             TE( "Cannot parse line %d in DATA MEMORY dump." ) ,(int)i+1);
-//        APPL_ShowMsg(APPL_CALLER_MAIN,0,sz80Msg);
-//        fOk = false;
-//        break;
-//      }
-//   }
-//
-//  if(fOk)
-//   {
-//     if(REd_DataMem->Modified)
-//        APPL_ShowMsg(APPL_CALLER_MAIN,0,
-//             TE( "Applied edits in DATA-MEMORY-dump." ) );
-//     m_update_data_mem_display = true;
-//   }
-//
-//  REd_DataMem->Modified = false;
-//
-//  return fOk;
 }
 //---------------------------------------------------------------------------
 
@@ -1835,14 +1727,12 @@ void MainFrame::onDsPicReadMenuItemSelected(wxCommandEvent& event)
 
         if (ok)
         {
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                          _( "Reading Executive Code Memory ok.") );
+            APPL_ShowMsg( 0, _( "Reading Executive Code Memory ok.") );
             m_iMessagePanelUsage = MP_USAGE_INFO;
         }
         else
         {
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                          _( "Reading Executive Code Memory failed." ) );
+            APPL_ShowMsg( 0, _( "Reading Executive Code Memory failed." ) );
             m_iMessagePanelUsage = MP_USAGE_WARNING;
         }
         aCodeMemTab->UpdateCodeMemDisplay();

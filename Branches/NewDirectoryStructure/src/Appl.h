@@ -5,24 +5,11 @@
 /*     Ported to Linux by Erdem U. Altinyurt                               */
 /*-------------------------------------------------------------------------*/
 
-//#include <tchar.h> //No linux support for this
 #include "CommandOption.h"
 #include <stdint.h>
-//#ifdef __cplusplus
-// #define CPROT extern "C"
-//#else
-// #define CPROT
-//#endif  /* nicht "cplusplus" */
 
 
 /*-------- Constants  -----------------------------------------------------*/
-
- // Values to identify the "caller" of a routine ...
-#define APPL_CALLER_UNKNOWN  0    // .. or multi-language translator
-#define APPL_CALLER_MAIN     1    // main form (user interface)
-#define APPL_CALLER_PIC_PRG  2    // PIC programming routines
-#define APPL_CALLER_PIC_HEX  4    // PIC Hex-File loading routines (+buffer)
-#define APPL_CALLER_SAVE_CFG 0x80 // flag cleared by CFG_Save()
 
  // Values for APPL_i32CustomizeOptions ...
  //   These flags are loaded from settings.ini,
@@ -46,9 +33,9 @@ extern long APPL_i32CustomizeOptions;  // loaded from settings.ini in main form
 /*-------- Prototypes -----------------------------------------------------*/
 
 /***************************************************************************/
-void APPL_ShowMsg( int caller, int options, const wxChar *pszFormat, ... )
+void APPL_ShowMsg( int options, const wxChar *pszFormat, ... )
 #ifndef UNICODE
-__attribute__ ((format (printf, 3, 4)))
+__attribute__ ((format (printf, 2, 3)))
 #endif
 ;
   // The application's "error-display" routine.

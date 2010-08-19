@@ -403,8 +403,7 @@ bool PIC_PRG_SetDeviceType(T_PicDeviceInfo *pDeviceInfo )
             cp="???";
             break;
         }
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                      _("PIC18F: family='%ld'=%s, WriteLatch=%ld bytes, EraseLatch=%ld bytes ."),
+        APPL_ShowMsg( 0, _("PIC18F: family='%ld'=%s, WriteLatch=%ld bytes, EraseLatch=%ld bytes ."),
                       dwFamily, cp, dwWriteBufSize_bytes, dwEraseBufSize_bytes );
     } // end if < 4-digit "suffix" for PIC18 (?)
 
@@ -649,7 +648,7 @@ void SaveOscCalWord (void)
     } // end if <simulate or not>
 
     if (Config.iVerboseMessages)
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _( "Read osccal, result 0x%06lX" ), w );
+        APPL_ShowMsg( 0, _( "Read osccal, result 0x%06lX" ), w );
 
     if ( (w!=0x3FFF) || (PIC_lOscillatorCalibrationWord<0) )
     {
@@ -659,7 +658,7 @@ void SaveOscCalWord (void)
     }
 
     if ( (PIC_lOscillatorCalibrationWord & 0xFF00) != 0x3400/*RETLW*/ )
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _( "Oscillator calibration word looks bad (0x%06lX) !" ), PIC_lOscillatorCalibrationWord );
+        APPL_ShowMsg( 0, _( "Oscillator calibration word looks bad (0x%06lX) !" ), PIC_lOscillatorCalibrationWord );
 }
 
 
@@ -680,7 +679,7 @@ void SaveBandgapCalBit (void)
         PIC_lBandgapCalibrationBits = (w & PIC_DeviceInfo.wCfgmask_bandgap);
 
     if (Config.iVerboseMessages)
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _( "Read cfg with bandgap ref, result 0x%06lX" ), w );
+        APPL_ShowMsg( 0, _( "Read cfg with bandgap ref, result 0x%06lX" ), w );
 } // end if(PIC_DeviceInfo.wCfgmask_bandgap != 0)
 
 
@@ -748,7 +747,7 @@ bool PIC_PRG_Erase(int iEraseOptions)
             // BULK ERASE or CHIP ERASE(newer devices) to unprotect and erase everything.
             if (Config.iVerboseMessages)
             {
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _( "Erasing chip using algorithm \"%hs\" ." ),
+                APPL_ShowMsg( 0, _( "Erasing chip using algorithm \"%hs\" ." ),
                               PicDev_AlgorithmCodeToString(PIC_DeviceInfo.wEraseAlgo) );
             }
             switch ( PIC_DeviceInfo.wEraseAlgo )
@@ -901,12 +900,12 @@ bool PIC_PRG_Erase(int iEraseOptions)
                     // PIC is protected, but there IS NO "CHIP ERASE" command for the 16F87X. From spec:
                     // > When a Chip Erase command is issued and the PC points to (2000h-2007h), all of the
                     // > configuration memory, program memory and data memory will be erased .
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("EraseAll: Device is protected, using method 2") );
+                    APPL_ShowMsg( 0, _("EraseAll: Device is protected, using method 2") );
                     PIC_PRG_EraseOper(erasePROTECTION);
                 }
                 else // PIC is *not* protected (neither CODE nor DATA), must use "BULK ERASE" in another flavour...
                 {
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("EraseAll: Device is not protected, using method 1") );
+                    APPL_ShowMsg( 0, _("EraseAll: Device is not protected, using method 1") );
                     PIC_PRG_EraseOper(eraseCODE);
                     PIC_PRG_EraseOper(eraseDATA);
                 } // end < erase an UNPROTECTED PIC16F87X >
@@ -999,7 +998,7 @@ bool PIC_PRG_Erase(int iEraseOptions)
                 if (Config.iVerboseMessages)
                 {
                     _stprintf(sz80Temp, _( "EraseAll: Read config word 0x%06lX" ), w);
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+                    APPL_ShowMsg( 0, sz80Temp );
                 }
                 fIsProtected = false;
                 if ( (w & PIC_DeviceInfo.wCfgmask_cpbits) != PIC_DeviceInfo.wCfgmask_cpbits)
@@ -1020,7 +1019,7 @@ bool PIC_PRG_Erase(int iEraseOptions)
                     // PIC protected, one must(?) use the "CHIP ERASE" command. From spec:
                     // > When a Chip Erase command is issued and the PC points to (2000h-2007h), all of the
                     // > configuration memory, program memory and data memory will be erased .
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _( "EraseAll: Device is protected, using CHIP erase" ) );
+                    APPL_ShowMsg( 0, _( "EraseAll: Device is protected, using CHIP erase" ) );
                     //           PIC_HW_ProgMode();           // first(?) Vdd on, then(?) Vpp on
                     PIC_HW_SerialOut_Command6(0x00, false); // "Load Config" = set program counter to 0x2000
                     PIC_HW_SerialOut_14Bit(0x3FFF);  // why this is/was necessary, remains a mystery !
@@ -1033,7 +1032,7 @@ bool PIC_PRG_Erase(int iEraseOptions)
                 }
                 else // PIC is *not* protected (neither CODE nor DATA), must use "BULK ERASE" (? !?)
                 {
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _( "EraseAll: Device is not protected, using BULK erase" ) );
+                    APPL_ShowMsg( 0, _( "EraseAll: Device is not protected, using BULK erase" ) );
                     PIC_HW_SerialOut_Command6(0x09, true);  // "Bulk Erase Program Memory" (externally timed)
                     PIC_HW_SerialOut_Command6(0x08, true);  // "Begin Erase" (externally timed)
                     PIC_HW_Delay_us(PIC_DeviceInfo.lTi_Erase_us);  // wait for erase
@@ -1091,7 +1090,7 @@ bool PIC_PRG_Erase(int iEraseOptions)
 
             case PIC_ALGO_MULTI_WORD: // not an erase algo
             default:    // this PIC does not seem to support BULK ERASE
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _( "EraseAll: missing bulk erase algorithm !" ) );
+                APPL_ShowMsg( 0, _( "EraseAll: missing bulk erase algorithm !" ) );
                 fResult = false;
                 break;
             } // end switch
@@ -1273,7 +1272,7 @@ bool PIC_PRG_Program16FXX(   // Also used for 12FXX (but can't change the name t
                 {
                     ++n_errors;
                     _stprintf(PIC_error_string, _( "Verify Error: %06lX: read %06lX, wanted %06lX" ), dwDeviceAddr2, r, w );
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, PIC_error_string);
+                    APPL_ShowMsg( 0, PIC_error_string);
                     fOk = false;
                     wFlags = PicBuf_GetMemoryFlags(dwDeviceAddr2);
                     if (wFlags & PIC_BUFFER_FLAG_PRG_ERROR)
@@ -1354,7 +1353,7 @@ bool PIC_PRG_Program16FXX(   // Also used for 12FXX (but can't change the name t
         if (n_errors>16)
         {
             _stprintf(PIC_error_string, _( "Programming aborted after %d errors." ), n_errors);
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
+            APPL_ShowMsg( 0, PIC_error_string);
             break;
         }
         if ( (i&15)==0 ) // added 2007-08-27, because a USB<->RS-232 adapter was SOOO TERRIBLY SLOW...
@@ -1465,7 +1464,7 @@ bool PIC_PRG_ProgramCode16F630(
             // "If data not correct, report programming failure" ..
             ++n_errors;
             _stprintf(PIC_error_string, _( "Verify Error: %06lX: read %06lX, wanted %06lX" ), dwDeviceAddress+i, r, w );
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
+            APPL_ShowMsg( 0, PIC_error_string);
             fOk = false;
             wFlags = PicBuf_GetMemoryFlags(dwDeviceAddress+i);
             if (wFlags & PIC_BUFFER_FLAG_PRG_ERROR)
@@ -1495,7 +1494,7 @@ bool PIC_PRG_ProgramCode16F630(
         if (n_errors>16)
         {
             _stprintf(PIC_error_string, _( "Programming aborted after %d errors." ), n_errors);
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
+            APPL_ShowMsg( 0, PIC_error_string);
             break;
         }
         if (APPL_iUserBreakFlag)
@@ -1872,7 +1871,7 @@ bool PIC_PRG_Program16F81X(
         {
             sprintf(PIC_error_string,
                     TE( "Programming aborted after %d errors." ),(int)n_errors);
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
+            APPL_ShowMsg( 0, PIC_error_string);
             break;
         }
 #endif
@@ -1934,7 +1933,7 @@ bool PIC_PRG_ProgramConfigMem_16F81X(
     if (   ( dwDeviceAddress < (uint32_t)PIC_DeviceInfo.lConfMemBase)
             || ( dwDeviceAddress > (uint32_t)PIC_DeviceInfo.lConfWordAdr) )
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _T("Erroneously called ProgramConfigMem_16F81X !")); // not worth translating !
+        APPL_ShowMsg( 0, _T("Erroneously called ProgramConfigMem_16F81X !")); // not worth translating !
         return false;
     }
 
@@ -1987,7 +1986,7 @@ bool PIC_PRG_ProgramConfigMem_16F81X(
             {
                 ++n_errors;
                 _stprintf(PIC_error_string, _( "Verify Error: %06lX: read %06lX, wanted %06lX" ), iAddress, r, w );
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
+                APPL_ShowMsg( 0, PIC_error_string);
                 fOk = false;
             }
             PIC_HW_SerialOut_Command6( PIC_DeviceInfo.iCmd_IncrAddr, true ); // "Increment Address Command"
@@ -2184,7 +2183,7 @@ bool PIC_PRG_ProgramConfigMem_16F87XA(
     if (   ( dwDeviceAddress < (uint32_t)PIC_DeviceInfo.lConfMemBase)
             || ( dwDeviceAddress > (uint32_t)PIC_DeviceInfo.lConfWordAdr) )
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, _("Erroneously called ProgramConfigMem_16F87XA !"));
+        APPL_ShowMsg( 0, _("Erroneously called ProgramConfigMem_16F87XA !"));
         return false;
     }
 
@@ -2235,7 +2234,7 @@ bool PIC_PRG_ProgramConfigMem_16F87XA(
                 // if data not correct, report programming failure
                 ++n_errors;
                 _stprintf(PIC_error_string, _( "Verify Error: %06lX: read %06lX, wanted %06lX" ), iAddress, r, w );
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
+                APPL_ShowMsg( 0, PIC_error_string);
                 fOk = false;
             }
             PIC_HW_SerialOut_Command6(PIC_DeviceInfo.iCmd_IncrAddr, true); // "Increment Address Command"
@@ -2429,7 +2428,7 @@ bool PIC_PRG_ProgramEpromMcu(
 
     if ( PIC_PRG_iSimulateOnly )
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, _("Simulated programming of PIC failed"));
+        APPL_ShowMsg( 0, _("Simulated programming of PIC failed"));
         return false;
     }
 
@@ -2459,7 +2458,7 @@ bool PIC_PRG_ProgramEpromMcu(
             // this cell does not want to be programmed ?  grumble.. another chip please :-(
             ++n_errors;
             _stprintf(PIC_error_string, _( "Verify Error: %06lX: read %06lX, wanted %06lX" ), dwDeviceAddress+i, r, w );
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
+            APPL_ShowMsg( 0, PIC_error_string);
             fOk = false;
 
             wFlags = PicBuf_GetMemoryFlags(dwDeviceAddress+i);
@@ -2484,7 +2483,7 @@ bool PIC_PRG_ProgramEpromMcu(
         if (n_errors>20)
         {
             _stprintf(PIC_error_string, _( "Programming aborted after %d errors." ), n_errors);
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
+            APPL_ShowMsg( 0, PIC_error_string);
             break;
         }
     } // end for(i..)
@@ -2543,7 +2542,7 @@ bool PIC_PRG_Program(
 
     if (Config.iVerboseMessages)
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Programming 0x%06lX..0x%06lX, algo=\"%hs\", CanRead=%d ."),
+        APPL_ShowMsg( 0, _("Programming 0x%06lX..0x%06lX, algo=\"%hs\", CanRead=%d ."),
                       dwDeviceAddress,
                       dwDeviceAddress+n-1,
                       PicDev_AlgorithmCodeToString(wProgAlgo),
@@ -2559,7 +2558,7 @@ bool PIC_PRG_Program(
         return PIC_PRG_Program16FXX( pdwSourceData, n, dwMask, ldcmd, rdcmd, dwDeviceAddress );
 
     case PIC_ALGO_16FXX_OLD_ERASE  :  // 16F84, 16F628 (but not -A), and many others
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("WARNING! PIC_ALGO_16FXXOLD_ERASE algo should not be used for programming!"));
+        APPL_ShowMsg( 0, _("WARNING! PIC_ALGO_16FXXOLD_ERASE algo should not be used for programming!"));
         return PIC_PRG_Program16FXX( pdwSourceData, n, dwMask, ldcmd, rdcmd, dwDeviceAddress );
 
     case PIC_ALGO_16F630 :  // 16F630 (different from 16F628, never tested)
@@ -2589,7 +2588,7 @@ bool PIC_PRG_Program(
         }
 
     case PIC_ALGO_PIC16F7X: /* added 2005-08-21, because the PIC16F74 was too different.. */
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("ERROR ! PIC_PRG_Program() must not be called for PIC16F73/74/76/77 !"));
+        APPL_ShowMsg( 0, _("ERROR ! PIC_PRG_Program() must not be called for PIC16F73/74/76/77 !"));
         return false;
 
     case PIC_ALGO_PIC16F716: /* added 2005-12-03, ANOTHER "SPECIAL" CASE - grumble ;-) */
@@ -2615,7 +2614,7 @@ bool PIC_PRG_Program(
                     // when doing this *immediately after* writing the code memory.
                     // The ID LOCATIONS all read zero then, but when verifying *later*
                     // they turned out to be properly written ! !
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Trying again to verify PIC16F716 code memory..."));
+                    APPL_ShowMsg( 0, _("Trying again to verify PIC16F716 code memory..."));
                     // This error may be related to supply voltage problems
                     // in the "JDM 2"-interface, but it also occurred with a "COM84"-
                     // interface .   Tried this as a cure:  Verify a second time !
@@ -2625,13 +2624,13 @@ bool PIC_PRG_Program(
                                              pdwSourceData, n, 0x3FFF, rdcmd);
                     if ( !fResult )
                     {
-                        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Please try to verify PIC16F716 again (it's STRANGE) !"));
+                        APPL_ShowMsg( 0, _("Please try to verify PIC16F716 again (it's STRANGE) !"));
                     }
                 }
             }
             return fResult;
         case MT_DATA:
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("ERROR ! There is no DATA MEMORY in a PIC16F716 !"));
+            APPL_ShowMsg( 0, _("ERROR ! There is no DATA MEMORY in a PIC16F716 !"));
             return false;
         case MT_CODE:
             if ( !  PIC16F716_WriteCodeMemory( pdwSourceData, n, dwDeviceAddress ) )
@@ -2771,7 +2770,7 @@ bool PicPrg_WriteDataMemory(void)
     } // end if( PicBuf[PIC_BUF_DATA].i32LastUsedArrayIndex >= 0 )
     else  // shall "PROGRAM DATA" but there is nothing LOADED....
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Cannot program DATA MEMORY, nothing in buffer.") );
+        APPL_ShowMsg( 0, _("Cannot program DATA MEMORY, nothing in buffer.") );
     }
 
     return fResult;  // true = ok,   false = error .
@@ -2861,18 +2860,18 @@ bool PicPrg_Verify(
 
     // Note: The address may step by TWO for each 'location', depending on the device !
     dwAddressFactor = pBufInfo->dwAddressFactor;  // how many "address steps per location" ?
-    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _( "Verifying 0x%06lX..0x%06lX" ) ,
+    APPL_ShowMsg( 0, _( "Verifying 0x%06lX..0x%06lX" ) ,
                   dwDeviceAddress,
                   (dwDeviceAddress + (dwNrOfLocations-1)*dwAddressFactor) );
 
     if ( PIC_PRG_iSimulateOnly )
     {
 #if(0)
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, _("Simulated verify failed"));
+        APPL_ShowMsg( 0, _("Simulated verify failed"));
         PicPrg_SetVerifyResult( dwDeviceAddress, -1 );
         return false;
 #else
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, _("Simulated verify successfull"));
+        APPL_ShowMsg( 0, _("Simulated verify successfull"));
         PicPrg_SetVerifyResult( dwDeviceAddress, +1 );
         return true;
 #endif
@@ -2946,7 +2945,7 @@ bool PicPrg_Verify(
                                 cp = PIC_error_string + _tcslen(PIC_error_string);
                                 _stprintf(cp, _(", mask %06lX  ==> diff=%06lX"), dwMask2, (r^w) & dwMask2 );
                             }
-                            APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
+                            APPL_ShowMsg( 0, PIC_error_string);
                         }
                     } // end if < difference between read and expected value >
                     else  // verify ok, reset "verify error" flag for this location:
@@ -3017,7 +3016,7 @@ bool PicPrg_Verify(
                 if (n_errors<5)
                 {
                     _stprintf(PIC_error_string, _("Verify Error: %06lX: read %06lX, wanted %06lX"), dwDeviceAddress2, r, w );
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
+                    APPL_ShowMsg( 0, PIC_error_string);
                 }
             } // end if <verify failed>
             else  // verify ok, reset "verify error" flag for this location:
@@ -3055,7 +3054,7 @@ bool PicPrg_Verify(
     if (n_errors>=5)
     {
         _stprintf(PIC_error_string, _( "More Verify Errors, unable to list all (total=%d)" ), n_errors);
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, PIC_error_string);
+        APPL_ShowMsg( 0, PIC_error_string);
     }
 
     PicPrg_SetVerifyResult( dwDeviceAddress, (n_errors==0) ? +1 : -1 );
@@ -3072,7 +3071,7 @@ bool PicPrg_Verify(
 /***************************************************************************/
 void PicPrg_ShowReadingIndicator(long i32FromAddr, long i32ToAddr)
 {
-    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Reading 0x%06lX - 0x%06lX ..."),
+    APPL_ShowMsg( 0, _("Reading 0x%06lX - 0x%06lX ..."),
                   i32FromAddr, i32ToAddr );
 }
 
@@ -3186,8 +3185,7 @@ bool PIC_PRG_ReadAll(
                         {
                             if ( blank_check_only && memrange_blank )
                             {
-                                APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-                                              _("  Config memory is not blank at addr 0x%06lX : read=0x%04lX, mask=0x%04lX ."),
+                                APPL_ShowMsg( 0, _("  Config memory is not blank at addr 0x%06lX : read=0x%04lX, mask=0x%04lX ."),
                                               dwTargetAddress, dw32TempBuffer[i], dwVerifyMask );
                             }
                             memrange_blank = false;
@@ -3222,8 +3220,7 @@ bool PIC_PRG_ReadAll(
                                 not_blank = true;
                                 if ( blank_check_only && memrange_blank )
                                 {
-                                    APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-                                                  _("  Data memory is not blank at addr 0x%06lX : read=0x%04lX ."),
+                                    APPL_ShowMsg( 0, _("  Data memory is not blank at addr 0x%06lX : read=0x%04lX ."),
                                                   dwTargetAddress, pdwTempBuffer[i32] );
                                 }
                             }
@@ -3276,8 +3273,7 @@ bool PIC_PRG_ReadAll(
                                     not_blank = true;
                                     if ( blank_check_only && memrange_blank )
                                     {
-                                        APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-                                                      _("  Code memory is not blank at addr 0x%06lX : read=0x%04lX, mask=0x%04lX ."),
+                                        APPL_ShowMsg( 0, _("  Code memory is not blank at addr 0x%06lX : read=0x%04lX, mask=0x%04lX ."),
                                                       dwTargetAddress, dw32TempBuffer[i], dwVerifyMask );
                                     }
                                     memrange_blank = false;
@@ -3303,7 +3299,7 @@ bool PIC_PRG_ReadAll(
                     } // end if < successfully read dsPIC's code memory >
                     else // failed reading (possibly stopped via ESCAPE key)
                     {
-                        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Action aborted") );
+                        APPL_ShowMsg( 0, _("Action aborted") );
                     }
                     free( pdwTempBuffer );  // free temporary buffer
                 } // end if < successfully allocated temporary buffer >
@@ -3463,17 +3459,17 @@ bool PIC_PRG_ReadAll(
 
             if (blank_check_only)
             {
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, _("Blank Check results:"));
+                APPL_ShowMsg( 0, _("Blank Check results:"));
                 if (!not_blank)
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,_("  Device is blank."));
+                    APPL_ShowMsg( 0,_("  Device is blank."));
                 if (prog_mem_last != -1)
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, _("  Program memory %ld is not blank."), prog_mem_last);
+                    APPL_ShowMsg( 0, _("  Program memory %ld is not blank."), prog_mem_last);
                 if (iLastUsedDataIndex != -1)
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, _("  Data memory %ld is not blank."), iLastUsedDataIndex);
+                    APPL_ShowMsg( 0, _("  Data memory %ld is not blank."), iLastUsedDataIndex);
                 if (i1stNonEmptyIdAddr != 0)
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, _("  ID memory %lX is not blank."), i1stNonEmptyIdAddr);
+                    APPL_ShowMsg( 0, _("  ID memory %lX is not blank."), i1stNonEmptyIdAddr);
                 if ( cfg_base_adr != 0)
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, _("  Config memory %lX is not blank."), cfg_base_adr);
+                    APPL_ShowMsg( 0, _("  Config memory %lX is not blank."), cfg_base_adr);
             }
             else // not just BLANK CHECKING, but really READING:
             {
@@ -3489,7 +3485,7 @@ bool PIC_PRG_ReadAll(
             {
                 _stprintf(sz80Temp, _( "Oscillator calibration word looks bad (0x%06lX) !" ),
                           PIC_lOscillatorCalibrationWord & 0x0FFFF );
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+                APPL_ShowMsg( 0, sz80Temp );
             }
         } // end else  ( PIC_DeviceInfo.iBitsPerInstruction != 24 )
 

@@ -122,7 +122,7 @@ bool PIC16F7x_VerifyRange( uint32_t dwNrOfLocations )
          {
            _stprintf(sz80Msg, _("Verify Error: %06lX: read %06lX, wanted %06lX"),
                            (long)PIC16F7x_iCurrTargetAddress, (long)dwRead, (long)dwWritten );
-           APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, sz80Msg );
+           APPL_ShowMsg( 0, sz80Msg );
          }
       } // end if <verify failed>
      else  // verify ok, reset "verify error" flag for this location:
@@ -146,7 +146,7 @@ bool PIC16F7x_VerifyRange( uint32_t dwNrOfLocations )
    {
     _stprintf(sz80Msg, _( "More Verify Errors, unable to list all (total=%d)" ),
             (int)n_errors);
-    APPL_ShowMsg( APPL_CALLER_PIC_PRG,0, sz80Msg );
+    APPL_ShowMsg( 0, sz80Msg );
    }
 
   PicPrg_SetVerifyResult( dwVerifyStartAddr, (n_errors==0) ? +1 : -1 );
@@ -281,8 +281,7 @@ bool PIC16F7x_ProgramAll(
   //           because we cannot read directly after writing a single uint16_t !
   if( ! APPL_iUserBreakFlag )
    {
-    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                    _( "Verifying 0x%06lX..0x%06lX" ) ,
+    APPL_ShowMsg( 0, _( "Verifying 0x%06lX..0x%06lX" ) ,
                    (long) 0/*device address*/, (long)(PIC_DeviceInfo.lCodeMemSize-1) );
     // To avoid exiting and re-entering programming mode,
     //  increment the program counter to let it WRAP(!) to 0x0000 .

@@ -213,11 +213,11 @@ bool TOptionPanel::InterfaceSpeedTest(void)
             //  itself as "Prolific USB-Serial Adapter" in the system control,
             //  required almost 5 ms (FIVE MILLISECONDS!!!!) for a Clock-and-Data-Cycle.
         }
-        APPL_ShowMsg(APPL_CALLER_MAIN,0, sz255Msg );
+        APPL_ShowMsg( 0, sz255Msg );
     }
     else
     {
-        APPL_ShowMsg(APPL_CALLER_MAIN,0, _("Something wrong with QueryPerformanceFrequency !") );
+        APPL_ShowMsg( 0, _("Something wrong with QueryPerformanceFrequency !") );
     }
 
 
@@ -287,7 +287,7 @@ bool TOptionPanel::InterfaceSpeedTest(void)
         _stprintf( cp, _(" %dns"), dblDelayTimes_ns[iTestLoops] );
         cp += _tcslen(cp);
     }
-    APPL_ShowMsg(APPL_CALLER_MAIN,0, sz255Msg );
+    APPL_ShowMsg( 0, sz255Msg );
     _tcscpy( sz255Msg, _("Response times H->L : ") );
     cp = sz255Msg+_tcslen(sz255Msg);
     for (iTestLoops=1; iTestLoops<N_TEST_LOOPS; iTestLoops+=2)
@@ -295,7 +295,7 @@ bool TOptionPanel::InterfaceSpeedTest(void)
         _stprintf( cp, _(" %lgns"), dblDelayTimes_ns[iTestLoops] );
         cp += _tcslen(cp);
     }
-    APPL_ShowMsg(APPL_CALLER_MAIN,0, sz255Msg );
+    APPL_ShowMsg( 0, sz255Msg );
 
 
     return (n_errors==0);

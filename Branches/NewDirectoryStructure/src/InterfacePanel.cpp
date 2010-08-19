@@ -684,13 +684,13 @@ bool TInterfacePanel::TestTheInterface(void)
     PIC_HW_SetClockAndData( false/*clock_high*/, false/*data_high*/ );
     if ( n_errors == 0 )
     {
-        APPL_ShowMsg(APPL_CALLER_MAIN,0, _("Initialising PIC-Programmer: Success.") );
+        APPL_ShowMsg( 0, _("Initialising PIC-Programmer: Success.") );
         aInterfaceTypeText->SetLabel(_("Interface tested, OK."));
         fResult = true;
     }
     else
     {
-        APPL_ShowMsg(APPL_CALLER_MAIN,0, _("WARNING: Could not initialize programmer !") );
+        APPL_ShowMsg( 0, _("WARNING: Could not initialize programmer !") );
         aInterfaceTypeText->SetLabel(_("Error testing the Interface") );
         fResult = false;
     }

@@ -15,7 +15,7 @@ int  APPL_iUserBreakFlag = 0;  // signal for any programming loop to "stop" ,
                                // set by pressing ESCAPE .
 wxCSConv Iso8859_1(wxConvISO8859_1);
 
-void APPL_ShowMsg( int caller, int error_level, const wxChar *pszFormat, ... )
+void APPL_ShowMsg( int error_level, const wxChar *pszFormat, ... )
   /* The application's "error-display" routine.
    * Also called from the PIC - routines (and other, possibly "C"-modules),
    *      therefore **NOT** a method of any CLASS.
@@ -27,8 +27,6 @@ void APPL_ShowMsg( int caller, int error_level, const wxChar *pszFormat, ... )
     va_start( parameter, pszFormat );
     Text.PrintfV(pszFormat, parameter );
     va_end(parameter);
-
-    (void)caller;
 
     MainFrame::SetStatusText(Text);
     if(  (error_level>=127/*important*/)  /*&&  (ToolForm!=NULL)*/  )

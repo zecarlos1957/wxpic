@@ -853,18 +853,18 @@ int PIC_HEX_LoadFile(const wxChar *fname )  // Loads a Microchip hex file
              (char)(PicHex_i32CountIgnoredLocations==1)?' ':'s',
              (long)PicHex_i32FirstIgnoredAddress,
              (long)PicHex_i32LastIgnoredAddress );
-    APPL_ShowMsg( APPL_CALLER_PIC_HEX, 127/*important error*/, szErrorMsg);
+    APPL_ShowMsg( 127/*important error*/, szErrorMsg);
 
    }
   else
    { if( i32ParserErrorInLine > 0 ) // here, counting lines from ONE to N !
-      {  APPL_ShowMsg( APPL_CALLER_PIC_HEX, 127/*important error*/, szErrorMsg );
+      {  APPL_ShowMsg( 127/*important error*/, szErrorMsg );
          PicHex_i32ErrorInLine = i32ParserErrorInLine;
       }
      else // no ERROR, but there may be funny stuff in the HEX file
       {   //  (for example, placed there by the SCC-compiler) ...
         if( szErrorMsg[0]>32 )
-         { APPL_ShowMsg( APPL_CALLER_PIC_HEX,0, szErrorMsg );
+         { APPL_ShowMsg( 0, szErrorMsg );
          }
       }
    }

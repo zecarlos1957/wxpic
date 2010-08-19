@@ -361,7 +361,7 @@ bool MainFrame::ReadPicAndDumpToFile(const wxChar *fn)
     if ( !ok )
     {
         // reading not ok, for any strange reason it was "aborted" ...
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _( "Action aborted") );
+        APPL_ShowMsg( 0, _( "Action aborted") );
         m_iMessagePanelUsage = MP_USAGE_ERROR;
         return false;
     }
@@ -371,7 +371,7 @@ bool MainFrame::ReadPicAndDumpToFile(const wxChar *fn)
     }
     else
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("PIC is erased - nothing to dump") );
+        APPL_ShowMsg( 0, _("PIC is erased - nothing to dump") );
         m_iMessagePanelUsage = MP_USAGE_INFO;
         RedAndGreenLedOff();
         return false;
@@ -400,8 +400,7 @@ int PicPrg_GetNrOfConfigMemLocationsToWrite(void)
         {
             // There are more config mem words "loaded" than exist in the device ?!
             // ( a smart HEX load routine may already have signalled this, but ... )
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                          _("Problem: Buffer contains more CONFIG MEMORY WORDS (%d) than exist in device (%d) ."),
+            APPL_ShowMsg( 0, _("Problem: Buffer contains more CONFIG MEMORY WORDS (%d) than exist in device (%d) ."),
                           PicBuf[PIC_BUF_CONFIG].i32LastUsedArrayIndex+1, iNrWordsWriteable );
         }
     }
@@ -430,7 +429,7 @@ bool MainFrame::ProgramPic(void)
 
     _stprintf( sz80Temp, _("Programming...") );
     m_iMessagePanelUsage = MP_USAGE_BUSY;
-    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp  );
+    APPL_ShowMsg( 0, sz80Temp  );
 
 
     PicPrg_iCodeMemErased   = 0;
@@ -471,7 +470,7 @@ bool MainFrame::ProgramPic(void)
     {
         fDidSomething = true;
         _tcscpy(sz80Temp, _("Erasing (\"bulk\" or \"chip\") ...") );
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+        APPL_ShowMsg( 0, sz80Temp );
         Update();
         if ( PIC_PRG_Erase( PIC_ERASE_ALL | PIC_SAVE_CALIBRATION ) ) // here in ProgramPic()
         {
@@ -483,7 +482,7 @@ bool MainFrame::ProgramPic(void)
         else
         {
             pszMsg = _("Erasing FAILED !");
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, pszMsg );
+            APPL_ShowMsg( 0, pszMsg );
         }
         Update();
     } // end if <ok to erase the PIC ?>
@@ -518,8 +517,7 @@ bool MainFrame::ProgramPic(void)
                     PicBuf_SetBufferWord(PIC_DeviceInfo.lAddressOscCal, PIC_lOscillatorCalibrationWord );
                     if (dw != (uint32_t)PIC_lOscillatorCalibrationWord)
                     {
-                        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                                      _("Replaced OSCCAL word in buffer: old=0x%06lX, new=0x%06lX ."),
+                        APPL_ShowMsg( 0, _("Replaced OSCCAL word in buffer: old=0x%06lX, new=0x%06lX ."),
                                       dw, PIC_lOscillatorCalibrationWord );
                     }
                 }
@@ -529,16 +527,14 @@ bool MainFrame::ProgramPic(void)
                     if ( (dw & 0xFF00) == 0x3400)
                     {
                         // The osc calib word in the program buffer is a RETLW instruction.. use it.
-                        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                                      _("Using old OSCCAL word from buffer (0x%06lX) .") , dw );
+                        APPL_ShowMsg( 0, _("Using old OSCCAL word from buffer (0x%06lX) .") , dw );
                     }
                     else // there is still no valid osc calib word in the buffer ...
                     {
                         if (PIC_iHaveErasedCalibration)
                         {
                             PicBuf_SetBufferWord(PIC_DeviceInfo.lAddressOscCal, 0x3480/*RETLW 0x80*/ );
-                            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                                          _("Warning: using default OSC CALIB word instead of 0x%06lX ."), dw );
+                            APPL_ShowMsg( 0, _("Warning: using default OSC CALIB word instead of 0x%06lX ."), dw );
                         }
                     }
                 }
@@ -563,7 +559,7 @@ bool MainFrame::ProgramPic(void)
                 _stprintf(sz80Temp, _("Warning: Last program addr (0x%06lX) exceeds device memory size (0x%06lX) !"),
                           PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex,
                           PIC_DeviceInfo.lCodeMemSize );
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+                APPL_ShowMsg( 0, sz80Temp );
                 _stprintf(sz255Temp, _T("%s\n%s"), sz80Temp,
                           _("Select YES to ignore this problem and truncate the buffer contents.") );
                 if (wxMessageBox(sz255Temp, _("Problem encountered before CODE MEMORY programming") ,
@@ -574,7 +570,7 @@ bool MainFrame::ProgramPic(void)
                 }
                 else
                 {
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Skipped CODE MEMORY programming.") );
+                    APPL_ShowMsg( 0, _("Skipped CODE MEMORY programming.") );
                     fOkToGo = false;
                 }
             } // end if <problem with CODE MEMORY size>
@@ -591,13 +587,13 @@ bool MainFrame::ProgramPic(void)
                     // before programming it !
                     // However, there is the option NOT TO ERASE before programming, so :
                     pszMsg = _("Erasing CODE");
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, pszMsg );
+                    APPL_ShowMsg( 0, pszMsg );
 //            if(ToolForm)
 //                ToolForm->ShowMsg( pszMsg, TWMSG_NO_ERROR );
                     Update();
                     if ( ! PIC_PRG_Erase( PIC_ERASE_CODE | PIC_SAVE_CALIBRATION ) ) // here in ProgramPic(), "CODE" only
                     {
-                        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Erasing FAILED !") );
+                        APPL_ShowMsg( 0, _("Erasing FAILED !") );
                         ++error_count;
                     }
                 } // end if < not "program all" >
@@ -611,9 +607,7 @@ bool MainFrame::ProgramPic(void)
                     _stprintf( sz80Temp, _("Programming CODE, 0x%06lX..0x%06lX"),
                                i32FirstAddress, i32LastAddress );
                 }
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
-//        if(ToolForm)
-//            ToolForm->ShowMsg( sz80Temp, TWMSG_NO_ERROR );
+                APPL_ShowMsg( 0, sz80Temp );
 
                 if ( PIC_DeviceInfo.iBitsPerInstruction==24 )
                 {
@@ -691,7 +685,7 @@ bool MainFrame::ProgramPic(void)
                     // code memory not verified yet -> do that now :
                     _stprintf(sz80Temp, _("Verifying CODE, 0x%06lX..0x%06lX"),
                               i32FirstAddress, i32LastAddress );
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+                    APPL_ShowMsg( 0, sz80Temp );
 
                     if ( ! PicPrg_Verify( 0, // dwDeviceAddress
                                           PicBuf[PIC_BUF_CODE].pdwData, // uint32_t *pdwSourceData
@@ -706,14 +700,14 @@ bool MainFrame::ProgramPic(void)
         }   // end if ( PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex >= 0 )
         else // no program in memory !
         {
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Cannot Program CODE MEMORY, nothing in buffer.") );
+            APPL_ShowMsg( 0, _("Cannot Program CODE MEMORY, nothing in buffer.") );
             m_iMessagePanelUsage = MP_USAGE_WARNING;
         } // end else < no program in memory >
     } // end if(Config.iProgramWhat&PIC_PROGRAM_CODE)
 
     if (APPL_iUserBreakFlag)
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("USER BREAK while programming.") );
+        APPL_ShowMsg( 0, _("USER BREAK while programming.") );
         m_iMessagePanelUsage = MP_USAGE_WARNING;
         APPL_iUserBreakFlag = 0;
         return false;
@@ -738,19 +732,19 @@ bool MainFrame::ProgramPic(void)
                 // before programming it !
                 // However, there is the option NOT TO ERASE before programming, so :
                 _tcscpy(sz80Temp, _("Erasing: DATA ..") );
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+                APPL_ShowMsg( 0, sz80Temp );
 
                 Update();
                 if ( PIC_PRG_Erase( PIC_ERASE_DATA ) ) // here in ProgramPic(), "DATA" only
                 {
-                    APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Erasing FAILED !") );
+                    APPL_ShowMsg( 0, _("Erasing FAILED !") );
                     ++error_count;
                 }
             } // end if < not "program all" >
 
             _stprintf(sz80Temp, _("Programming DATA, 0x%06lX..0x%06lX"),
                       i32FirstAddress, i32LastAddress );
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+            APPL_ShowMsg( 0, sz80Temp );
 
             if ( ! PicPrg_WriteDataMemory() ) // Note: doesn't necessarily verify !
             {
@@ -764,7 +758,7 @@ bool MainFrame::ProgramPic(void)
                 // code memory not verified yet -> do that now :
                 _stprintf(sz80Temp, _("Verifying DATA, 0x%06lX..0x%06lX"),
                           i32FirstAddress, i32LastAddress );
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+                APPL_ShowMsg( 0, sz80Temp );
 
                 if ( ! PicPrg_Verify( i32FirstAddress, // dwDeviceAddress
                                       PicBuf[PIC_BUF_DATA].pdwData,  // pointer to source data
@@ -781,7 +775,7 @@ bool MainFrame::ProgramPic(void)
 
     if (APPL_iUserBreakFlag)
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("USER BREAK while programming.") );
+        APPL_ShowMsg( 0, _("USER BREAK while programming.") );
         m_iMessagePanelUsage = MP_USAGE_WARNING;
         APPL_iUserBreakFlag = 0;
         return false;
@@ -796,12 +790,12 @@ bool MainFrame::ProgramPic(void)
             && (PIC_DeviceInfo.wCfgmask_bandgap!=0) )
     {
         // restore the bandgap calibration bits which have been read before bulk-erase ?
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Restoring BANDGAP calibration bits for CONFIG-WORD") );
+        APPL_ShowMsg( 0, _("Restoring BANDGAP calibration bits for CONFIG-WORD") );
         if (Config.iVerboseMessages)
         {
             _stprintf(sz80Temp, _("Cfg word before restoring BG calib: 0x%06lX"),
                       PicBuf_GetConfigWord(0) );
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+            APPL_ShowMsg( 0, sz80Temp );
         }
         PicBuf_SetConfigWord( 0,
                               (PicBuf_GetConfigWord(0) & ~PIC_DeviceInfo.wCfgmask_bandgap)
@@ -810,7 +804,7 @@ bool MainFrame::ProgramPic(void)
         {
             _stprintf(sz80Temp, _("Cfg word after restoring BG calib: 0x%06lX"),
                       PicBuf_GetConfigWord(0) );
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+            APPL_ShowMsg( 0, sz80Temp );
         }
     } // end if < must restore BANDGAP calibration bits ? >
 
@@ -834,7 +828,7 @@ bool MainFrame::ProgramPic(void)
             i32LastAddress  = PicBuf_ArrayIndexToTargetAddress(PIC_BUF_CONFIG, iNrWordsWriteable-1 );
             _stprintf( sz80Temp, _("Programming CONFIG, 0x%06lX..0x%06lX"),
                        i32FirstAddress, i32LastAddress );
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+            APPL_ShowMsg( 0, sz80Temp );
             if ( ! PicPrg_WriteConfigRegs( // Note: doesn't necessarily verify !
                         PIC_DeviceInfo.lConfMemBase, // uint32_t dwDestAddress
                         PicBuf[PIC_BUF_CONFIG].pdwData, // uint32_t *pdwSourceData
@@ -849,7 +843,7 @@ bool MainFrame::ProgramPic(void)
                 // config memory not verified yet -> do that now :
                 _stprintf( sz80Temp, _("Verifying CONFIG, 0x%06lX..0x%06lX"),
                            i32FirstAddress, i32LastAddress );
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+                APPL_ShowMsg( 0, sz80Temp );
 
                 if ( ! PicPrg_Verify(  // Verify CONFIG MEMORY (including config word)
                             PIC_DeviceInfo.lConfMemBase,    // dwDeviceAddress
@@ -873,8 +867,7 @@ bool MainFrame::ProgramPic(void)
                 // Too bad for older chips where we have already "erased everything".
                 // No problem for newer chips which do NOT erase configuration memory,
                 //   not even when performing "bulk erase" (for example dsPIC30F) .
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                              _("Suspicious: Buffer contains no data for the CONFIGURATION BITS.") );
+                APPL_ShowMsg( 0, _("Suspicious: Buffer contains no data for the CONFIGURATION BITS.") );
             }
         }
     } // end if < not PIC10F20x >
@@ -908,14 +901,14 @@ bool MainFrame::ProgramPic(void)
                 && ( Config.iProgramWhat & PIC_PROGRAM_CONFIG)!=0 )   // May I ... ?
         {
             _stprintf( sz80Temp, _("Programming CONFIG-WORD") );
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+            APPL_ShowMsg( 0, sz80Temp );
 
             if (Config.iVerboseMessages)
             {
                 _stprintf(sz80Temp, _("Config word = 0x%06lX; Config mask = 0x%06lX"),
                           PicBuf_GetConfigWord(0) ,
                           PicPrg_GetConfigWordMask() );
-                APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz80Temp );
+                APPL_ShowMsg( 0, sz80Temp );
             }
             dwTemp4[0] = PicBuf_GetConfigWord(0);
             dwTemp4[1] = PicBuf_GetConfigWord(1);
@@ -938,7 +931,7 @@ bool MainFrame::ProgramPic(void)
 
     if (APPL_iUserBreakFlag)
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("USER BREAK while programming.") );
+        APPL_ShowMsg( 0, _("USER BREAK while programming.") );
         m_iMessagePanelUsage = MP_USAGE_WARNING;
         APPL_iUserBreakFlag = 0;
         fResult = false;
@@ -956,13 +949,13 @@ bool MainFrame::ProgramPic(void)
             {
                 pszMsg = _("Programming finished, nothing to do.");
             }
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, pszMsg );
+            APPL_ShowMsg( 0, pszMsg );
             m_iMessagePanelUsage = MP_USAGE_INFO;
         }
         else
         {
             pszMsg = _("ERROR: Programming FAILED !");
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, pszMsg  );
+            APPL_ShowMsg( 0, pszMsg  );
             Update();
             m_iMessagePanelUsage = MP_USAGE_ERROR;
             // highlight good or bad CODE LOCATIONS ?
@@ -1009,8 +1002,7 @@ bool MainFrame::VerifyPic(void)
         if (PIC_HW_CanSelectVdd() )
             fVerifyAtDifferentVoltages = true;
         else
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0,
-                          _("Cannot verify at different voltages with this hardware.") );
+            APPL_ShowMsg( 0, _("Cannot verify at different voltages with this hardware.") );
     }
 
     RedAndGreenLedOff();
@@ -1053,7 +1045,7 @@ bool MainFrame::VerifyPic(void)
         {
             // verify at this voltage if "nominal" voltage of "switching supported" :
 
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, pszMsg );
+            APPL_ShowMsg( 0, pszMsg );
 
             aInterfaceTab->UpdateInterfaceTestDisplay();  // show the "should-be" state of the control lines
 
@@ -1075,7 +1067,7 @@ bool MainFrame::VerifyPic(void)
                         fDidSomething = true;
                         i32FirstAddress = PicBuf_ArrayIndexToTargetAddress(PIC_BUF_CODE, 0 );
                         i32LastAddress  = PicBuf_ArrayIndexToTargetAddress(PIC_BUF_CODE, PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex);
-                        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Verifying CODE, 0x%06lX..0x%06lX"),
+                        APPL_ShowMsg( 0, _("Verifying CODE, 0x%06lX..0x%06lX"),
                                       i32FirstAddress, i32LastAddress );
                         if (! PicPrg_Verify( 0 ,  // // dwDeviceAddress
                                              PicBuf[PIC_BUF_CODE].pdwData, // uint32_t *pdwSourceData
@@ -1088,7 +1080,7 @@ bool MainFrame::VerifyPic(void)
                     }
                     else // no program in memory !
                     {
-                        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("No PROGRAM CODE in buffer to verify.") );
+                        APPL_ShowMsg( 0, _("No PROGRAM CODE in buffer to verify.") );
                         m_iMessagePanelUsage = MP_USAGE_WARNING;
                     }
                 } // end if < shall verify CODE >
@@ -1102,7 +1094,7 @@ bool MainFrame::VerifyPic(void)
                         fDidSomething = true;
                         i32FirstAddress = PicBuf_ArrayIndexToTargetAddress(PIC_BUF_DATA, 0 );
                         i32LastAddress  = PicBuf_ArrayIndexToTargetAddress(PIC_BUF_DATA, PicBuf[PIC_BUF_DATA].i32LastUsedArrayIndex );
-                        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Verifying DATA, 0x%06lX..0x%06lX"),
+                        APPL_ShowMsg( 0, _("Verifying DATA, 0x%06lX..0x%06lX"),
                                       i32FirstAddress, i32LastAddress );
                         if (!PicPrg_Verify( PIC_DeviceInfo.lDataMemBase,
                                             PicBuf[PIC_BUF_DATA].pdwData,
@@ -1112,7 +1104,7 @@ bool MainFrame::VerifyPic(void)
                     }
                     else // no DATA in memory...
                     {
-                        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("No DATA MEMORY in buffer to verify.") );
+                        APPL_ShowMsg( 0, _("No DATA MEMORY in buffer to verify.") );
                         m_iMessagePanelUsage = MP_USAGE_WARNING;
                     } // end if ( PicBuf[PIC_BUF_DATA].i32LastUsedArrayIndex >= 0 )
                 } // end if < shall verify DATA >
@@ -1127,7 +1119,7 @@ bool MainFrame::VerifyPic(void)
                         int iNrWordsWritten = PicPrg_GetNrOfConfigMemLocationsToWrite();
                         i32FirstAddress = PicBuf_ArrayIndexToTargetAddress(PIC_BUF_CONFIG, 0 );
                         i32LastAddress  = PicBuf_ArrayIndexToTargetAddress(PIC_BUF_CONFIG, iNrWordsWritten-1 );
-                        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Verifying CONFIG, 0x%06lX..0x%06lX"),
+                        APPL_ShowMsg( 0, _("Verifying CONFIG, 0x%06lX..0x%06lX"),
                                       i32FirstAddress, i32LastAddress );
                         if (!PicPrg_Verify( PIC_DeviceInfo.lConfMemBase,
                                             PicBuf[PIC_BUF_CONFIG].pdwData, // source buffer
@@ -1150,7 +1142,7 @@ bool MainFrame::VerifyPic(void)
                             && ( PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex >= 0 ) )
                     {
                         fDidSomething = true;
-                        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _(" Verifying CONFIG-WORD%c"),
+                        APPL_ShowMsg( 0, _(" Verifying CONFIG-WORD%c"),
                                       (PIC_DeviceInfo.wCfgmask2_used!=0) ? _T('s') : _T(' ') );
                         dwTemp4[0] = PicBuf_GetConfigWord(0);
                         dwTemp4[1] = PicBuf_GetConfigWord(1);
@@ -1182,7 +1174,7 @@ bool MainFrame::VerifyPic(void)
 
     if (APPL_iUserBreakFlag)
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("USER BREAK while verifying.") );
+        APPL_ShowMsg( 0, _("USER BREAK while verifying.") );
         m_iMessagePanelUsage = MP_USAGE_WARNING;
         APPL_iUserBreakFlag = 0;
         error_count = 1;
@@ -1195,13 +1187,13 @@ bool MainFrame::VerifyPic(void)
                 pszMsg = _("Verify finished, no errors.");
             else
                 pszMsg = _("Nothing to verify in buffer.");
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, pszMsg );
+            APPL_ShowMsg( 0, pszMsg );
             m_iMessagePanelUsage = MP_USAGE_INFO;
         }
         else
         {
             pszMsg = _("ERROR: Verifying FAILED !");
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, pszMsg );
+            APPL_ShowMsg( 0, pszMsg );
             m_iMessagePanelUsage = MP_USAGE_ERROR;
         }
     }
@@ -1261,7 +1253,7 @@ bool MainFrame::LoadFileAndProgramPic(const wxChar *fn, bool program_too)
         if (!ReadTest.IsOpened())
         {
             _stprintf(sz255Temp, _("Can't open hexfile \"%s\"") , fn);
-            APPL_ShowMsg(APPL_CALLER_MAIN,0, sz255Temp );
+            APPL_ShowMsg( 0, sz255Temp );
             //       if(ToolForm)
             //        ToolForm->ShowMsg( sz255Temp, TWMSG_ERROR );
             return false;
@@ -1287,15 +1279,14 @@ bool MainFrame::LoadFileAndProgramPic(const wxChar *fn, bool program_too)
                  );
         cp = sz255Temp + _tcslen(sz255Temp);
         _stprintf( const_cast<wxChar*>(cp), _(" (%s)"), fn );    // added 2006-03-26
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz255Temp );
+        APPL_ShowMsg( 0, sz255Temp );
     }
     if (CommandOption.WinPic_i32CmdLineOption_OverrideConfigWord>=0)
     {
         // replace the CONFIGURATION WORD which should have been in the config file ?
         if ( (uint16_t)PicBuf_GetConfigWord(0) != (uint16_t)CommandOption.WinPic_i32CmdLineOption_OverrideConfigWord)
         {
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG,0,
-                          _("Info: Config word set to 0x%06lX from command line .") ,
+            APPL_ShowMsg( 0, _("Info: Config word set to 0x%06lX from command line .") ,
                           CommandOption.WinPic_i32CmdLineOption_OverrideConfigWord);
         }
         PicBuf_SetConfigWord( 0, CommandOption.WinPic_i32CmdLineOption_OverrideConfigWord );
@@ -1308,7 +1299,7 @@ bool MainFrame::LoadFileAndProgramPic(const wxChar *fn, bool program_too)
         if (program_too)
         {
             _tcscpy(sz255Temp, _("Aborting LoadAndProgram because of error(s)") );
-            APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, sz255Temp );
+            APPL_ShowMsg( 0, sz255Temp );
         }
         return false;
     }
@@ -1345,7 +1336,7 @@ bool MainFrame::DumpEverythingToHexFile(const wxChar *fn)
 
     if ( PIC_HEX_DumpHexFile(fn) <= 0 ) // dump all buffers which contain "something"
     {
-        APPL_ShowMsg( APPL_CALLER_PIC_PRG, 0, _("Can't create hexfile") );
+        APPL_ShowMsg( 0, _("Can't create hexfile") );
         m_iMessagePanelUsage = MP_USAGE_WARNING;
         UpdateLedsForResult( false );
         return false;
