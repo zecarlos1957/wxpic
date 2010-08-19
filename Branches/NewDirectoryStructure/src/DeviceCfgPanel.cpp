@@ -164,14 +164,9 @@ TDeviceCfgPanel::~TDeviceCfgPanel()
 //---------------------------------------------------------------------------
 void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
 {
-//  int i,n;
     wxChar str80[81];
     const wxChar *psz;
     bool fFoundDevName;
-//  T_PicDeviceInfo MyDeviceInfo;
-//  T_PicConfigBitInfo *pConfigBitInfo;
-//  uint32_t dwConfigWord, dwConfigWordAddress, dwConfigMask;
-//  wxString s;
 
     ++(MainFrame::TheMainFrame->m_Updating);
     m_displayed_config_word[0]  = PicBuf_GetConfigWord(0);
@@ -185,20 +180,8 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
     // Now all types in the list are filled during run-time from a table..
     if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
         APPL_LogEvent( _("UpdateDeviceConfigTab: Listing devices..") );
-//   fFoundDevName = false;
-//   i=0;
     wxString DeviceName;
     fFoundDevName = aPartNameChoice->SetStringSelection(Iso8859_1_TChar(m_sz40DisplayedDeviceName, DeviceName));
-//   while( i < aPartNameChoice->GetCount() )
-//     {
-//       if( >GetString(i) == DeviceName )
-//        {
-//          aPartNameChoice->SetSelection(i);
-//          fFoundDevName = true;
-//          break;
-//        }
-//       ++i;
-//     }
 
     aHasFlashMemoryChk->SetValue(PIC_DeviceInfo.iCodeMemType==PIC_MT_FLASH) ;
     if (fFoundDevName && (m_sz40DisplayedDeviceName[0]!='u') )
@@ -206,10 +189,7 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
         MainFrame::TheMainFrame->SetLabel(MainFrame::TheMainFrame->m_original_title
                                     + _T(" - ") + aPartNameChoice->GetStringSelection());
         aProgMemSizeText->SetEditable(false);
-//        aEepromMemSizeText->Color       = clBtnFace;
         aEepromMemSizeText->SetEditable(false);
-//        Ed_DataEepromMemory->Color    = clBtnFace;
-//        Ed_ConfigWordHex->Color       = clBtnFace;
         aHasFlashMemoryChk->Enable(false);    // we know if it's possible
     }
     else // unknown PIC device type.
@@ -218,10 +198,7 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
         MainFrame::TheMainFrame->SetLabel(MainFrame::TheMainFrame->m_original_title
                                     + _(" - unknown PIC type !"));
         aProgMemSizeText->SetEditable(true);
-//        Ed_ProgramMemory->Color       = clWindow;
         aEepromMemSizeText->SetEditable(true);
-//        Ed_DataEepromMemory->Color    = clWindow;
-//        Ed_ConfigWordHex->Color       = clWindow;
         aHasFlashMemoryChk->Enable(true);    // dunno, let the user decide
     }  // end if <unknown PIC device type
 
@@ -230,28 +207,17 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
         // only if the user is not editing the hex config word(s) at the moment...
         // Show the currently used config-word and some of its elements:
         aConfigWordHexEdit->ChangeValue(wxString::Format(_T("%04X"), m_displayed_config_word[0]));
-//      _stprintf(str80, _T("%04X"), m_displayed_config_word[0]);
-//      Ed_ConfigWordHex->Text = str80;
 
         // Since 2003-12, the PIC16F88 is supported, it was the first midrange-PIC
         //                with TWO configuration words !
         aConfigWordHexEdit2->Enable(PIC_DeviceInfo.wCfgmask2_used != 0x0000);
-//      if( PIC_DeviceInfo.wCfgmask2_used == 0x0000)  // looks like there is no 2nd cfg word:
-//         Ed_ConfigWord2->Color = clBtnShadow;
-//      else // 2nd config word seems to exist:
-//         Ed_ConfigWord2->Color = clWindow;
         aConfigWordHexEdit2->ChangeValue(wxString::Format(_T("%04X"), PicBuf_GetConfigWord(1)));
-//      _stprintf(str80, _T("%04X"), PicBuf_GetConfigWord(1) );
-//      Ed_ConfigWord2->Text = str80;
     }
 
     // Since 2005-03-11 : Fill the string grid ("table") with special configuration bits (or bit groups):
     if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
         APPL_LogEvent( _("UpdateDeviceConfigTab: Updating config BIT GRID..") );
     UpdateConfigBitGrid();
-//   if( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-//       APPL_LogEvent( _("UpdateDeviceConfigTab: Updating config BIT COMBO..") );
-//   UpdateConfigBitCombo();
 
     aProgMemSizeText  ->ChangeValue(wxString::Format(_T("%d"), PIC_DeviceInfo.lCodeMemSize));
     aEepromMemSizeText->ChangeValue(wxString::Format(_T("%d"), PIC_DeviceInfo.lDataEEPROMSizeInByte));
@@ -261,39 +227,29 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
     //      and oscillator calibration words. Show info about this:
     aSavedBeforeEraseText->SetLabel(_T(""));
     aSavedBeforeEraseText->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT));
-//   aSavedBeforeEraseText->Color   = clBtnFace;
-//    aSavedBeforeEraseTitle->Enable(false);
     wxString  SavedData;
     if ( PIC_DeviceInfo.wCfgmask_bandgap!=0 ) // bandgap calibration bits, 0x3000 for 12F675
     {
-//        aSavedBeforeEraseTitle->Enable(true);
       if(PIC_lBandgapCalibrationBits>=0)
         {
-//            _stprintf(str80, _("bandgap_cal=0x%06lX"), PIC_lBandgapCalibrationBits);
-//          Lab_SavedBeforeErase->Caption = str80;
             _stprintf(str80, _T("0x%06lX"), PIC_lBandgapCalibrationBits);
             psz = str80;
         }
         else
             psz = _("n/a");
         SavedData.Printf(_("bandgap_cal=%s"), psz);
-//            Lab_SavedBeforeErase->Caption = _("bandgap_cal:n/a");
     }
     if ( PIC_DeviceInfo.lAddressOscCal>0 ) // oscillator calibration word, at 0x03FF for 12F675
     {
         if (!SavedData.IsEmpty())
             SavedData += _T("   ");
         // (usually the very last word in the CODE memory)
-//        aSavedBeforeEraseTitle->Enable(true);
         if (PIC_lOscillatorCalibrationWord>=0)
         {
             _stprintf(str80, _T("0x%06lX"), PIC_lOscillatorCalibrationWord);
             psz = str80;
-//            _stprintf(str80,_("  oscillator_cal=0x%06lX"),(long)PIC_lOscillatorCalibrationWord);
-//          Lab_SavedBeforeErase->Caption = Lab_SavedBeforeErase->Caption + wxString(str80);
             if ( (PIC_lOscillatorCalibrationWord & 0xFF00) != 0x3400/*RETLW*/ )
                 aSavedBeforeEraseText->SetForegroundColour(*wxRED);
-//              Lab_SavedBeforeErase->Color = clRed;
 
         }
         else
@@ -323,8 +279,7 @@ void TDeviceCfgPanel::UpdateConfigBitGrid(void)
 //  See DEVICES.CPP,  PicDev_FillConfigBitInfoTable() for details .
 {
     int i,n;
-//  wxChar str80[84];
-    wxString s, old_msg;  // VCL-stuff !
+    wxString s, old_msg;
     T_PicConfigBitInfo *pConfigBitInfo;
     T_PicConfigBitSetting *pBitCombinations;
     uint32_t dwConfigWord, dwConfigWordAddress, dwConfigMask;
@@ -336,20 +291,10 @@ void TDeviceCfgPanel::UpdateConfigBitGrid(void)
     MainFrame::TheMainFrame->Update();
 
 
-//   SG_ConfigBits->RowCount=PICDEV_MAX_CONFIG_BIT_INFOS;
-//   SG_ConfigBits->Cells[configbitsCOL_NAME][0] = _("Configuration Bit Group (Name)");
-//   SG_ConfigBits->Cells[configbitsCOL_ADDR][0] = _("Addr");
-//   SG_ConfigBits->Cells[configbitsCOL_MASK][0] = _("Mask");  // important debugging aid, also to add support for new devices
-//   SG_ConfigBits->Cells[configbitsCOL_VALUE][0]= _("Setting");
     aDevCfgGrid->BeginBatch();
     int RowCount = aDevCfgGrid->GetNumberRows();
     if (RowCount > 0)
         aDevCfgGrid->DeleteRows(0, RowCount);
-
-//   for(i=0; i<SG_ConfigBits->ColCount; ++i)  // clear line 1, we MAY not be able to fill it
-//    {
-//        SG_ConfigBits->Cells[i][1] = _T("");
-//    }
 
     wxArrayString ConfigChoice;
     pConfigBitInfo = PicDev_ConfigBitInfo;
@@ -363,16 +308,9 @@ void TDeviceCfgPanel::UpdateConfigBitGrid(void)
         {
             aDevCfgGrid->AppendRows();
             aDevCfgGrid->SetRowLabelValue(n, pConfigBitInfo->szText);
-//          SG_ConfigBits->Cells[configbitsCOL_NAME][n+1] = pConfigBitInfo->sz60Text;
             aDevCfgGrid->SetCellValue(n, configbitsCOL_ADDR, wxString::Format(_T("%06lX"), dwConfigWordAddress));
-//        sprintf(str80, _T("%06lX"), dwConfigWordAddress);
-//        SG_ConfigBits->Cells[configbitsCOL_ADDR][n+1] = str80;
             aDevCfgGrid->SetCellValue(n, configbitsCOL_MASK, wxString::Format(_T("%06lX"), dwConfigMask));
-//        sprintf(str80, _T("%06lX"), dwConfigMask);
-//        SG_ConfigBits->Cells[configbitsCOL_MASK][n+1] = str80;
             m_pConfigBitGridRowNumber_to_ConfigBitInfoPtr[n]= pConfigBitInfo;
-//        if( dwConfigWordAddress == 0x300005 )
-//            dwConfigWordAddress =  dwConfigWordAddress;
             if ( PicBuf_GetBufferWord(dwConfigWordAddress, &dwConfigWord) > 0 )
             {
                 s = PicDev_ConfigBitValueToString( pConfigBitInfo, dwConfigWord );
@@ -383,30 +321,14 @@ void TDeviceCfgPanel::UpdateConfigBitGrid(void)
             }
             aDevCfgGrid->SetCellValue(n, configbitsCOL_VALUE, s);
             pBitCombinations = pConfigBitInfo->pBitCombinations;
-//        pBitCombinations = pConfigBitInfo->pBitCombinations;
-//        iComboItemIndex = -1; // "item index" for the new combo list still unknown
-//        iComboItemCount = 0;  // no entry in the combo list (yet)
-//        CB_ConfigBits->Clear();
             if ( pBitCombinations ) // only if there is a chained list of "bit combinations"...
             {
                 while (pBitCombinations!=NULL && ConfigChoice.Count()<100 && pBitCombinations->szComboText[0]!=0 )
                 {
                     ConfigChoice.Add(pBitCombinations->szComboText);
-//            { CB_ConfigBits->Items->Add( pBitCombinations->sz60ComboText );
-//              if( strncmp( str60, pBitCombinations->sz60ComboText, 60 ) == 0 )
-//               { iComboItemIndex = iComboItemCount;  // select this item in the combo !
-//               }
                     pBitCombinations = pBitCombinations->pNext;
-//              ++iComboItemCount;
                 }
-//           CB_ConfigBits->ItemIndex = iComboItemIndex;
-//           fShowCombo = true;
             } // end if( pBitCombinations )
-//      }
-//     else // there is no "pointer to info about this configuration bit" ->
-//      {
-//         // leave fShowCombo=false to turn the combo box "off" for this line !
-//      }
             aDevCfgGrid->SetCellEditor(n, configbitsCOL_VALUE, new wxGridCellChoiceEditor(ConfigChoice));
             ConfigChoice.Empty();
 
@@ -416,13 +338,7 @@ void TDeviceCfgPanel::UpdateConfigBitGrid(void)
         ++pConfigBitInfo;
         if (i>PICDEV_MAX_CONFIG_BIT_INFOS)
             break;  // emergency break, should never happen
-    } // end while( pConfigBitInfo->sz60Text[0] )
-//   if( n>=1 )
-//      SG_ConfigBits->RowCount = n+1;   // remove unused lines (rows) at end of grid
-//   else
-//    {
-//      SG_ConfigBits->RowCount = 2;  // not one (looks too ugly)
-//    }
+    } // end while( pConfigBitInfo->szText && pConfigBitInfo->szText[0] )
 
     MainFrame::TheMainFrame->aStatusBar->SetStatusText(old_msg);
     MainFrame::TheMainFrame->Update();
@@ -456,7 +372,6 @@ void TDeviceCfgPanel::ApplyConfigBitGrid(void)
         pConfigBitInfo = m_pConfigBitGridRowNumber_to_ConfigBitInfoPtr[iGridRow];
         if ( pConfigBitInfo ) // can only "handle" this grid line with this device-specific config-bit info...
         {
-//        _tcsncpy(str80, SG_ConfigBits->Cells[configbitsCOL_VALUE][iGridRow].c_str(), 80 );
             _tcsncpy(str80, aDevCfgGrid->GetCellValue(iGridRow, configbitsCOL_VALUE).c_str(), 80 );
             dwConfigWordAddress = pConfigBitInfo->dwAddress;  // target address (example: 0x002007 for PIC16Fxx)
             dwConfigMask   = pConfigBitInfo->dwBitmask;    // bitmask (usually only ONE bit set in this value)
@@ -489,122 +404,6 @@ void TDeviceCfgPanel::ApplyConfigBitGrid(void)
 } // end ApplyConfigBitGrid()
 
 
-////---------------------------------------------------------------------------
-//// Poor man's "TStringGrid with Combos" ... without any 3rd-party's controls :
-//// Based on an idea from http://www.functionx.com/bcb/howto/cboxinstringgrid.htm
-////  This is clumsy but it works: "a TComboBox plastered over a TStringGrid" !
-////---------------------------------------------------------------------------
-//
-//void MainFrame::UpdateConfigBitCombo(void)
-//{
-//  int iGridRow = SG_ConfigBits->Row;
-//  int iComboItemIndex, iComboItemCount;
-//  wxChar str60[64];
-//  T_PicConfigBitInfo *pConfigBitInfo;
-//  T_PicConfigBitSetting *pBitCombinations;
-//  bool fShowCombo = false;
-//
-//  ++m_Updating;
-//
-//  if( SG_ConfigBits->Col == configbitsCOL_VALUE )
-//   {
-//     // Fill the COMBO for this line with new data,
-//     //  using the device-specific info table (in Devices.cpp) .
-//     // Get a pointer to the device-specific info about this "CONFIG-BIT":
-//     pConfigBitInfo = m_pConfigBitGridRowNumber_to_ConfigBitInfoPtr[iGridRow];
-//     if( pConfigBitInfo )  // can only "handle" this grid line with this device-specific config-bit info...
-//      { strncpy(str60, SG_ConfigBits->Cells[configbitsCOL_VALUE][iGridRow].c_str(), 60 ); // string to select in combo
-//        str60[60] = '\0';  // important for string compare, if strings too long
-//        pBitCombinations = pConfigBitInfo->pBitCombinations;
-//        iComboItemIndex = -1; // "item index" for the new combo list still unknown
-//        iComboItemCount = 0;  // no entry in the combo list (yet)
-//        CB_ConfigBits->Clear();
-//        if( pBitCombinations )  // only if there is a chained list of "bit combinations"...
-//         {
-//           while(pBitCombinations!=NULL && iComboItemCount<100 && pBitCombinations->sz60ComboText[0]!=0 )
-//            { CB_ConfigBits->Items->Add( pBitCombinations->sz60ComboText );
-//              if( strncmp( str60, pBitCombinations->sz60ComboText, 60 ) == 0 )
-//               { iComboItemIndex = iComboItemCount;  // select this item in the combo !
-//               }
-//              pBitCombinations = pBitCombinations->pNext;
-//              ++iComboItemCount;
-//            }
-//           CB_ConfigBits->ItemIndex = iComboItemIndex;
-//           fShowCombo = true;
-//         } // end if( pBitCombinations )
-//      }
-//     else // there is no "pointer to info about this configuration bit" ->
-//      {
-//         // leave fShowCombo=false to turn the combo box "off" for this line !
-//      }
-//   }  // end if( SG_ConfigBits->Col == configbitsCOL_VALUE )
-//
-//  if( fShowCombo )   // Ok to show the COMBO BOX for this line of the config-bit-grid ?
-//   { // This "TStringGrid with COMBOS" is actually an ordinary standard String Grid control,
-//     // with a TComboBox "plastered" over it. To let the combo look like a part of the grid,
-//     // get the screen coordinates of a cell in the grid (CellRect)
-//     // and place the TComboBox there .
-//     TRect CellRect = SG_ConfigBits->CellRect( SG_ConfigBits->Col, SG_ConfigBits->Row);
-// //  CB_ConfigBits->Top  = SG_ConfigBits->Top;   // why ?
-// //  CB_ConfigBits->Left = SG_ConfigBits->Left;
-// //  CB_ConfigBits->Top  = CB_ConfigBits->Top + CellRect.Top + SG_ConfigBits->GridLineWidth;
-// //  CB_ConfigBits->Left = CB_ConfigBits->Left + CellRect.Left + SG_ConfigBits->GridLineWidth + 1;
-//     CB_ConfigBits->Top  = SG_ConfigBits->Top  + CellRect.Top  + SG_ConfigBits->GridLineWidth + 1;
-//     CB_ConfigBits->Left = SG_ConfigBits->Left + CellRect.Left + SG_ConfigBits->GridLineWidth + 1;
-//     CB_ConfigBits->Height = (CellRect.Bottom - CellRect.Top) + 1;    // not accepted by ComboBox ?!
-//     CB_ConfigBits->Width  = CellRect.Right - CellRect.Left;
-//     CB_ConfigBits->Visible = True;
-//   }
-//  else // fShowCombo=false..
-//   { CB_ConfigBits->Visible = False;
-//   }
-//
-//  --m_Updating;
-//
-//} // end MainFrame::UpdateConfigBitCombo()
-
-////---------------------------------------------------------------------------
-//void MainFrame::SG_ConfigBitsClick(TObject *Sender)
-//{ // Called when user selected a cell (row or column) in the "configuration bit grid" .
-//  if( m_Updating )
-//    return;
-//  UpdateConfigBitCombo(); // adjust the TComboBox in this "Poor Man's TStringGrid with COMBOs" ;-)
-//} // SG_ConfigBitsClick()
-//---------------------------------------------------------------------------
-
-//void MainFrame::SG_ConfigBitsTopLeftChanged(TObject *Sender)
-//{ // > Use OnTopLeftChanged to perform special processing
-//  // > when the non-fixed cells in the grid are scrolled.
-//  // Here: Make sure the TComboBox is scrolled along with the grid cell:
-//  if( m_Updating )
-//    return;
-//  UpdateConfigBitCombo();
-//}
-//---------------------------------------------------------------------------
-
-////---------------------------------------------------------------------------
-//void MainFrame::TS_DeviceConfigResize(TObject *Sender)
-//{
-// int iNewTableWidth = TS_DeviceConfig->Width - 20;
-// int iWidth0;
-//  // ... similar as above after RESIZING the tabsheet with the config bits:
-//  if( m_Updating )
-//    return;
-//  if( iNewTableWidth>200 )
-//   {
-//    iWidth0 = (iNewTableWidth-90)/2;
-//    if( iWidth0 > 250 )
-//        iWidth0 = 250;
-//    SG_ConfigBits->ColWidths[0] = iWidth0;
-//    SG_ConfigBits->ColWidths[1] = 45;
-//    SG_ConfigBits->ColWidths[2] = 45;
-//    SG_ConfigBits->ColWidths[3] = iNewTableWidth-100-iWidth0;
-//   }
-//  UpdateConfigBitCombo();
-//}
-////---------------------------------------------------------------------------
-
-
 /**static*/ void TDeviceCfgPanel::SetDevice(const char *pDeviceName)
 {
     T_PicDeviceInfo MyDeviceInfo;
@@ -626,21 +425,15 @@ void TDeviceCfgPanel::ApplyConfigBitGrid(void)
         MainFrame::TheMainFrame->aOptionTab->aMplabDirLabel->SetForegroundColour(Colour);
         MainFrame::TheMainFrame->aOptionTab->aMplabDirLabel->Refresh();
     }
+    ConfigChanged = true;
 }
 
 
 void TDeviceCfgPanel::onPartNameChoiceSelect(wxCommandEvent& event)
-//void MainFrame::Combo_PartNameChange(TObject *Sender)
 {
-//    T_PicDeviceInfo MyDeviceInfo;
-
     if (MainFrame::TheMainFrame->m_Updating) return;
     wxCharBuffer DeviceName = aPartNameChoice->GetStringSelection().mb_str(wxConvISO8859_1);
     SetDevice(DeviceName);
-//    if ( PicDev_GetDeviceInfoByName(DeviceName, &MyDeviceInfo ) >= 0 )
-////  if( PicDev_GetDeviceInfoByName( Combo_PartName->Text.c_str(), &MyDeviceInfo ) >= 0 )
-//        PIC_PRG_SetDeviceType( &MyDeviceInfo );
-//    else PIC_PRG_SetDeviceType( PIC_DEV_TYPE_UNKNOWN );
     UpdateDeviceConfigTab( true/*fUpdateHexWord*/ );
     MainFrame::TheMainFrame->aOptionTab->UpdateOptionsDisplay();    // a lot may have changed, depending on chip type
     MainFrame::TheMainFrame->aConfigMemoryTab->UpdateIdAndConfMemDisplay(); // number of 'valid locations' may have changed
@@ -658,9 +451,7 @@ void TDeviceCfgPanel::onPartNameChoiceSelect(wxCommandEvent& event)
     {
         // this message should occur after switching from 16F628 to F818 (for example)
         MainFrame::TheMainFrame->aNotebook->SetSelection(MainFrame::TS_Options);
-//    PageControl1->ActivePage = TS_Options;
         MainFrame::TheMainFrame->aOptionTab->aVddBeforeMCLRChk->SetForegroundColour(*wxRED);
-//    Chk_VddBeforeMCLR->Color = clRed;
         if (wxMessageBox(
                     _("Conflicting Vpp/Vdd switching sequence on the Options tab.\n Change the sequence to match the new device info ?"),
                     _("Vpp/Vdd switching sequence possibly wrong"),
@@ -675,11 +466,9 @@ void TDeviceCfgPanel::onPartNameChoiceSelect(wxCommandEvent& event)
         UpdateDeviceConfigTab( true/*fUpdateHexWord*/ );
         MainFrame::TheMainFrame->aOptionTab->UpdateOptionsDisplay();
         MainFrame::TheMainFrame->aOptionTab->aVddBeforeMCLRChk->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT));
-//    Chk_VddBeforeMCLR->Color = clBtnFace;
         MainFrame::TheMainFrame->Update();
         wxMilliSleep(500);
         MainFrame::TheMainFrame->aNotebook->ChangeSelection(MainFrame::TS_DeviceConfig);
-//    PageControl1->ActivePage = TS_DeviceConfig;
     } // end if < Vpp/Vdd switching sequence POSSIBLY wrong >
 }
 //---------------------------------------------------------------------------
@@ -687,11 +476,7 @@ void TDeviceCfgPanel::onPartNameChoiceSelect(wxCommandEvent& event)
 
 //---------------------------------------------------------------------------
 void TDeviceCfgPanel::onConfigWordHexEditText(wxCommandEvent& event)
-//void ::Ed_ConfigWordHexChange(TObject *Sender)
 {
-// char str8[9];
-// long l;
-
     if (MainFrame::TheMainFrame->m_Updating)
         return;
     if ( APPL_i32CustomizeOptions & APPL_CUST_NO_CONFIG_EDITOR )
@@ -706,10 +491,6 @@ void TDeviceCfgPanel::onConfigWordHexEditText(wxCommandEvent& event)
         return;
     }
 
-//  strncpy(str8,Ed_ConfigWordHex->Text.c_str(), 8);
-//  l = HexStringToLongint(6, str8);  // usually the "config word" has 4 digits only
-//  if(l<0) return; // someone entered an invalid hex config word .. ignore it !
-
     // Immediately 'decode' the new configuration word..
     ++(MainFrame::TheMainFrame->m_Updating);
     PicBuf_SetConfigWord( 0 , ConfigWord );
@@ -722,11 +503,7 @@ void TDeviceCfgPanel::onConfigWordHexEditText(wxCommandEvent& event)
 
 //---------------------------------------------------------------------------
 void TDeviceCfgPanel::onConfigWordHexEdit2Text(wxCommandEvent& event)
-//void ::Ed_ConfigWord2Change(TObject *Sender)
 {
-// char str8[9];
-// long l;
-
     if (MainFrame::TheMainFrame->m_Updating) return;
 
     long ConfigWord;
@@ -737,9 +514,6 @@ void TDeviceCfgPanel::onConfigWordHexEdit2Text(wxCommandEvent& event)
         aConfigWordHexEdit2->SetBackgroundColour(wxColour(0xFF,0x80,0x80));
         return;
     }
-//  strncpy(str8,Ed_ConfigWord2->Text.c_str(), 8);
-//  l = HexStringToLongint(6, str8);
-//  if(l<0) return; // someone entered an invalid 4-digit hex config word .. ignore
 
     // Immediately 'decode' the new configuration word..
     ++(MainFrame::TheMainFrame->m_Updating);
@@ -754,14 +528,11 @@ void TDeviceCfgPanel::onConfigWordHexEdit2Text(wxCommandEvent& event)
 
 
 void TDeviceCfgPanel::onProgMemSizeTextText(wxCommandEvent& event)
-//void ::Ed_ProgramMemoryChange(TObject *Sender)
 {
-// bool fCorrected = false;
     if (MainFrame::TheMainFrame->m_Updating)
         return;
 
     aProgMemSizeText->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
-//  Ed_ProgramMemory->Color = clWhite;
     if ( tolower(PIC_DeviceInfo.sz40DeviceName[0])=='u') // "unknown" ?
     {
         long Size;
@@ -770,29 +541,11 @@ void TDeviceCfgPanel::onProgMemSizeTextText(wxCommandEvent& event)
                 &&  (Size > 0))
         {
             Config.dwUnknownCodeMemorySize = Size;
-//    Config.dwUnknownCodeMemorySize = StrToIntDef(Ed_ProgramMemory->Text,
-//       Config.dwUnknownCodeMemorySize );
-//    if(Config.dwUnknownCodeMemorySize > PIC_BUF_CODE_SIZE)
-//     {
-//       Config.dwUnknownCodeMemorySize = PIC_BUF_CODE_SIZE;
-//       fCorrected = true;
-//     }
-//    if(Config.dwUnknownCodeMemorySize < 1)
-//     {
-//       Config.dwUnknownCodeMemorySize = 1;
-//       fCorrected = true;
-//     }
             PIC_DeviceInfo.lCodeMemSize = Config.dwUnknownCodeMemorySize;
+            ConfigChanged = true ;  // save on exit
         }
         else
             aProgMemSizeText->SetBackgroundColour(wxColour(0xFF,0x7F,0x7F));
-//   }
-//  if(fCorrected)
-//   {
-//     ++m_Updating;
-//     Ed_ProgramMemory->Color = clRed;
-//     Ed_ProgramMemory->Text  = IntToStr(Config.dwUnknownCodeMemorySize);
-//     --m_Updating;
     }
 }
 //---------------------------------------------------------------------------
@@ -800,7 +553,6 @@ void TDeviceCfgPanel::onProgMemSizeTextText(wxCommandEvent& event)
 
 
 void TDeviceCfgPanel::onEepromMemSizeTextText(wxCommandEvent& event)
-//void ::Ed_DataEepromMemoryChange(TObject *Sender)
 {
     if (MainFrame::TheMainFrame->m_Updating)
         return;
@@ -810,9 +562,10 @@ void TDeviceCfgPanel::onEepromMemSizeTextText(wxCommandEvent& event)
         long Size;
         if (aEepromMemSizeText->GetValue().ToLong(&Size)
                 && (Size >= 0))
+        {
             PIC_DeviceInfo.lDataEEPROMSizeInByte = Config.dwUnknownDataMemorySize = Size;
-//    PIC_DeviceInfo.lDataEEPROMSizeInByte = Config.dwUnknownDataMemorySize =
-//      StrToIntDef(Ed_DataEepromMemory->Text, Config.dwUnknownDataMemorySize);
+            ConfigChanged = true ;  // save on exit
+        }
         else
             aEepromMemSizeText->SetBackgroundColour(wxColour(0xFF,0x7F,0x7F));
     }
@@ -822,12 +575,10 @@ void TDeviceCfgPanel::onEepromMemSizeTextText(wxCommandEvent& event)
 
 
 void TDeviceCfgPanel::onHasFlashMemoryChkClick(wxCommandEvent& event)
-//void ::Chk_HasFlashMemoryClick(TObject *Sender)
 {
     if (MainFrame::TheMainFrame->m_Updating)
         return;
     if (aHasFlashMemoryChk->GetValue())
-//  if(Chk_HasFlashMemory->Checked)
     {
         // which kind of FLASH memory, 12..14 bit per location, or more ?
         PIC_DeviceInfo.iCodeMemType=PIC_MT_FLASH;   // 12Fxxx, 16Fxxx -> 14 bit per word
@@ -838,35 +589,25 @@ void TDeviceCfgPanel::onHasFlashMemoryChkClick(wxCommandEvent& event)
         PIC_DeviceInfo.iCodeMemType=PIC_MT_EPROM;
         Config.iUnknownDevHasFlashMemory=0;
     }
+    ConfigChanged = true ;  // save on exit
 }
 //---------------------------------------------------------------------------
 
 
 
 void TDeviceCfgPanel::onDevCfgGridCellChange(wxGridEvent& event)
-//void ::CB_ConfigBitsChange(TObject *Sender)
 {
     // Called when the user(?) selected an item from the "plastered" configuration bit COMBO.
     int   iGridRow = event.GetRow();
     uint32_t dwAddr;
-//  const wxChar  *cp;
-//  wxChar  str80[84];
 
     if ( MainFrame::TheMainFrame->m_Updating )
         return;   // it was not the user ("clicking"), but a programmed access to the COMBO
 
     ++(MainFrame::TheMainFrame->m_Updating);
 
-//  // Here: Copy the "new" selected item as text into the string grid ..
-//  SG_ConfigBits->Cells[SG_ConfigBits->Col][iGridRow] =
-//        CB_ConfigBits->Items->Strings[CB_ConfigBits->ItemIndex];
-
-    // .. and check the ADDRESS of this config bit, to mark this buffer entry as "used" :
-//  _tcsncpy(str80, SG_ConfigBits->Cells[configbitsCOL_ADDR][iGridRow].c_str(), 80 );
-//  cp = str80;
 	wxString tempstring= aDevCfgGrid->GetCellValue(iGridRow, configbitsCOL_ADDR);
     if (tempstring.ToLong( (long*)&dwAddr, 16))
-//  if( PicHex_GetHexValueFromSource( &cp, &dwAddr ) )  // parsed a valid address ?
     {
         PicBuf_SetMemoryFlags(dwAddr, PicBuf_GetMemoryFlags(dwAddr) | PIC_BUFFER_FLAG_USED );
     }
@@ -880,7 +621,7 @@ void TDeviceCfgPanel::onDevCfgGridCellChange(wxGridEvent& event)
 
     --(MainFrame::TheMainFrame->m_Updating);
 
-} // end CB_ConfigBitsChange()
+}
 //---------------------------------------------------------------------------
 
 
