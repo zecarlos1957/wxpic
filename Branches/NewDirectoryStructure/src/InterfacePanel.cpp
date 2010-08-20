@@ -452,7 +452,7 @@ void TInterfacePanel::changeIoPortAddress (void)
     if (MainFrame::TheMainFrame->m_Updating)
         return;
 
-    EIoAddressUsage IoAddressUsage;
+    EIoAddressUsage IoAddressUsage = usageINPUT_ERROR;
 
     if (!aIoPortAddressEdit->GetValue().ToLong(&PortAddr,16))
         IoAddressUsage = usageINPUT_ERROR;  // someone entered an invalid hex word .. ignore
@@ -469,8 +469,7 @@ void TInterfacePanel::changeIoPortAddress (void)
                 Config.iLptIoAddress = PortAddr;
                 ConfigChanged = true ;  // save on exit
             }
-            else // do NOT accept the address (leave it unchanged)
-                IoAddressUsage = usageINPUT_ERROR;
+            // else // do NOT accept the address (leave it unchanged)
         }
         else
         {

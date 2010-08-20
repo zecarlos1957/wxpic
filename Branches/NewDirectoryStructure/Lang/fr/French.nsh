@@ -1,6 +1,6 @@
 # Define language variant for the installer 
 LoadLanguageFile "${NSISDIR}\Contrib\Language files\French.nlf"
-LicenseLangString LicenseData ${LANG_FRENCH} "Lang\fr\License.txt"
+LicenseLangString LicenseData ${LANG_FRENCH} "doc\fr\License.txt"
 VIAddVersionKey /LANG=${LANG_FRENCH} "ProductName" "${PRODUCT_NAME}"
 VIAddVersionKey /LANG=${LANG_FRENCH} "Comments" "Programmeur PIC"
 VIAddVersionKey /LANG=${LANG_FRENCH} "LegalCopyright" "© Philippe Chevrier et Contributeurs"

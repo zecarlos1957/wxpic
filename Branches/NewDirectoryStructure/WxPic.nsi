@@ -199,18 +199,19 @@ Section "English"
 	; Put The default Help and license files
 	SetOutPath "$INSTDIR\Help"
 	File "bin\${Build}\Help\*.*"
-	SetOutPath "$INSTDIR\Lang"
-	File "bin\${Build}\Lang\License.txt"
-	File "bin\${Build}\Lang\Author.txt"
+	SetOutPath "$INSTDIR\doc"
+	File "bin\${Build}\doc\License.txt"
+	File "bin\${Build}\doc\Author.txt"
 SectionEnd
 
 !macro LANGUAGE_SECTION LANG_NAME LANG_TAG
 Section "${LANG_NAME}"
 	; Copy the translation file
+	SetOutPath "$INSTDIR\doc\${LANG_TAG}"
+	File "bin\${Build}\doc\${LANG_TAG}\License.txt"
+	File "bin\${Build}\doc\${LANG_TAG}\Author.txt"
 	SetOutPath "$INSTDIR\Lang\${LANG_TAG}"
 	File "bin\${Build}\Lang\${LANG_TAG}\WxPic.mo"
-	File "bin\${Build}\Lang\${LANG_TAG}\License.txt"
-	File "bin\${Build}\Lang\${LANG_TAG}\Author.txt"
 	
 	; Copy the Help files if any
 	SetOutPath "$INSTDIR\Help\${LANG_TAG}"
@@ -270,6 +271,7 @@ EndOfDeviceFile:
 	
 	RMDir /r "$INSTDIR\Lang"
 	RMDir /r "$INSTDIR\Help"
+	RMDir /r "$INSTDIR\doc"
 	
 	Delete /REBOOTOK "${UNINSTALL}"
   
