@@ -122,7 +122,7 @@ void MainFrame::initAuto (void)
     wxBoxSizer* MainBoxSizer;
     wxMenuItem* ShowPrgOptMenuItem;
 
-    Create(0, wxID_ANY, _("Wx PIC Programmer"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
+    Create(0, wxID_ANY, _("WxPic Programmer"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     MainBoxSizer = new wxBoxSizer(wxVERTICAL);
     aNotebook = new wxNotebook(this, ID_NOTEBOOK, wxPoint(216,312), wxDefaultSize, 0, _T("ID_NOTEBOOK"));
     aCodeMemTab = new TCodeMemPanel(aNotebook, ID_CODE_MEM_PANEL, wxDefaultPosition, wxDefaultSize, 0, _T("ID_CODE_MEM_PANEL"));
@@ -1224,7 +1224,7 @@ void MainFrame::onAboutMenuItemSelected(wxCommandEvent& event)
 //void MainFrame::About1Click(TObject *Sender)
 {
 	wxAboutDialogInfo myAbout;
-	myAbout.AddDeveloper( _T("Author of wxPic, Philippe Chevrier") );
+	myAbout.AddDeveloper( _T("Author of WxPic, Philippe Chevrier") );
 	myAbout.AddDeveloper( _T("Author of original WinPic, Wolfgang Buescher (DL4YHF)") );
 	myAbout.AddDeveloper( _T("PIC18Fxxxx by Martin van der Werff") );
 	myAbout.AddDeveloper( _T("PIC12F508 by Leonid Lisovskiy") );
@@ -1267,10 +1267,10 @@ void MainFrame::onAboutMenuItemSelected(wxCommandEvent& event)
 //   elif( wxFileName::FileExists("/usr/share/doc/packages/wxpic/License.txt") )
 //      License = TLanguage::GetFileText("/usr/share/doc/packages/wxpic/License.txt");
 //
-   myAbout.SetLicense( _T("wxPic is PIC Microcontroller Programmer utility.\nCopyright (C) 2009  Philippe Chevrier\n") + License );
+    myAbout.SetLicense( _T("WxPic is PIC Microcontroller Programmer utility.\nCopyright (C) 2009  Philippe Chevrier\n") + License );
 	myAbout.SetCopyright( _T( "Copyright (C) 2009 Philippe Chevrier" ) );
-	myAbout.SetDescription( _("wxPic is PIC Microcontroller Programmer") );
-	myAbout.SetName( _T("wxPIC") );
+	myAbout.SetDescription( _("WxPic is PIC Microcontroller Programmer") );
+	myAbout.SetName( _T("WxPic") );
 	if (SVN_MANAGED){
 		myAbout.SetVersion( wxString( _T("")) << SVN_VERSION << _T(" Rev.") << SVN_REVISION) ;
 		}
