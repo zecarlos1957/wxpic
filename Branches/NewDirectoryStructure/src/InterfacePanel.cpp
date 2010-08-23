@@ -314,7 +314,6 @@ static uint32_t IsSerialInterface =
 //---------------------------------------------------------------------------
 void TInterfacePanel::UpdateInterfaceType(void)
 {
-    int i;
     ++(MainFrame::TheMainFrame->m_Updating);
     if ((Config.pic_interface_type >= PIC_INTF_TYPE_MAX)
     ||  (Config.pic_interface_type < 0))
@@ -340,13 +339,13 @@ void TInterfacePanel::UpdateInterfaceType(void)
             wxString DeviceName;
 
 #ifdef __WXMSW__
-            for (i=0;i<16;++i)
+            for (int i=0;i<16;++i)
                 aInterfacePortChoice->Append(wxString::Format(_T("COM%d"),i));
 #else
             wxString device_path;
             wxDir temp_dir(wxT("/dev"));
             static const wxChar *SerialPortDevNames [] = { wxT("ttyS*"), wxT("ttyUSB*") };
-            for (int i = 0; i < sizeof(SerialPortDevNames)/sizeof(wxChar*)); ++i)
+            for (unsigned i = 0; i < sizeof(SerialPortDevNames)/sizeof(wxChar*); ++i)
             {
                 if(temp_dir.GetFirst( &device_path, SerialPortDevNames[i] ) )
                     do{
