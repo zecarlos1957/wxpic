@@ -1,22 +1,17 @@
-Auteur:
- Philippe Chevrier
- pch@laposte.net
- http:wxpic.free.fr
+Auteur de WxPic :
+	Philippe Chevrier (pch@laposte.net - http:wxpic.free.fr)
 
-Auteur du Programme Original
- Wolfgang Buescher, DL4YHF
- dl4yhf@qsl.net
- www.qsl.net/dl4yhf
+Auteur du Programme Original (WinPic) :
+	Wolfgang Buescher, DL4YHF (dl4yhf@qsl.net - www.qsl.net/dl4yhf)
 
+Portage Linux et packaging by Erdem U. Altinyurt
 PIC12F508 par Leonid Lisovskiy
 PIC12F609/615, 16F610/616 par Andrew Kibler
 PIC18Fxxxx par Martin van der Werff
 
-WxPic is using the wxWidgets framework http://www.wxwidgets.org/
-
-Le developpement de WxPic utilise:
-Code::Blocks et wxSmith: http://www.codeblocks.org/
-Tortoise SVN: http://tortoisesvn.net/
+wxWidgets framework: http://www.wxwidgets.org/
 MinGW: http://sourceforge.net/projects/mingw/
 NullSoft Scriptable Install System: http://nsis.sf.net
 WinRing0: http://openlibsys.org/ (voir WinRing0.COPYRIGHT.txt)
+Tortoise SVN: http://tortoisesvn.net/
+Code::Blocks et wxSmith: http://www.codeblocks.org/
