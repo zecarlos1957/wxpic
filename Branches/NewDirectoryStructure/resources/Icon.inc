@@ -18,4 +18,5 @@ ICON_DEF(LedRed)
 ICON_DEF(LedOff)
 ICON_DEF(Open)
 ICON_DEF(Save)
+ICON_DEF(WxPic32)
 

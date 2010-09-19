@@ -23,6 +23,7 @@
 #include "LedOff.xpm"
 #include "Open.xpm"
 #include "Save.xpm"
+#include "WxPic32.xpm"
 #endif
 
 
