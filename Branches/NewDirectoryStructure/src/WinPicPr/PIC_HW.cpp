@@ -47,6 +47,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <wx/xml/xml.h>
 #include <wx/stdpaths.h>
 #include <wx/utils.h>
+#include <wx/log.h>
 
 #include "Config.h"    // permanently saved Config-structure
 #include <Appl.h>      // call the APPLication to display message strings
@@ -1248,14 +1249,14 @@ int PicHw_TestNotPrinterBusy(int iNewState)
 }
 
 int PicHw_SetPrinterALF(int iNewState)
-{ 
+{
     // the "inversion by hardware" of ALF is considered here:
     if(iNewState >0) { PicHw_wLptCtrlBits &= ~0x02; PicHw_UpdateLptCtrlBits(); }
     if(iNewState==0) { PicHw_wLptCtrlBits |=  0x02; PicHw_UpdateLptCtrlBits(); }
     return ( PicHw_wLptCtrlBits & 0x02) == 0;
 }
 int PicHw_SetNotPrinterALF(int iNewState)
-{ 
+{
     // the "inversion by hardware" of ALF is considered here:
     if(iNewState >0) { PicHw_wLptCtrlBits |=  0x02; PicHw_UpdateLptCtrlBits(); }
     if(iNewState==0) { PicHw_wLptCtrlBits &= ~0x02; PicHw_UpdateLptCtrlBits(); }
@@ -1278,7 +1279,7 @@ int PicHw_TestNotPrinterError(int iNewState)
 }
 
 int PicHw_SetPrinterInit(int iNewState)
-{ 
+{
     if(iNewState >0) { PicHw_wLptCtrlBits |=  0x04; PicHw_UpdateLptCtrlBits(); }
     if(iNewState==0) { PicHw_wLptCtrlBits &= ~0x04; PicHw_UpdateLptCtrlBits(); }
     return ( PicHw_wLptCtrlBits & 0x04) != 0;
@@ -1291,14 +1292,14 @@ int PicHw_SetNotPrinterInit(int iNewState)
 }
 
 int PicHw_SetPrinterSelect(int iNewState)
-{ 
+{
     // the "hardware inversion" of the SELECT_PRINTER output is considered here:
     if(iNewState >0) { PicHw_wLptCtrlBits &= ~0x08; PicHw_UpdateLptCtrlBits(); }
     if(iNewState==0) { PicHw_wLptCtrlBits |=  0x08; PicHw_UpdateLptCtrlBits(); }
     return ( PicHw_wLptCtrlBits & 0x08) == 0;
 }
 int PicHw_SetNotPrinterSelect(int iNewState)
-{ 
+{
     // the "hardware inversion" of the SELECT_PRINTER output is considered here:
     if(iNewState >0) { PicHw_wLptCtrlBits |=  0x08; PicHw_UpdateLptCtrlBits(); }
     if(iNewState==0) { PicHw_wLptCtrlBits &= ~0x08; PicHw_UpdateLptCtrlBits(); }
@@ -1933,8 +1934,11 @@ bool PicHw_ReadCustomProgrammerDefsFromIniFile(const wxChar *pszFileName, T_PicH
 // bool  fResult;
 
     wxXmlDocument doc;
-    if (!doc.Load(pszFileName))
-        return false;
+    {
+        wxLogNull logNo; //-- Suppress error dialog
+        if (!doc.Load(pszFileName))
+            return false;
+    }
 
     wxXmlNode *Root = doc.GetRoot();
     if (Root->GetName() != _T("programmer-control-lines"))

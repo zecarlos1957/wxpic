@@ -22,7 +22,7 @@ SetCompressor /SOLID lzma
 ;--------------------------------
 ; If the build is not defined, then define it to Release
 !ifndef ${BUILD}
-   !define BUILD Release
+   !define BUILD Win32Release
 !else
 	!if ${BUILD} != "Debug"
 		!if ${BUILD} != "Release"
@@ -200,18 +200,19 @@ Section "English"
 	SetOutPath "$INSTDIR\Help"
 	File "bin\${Build}\Help\*.*"
 	SetOutPath "$INSTDIR\doc"
-	File "bin\${Build}\doc\License.txt"
-	File "bin\${Build}\doc\Author.txt"
+	File "bin\${Build}\License.txt"
+	File "bin\${Build}\Author.txt"
+	File "bin\${Build}\Translator.txt"
+	File "bin\${Build}\DocWriter.txt"
 SectionEnd
 
 !macro LANGUAGE_SECTION LANG_NAME LANG_TAG
 Section "${LANG_NAME}"
-	; Copy the translation file
-	SetOutPath "$INSTDIR\doc\${LANG_TAG}"
-	File "bin\${Build}\doc\${LANG_TAG}\License.txt"
-	File "bin\${Build}\doc\${LANG_TAG}\Author.txt"
-	SetOutPath "$INSTDIR\Lang\${LANG_TAG}"
-	File "bin\${Build}\Lang\${LANG_TAG}\WxPic.mo"
+	; Copy the localized files
+	SetOutPath "$INSTDIR\${LANG_TAG}"
+	File "bin\${Build}\${LANG_TAG}\WxPic.mo"
+	SetOutPath "$INSTDIR\${LANG_TAG}"
+	File /nonfatal "bin\${Build}\${LANG_TAG}\*.txt"
 	
 	; Copy the Help files if any
 	SetOutPath "$INSTDIR\Help\${LANG_TAG}"

@@ -40,20 +40,14 @@ bool MyApp::OnInit()
 {
     bool wxsOK = true;
 
-    TLanguage::SetLangDefDir();
+    TLanguage::Init();
     MainFrame::TheIniFile.SetPath(_T("/LANGUAGE"));
     MainFrame::TheIniFile.Read(_T("Name"), &MainFrame::TheLanguageName);
     if (MainFrame::TheLanguageName != BUILT_IN_NAME)
         TLanguage::SetLanguage(MainFrame::TheLanguageName);
     if (MainFrame::TheLanguageName.IsEmpty())
         MainFrame::TheLanguageName = BUILT_IN_NAME;
-#if defined( __WXMSW__ )
     TLanguage::SetHelp();
-//#elif defined (__WXMAC__)
-#else // elif defined( __WXGTK__ )
-	if( not TLanguage::SetHelp() )// try for Static build executables first those doesn't require install.
-	 TLanguage::SetHelp( _T("/usr/share/doc/packages/wxpic/") );
-#endif
 
     if (aInstanceChecker.Create(APPLICATION_NAME)
     &&  aInstanceChecker.IsAnotherRunning())

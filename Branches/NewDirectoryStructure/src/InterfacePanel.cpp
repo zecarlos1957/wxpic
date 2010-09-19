@@ -11,6 +11,7 @@
 #include <wx/settings.h>
 #include <wx/msgdlg.h>
 #include <wx/stdpaths.h>
+#include <wx/filename.h>
 #include <wx/dir.h>
 #include <WinPicPr/Config.h>
 #include <WinPicPr/PIC_HW.h>
@@ -941,10 +942,9 @@ void TInterfacePanel::onCustomInterfSelectButtonClick(wxCommandEvent& event)
     ++(MainFrame::TheMainFrame->m_Updating);
 
 
-    // see help on TOpenDialog .
     MainFrame::TheMainFrame->aFileDialog->SetMessage(_( "Load custom interface definition file" ));
     MainFrame::TheMainFrame->aFileDialog->SetWindowStyle(wxFD_FILE_MUST_EXIST | wxFD_OPEN);
-    wxFileName Filename (wxStandardPaths::Get().GetExecutablePath());
+    wxFileName Filename (wxStandardPaths::Get().GetDataDir(), wxEmptyString);
 //    if ( interface_type == PIC_INTF_TYPE_PLUGIN_DLL )
 //    {
 //        aFileDialog->SetWildcard(_("Plugin DLLs (*.dll)|*.dll"));

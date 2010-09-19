@@ -28,6 +28,7 @@
 //*)
 #include <wx/toolbar.h>
 #include <wx/config.h>
+#include <wx/aboutdlg.h>
 #include <WinPicPr/Devices.h>
 #include "MemAddrGetter.h"
 #include "CodeMemPanel.h"
@@ -306,7 +307,8 @@ class MainFrame: public wxFrame
 		void onChar(wxKeyEvent& event);
         void onMenuOpen(wxMenuEvent &pEvent);
 
-        wxString aEmptyMRFname;
+        wxString          aEmptyMRFname;
+        wxAboutDialogInfo aAboutInfo;
 
         void     SaveLayout   (void);
         void     LoadLayout   (void);
@@ -329,6 +331,7 @@ class MainFrame: public wxFrame
         bool RunHexOpenDialog (void);
         void initAuto         (void);
         void initMore         (void);
+        void addLines         (wxString &pText, void (wxAboutDialogInfo::*pAdder)(const wxString&));
 
  	public:
        void UpdateCodeMemRange( int iWhichMemory, long i32NLocations, int iUCMoptions );

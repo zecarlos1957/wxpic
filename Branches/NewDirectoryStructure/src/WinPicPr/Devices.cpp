@@ -2674,7 +2674,7 @@ const wxChar * PicDev_GetDeviceFileName(void)
 {
     static wxChar sz511FileName[512];
 //  wxString s = ExtractFilePath(Application->ExeName)+C_DEVLIST_FILE_NAME;
-    wxFileName  DeviceListFilename (wxStandardPaths::Get().GetExecutablePath());
+    wxFileName  DeviceListFilename (wxStandardPaths::Get().GetDataDir(), wxEmptyString);
     DeviceListFilename.SetFullName(C_DEVLIST_FILE_NAME);
     wxString s = DeviceListFilename.GetFullPath();
     _tcsncpy( sz511FileName, s.c_str(), 511 );
@@ -3787,7 +3787,7 @@ bool PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo )
                     DevFilename.AssignDir(Config.sz255MplabDevDir);
                 else
                 {
-                    DevFilename.Assign(wxStandardPaths::Get().GetExecutablePath());
+                    DevFilename.Assign(wxStandardPaths::Get().GetDataDir(), wxEmptyString);
                     DevFilename.AppendDir(_T("Devices"));
                 }
                 DevFilename.SetFullName(psrcPicDeviceInfo->sz80ConfigRegisterInfoFile);
@@ -4166,7 +4166,7 @@ void PicDev_DumpDeviceListToFile( const wxChar *pszDumpFileName )
     char sz80[81];
     int  i;
 
-    wxFileName DumpFilename(wxStandardPaths::Get().GetExecutablePath());
+    wxFileName DumpFilename(wxStandardPaths::Get().GetDocumentsDir(), wxEmptyString);
     DumpFilename.SetFullName(pszDumpFileName);
     s = DumpFilename.GetFullPath();
     wxRemoveFile( s );  // make sure we write into a "clean" file. No old scrap !

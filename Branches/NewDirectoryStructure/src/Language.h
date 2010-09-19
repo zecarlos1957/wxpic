@@ -13,23 +13,24 @@
 
 #include <wx/arrstr.h>
 #include <wx/intl.h>
-#include <wx/filename.h>
 #include "HelpCtrl.h"
 
 #define HELP_DEFAULT_DIR_NAME     (_T("Help"))
-#define LANGUAGE_DEFAULT_DIR_NAME (_T("Lang"))
+
+//------------------------------------------------------------
+//-- Manage the Language files and the Help Language
+//-- The translation files must be in the form:
+//-- Win32: <ApplicationDirectory>/Lang/<LanguageCode>/<ApplicationName>.mo
+//-- Linux: <ApplicationDirectory>/../share/local/<LanguageCode>/LC_MESSAGES/<ApplicationName>.mo
+//-- with <LanguageCode> a valid language code such as sp or fr_FR
+//------------------------------------------------------------
 
 class TLanguage
 {
 public:
-    //-- Yet before calling SetLanguage, GetLanguageNameList, ...
-    //-- This initialisation method must be called to define the place where the translation files and help files are
-    //-- If the pLanguageDefDir parameter is <Directory>/<Filename>.<Ext>
-    //-- The translation files must be in the form
-    //-- <Directory>/<LanguageCode>/<Filename>.mo with <LanguageCode> a valid language code such as sp or fr_FR
-    //-- If the provided directory path is empty it is replaced
-    //-- by the application executable dir and Name with additional directory /Lang in between
-    static bool                 SetLangDefDir       (const wxFileName &pLanguageDefDir = wxFileName());
+    //-- This initialisation method must be called first
+    //-- Return true upon success
+    static bool                 Init                (void);
 
     //-- At very beginning of application execution (before any call to wxGetTranslation or GetHelpController)
     //-- Specify the language by its natural name.
@@ -62,7 +63,7 @@ public:
     static wxString             GetFileText         (const wxString &pFilename) { return theSingleton->doGetFileText(pFilename); };
 
 private:
-    /**/ TLanguage     (const wxFileName &pLanguageDefFile);
+    /**/ TLanguage     (void);
     void     setLanguage   (wxString   &pLanguageName);
     void     doSetLanguage (int pLanguage);
     bool     try2Languages (int pLanguage);
@@ -75,7 +76,7 @@ private:
     int                     aLanguageTab[wxLANGUAGE_USER_DEFINED];
     int                     aLanguageCount;
     int                     aLanguageSet;
-    wxFileName              aLanguageDefFile;
+    wxString                aLanguageFile;
     wxLocale                aLocale;
     wxBrowserHelpController aHelpController;
     bool                    aIsHelpValid;

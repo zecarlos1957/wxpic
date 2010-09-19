@@ -251,7 +251,7 @@ bool wxBrowserHelpController::LoadFile(const wxString& file)
     {
         wxString locName = loc->GetName();
 
-        // the locale is in general of the form xx_YY.zzzz, try the full firm
+        // the locale is in general of the form xx_YY.zzzz, try the full form
         // first and then also more general ones
         wxFileName helpDirLoc(helpDir);
         if (!locName.empty())

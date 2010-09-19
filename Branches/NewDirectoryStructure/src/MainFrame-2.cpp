@@ -28,7 +28,7 @@
 #include <wx/stdpaths.h>
 #include <wx/settings.h>
 #include <wx/file.h>
-
+#include <wx/tokenzr.h>
 #include <WinPicPr/PIC_HEX.h>
 #include <WinPicPr/PIC_HW.h>
 #include <WinPicPr/PIC_PRG.h>
@@ -1385,5 +1385,5 @@ void MainFrame::UpdateAllSheets(void)
 } // end UpdateAllSheets()
 
 
-
+void MainFrame::addLines (wxString &pText, void (wxAboutDialogInfo::*pAdder)(const wxString&)){    wxStringTokenizer Tokenizer(pText, wxT("\n\r\t"), wxTOKEN_STRTOK);    for (wxString Line = Tokenizer.GetNextToken(); !Line.IsEmpty(); Line = Tokenizer.GetNextToken())    {        if (Line.GetChar(Line.length()-1) == wxT(':'))        {            //-- If line ends with ':'  conacatennate next line            Line += wxT(' ');            Line += Tokenizer.GetNextToken();        }        (aAboutInfo.*pAdder)(Line);    }}
 

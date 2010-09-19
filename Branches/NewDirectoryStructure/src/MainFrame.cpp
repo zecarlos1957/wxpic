@@ -31,13 +31,34 @@
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 #include <wx/msgdlg.h>
-#include <wx/aboutdlg.h>
 #include "SVNVersion.h"
 
 MainFrame *MainFrame::TheMainFrame = NULL;
 wxConfig   MainFrame::TheIniFile(APPLICATION_NAME);
 wxString   MainFrame::TheLanguageName;
 
+
+enum {
+    aboutLICENSE,
+    aboutAUTHOR,
+    aboutTRANSLAT,
+    aboutDOC,
+    aboutCOUNT
+};
+static const wxChar *AboutInfoFilenames[aboutCOUNT] = 
+{
+	wxT("License.txt"),
+	wxT("Author.txt"),
+	wxT("Translator.txt"),
+	wxT("DocWriter.txt"),
+};
+
+static void addMissingFileError (wxString &pErrorText, const wxChar *pMissingFile)
+{
+    pErrorText += _("Can't find ");
+    pErrorText += pMissingFile;
+    pErrorText += '\n';
+}
 
 //(*IdInit(MainFrame)
 const long MainFrame::ID_CODE_MEM_PANEL = wxNewId();
@@ -336,6 +357,42 @@ void MainFrame::initMore (void)
 //    PageControl1->ActivePage = TS_ProgramMemory;
     aNotebook->ChangeSelection(TS_ProgramMemory);
 
+    wxString Errors;
+    //-- That Devices.ini exists
+    const wxChar *DeviceCharFile = PicDev_GetDeviceFileName();
+    if (!wxFileName::FileExists(DeviceCharFile))
+            addMissingFileError(Errors, DeviceCharFile);
+
+    //-- About Info Initialisation
+    wxString Info[aboutCOUNT];
+    for (int i = 0; i < aboutCOUNT; ++i)
+    {
+        Info[i] = TLanguage::GetFileText(AboutInfoFilenames[i]);
+        if (Info[i].IsEmpty())
+            addMissingFileError(Errors, AboutInfoFilenames[i]);
+    }
+    if (!Errors.IsEmpty())
+    {
+        Errors += _("Please re-install the Program");
+        wxMessageBox(Errors, _("Installation Error"));
+        Close();
+    }
+    else
+    {
+        aAboutInfo.SetIcon(*TResource::GetWxPic32Icon());
+        aAboutInfo.SetLicence(Info[aboutLICENSE]);
+        addLines(Info[aboutAUTHOR],   &wxAboutDialogInfo::AddDeveloper);
+        addLines(Info[aboutTRANSLAT], &wxAboutDialogInfo::AddTranslator);
+        addLines(Info[aboutDOC],      &wxAboutDialogInfo::AddDocWriter);
+
+        aAboutInfo.SetCopyright( _T( "Copyright (C) 2009-2010 Philippe Chevrier and Contributors" ) );
+        aAboutInfo.SetDescription( _("WxPic is PIC Microcontroller Programmer") );
+        aAboutInfo.SetName( _T("WxPic") );
+        wxString Version = (SVN_MANAGED) ? wxString::Format(_T("%s Rev. %d\n%s"), SVN_VERSION, SVN_REVISION, SVN_DATE)
+                                         : wxString::Format(_("Unknown Version\nCompiled %s"), wxT(__DATE__ " "  __TIME__));
+        aAboutInfo.SetVersion(Version);
+        aAboutInfo.SetWebSite( _T("http://wxpic.sourceforge.net"));
+    }
 }
 
 
@@ -394,20 +451,7 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
         {
             siFirstCall = 0;
 
-
-            // Initialize the port access driver (SmallPort) if it shall be used:
-//            PicHw_fUseSmallPort = (Config.iWhichPortAccessDriver!=CFG_PORTACCESS_USE_API_ONLY);
-//            if ( PicHw_fUseSmallPort )
-//            {
-//                LoadSmallPort();
-//            }
-
-            if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-            {
-                APPL_LogEvent( _("Initialising programmer hardware") );
-            }
-
-            // Initialize the PIC-programming routines (after setting the user's language!)
+            // Initialize the PIC-programming routines
             PicHw_sz255LastError[0] = 0;
             if (!PIC_HW_Init() ) // Initialize PIC programmer interface (HW = HardWare)
             {
@@ -633,9 +677,6 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
             if (m_progress_activity_timer<=0)
             {
                 ShowProgressGauge(false);
-//        if(ToolForm)
-//           ToolForm->ProgressBar1->Visible = false;
-//        m_progress_visible    = false;
             }
         }
 
@@ -842,25 +883,6 @@ void MainFrame::LoadMRF(int iMRFindex)
 //---------------------------------------------------------------------------
 
 
-////---------------------------------------------------------------------------
-//bool/*not bool*/ MainFrame::AppHelp(Word Command, int Data, bool/*not bool!*/ &CallHelp)
-//{
-//  // Redirected handler for TApplication::OnHelp .
-//  CallHelp = false;  // don't try to call the original WinHelp system !
-//  // Info about the Command and Data parameters can be found in the
-//  // Win32 Programmer's Reference on "WinHelp"
-//  switch( Command )
-//   {
-//    case HELP_CONTEXT:
-//         return YHF_HELP_ShowHelpContext( Data /* iHelpContext*/ );
-//    default:
-//         return false;
-//   }
-//} // end AppHelp()
-////---------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------
-
 
 
 //---------------------------------------------------------------------------
@@ -892,25 +914,6 @@ void MainFrame::OnExitNoSaveMenuItemSelected(wxCommandEvent& event)
 //---------------------------------------------------------------------------
 
 
-
-
-//void MainFrame::RB_VddNormClick(TObject *Sender)
-//{
-//  if(m_Updating>0) return;
-//  Config.iIdleSupplyVoltage = 1; /* normal supply voltage */
-//  if (! PIC_HW_SelectVdd( Config.iIdleSupplyVoltage ) )
-//    AddTextToLog( _("PIC- SelectVddNorm failed") );
-//}
-////---------------------------------------------------------------------------
-//
-//void MainFrame::RB_VddHighClick(TObject *Sender)
-//{
-//  if(m_Updating>0) return;
-//  Config.iIdleSupplyVoltage = 2; /* high supply voltage */
-//  if (! PIC_HW_SelectVdd( Config.iIdleSupplyVoltage ) )
-//    AddTextToLog( _("PIC- SelectVddHigh failed") );
-//}
-//---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
 void MainFrame::onProgramMenuItemSelected(wxCommandEvent& event)
@@ -1223,60 +1226,7 @@ void MainFrame::onVerifyMenuItemSelected(wxCommandEvent& event)
 void MainFrame::onAboutMenuItemSelected(wxCommandEvent& event)
 //void MainFrame::About1Click(TObject *Sender)
 {
-	wxAboutDialogInfo myAbout;
-	myAbout.AddDeveloper( _T("Author of WxPic, Philippe Chevrier") );
-	myAbout.AddDeveloper( _T("Author of original WinPic, Wolfgang Buescher (DL4YHF)") );
-	myAbout.AddDeveloper( _T("PIC18Fxxxx by Martin van der Werff") );
-	myAbout.AddDeveloper( _T("PIC12F508 by Leonid Lisovskiy") );
-	myAbout.AddDeveloper( _T("PIC12F609/615, 16F610/616 by Andrew Kibler") );
-	myAbout.AddDeveloper( _T("Linux port & pack by Erdem U. Altinyurt") );
-
-   wxString License = _T("\n"
-             "Permission to use, copy, and distribute this software and its documentation \n"
-             "for any purpose and without fee is hereby granted, provided that the above \n"
-             "copyright notice and disclaimer appear in all copies and supporting documentation. \n"
-             "\n"
-             "Namings for products in the software and this manual, that are registered trademarks, \n"
-             "are not separately marked. The same applies to copyrighted material. \n"
-             "Therefore the missing (r) or (c) character does not implicate, that the naming is a free trade name.\n"
-             "Furthermore the used names do not indicate patent rights or anything similar. \n"
-             "\n"
-             "WinRing0 License: \n"
-             "Copyright (c) 2007-2009 OpenLibSys.org. All rights reserved.\n"
-             "Redistribution and use in source and binary forms, with or without\n"
-             "modification, are permitted provided that the following conditions are met:\n"
-             "1. Redistributions of source code must retain the above copyright\n"
-             "notice, this list of conditions and the following disclaimer.\n"
-             "2. Redistributions in binary form must reproduce the above copyright\n"
-             "notice, this list of conditions and the following disclaimer in the\n"
-             "documentation and/or other materials provided with the distribution.\n"
-             "\n"
-             "\nDisclaimer:\n"
-             "This software is provided ''as is'' and any express or implied warranties, \n"
-             "including, but not limited to, the implied warranties of merchantability and fitness \n"
-             "for a particular purpose are disclaimed. in no event shall the author and contributors \n"
-             "be liable for any direct, indirect, incidental, special, exemplary, or consequential damages \n"
-             "(including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;\n"
-             "or business interruption ) however caused and on any theory of liability, whether in contract,\n"
-             "strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software,\n"
-             "even if advised of the possibility of such damage."
-             );
-//
-//   if( wxFileName::FileExists("./doc/License.txt") )
-//      License = TLanguage::GetFileText("./doc/License.txt");
-//   elif( wxFileName::FileExists("/usr/share/doc/packages/wxpic/License.txt") )
-//      License = TLanguage::GetFileText("/usr/share/doc/packages/wxpic/License.txt");
-//
-    myAbout.SetLicense( _T("WxPic is PIC Microcontroller Programmer utility.\nCopyright (C) 2009  Philippe Chevrier\n") + License );
-	myAbout.SetCopyright( _T( "Copyright (C) 2009 Philippe Chevrier" ) );
-	myAbout.SetDescription( _("WxPic is PIC Microcontroller Programmer") );
-	myAbout.SetName( _T("WxPic") );
-	if (SVN_MANAGED){
-		myAbout.SetVersion( wxString( _T("")) << SVN_VERSION << _T(" Rev.") << SVN_REVISION) ;
-		}
-	myAbout.SetWebSite( _T("http://wxpic.sourceforge.net"));
-	myAbout.AddTranslator(_T("French:\tPhilippe Chevrier") );
-	wxAboutBox( myAbout );
+	wxAboutBox( aAboutInfo );
 }
 
 void MainFrame::onHelpIndexMenuItemSelected(wxCommandEvent& event)

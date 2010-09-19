@@ -13,15 +13,18 @@
 #include <wx/stdpaths.h>
 #include <wx/strconv.h>
 #include <wx/file.h>
+#include <wx/tokenzr.h>
+#include <wx/filename.h>
+
 
 TLanguage *TLanguage::theSingleton = NULL;
 
 /* static */
-bool TLanguage::SetLangDefDir (const wxFileName &pLanguageDefFile)
+bool TLanguage::Init (void)
 {
     if (theSingleton != NULL)
         return false;
-    theSingleton = new TLanguage(pLanguageDefFile);
+    theSingleton = new TLanguage;
     return (theSingleton != NULL) && (theSingleton->aLanguageCount > 0);
 }
 
@@ -76,26 +79,24 @@ void TLanguage::doSetLanguage (int pLanguage)
     aLanguageSet = pLanguage;
     //-- Définit la locale avec ce langage (encodage et fichier de traduction)
     aLocale.Init(aLanguageSet, wxLOCALE_CONV_ENCODING);
-    aLocale.AddCatalog(aLanguageDefFile.GetName());
+    aLocale.AddCatalog(aLanguageFile);
 }
 
 
 /*static*/
 bool TLanguage::SetHelp (const wxString &pHelpDefDir)
 {
-    //-- Construit le fichier de map par défaut quand aucun fichier n'est spécifié
-    	wxString HelpDir = pHelpDefDir;
-		if (HelpDir.IsEmpty()){
-			wxFileName Temp;
-			Temp.Assign(wxStandardPaths::Get().GetExecutablePath());
-			Temp.AppendDir(HELP_DEFAULT_DIR_NAME);
-			HelpDir = Temp.GetPath();
-			}
-		if( wxFile::Exists(HelpDir) ){ //Silences error if diretory doesn't exists.
-			theSingleton->aIsHelpValid = theSingleton->aHelpController.Initialize(HelpDir);
-			return true;
-			}
-	return false;
+    wxString HelpDir = pHelpDefDir;
+    if (HelpDir.IsEmpty())
+    {
+        //-- Construit le fichier de map par défaut quand aucun fichier n'est spécifié
+        wxFileName Temp;
+        Temp.Assign(wxStandardPaths::Get().GetDataDir(), wxEmptyString);
+        Temp.AppendDir(HELP_DEFAULT_DIR_NAME);
+        HelpDir = Temp.GetPath();
+    }
+    theSingleton->aIsHelpValid = theSingleton->aHelpController.Initialize(HelpDir);
+	return theSingleton->aIsHelpValid;
 }
 
 
@@ -112,22 +113,18 @@ wxArrayString TLanguage::GetLanguageNameList(void)
 }
 
 
-/**/ TLanguage::TLanguage(const wxFileName &pLanguageDefFile)
+/**/ TLanguage::TLanguage(void)
 : aLanguageCount  (0)
 , aLanguageSet    (wxLANGUAGE_UNKNOWN)
-, aLanguageDefFile(pLanguageDefFile)
 , aIsHelpValid    (false)
 {
-    //-- Construit le répertoire par défaut quand aucun répertoire de traduction n'est spécifié
-    if (aLanguageDefFile.GetPath().IsEmpty())
-    {
-        aLanguageDefFile.Assign(wxStandardPaths::Get().GetExecutablePath());
-        aLanguageDefFile.AppendDir(LANGUAGE_DEFAULT_DIR_NAME);
-    }
+    //-- Récupère le nom de l'éxécutable (le chemin ne sera pas utilisé)
+    wxFileName LanguageFilename;
+    LanguageFilename.Assign(wxStandardPaths::Get().GetExecutablePath());
+
     //-- Dans tous les cas l'extension des fichiers de traduction est .mo
-    aLanguageDefFile.SetExt(_T("mo"));
-    //-- Indique que les catalogues doivent être cherchés dans le répertoire de traduction
-    aLocale.AddCatalogLookupPathPrefix(aLanguageDefFile.GetPath());
+    LanguageFilename.SetExt(_T("mo"));
+    aLanguageFile = LanguageFilename.GetFullName();
 
     //-- Passer tous les langages en revue pour savoir s'ils ont leur fichier de traduction
     //-- Si c'est le cas le language est ajouté dans la liste des langages disponibles
@@ -187,22 +184,23 @@ bool TLanguage::try2Languages (int pLanguage)
 
 bool TLanguage::tryLanguage (const wxString &pLanguage)
 {
-    aLanguageDefFile.AppendDir(pLanguage);
-    bool Result = aLanguageDefFile.FileExists();
-    aLanguageDefFile.RemoveLastDir();
+    wxString LanguageFile = wxStandardPaths::Get().GetLocalizedResourcesDir(pLanguage.c_str(),
+                                                        wxStandardPathsBase::ResourceCat_Messages)
+                            + wxFileName::GetPathSeparator()
+                            + aLanguageFile;
+    bool Result = wxFile::Exists(LanguageFile.c_str());
     return Result;
 }
 
 
 wxString TLanguage::doGetFileText (const wxString &pFilename)
 {
-    wxFileName Filename;
+    wxFileName Filename(wxStandardPaths::Get().GetDataDir(), wxEmptyString);
     bool       Found = false;
     wxString   Result;
     wxFile     TextFile;
     char      *FileData;
 
-    Filename = aLanguageDefFile;
     Filename.SetFullName(pFilename);
     if (aLanguageSet != wxLANGUAGE_UNKNOWN)
     {

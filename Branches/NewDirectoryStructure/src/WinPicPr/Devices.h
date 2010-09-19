@@ -227,33 +227,25 @@ EXTERN T_PicConfigBitInfo PicDev_ConfigBitInfo[PICDEV_MAX_CONFIG_BIT_INFOS];
 
 /*------------- Prototypes ------------------------------------------------*/
 
-  // Many of these routines are called from "C" (not CPP), so:
-#ifdef __cplusplus      /* to call these routines from CPP modules : */
- #define CPROT extern "C"
- // Note: It's 'extern "C"' , not 'extern "c"' as stated in
- //       Borland's bugged help system ! (at least for BCB4)
-#else
- #define CPROT          /* to call these routines from ordinary "C": */
-#endif  /* nicht "cplusplus" */
 
-
-CPROT int   PicDev_GetDeviceInfoByIndex(int iTableIndex, T_PicDeviceInfo *pDstDeviceInfo );
-CPROT int   PicDev_GetDeviceInfoByName(const char *pszDeviceName, T_PicDeviceInfo *pDstDeviceInfo );
-CPROT bool  PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo );
-CPROT const char *PicDev_GetDeviceNameByIdWord( uint16_t wDeviceIdWord, int iBitsPerInstruction );
-CPROT const char *PicDev_AlgorithmCodeToString(int iAlgorithm);
-CPROT int   PicDev_StringToAlgorithmCode(const char *pszAlgorithmName);
-CPROT int   PicDev_StringToVppVddSequenceCode(const char *pszVppVddSequence);
-CPROT const char *PicDev_VppVddSequenceCodeToString(int iVppVddSequence);
-CPROT int   PicDev_GetNrOfBitsPerIdLocation(void);
-CPROT int   PicDev_GetConfMemSize(void);   // better use PIC_DeviceInfo_iConfMemSize for speed reasons !
-CPROT int   PicDev_IsConfigMemLocationValid(uint32_t dwCfgMemAddress);
-CPROT uint32_t PicDev_GetVerifyMaskForAddress(uint32_t dwTargetAddress);
-CPROT const wxChar *PicDev_GetInfoOnConfigMemory(uint32_t dwCfgMemAddress);
-CPROT const wxChar *PicDev_ConfigBitValueToString( T_PicConfigBitInfo *pConfigBitInfo, uint32_t dwConfigRegisterContent );
-CPROT bool  PicDev_ConfigBitStringToValue( T_PicConfigBitInfo *pConfigBitInfo, const wxChar *pszComboText, uint32_t *pdwDest );
-CPROT void  PicDev_FillDefaultDeviceInfo(T_PicDeviceInfo *pDeviceInfo);
-CPROT void  PicDev_DumpDeviceListToFile( const wxChar *pszDumpFileName );
+int   PicDev_GetDeviceInfoByIndex(int iTableIndex, T_PicDeviceInfo *pDstDeviceInfo );
+int   PicDev_GetDeviceInfoByName(const char *pszDeviceName, T_PicDeviceInfo *pDstDeviceInfo );
+bool  PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo );
+const char *PicDev_GetDeviceNameByIdWord( uint16_t wDeviceIdWord, int iBitsPerInstruction );
+const char *PicDev_AlgorithmCodeToString(int iAlgorithm);
+int   PicDev_StringToAlgorithmCode(const char *pszAlgorithmName);
+int   PicDev_StringToVppVddSequenceCode(const char *pszVppVddSequence);
+const char *PicDev_VppVddSequenceCodeToString(int iVppVddSequence);
+int   PicDev_GetNrOfBitsPerIdLocation(void);
+int   PicDev_GetConfMemSize(void);   // better use PIC_DeviceInfo_iConfMemSize for speed reasons !
+int   PicDev_IsConfigMemLocationValid(uint32_t dwCfgMemAddress);
+uint32_t PicDev_GetVerifyMaskForAddress(uint32_t dwTargetAddress);
+const wxChar *PicDev_GetInfoOnConfigMemory(uint32_t dwCfgMemAddress);
+const wxChar *PicDev_ConfigBitValueToString( T_PicConfigBitInfo *pConfigBitInfo, uint32_t dwConfigRegisterContent );
+bool  PicDev_ConfigBitStringToValue( T_PicConfigBitInfo *pConfigBitInfo, const wxChar *pszComboText, uint32_t *pdwDest );
+void  PicDev_FillDefaultDeviceInfo(T_PicDeviceInfo *pDeviceInfo);
+void  PicDev_DumpDeviceListToFile( const wxChar *pszDumpFileName );
+const wxChar * PicDev_GetDeviceFileName(void);
 
 
 #endif // _DEVICES_H_
