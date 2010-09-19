@@ -9,6 +9,6 @@
 // License:     GNU Lesser General Public License (LGPLv3)
 ///////////////////////////////////////////////////////////////////////////////
 
-name ICON "src/Res/aWxPic.ico"
+name ICON "resources/aWxPic.ico"
 //-- Without version autogeneration procedure replace manifest.autogen by manually edited Res\\model.manifest
 1 24 "manifest.autogen"

@@ -4,7 +4,7 @@
 #-- Purpose: Make Xpm compatible with gcc 4.4
 #-- Author: Philippe Chevrier
 #------------------------------------------------------
-for XPM in src/Res/*.xpm; do
+for XPM in resources/*.xpm; do
 	grep "static char *" $XPM
 	if [ $? = 0 ]; then
 	{
