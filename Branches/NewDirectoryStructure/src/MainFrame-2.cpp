@@ -1385,5 +1385,17 @@ void MainFrame::UpdateAllSheets(void)
 } // end UpdateAllSheets()
 
 
-void MainFrame::addLines (wxString &pText, void (wxAboutDialogInfo::*pAdder)(const wxString&)){    wxStringTokenizer Tokenizer(pText, wxT("\n\r\t"), wxTOKEN_STRTOK);    for (wxString Line = Tokenizer.GetNextToken(); !Line.IsEmpty(); Line = Tokenizer.GetNextToken())    {        if (Line.GetChar(Line.length()-1) == wxT(':'))        {            //-- If line ends with ':'  conacatennate next line            Line += wxT(' ');            Line += Tokenizer.GetNextToken();        }        (aAboutInfo.*pAdder)(Line);    }}
+void MainFrame::addLines (wxString &pText, void (wxAboutDialogInfo::*pAdder)(const wxString&))
+{
+    wxStringTokenizer Tokenizer(pText, wxT("\n\r\t"), wxTOKEN_STRTOK);
+    for (wxString Line = Tokenizer.GetNextToken(); !Line.IsEmpty(); Line = Tokenizer.GetNextToken())
+    {
+        if (Line.GetChar(Line.length()-1) == wxT(':'))
+        {            //-- If line ends with ':'  conacatennate next line
+            Line += wxT(' ');
+            Line += Tokenizer.GetNextToken();
+        }
+        (aAboutInfo.*pAdder)(Line);
+    }
+}
 
