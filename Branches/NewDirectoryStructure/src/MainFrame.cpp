@@ -45,7 +45,7 @@ enum {
     aboutDOC,
     aboutCOUNT
 };
-static const wxChar *AboutInfoFilenames[aboutCOUNT] = 
+static const wxChar *AboutInfoFilenames[aboutCOUNT] =
 {
 	wxT("License.txt"),
 	wxT("Author.txt"),
@@ -388,8 +388,12 @@ void MainFrame::initMore (void)
         aAboutInfo.SetCopyright( _T( "Copyright (C) 2009-2010 Philippe Chevrier and Contributors" ) );
         aAboutInfo.SetDescription( _("WxPic is PIC Microcontroller Programmer") );
         aAboutInfo.SetName( _T("WxPic") );
-        wxString Version = (SVN_MANAGED) ? wxString::Format(_T("%s Rev. %d\n%s"), SVN_VERSION, SVN_REVISION, SVN_DATE)
-                                         : wxString::Format(_("Unknown Version\nCompiled %s"), wxT(__DATE__ " "  __TIME__));
+        wxString Version;
+#if SVN_MANAGED
+        Version.Printf(_T("%s Rev. %d\n%s"), SVN_VERSION, SVN_REVISION, SVN_DATE);
+#else
+        Version.Printf(_("Unknown Version\nCompiled %s"), _T(__DATE__ " " __TIME__));
+#endif
         aAboutInfo.SetVersion(Version);
         aAboutInfo.SetWebSite( _T("http://wxpic.sourceforge.net"));
     }
