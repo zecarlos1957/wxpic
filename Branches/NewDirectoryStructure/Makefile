@@ -35,8 +35,8 @@ PRJEXEC =$(PRJXEDIR)/$(EXECUTABLE)
 
 # Graphic resources
 RSCDIR    =resources
-SRCPIXMAP =$(RSCDIR)/$(EXECUTABLE).png
-SRCDESKTOP=$(RSCDIR)/$(EXECUTABLE).desktop
+SRCPIXMAP =$(RSCDIR)/wxpic.png
+SRCDESKTOP=$(RSCDIR)/wxpic.desktop
 
 # Executable source files
 SRCDIR =src
@@ -133,7 +133,7 @@ RMDIR      =rm -f -R
 
 .PHONY: uninstall clean
 
-all: $(PRJEXEC) test langs
+all: $(PRJEXEC) langs
 
 ifeq ($(CODEBLOCKS),NO)
 .cpp.o:
