@@ -35,8 +35,8 @@ PRJEXEC =$(PRJXEDIR)/$(EXECUTABLE)
 
 # Graphic resources
 RSCDIR    =resources
-SRCPIXMAP =$(RSCDIR)/wxpic.png
-SRCDESKTOP=$(RSCDIR)/wxpic.desktop
+SRCPIXMAP =$(RSCDIR)/$(TGT_EXECUTABLE).png
+SRCDESKTOP=$(RSCDIR)/$(TGT_EXECUTABLE).desktop
 
 # Executable source files
 SRCDIR =src
