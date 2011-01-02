@@ -2,14 +2,14 @@
 # This file and all modifications and additions to the wxpic
 # package are under the same license as the package itself.
 #
-# Please submit bugfixes or comments to spamjunkeater gmail.com
+# Please submit bugfixes or comments to wxpic.free.fr
 
 # norootforbuild
 
 %define _prefix	/usr
 
 Name:			wxpic
-Summary:		A program to repair broken AVI file streams by rebuilding index part of file
+Summary:		Programmer of PIC microcontrollers driving serial or parallel port adapters
 Version:		1.2.1_r186
 Release:		1
 License:		GPL
