@@ -142,6 +142,10 @@ Function .onInit
 		
 FunctionEnd
 
+Function .onGUIEnd
+	FileClose $0
+FunctionEnd
+
 
 Function un.onInit
 	!insertmacro INIT_CONTEXT
@@ -155,6 +159,9 @@ Section "${PRODUCT_NAME}"
   
 	; Set output path to the installation directory.
 	SetOutPath $INSTDIR
+  
+	; Open the lang list file
+	FileOpen $0 "$INSTDIR\Lang.lst" w
   
 	; Put executable file there
 	File "bin\${Build}\${EXE_NAME}"
@@ -217,6 +224,9 @@ Section "${LANG_NAME}"
 	; Copy the Help files if any
 	SetOutPath "$INSTDIR\Help\${LANG_TAG}"
 	File /nonfatal "bin\${Build}\Help\${LANG_TAG}\*.*"
+	
+	; Memorize the language has been installed
+	FileWrite $0 "${LANG_TAG}$\r$\n"
 SectionEnd
 !macroend
 
@@ -259,24 +269,36 @@ ExeDeleted:
 	Delete "$INSTDIR\DisablePolling.reg"
 	Delete "$INSTDIR\EnablePollingBack.reg"
    
-	IfFileExists "$INSTDIR\Devices\*.dev" +1 NoDeviceFile
+	RMDir "$INSTDIR\Devices"
+	IfFileExists "$INSTDIR\Devices" +1 NoDeviceFile
 		MessageBox MB_YESNO|MB_ICONQUESTION $(DeviceFilesExist) /SD IDYES IDYES KeepDeviceFiles 
 		RMDir /r "$INSTDIR\Devices"
-		goto EndOfDeviceFile
 NoDeviceFile:
-	RMDir "$INSTDIR\Devices"
 KeepDeviceFiles:
-EndOfDeviceFile:
    
 	RMDir /r "$SMPROGRAMS\${PRODUCT_NAME}"
 	
-	RMDir /r "$INSTDIR\Lang"
 	RMDir /r "$INSTDIR\Help"
 	RMDir /r "$INSTDIR\doc"
 	
-	Delete /REBOOTOK "${UNINSTALL}"
-  
+	ClearErrors
+	FileOpen $0 "$INSTDIR\Lang.lst" r
+	IfErrors NoFileOpen
+DeleteNextLang:
+	FileRead $0 $1
+	IfErrors AllLangCompleted
+	RMDir /r "$INSTDIR\$1"
+	Goto DeleteNextLang
+AllLangCompleted:
+	FileClose $0
+NoFileOpen:
+	Delete "$INSTDIR\Lang.lst"
+	
 	DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 	;DeleteRegKey SHCTX "SOFTWARE\${PRODUCT_NAME}"
 	
+	Delete "$INSTDIR\${UNINSTALL}"
+	
+	RMDir "$INSTDIR"
+  
 SectionEnd
