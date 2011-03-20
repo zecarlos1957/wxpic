@@ -20,11 +20,13 @@ class TMessagePanel: public wxPanel
 		wxButton* aClearMsgButton;
 		//*)
 
+		void EnterBatchMode (void);
+
 	protected:
 
 		//(*Identifiers(TMessagePanel)
-		static const long ID_BUTTON11;
-		static const long ID_TEXTCTRL13;
+		static const long ID_CLEAR_MSG_BUTTON;
+		static const long ID_MESSAGE_LOG_TEXTCTRL;
 		//*)
 
 	private:

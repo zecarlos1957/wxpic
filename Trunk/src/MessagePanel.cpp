@@ -7,8 +7,8 @@
 //*)
 
 //(*IdInit(TMessagePanel)
-const long TMessagePanel::ID_BUTTON11 = wxNewId();
-const long TMessagePanel::ID_TEXTCTRL13 = wxNewId();
+const long TMessagePanel::ID_CLEAR_MSG_BUTTON = wxNewId();
+const long TMessagePanel::ID_MESSAGE_LOG_TEXTCTRL = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(TMessagePanel,wxPanel)
@@ -23,15 +23,15 @@ TMessagePanel::TMessagePanel(wxWindow* parent,wxWindowID id,const wxPoint& pos,c
 
 	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("id"));
 	BoxSizer24 = new wxBoxSizer(wxVERTICAL);
-	aClearMsgButton = new wxButton(this, ID_BUTTON11, _("Clear"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON11"));
+	aClearMsgButton = new wxButton(this, ID_CLEAR_MSG_BUTTON, _("Clear"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CLEAR_MSG_BUTTON"));
 	BoxSizer24->Add(aClearMsgButton, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 1);
-	aMessageLog = new wxTextCtrl(this, ID_TEXTCTRL13, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY, wxDefaultValidator, _T("ID_TEXTCTRL13"));
+	aMessageLog = new wxTextCtrl(this, ID_MESSAGE_LOG_TEXTCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY, wxDefaultValidator, _T("ID_MESSAGE_LOG_TEXTCTRL"));
 	BoxSizer24->Add(aMessageLog, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 1);
 	SetSizer(BoxSizer24);
 	BoxSizer24->Fit(this);
 	BoxSizer24->SetSizeHints(this);
 
-	Connect(ID_BUTTON11,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TMessagePanel::onClearMsgButtonClick);
+	Connect(ID_CLEAR_MSG_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TMessagePanel::onClearMsgButtonClick);
 	//*)
 }
 
@@ -54,4 +54,9 @@ void TMessagePanel::onClearMsgButtonClick(wxCommandEvent& event)
 //---------------------------------------------------------------------------
 
 
+void TMessagePanel::EnterBatchMode (void)
+{
+    aMessageLog->SetFocus();
+    aMessageLog->Clear();
+};
 

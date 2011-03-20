@@ -734,7 +734,7 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
             break; // end case < no BATCH PROGRAMMING mode >
 
         case BATCH_PROG_PREP_START:
-            APPL_ShowMsg( 0, _("BATCH PROG: Insert device or connect ICSP, then press Enter or OK !") );
+            APPL_ShowMsg( 0, _("BATCH PROG: Insert device or connect ICSP, then press adapter button or press Enter or OK in this log Window") );
             PIC_PRG_iBatchProgState = BATCH_PROG_WAIT_START;
             break;
 
@@ -1403,7 +1403,7 @@ void MainFrame::onBatchPrgMenuItemSelected(wxCommandEvent& event)
 //  PageControl1->ActivePage = TS_Messages;
     if (PIC_PRG_iBatchProgState == BATCH_PROG_OFF)
     {
-        aMessageTab->aMessageLog->Clear();
+        aMessageTab->EnterBatchMode();
 //       Mem_Messages->Clear();
         aStatusBar->SetStatusText(wxEmptyString);
         PIC_PRG_iBatchProgState = BATCH_PROG_PREP_START;

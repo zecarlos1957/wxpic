@@ -6,7 +6,7 @@
 		<object class="wxBoxSizer" variable="BoxSizer24" member="no">
 			<orient>wxVERTICAL</orient>
 			<object class="sizeritem">
-				<object class="wxButton" name="ID_BUTTON11" variable="aClearMsgButton" member="yes">
+				<object class="wxButton" name="ID_CLEAR_MSG_BUTTON" variable="aClearMsgButton" member="yes">
 					<label>Clear</label>
 					<handler function="onClearMsgButtonClick" entry="EVT_BUTTON" />
 				</object>
@@ -14,7 +14,7 @@
 				<border>1</border>
 			</object>
 			<object class="sizeritem">
-				<object class="wxTextCtrl" name="ID_TEXTCTRL13" variable="aMessageLog" member="yes">
+				<object class="wxTextCtrl" name="ID_MESSAGE_LOG_TEXTCTRL" variable="aMessageLog" member="yes">
 					<style>wxTE_MULTILINE|wxTE_READONLY</style>
 				</object>
 				<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
