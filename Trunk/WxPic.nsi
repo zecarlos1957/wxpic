@@ -206,7 +206,7 @@ Section "English"
 	; Put The default Help and license files
 	SetOutPath "$INSTDIR\Help"
 	File "bin\${Build}\Help\*.*"
-	SetOutPath "$INSTDIR\doc"
+	SetOutPath "$INSTDIR"
 	File "bin\${Build}\License.txt"
 	File "bin\${Build}\Author.txt"
 	File "bin\${Build}\Translator.txt"
@@ -279,7 +279,10 @@ KeepDeviceFiles:
 	RMDir /r "$SMPROGRAMS\${PRODUCT_NAME}"
 	
 	RMDir /r "$INSTDIR\Help"
-	RMDir /r "$INSTDIR\doc"
+	Delete "$INSTDIR\License.txt"
+	Delete "$INSTDIR\Author.txt"
+	Delete "$INSTDIR\Translator.txt"
+	Delete "$INSTDIR\DocWriter.txt"
 	
 	ClearErrors
 	FileOpen $0 "$INSTDIR\Lang.lst" r
