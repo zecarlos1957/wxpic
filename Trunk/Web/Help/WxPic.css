@@ -103,7 +103,7 @@ div.toc ul li
 	line-height:14px;
 }
 
-h1, h2, h3
+h1, h2, h3, h4, h5
 {
 	border-bottom: 1px solid #999999;
 	font-weight:normal;
@@ -139,6 +139,19 @@ h3
 {
 	font-size:16px;
 }
+h4, h5
+{
+	font-weight:bold;
+}
+h4
+{
+	font-size:12px;
+}
+h5
+{
+	font-size:10px;
+	margin-left:30px;
+}	
 
 p
 {
@@ -221,6 +234,9 @@ div.left-col > a
 .quote {
 	color: #006633;
 	font-family:"Courier New", Courier, monospace;
+}
+p.quote {
+	margin-left: 30px;
 }
 .important {
 	background-color: #FFFF99;

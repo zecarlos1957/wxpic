@@ -1,3 +1,14 @@
+#############################################
+#  Purpose:
+#    Makefile for Linux only
+#
+#  Authors: 
+#    Philippe Chevrier  pch@laposte.net
+#    Erdem U. Altinyurt http://erdem_ua.users.sourceforge.net/
+#
+#  License: see Doc/License.txt
+#    
+#############################################
 # targets:
 #    - all: build the binaries and the test environment
 #    - clean: remove the files generated or copied by all
@@ -27,6 +38,7 @@ TESTDIRS=$(wildcard $(TESTDIR))
 PRJDIR  =$(TSTROOT)/$(RELEASE)
 PRJXEDIR=$(PRJDIR)/bin
 PRJEXEC =$(PRJXEDIR)/$(EXECUTABLE)
+TMP_DIR =obj/$$REDIRECT_TMP$$
 
 
 #############################################
@@ -51,12 +63,14 @@ endif
 # Language list
 LANGSRCDIR=Lang
 LANSRC    =$(wildcard $(LANGSRCDIR)/*/$(EXECUTABLE).po)
-#LANGUAGEDIRS=$(subst $(LANGSRC)/,,$(subst /$(EXECUTABLE).po,,$(LANGUAGES)))
 
 # Help files
-HELPDIR  =Web/Help
-HELPEXT  =htm* png jp*g ico gif css map
-HELPFILES=$(foreach EXT,$(HELPEXT),$(wildcard $(HELPDIR)/*.$(EXT)) $(wildcard $(HELPDIR)/*/*.$(EXT)))
+HELPDIR     =Web/Help
+HELPEXT     =htm* png jp*g ico gif css
+HELPFILES   =$(foreach EXT,$(HELPEXT),$(wildcard $(HELPDIR)/*.$(EXT)) $(wildcard $(HELPDIR)/*/*.$(EXT)))
+
+MAPFILENAME =wxHelp.map
+MAPFILES    =$(HELPDIR)/$(MAPFILENAME) $(subst $(LANGSRCDIR)/,$(HELPDIR)/,$(subst $(EXECUTABLE).po,$(MAPFILENAME),$(LANSRC)))
 
 # Doc files
 DOCDIR   =doc
@@ -67,7 +81,7 @@ INSTDIR=Install
 INSTRES=$(INSTDIR)/devices.ini \
         $(INSTDIR)/SampleInterfaceOnSerialPort.xml \
         $(INSTDIR)/SampleInterfaceOnLptPort.xml
-
+		
 
 #############################################
 ##  OBJECT FILES
@@ -103,6 +117,8 @@ TSTFILES  =$(subst $(INSTDIR),$(PRJDIR)/$(TSTDATA),$(INSTRES))
 TGTHELP   =Help
 TGTHFILES =$(subst $(HELPDIR),$(PREFIX)/$(TGTDATA)/$(TGTHELP),$(HELPFILES))
 TSTHFILES =$(subst $(HELPDIR),$(PRJDIR)/$(TSTDATA)/$(TGTHELP),$(HELPFILES))
+TGTMAPS   =$(subst $(HELPDIR),$(PREFIX)/$(TSTDATA)/$(TGTHELP),$(MAPFILES))
+TSTMAPS   =$(subst $(HELPDIR),$(PRJDIR)/$(TSTDATA)/$(TGTHELP),$(MAPFILES))
 TGDOCFILES=$(subst $(DOCDIR),$(PREFIX)/$(TGTDATA),$(DOC))
 TSDOCFILES=$(subst $(DOCDIR),$(PRJDIR)/$(TSTDATA),$(DOC))
 
@@ -125,6 +141,8 @@ endif
 CPPC       =$(CXX) `$(WXCONFIG) --cxxflags` -O2 -Isrc
 RM         =rm -f
 RMDIR      =rm -f -R
+XSLT_MAP   =saxonb-xslt -ext:on -xsl:Map2Redirect.xslt
+XSLT_IN    =-s:
 
 
 #############################################
@@ -132,6 +150,7 @@ RMDIR      =rm -f -R
 #############################################
 
 .PHONY: uninstall clean
+
 
 all: $(PRJEXEC) langs
 
@@ -164,6 +183,13 @@ $(TGTFILES): $(PREFIX)/$(TGTDATA)%: $(INSTDIR)%
 $(TGTHFILES): $(PREFIX)/$(TGTDATA)/$(TGTHELP)%: $(HELPDIR)%
 	$(INSTALLDAT) $< $@
 
+$(TGTMAPS): $(PREFIX)/$(TGTDATA)/$(TGTHELP)%: $(HELPDIR)%
+	$(INSTALLDAT) $< $$i/$(subst $(PRJDIR)/,,$@)
+	$(MKDIR) $(TMP_DIR)
+	$(XSLT_MAP) $(XSL_IN)$< TARGET_DIR=$(CURDIR)/$(TMP_DIR)
+	$(INSTALLDAT) $(TMP_DIR)/* $(subst /$(MAPFILENAME),,$@)
+	$(RMDIR) $(TMP_DIR)
+
 $(TGDOCFILES): $(PREFIX)/$(TGTDATA)%: $(DOCDIR)%
 	$(INSTALLDAT) $< $@
 
@@ -176,22 +202,14 @@ $(TGTPIXMAP): $(SRCPIXMAP)
 $(TGTDESKTOP): $(SRCDESKTOP)
 	$(INSTALLDAT) $< $@
 	
-install: $(PREFIX)/$(BINDIR)/$(TGT_EXECUTABLE) $(TGTFILES) $(TGTHFILES) $(TGDOCFILES) $(TGLANGFILE) $(TGTPIXMAP) $(TGTDESKTOP)
-#	$(INSTALLEXE) $(PRJEXEC) $(PREFIX)/$(BINDIR)/$(TGT_EXECUTABLE)
-#	$(INSTALLDAT) Install/devices.ini $(PREFIX)/$(TGTDATA)/devices.ini
-#	$(INSTALLDAT) Install/SampleInterfaceOnSerialPort.xml $(PREFIX)/$(TGTDATA)/SampleInterfaceOnSerialPort.xml
-#	$(INSTALLDAT) Install/SampleInterfaceOnLptPort.xml $(PREFIX)/$(TGTDATA)/SampleInterfaceOnLptPort.xml
-#	@for i in $(HELPFILES) ; do \
-#	   echo "$(INSTALLDAT) $(HELPDIR)/$$i $(PREFIX)/$(TGTDATA)/$(TGTHELP)/$$i"; \
-#	   $(INSTALLDAT) $(HELPDIR)/$$i $(PREFIX)/$(TGTDATA)/$(TGTHELP)/$$i ; done
-#	@for i in $(DOCFILES) ; do \
-#	   echo "$(INSTALLDAT) $(DOCDIR)/$$i $(PREFIX)/$(TGTDATA)/$$i"; \
-#	   $(INSTALLDAT) $(DOCDIR)/$$i $(PREFIX)/$(TGTDATA)/$$i ; done
-#	@for i in $(LANGUAGEDIRS); do \
-#	   echo "$(INSTALLDAT) $(LANGSRC)/$$i/$(EXECUTABLE).mo $(PREFIX)/$(LOCALEDIR)/$$i/LC_MESSAGES/$(TGT_EXECUTABLE).mo"; \
-#	   $(INSTALLDAT) $(LANGSRC)/$$i/$(EXECUTABLE).mo $(PREFIX)/$(LOCALEDIR)/$$i/LC_MESSAGES/$(TGT_EXECUTABLE).mo; done
-#	$(INSTALLDAT) resources/$(EXECUTABLE).png $(DATADIR)/pixmaps/$(TGT_EXECUTABLE).png
-#	$(INSTALLDAT) resources/$(EXECUTABLE).desktop $(DATADIR)/applications/$(TGT_EXECUTABLE).desktop
+install: $(PREFIX)/$(BINDIR)/$(TGT_EXECUTABLE) $(TGTFILES) $(TGTHFILES) $(TGTMAPS) $(TGDOCFILES) $(TGLANGFILE) $(TGTPIXMAP) $(TGTDESKTOP)
+
+tar: install
+	tar -cf $(EXECUTABLE).tar --directory=$(PREFIX) $(BINDIR)/$(TGT_EXECUTABLE) $(TGTDATA) \
+					$(subst $(PREFIX)/,,$(TGLANGFILE)) \
+					$(DATADIR)/pixmaps/$(TGT_EXECUTABLE).png \
+					$(DATADIR)/applications/$(TGT_EXECUTABLE).desktop
+	gzip $(EXECUTABLE).tar
 
 uninstall:
 	$(RM)    $(PREFIX)/$(BINDIR)/$(TGT_EXECUTABLE)
@@ -212,6 +230,13 @@ $(TSTHFILES): $(PRJDIR)/$(TSTDATA)/$(TGTHELP)%: $(HELPDIR)%
 	    echo "$(INSTALLDAT) $< $$i/$(subst $(PRJDIR)/,,$@)"; \
 	    $(INSTALLDAT) $< $$i/$(subst $(PRJDIR)/,,$@); done
 
+$(TSTMAPS): $(PRJDIR)/$(TSTDATA)/$(TGTHELP)%: $(HELPDIR)%
+	@for i in $(TESTDIR); do \
+	    echo "$(INSTALLDAT) $< $$i/$(subst $(PRJDIR)/,,$@)"; \
+	    $(INSTALLDAT) $< $$i/$(subst $(PRJDIR)/,,$@); \
+	    echo "$(XSLT_MAP) $(XSL_OUT)$(DUMMY) $(XSL_IN)$< TARGET_DIR=$(CURDIR)/$$i/$(subst /$(MAPFILENAME),,$(subst $(PRJDIR)/,,$@))"; \
+	    $(XSLT_MAP) $(XSL_IN)$< TARGET_DIR=$(CURDIR)/$$i/$(subst $(MAPFILENAME),,$(subst $(PRJDIR)/,,$@)); done
+
 $(TSDOCFILES): $(PRJDIR)/$(TSTDATA)%: $(DOCDIR)%
 	@for i in $(TESTDIR); do \
 	    echo "$(INSTALLDAT) $< $$i/$(subst $(PRJDIR)/,,$@)"; \
@@ -223,23 +248,7 @@ $(TSLANGFILE): $(PRJDIR)/$(LOCALEDIR)%$(LCMSGDIR)/$(EXECUTABLE).mo: $(LANGSRCDIR
 	    $(INSTALLDAT) $< $$i/$(subst $(PRJDIR)/,,$@); done
 
 
-test: $(TSTFILES) $(TSTHFILES) $(TSDOCFILES) $(TSLANGFILE)
-#	@for j in $(TESTDIR); do \
-#	    echo "$(INSTALLDAT) Install/devices.ini $$j/$(TSTDATA)/devices.ini"; \
-#	    $(INSTALLDAT) Install/devices.ini $$j/$(TSTDATA)/devices.ini; \
-#	    echo "$(INSTALLDAT) Install/SampleInterfaceOnSerialPort.xml $$j/$(TSTDATA)/SampleInterfaceOnSerialPort.xml" ; \
-#	    $(INSTALLDAT) Install/SampleInterfaceOnSerialPort.xml $$j/$(TSTDATA)/SampleInterfaceOnSerialPort.xml ; \
-#	    echo "$(INSTALLDAT) Install/SampleInterfaceOnLptPort.xml $$j/$(TSTDATA)/SampleInterfaceOnLptPort.xml" ; \
-#	    $(INSTALLDAT) Install/SampleInterfaceOnLptPort.xml $$j/$(TSTDATA)/SampleInterfaceOnLptPort.xml ; \
-#		for i in $(HELPFILES) ; do \
-#		   echo "$(INSTALLDAT) $(HELPDIR)/$$i $$j/$(TSTDATA)/$(TGTHELP)/$$i"; \
-#		   $(INSTALLDAT) $(HELPDIR)/$$i $$j/$(TSTDATA)/$(TGTHELP)/$$i ; done; \
-#		for i in $(DOCFILES) ; do \
-#		   echo "$(INSTALLDAT) $(DOCDIR)/$$i $$j/$(TSTDATA)/$$i"; \
-#		   $(INSTALLDAT) $(DOCDIR)/$$i $$j/$(TSTDATA)/$$i ; done; \
-#	    for i in $(LANGUAGEDIRS); do \
-#	        echo "$(INSTALLDAT) Lang/$$i/$(EXECUTABLE).mo $$j/$(LOCALEDIR)/$$i/LC_MESSAGES/$(TGT_EXECUTABLE).mo"; \
-#	        $(INSTALLDAT) Lang/$$i/$(EXECUTABLE).mo $$j/$(LOCALEDIR)/$$i/LC_MESSAGES/$(TGT_EXECUTABLE).mo; done; done
+test: $(TSTFILES) $(TSTHFILES) $(TSTMAPS) $(TSDOCFILES) $(TSLANGFILE)
 
 
 clean:
@@ -253,4 +262,3 @@ else
 	@echo "To clean object files use Build > Clean command from Code::Blocks IDE"
 endif
 
-#distclean: ???
