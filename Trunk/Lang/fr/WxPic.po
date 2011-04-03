@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WxPic V1.0 Alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-25 10:25+0200\n"
+"POT-Creation-Date: 2011-03-26 23:31+0100\n"
 "PO-Revision-Date: 2009-05-31 20:00+0200\n"
 "Last-Translator: <pch@laposte.net>\n"
 "Language-Team: French\n"
@@ -807,7 +807,7 @@ msgid " ERROR !"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:364 src\MainFrame.cpp:1108 src\MainFrame.cpp:1160
+#: src\MainFrame-2.cpp:364 src\MainFrame.cpp:1109 src\MainFrame.cpp:1161
 #: src\WinPicPr\PIC_PRG.cpp:3302
 msgid "Action aborted"
 msgstr ""
@@ -842,7 +842,7 @@ msgstr "Effacement terminé"
 
 # P2
 #: src\MainFrame-2.cpp:484 src\MainFrame-2.cpp:596 src\MainFrame-2.cpp:740
-#: src\MainFrame.cpp:563 src\MainFrame.cpp:1068
+#: src\MainFrame.cpp:564 src\MainFrame.cpp:1069
 msgid "Erasing FAILED !"
 msgstr ""
 
@@ -971,7 +971,7 @@ msgid "Suspicious: Buffer contains no data for the CONFIGURATION BITS."
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:903 src\MainFrame.cpp:977
+#: src\MainFrame-2.cpp:903 src\MainFrame.cpp:978
 msgid "Programming CONFIG-WORD"
 msgstr "Programmation du ou des mots de configuration"
 
@@ -1043,7 +1043,7 @@ msgid "Load HEX File"
 msgstr "Charger un fichier HEX"
 
 # P1
-#: src\MainFrame-2.cpp:1218 src\MainFrame.cpp:1604
+#: src\MainFrame-2.cpp:1218 src\MainFrame.cpp:1605
 msgid "HEX files (INHX8M, *.hex)|*.hex"
 msgstr "Fichiers HEX (INHX8M, *.hex)|*.hex"
 
@@ -1194,7 +1194,7 @@ msgid "Load && &Program Device..."
 msgstr "Charger et &Programmer..."
 
 # P1
-#: src\MainFrame.cpp:174 src\MainFrame.cpp:1349
+#: src\MainFrame.cpp:174 src\MainFrame.cpp:1350
 msgid "&Reload && Program"
 msgstr "&Recharger et Programmer"
 
@@ -1456,7 +1456,7 @@ msgid "WxPic is PIC Microcontroller Programmer"
 msgstr "WxPic est in Programateur de micro-controlleur PIC"
 
 # P2
-#: src\MainFrame.cpp:394
+#: src\MainFrame.cpp:395
 #, c-format
 msgid ""
 "Unknown Version\n"
@@ -1466,83 +1466,86 @@ msgstr ""
 "Compilée le %s"
 
 # P2
-#: src\MainFrame.cpp:462
+#: src\MainFrame.cpp:463
 msgid "Error in PIC_HW_Init: "
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:468
+#: src\MainFrame.cpp:469
 msgid "Warning in PIC_HW_Init: "
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:475
+#: src\MainFrame.cpp:476
 msgid "Init: Testing the interface"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:522
+#: src\MainFrame.cpp:523
 #, c-format
 msgid "Command execution (%s) continues in %d seconds ... ESC to stop"
 msgstr ""
 "L'exécution des commandes continue dans %d seconds ... ESC pour interrompre"
 
 # P1
-#: src\MainFrame.cpp:546 src\MainFrame.cpp:1046
+#: src\MainFrame.cpp:547 src\MainFrame.cpp:1047
 msgid "Erasing ..."
 msgstr "Effacement..."
 
 # P1
-#: src\MainFrame.cpp:553 src\MainFrame.cpp:1057
+#: src\MainFrame.cpp:554 src\MainFrame.cpp:1058
 msgid "Device has been erased. PROGRAM TO RESTORE CALIB BITS !!"
 msgstr ""
 "The composant a été effacé. PROGRAMMEZ POUR RE-ECRIRE LES MOTS DE CALIBRATION"
 
 # P1
-#: src\MainFrame.cpp:558 src\MainFrame.cpp:1052
+#: src\MainFrame.cpp:559 src\MainFrame.cpp:1053
 msgid "Device has been erased."
 msgstr "Le composant a été effacé"
 
 # P2
-#: src\MainFrame.cpp:577
+#: src\MainFrame.cpp:578
 #, c-format
 msgid "Loaded file \"%s\" through command line ."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:609
+#: src\MainFrame.cpp:610
 #, c-format
 msgid "Quitting in %d seconds ... ESC to stop"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:636
+#: src\MainFrame.cpp:637
 msgid "Command line finished"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:737
-msgid "BATCH PROG: Insert device or connect ICSP, then press Enter or OK !"
+#: src\MainFrame.cpp:738
+#, fuzzy
+msgid ""
+"BATCH PROG: Insert device or connect ICSP, then press adapter button or "
+"press Enter or OK in this log Window"
 msgstr ""
 "LOT : Insérez le composant ou connectez l'ICSP, puis appuyez sur Entrée"
 
 # P1
-#: src\MainFrame.cpp:760
+#: src\MainFrame.cpp:761
 msgid "BATCH PROG: please wait.."
 msgstr "LOT : En cours..."
 
 # P1
-#: src\MainFrame.cpp:768
+#: src\MainFrame.cpp:769
 msgid "BATCH PROG: terminated batch mode."
 msgstr "LOT : Lot terminé."
 
 # P2
-#: src\MainFrame.cpp:792
+#: src\MainFrame.cpp:793
 msgid "WARNING ! Windows fooled around with the LPT port bits !"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:954
+#: src\MainFrame.cpp:955
 #, c-format
 msgid ""
 "The Bandgap calibration bits in config register (0x%04X) do not match the "
@@ -1556,48 +1559,48 @@ msgstr ""
 "sinon la calibration sera écrasée par la valeur définie en mémoire (Non)"
 
 # P2
-#: src\MainFrame.cpp:957
+#: src\MainFrame.cpp:958
 msgid "Overwrite Bandgap calibration "
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:961
+#: src\MainFrame.cpp:962
 msgid "Programming CONFIG-WORD cancelled."
 msgstr "Programmation du mot de configuration annulée."
 
 # P2
-#: src\MainFrame.cpp:971
+#: src\MainFrame.cpp:972
 #, c-format
 msgid "Old Bandgap 0x%04X will be overwritten with 0x%04X"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:989
+#: src\MainFrame.cpp:990
 msgid "Programming CONFIG-WORD done."
 msgstr "Programmation du mot de configuration effectuée."
 
 # P2
-#: src\MainFrame.cpp:993
+#: src\MainFrame.cpp:994
 msgid "Programming CONFIG-WORD FAILED."
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1006
+#: src\MainFrame.cpp:1007
 msgid "Programming ID-locations"
 msgstr "Programmation de l'identification"
 
 # P1
-#: src\MainFrame.cpp:1015
+#: src\MainFrame.cpp:1016
 msgid "Programming ID-LOCATIONS done."
 msgstr "Programmation de l'identification effectuée."
 
 # P2
-#: src\MainFrame.cpp:1019
+#: src\MainFrame.cpp:1020
 msgid "Programming ID-LOCATIONS FAILED."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1041
+#: src\MainFrame.cpp:1042
 msgid ""
 "The BULK ERASE option is disabled\n"
 "   in the programmer options.\n"
@@ -1605,127 +1608,127 @@ msgid ""
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1042
+#: src\MainFrame.cpp:1043
 msgid "Confirm ERASE ALL"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1075
+#: src\MainFrame.cpp:1076
 msgid "Must not erase non-FLASH device, check \"Device, Config\" !"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1115
+#: src\MainFrame.cpp:1116
 msgid "Reading PIC FAILED (maybe blank)."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1122
+#: src\MainFrame.cpp:1123
 #, c-format
 msgid "Reading done, Conflict: selected device = %hs,  read = %hs"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1127
+#: src\MainFrame.cpp:1128
 msgid "Reading PIC ok."
 msgstr "Lecture du Composant effectuée."
 
 # P2
-#: src\MainFrame.cpp:1140
+#: src\MainFrame.cpp:1141
 msgid "Blank Checking ..."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1151
+#: src\MainFrame.cpp:1152
 msgid "Device is NOT blank."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1155
+#: src\MainFrame.cpp:1156
 msgid "Device is blank."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1318
+#: src\MainFrame.cpp:1319
 msgid "CODE"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1324
+#: src\MainFrame.cpp:1325
 msgid "DATA"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1330
+#: src\MainFrame.cpp:1331
 msgid "CONFIG"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1345
+#: src\MainFrame.cpp:1346
 msgid "Load && &Program Device"
 msgstr "Charger et &Programmer"
 
 # P1
-#: src\MainFrame.cpp:1366
+#: src\MainFrame.cpp:1367
 msgid "Program"
 msgstr "Programmer"
 
 # P2
-#: src\MainFrame.cpp:1464
+#: src\MainFrame.cpp:1465
 msgid "Apply changes in the HEX EDITOR ?"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1490
+#: src\MainFrame.cpp:1491
 msgid ""
 "Do you want to APPLY the edits\n"
 " in the code memory buffer ?"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1491
+#: src\MainFrame.cpp:1492
 msgid "WxPic: turning CODE MEMORY editor off.."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1505
+#: src\MainFrame.cpp:1506
 msgid ""
 "Do you want to APPLY the edits\n"
 " in the data memory buffer ?"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1506
+#: src\MainFrame.cpp:1507
 msgid "WxPic: turning DATA MEMORY editor off.."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1582
+#: src\MainFrame.cpp:1583
 msgid "ESC: Command-line driven operation cancelled !"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1603
+#: src\MainFrame.cpp:1604
 msgid "Save Hex File"
 msgstr "Sauvegarder en fichier Hex"
 
 # P2
-#: src\MainFrame.cpp:1674
+#: src\MainFrame.cpp:1675
 msgid "Reading Executive Code Memory ..."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1684
+#: src\MainFrame.cpp:1685
 msgid "Reading Executive Code Memory ok."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1689
+#: src\MainFrame.cpp:1690
 msgid "Reading Executive Code Memory failed."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1775
+#: src\MainFrame.cpp:1776
 msgid ""
 "Some CALIBRATION BITS have been erased\n"
 "but not written back to the PIC yet.\n"
@@ -1733,7 +1736,7 @@ msgid ""
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1777
+#: src\MainFrame.cpp:1778
 msgid "*** PIC Programmer Warning ***"
 msgstr ""
 

@@ -9,7 +9,7 @@
 			<Target title="Debug Win32">
 				<Option platforms="Windows;" />
 				<Option output="bin\Win32Debug\WxPic" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Debug\" />
+				<Option object_output="obj\Win32Debug\" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
@@ -51,7 +51,7 @@
 			<Target title="Release Win32">
 				<Option platforms="Windows;" />
 				<Option output="bin\Win32Release\WxPic" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Release\" />
+				<Option object_output="obj\Win32Release\" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
@@ -94,7 +94,7 @@
 			<Target title="Debug-Mpatrol Win32">
 				<Option platforms="Windows;" />
 				<Option output="bin\Win32Debug\WxPic" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Debug\" />
+				<Option object_output="obj\Win32Debug\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
@@ -141,7 +141,7 @@
 			<Target title="Debug Linux">
 				<Option platforms="Unix;Mac;" />
 				<Option output="bin\LinuxDebug\bin\WxPic" prefix_auto="0" extension_auto="0" />
-				<Option object_output="obj\DebugLinux\" />
+				<Option object_output="obj\LinuxDebug\" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
@@ -162,7 +162,7 @@
 			<Target title="Release Linux">
 				<Option platforms="Unix;Mac;" />
 				<Option output="bin\LinuxRelease\bin\WxPic" prefix_auto="0" extension_auto="0" />
-				<Option object_output="obj\ReleaseLinux\" />
+				<Option object_output="obj\LinuxRelease\" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />

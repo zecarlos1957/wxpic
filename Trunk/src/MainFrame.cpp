@@ -400,7 +400,8 @@ void MainFrame::initMore (void)
 }
 
 
-MainFrame::~MainFrame(){
+MainFrame::~MainFrame()
+{
 	TheIniFile.Flush();
 }
 

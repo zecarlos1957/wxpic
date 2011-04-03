@@ -39,7 +39,7 @@ PRJDIR  =$(TSTROOT)/$(RELEASE)
 PRJXEDIR=$(PRJDIR)/bin
 PRJEXEC =$(PRJXEDIR)/$(EXECUTABLE)
 TMP_DIR =obj/$$REDIRECT_TMP$$
-
+OBJ_DIR =obj/$(RELEASE)
 
 #############################################
 ##  SOURCE FILES
@@ -49,6 +49,15 @@ TMP_DIR =obj/$$REDIRECT_TMP$$
 RSCDIR    =resources
 SRCPIXMAP =$(RSCDIR)/$(TGT_EXECUTABLE).png
 SRCDESKTOP=$(RSCDIR)/$(TGT_EXECUTABLE).desktop
+
+# Version
+SRC_VERSION=src/version.autogen
+MNF_VERSION=manifest.autogen
+TAR_VERSION=TarVersion.autogen
+ALL_VERSION=$(SRC_VERSION) $(MNF_VERSION) $(TAR_VERSION)
+SVN_STATUS =SVN.status.depend
+SVN_INFO   =SVN.info.depend
+MNF_SOURCE =resources/model.manifest
 
 # Executable source files
 SRCDIR =src
@@ -87,7 +96,7 @@ INSTRES=$(INSTDIR)/devices.ini \
 ##  OBJECT FILES
 #############################################
 ifeq ($(CODEBLOCKS),NO)
-OBJECTS   =$(SOURCES:.cpp=.o)
+OBJECTS   =$(foreach SOURCE,$(SOURCES),$(OBJ_DIR)/$(subst .cpp,.o,$(SOURCE)))
 endif
 MOBJECTS=$(LANSRC:.po=.mo)
 
@@ -117,10 +126,13 @@ TSTFILES  =$(subst $(INSTDIR),$(PRJDIR)/$(TSTDATA),$(INSTRES))
 TGTHELP   =Help
 TGTHFILES =$(subst $(HELPDIR),$(PREFIX)/$(TGTDATA)/$(TGTHELP),$(HELPFILES))
 TSTHFILES =$(subst $(HELPDIR),$(PRJDIR)/$(TSTDATA)/$(TGTHELP),$(HELPFILES))
-TGTMAPS   =$(subst $(HELPDIR),$(PREFIX)/$(TSTDATA)/$(TGTHELP),$(MAPFILES))
+TGTMAPS   =$(subst $(HELPDIR),$(PREFIX)/$(TGTDATA)/$(TGTHELP),$(MAPFILES))
 TSTMAPS   =$(subst $(HELPDIR),$(PRJDIR)/$(TSTDATA)/$(TGTHELP),$(MAPFILES))
 TGDOCFILES=$(subst $(DOCDIR),$(PREFIX)/$(TGTDATA),$(DOC))
 TSDOCFILES=$(subst $(DOCDIR),$(PRJDIR)/$(TSTDATA),$(DOC))
+# Tar Version
+TAR_DATE=$(shell cat $(TAR_VERSION))
+TAR_FILENAME=$(EXECUTABLE)-$(TAR_DATE)-bin
 
 
 #############################################
@@ -138,7 +150,7 @@ BUILD      =$(CXX) `$(WXCONFIG) --libs` -static-libgcc
 else
 BUILD      =codeblocks --build --target="Release Linux"
 endif
-CPPC       =$(CXX) `$(WXCONFIG) --cxxflags` -O2 -Isrc
+CPPC       =$(CXX) `$(WXCONFIG) --cxxflags` -O2 -Isrc -DUSE_SVN_VERSION
 RM         =rm -f
 RMDIR      =rm -f -R
 XSLT_MAP   =saxonb-xslt -ext:on -xsl:Map2Redirect.xslt
@@ -155,15 +167,25 @@ XSLT_IN    =-s:
 all: $(PRJEXEC) langs
 
 ifeq ($(CODEBLOCKS),NO)
-.cpp.o:
+
+$(OBJ_DIR):
+	$(MKDIR) $(OBJ_DIR)
+
+$(OBJ_DIR)/%.o: %.cpp $(SRC_VERSION) $(OBJ_DIR)
+	$(MKDIR) $(dir $@)
 	$(CPPC) -c $< -o $@
 
 $(PRJEXEC): $(OBJECTS)
 	$(MKDIR) $(PRJXEDIR)
 	$(BUILD) $(OBJECTS) -o $@
+	
+.SECONDARY: $(OBJECTS)
+
 else
-$(PRJEXEC): $(SOURCES)
+
+$(PRJEXEC): $(SOURCES) $(SRC_VERSION)
 	$(BUILD) $(EXECUTABLE).cbp
+	
 endif
 
 
@@ -171,9 +193,27 @@ langs: $(MOBJECTS)
 
 %.mo: %.po
 	$(MSGFMT) $< -o $@
- 
+
+## Version files
+##################
+
+$(SVN_INFO): $(SOURCES) $(LANSRC) $(SRCPIXMAP) $(SRCDESKTOP) $(HELPFILES) $(MAPFILES) $(DOC)
+	svn info --xml . > $@
+	
+$(SVN_STATUS): $(SOURCES) $(LANSRC) $(SRCPIXMAP) $(SRCDESKTOP) $(HELPFILES) $(MAPFILES) $(DOC)
+	svn status --xml -v . > $@
+
+$(ALL_VERSION): $(SVN_STATUS) $(SVN_INFO)
+	saxonb-xslt -ext:on -xsl:SVN2Version.xslt -s:$(SVN_INFO) \
+					STATUS_FILE=$(CURDIR)/$(SVN_STATUS) \
+					MANIFEST_FILE=$(CURDIR)/$(MNF_SOURCE) \
+					MANIFEST_OUTPUT=$(CURDIR)/$(MNF_VERSION) \
+					VERSION_SCRIPT=$(CURDIR)/$(TAR_VERSION) > $(SRC_VERSION)
+
+
 ## Install rules
 ##################
+
 $(PREFIX)/$(BINDIR)/$(TGT_EXECUTABLE): $(PRJEXEC)
 	$(INSTALLEXE) $< $@
 
@@ -204,12 +244,6 @@ $(TGTDESKTOP): $(SRCDESKTOP)
 	
 install: $(PREFIX)/$(BINDIR)/$(TGT_EXECUTABLE) $(TGTFILES) $(TGTHFILES) $(TGTMAPS) $(TGDOCFILES) $(TGLANGFILE) $(TGTPIXMAP) $(TGTDESKTOP)
 
-tar: install
-	tar -cf $(EXECUTABLE).tar --directory=$(PREFIX) $(BINDIR)/$(TGT_EXECUTABLE) $(TGTDATA) \
-					$(subst $(PREFIX)/,,$(TGLANGFILE)) \
-					$(DATADIR)/pixmaps/$(TGT_EXECUTABLE).png \
-					$(DATADIR)/applications/$(TGT_EXECUTABLE).desktop
-	gzip $(EXECUTABLE).tar
 
 uninstall:
 	$(RM)    $(PREFIX)/$(BINDIR)/$(TGT_EXECUTABLE)
@@ -217,6 +251,21 @@ uninstall:
 	$(RM)    $(TGLANGFILE)
 	$(RM)    $(TGTPIXMAP) $(TGTDESKTOP)
 
+	
+## TAR rules
+##################
+
+tar: $(VERSION_SCRIPT) $(TAR_FILENAME).tar.gz
+
+$(TAR_FILENAME).tar.gz: $(PREFIX)/$(BINDIR)/$(TGT_EXECUTABLE) $(TGTFILES) $(TGTHFILES) $(TGTMAPS) $(TGDOCFILES) $(TGLANGFILE) $(TGTPIXMAP) $(TGTDESKTOP) $(TAR_VERSION)
+	tar -cf $(TAR_FILENAME).tar --directory=$(PREFIX) $(BINDIR)/$(TGT_EXECUTABLE) $(TGTDATA) \
+					$(subst $(PREFIX)/,,$(TGLANGFILE)) \
+					$(DATADIR)/pixmaps/$(TGT_EXECUTABLE).png \
+					$(DATADIR)/applications/$(TGT_EXECUTABLE).desktop
+	$(RM) $(TAR_FILENAME).tar.gz
+	gzip $(TAR_FILENAME).tar
+
+	
 # TEST rules
 ##############
 
