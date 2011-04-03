@@ -24,17 +24,18 @@ SetCompressor /SOLID lzma
 !ifndef ${BUILD}
    !define BUILD Win32Release
 !else
-	!if ${BUILD} != "Debug"
-		!if ${BUILD} != "Release"
+	!if ${BUILD} != "Win32Debug"
+		!if ${BUILD} != "Win32Release"
 			!error "The build '${BUILD}' is not a valid build name"
 		!endif
 	!endif
 !endif
-!if ${BUILD} == "Debug"
+!if ${BUILD} == "Win32Debug"
 	!define SHORT_BUILD Dbg
 !else
 	!define SHORT_BUILD
 !endif
+
 
 ; Read the version number in version.autogen file
 !searchparse /file src\version.autogen '#define SVN_DATE (_T("' SVN_DATE '"'
@@ -164,7 +165,7 @@ Section "${PRODUCT_NAME}"
 	FileOpen $0 "$INSTDIR\Lang.lst" w
   
 	; Put executable file there
-	File "bin\${Build}\${EXE_NAME}"
+	File "bin\${BUILD}\${EXE_NAME}"
 	
 	; Put the additinal files (parameters, DLL, ...)
 	File "Install\devices.ini"
