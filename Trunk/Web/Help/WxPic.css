@@ -243,3 +243,12 @@ p.quote {
 	border: thin solid #003399;
 	padding: 10px;
 }
+pre {
+	display: block;
+	text-align: left;
+	border: 1px solid green;
+	color: green;
+	background-color: #EEEEEE;
+	padding :3px;
+	margin-left: 10px;
+}
