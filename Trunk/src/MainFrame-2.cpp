@@ -1244,7 +1244,7 @@ bool MainFrame::LoadFileAndProgramPic(const wxChar *fn, bool program_too)
 // FILE *fp;
     bool ok;
     wxChar sz255Temp[256];
-    const wxChar *cp;
+    wxChar *cp;
 
     RedAndGreenLedOff();
 
@@ -1272,13 +1272,19 @@ bool MainFrame::LoadFileAndProgramPic(const wxChar *fn, bool program_too)
 
     if (Config.iVerboseMessages)
     {
-        _stprintf(sz255Temp,
-                  _("Results from LoadHex: LastProgAdr=0x%06lX LastDataAdr=0x%06lX"),
-                  PicBuf_ArrayIndexToTargetAddress(PIC_BUF_CODE, PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex),
-                  PicBuf_ArrayIndexToTargetAddress(PIC_BUF_DATA, PicBuf[PIC_BUF_DATA].i32LastUsedArrayIndex)
-                 );
-        cp = sz255Temp + _tcslen(sz255Temp);
-        _stprintf( const_cast<wxChar*>(cp), _(" (%s)"), fn );    // added 2006-03-26
+        cp = sz255Temp;
+        cp += _stprintf(cp, _("Results from LoadHex: "));
+        if (PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex < 0)
+            cp += _stprintf(cp, _("No Code "));
+        else
+            cp += _stprintf(cp, _("LastProgAdr=0x%06lX "),
+                  PicBuf_ArrayIndexToTargetAddress(PIC_BUF_CODE, PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex));
+        if (PicBuf[PIC_BUF_DATA].i32LastUsedArrayIndex < 0)
+            cp += _stprintf(cp, _("No Data"));
+        else
+            cp += _stprintf(cp, _("LastDataAdr=0x%06lX"),
+                  PicBuf_ArrayIndexToTargetAddress(PIC_BUF_DATA, PicBuf[PIC_BUF_DATA].i32LastUsedArrayIndex));
+        _stprintf(cp, _(" (%s)"), fn );
         APPL_ShowMsg( 0, sz255Temp );
     }
     if (CommandOption.WinPic_i32CmdLineOption_OverrideConfigWord>=0)
