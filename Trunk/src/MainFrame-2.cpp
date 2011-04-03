@@ -502,56 +502,11 @@ bool MainFrame::ProgramPic(void)
     // Second, optional, but usually the most important step: program CODE
     if (Config.iProgramWhat&PIC_PROGRAM_CODE)
     {
-        // If there is a valid OSCILLATOR CALIBRATION WORD
-        //   (which in fact is a RETLW at the end of the program memory)
-        // smuggle it into the code memory buffer now:
-        if (    (PIC_DeviceInfo.lAddressOscCal >= 0)
-                && (!Config.iDontCareForOsccal)  )
-        {
-            // there SHOULD BE an oscillator calib word:
-            if ( PicBuf_GetBufferWord(PIC_DeviceInfo.lAddressOscCal, &dw ) > 0)
-            {
-                if ( (PIC_lOscillatorCalibrationWord & 0xFF00) == 0x3400/*RETLW*/ )
-                {
-                    // have read a valid oscillator config word earlier, usually before bulk erase.
-                    PicBuf_SetBufferWord(PIC_DeviceInfo.lAddressOscCal, PIC_lOscillatorCalibrationWord );
-                    if (dw != (uint32_t)PIC_lOscillatorCalibrationWord)
-                    {
-                        APPL_ShowMsg( 0, _("Replaced OSCCAL word in buffer: old=0x%06lX, new=0x%06lX ."),
-                                      dw, PIC_lOscillatorCalibrationWord );
-                    }
-                }
-                else // there should be an oscillator calib word,
-                {
-                    // but PIC_lOscillatorCalibrationWord does not look like a RETLW instruction:
-                    if ( (dw & 0xFF00) == 0x3400)
-                    {
-                        // The osc calib word in the program buffer is a RETLW instruction.. use it.
-                        APPL_ShowMsg( 0, _("Using old OSCCAL word from buffer (0x%06lX) .") , dw );
-                    }
-                    else // there is still no valid osc calib word in the buffer ...
-                    {
-                        if (PIC_iHaveErasedCalibration)
-                        {
-                            PicBuf_SetBufferWord(PIC_DeviceInfo.lAddressOscCal, 0x3480/*RETLW 0x80*/ );
-                            APPL_ShowMsg( 0, _("Warning: using default OSC CALIB word instead of 0x%06lX ."), dw );
-                        }
-                    }
-                }
-            } // end if < successfully read a "config word" >
-            // If a BULK ERASE has been done before, make sure CODE PROGRAMMING
-            // goes as far as the config word.
-            // Without BULK ERASE, this is not required.
-            if (PIC_iHaveErasedCalibration)
-            {
-                if (PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex < PIC_DeviceInfo.lAddressOscCal)
-                    PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex = PIC_DeviceInfo.lAddressOscCal;
-            }
-        } // end if <need to care for the PIC's oscillator calib word ?>
 
-        i32FirstAddress = PicBuf_ArrayIndexToTargetAddress(PIC_BUF_CODE, 0 );
-        i32LastAddress  = PicBuf_ArrayIndexToTargetAddress(PIC_BUF_CODE, PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex);
-        if ( PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex >= 0 )
+        //-- It is necessary to write the program memory if it is not empty
+        //-- Or if it contains an OSCCAL word
+        if ( (PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex >= 0)
+        ||   (PIC_DeviceInfo.lAddressOscCal >= 0))
         {
             fOkToGo = true;
             if (PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex >= PIC_DeviceInfo.lCodeMemSize)
@@ -597,6 +552,58 @@ bool MainFrame::ProgramPic(void)
                         ++error_count;
                     }
                 } // end if < not "program all" >
+
+
+                // If there is a valid OSCILLATOR CALIBRATION WORD
+                //   (which in fact is a RETLW at the end of the program memory)
+                // smuggle it into the code memory buffer now:
+                if (    (PIC_DeviceInfo.lAddressOscCal >= 0)
+                        && (!Config.iDontCareForOsccal)  )
+                {
+                    // there SHOULD BE an oscillator calib word:
+                    if ( PicBuf_GetBufferWord(PIC_DeviceInfo.lAddressOscCal, &dw ) > 0)
+                    {
+                        if ( (PIC_lOscillatorCalibrationWord & 0xFF00) == 0x3400/*RETLW*/ )
+                        {
+                            // have read a valid oscillator config word earlier, usually before bulk erase.
+                            PicBuf_SetBufferWord(PIC_DeviceInfo.lAddressOscCal, PIC_lOscillatorCalibrationWord );
+                            if (dw != (uint32_t)PIC_lOscillatorCalibrationWord)
+                            {
+                                APPL_ShowMsg( 0, _("Replaced OSCCAL word in buffer: old=0x%06lX, new=0x%06lX ."),
+                                              dw, PIC_lOscillatorCalibrationWord );
+                            }
+                        }
+                        else // there should be an oscillator calib word,
+                        {
+                            // but PIC_lOscillatorCalibrationWord does not look like a RETLW instruction:
+                            if ( (dw & 0xFF00) == 0x3400)
+                            {
+                                // The osc calib word in the program buffer is a RETLW instruction.. use it.
+                                APPL_ShowMsg( 0, _("Using old OSCCAL word from buffer (0x%06lX) .") , dw );
+                            }
+                            else // there is still no valid osc calib word in the buffer ...
+                            {
+                                if (PIC_iHaveErasedCalibration)
+                                {
+                                    PicBuf_SetBufferWord(PIC_DeviceInfo.lAddressOscCal, 0x3480/*RETLW 0x80*/ );
+                                    APPL_ShowMsg( 0, _("Warning: using default OSC CALIB word instead of 0x%06lX ."), dw );
+                                }
+                            }
+                        }
+                    } // end if < successfully read a "config word" >
+                    // If a BULK ERASE has been done before, make sure CODE PROGRAMMING
+                    // goes as far as the config word.
+                    // Without BULK ERASE, this is not required.
+                    if (PIC_iHaveErasedCalibration)
+                    {
+                        if (PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex < PIC_DeviceInfo.lAddressOscCal)
+                            PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex = PIC_DeviceInfo.lAddressOscCal;
+                    }
+                } // end if <need to care for the PIC's oscillator calib word ?>
+
+                i32FirstAddress = PicBuf_ArrayIndexToTargetAddress(PIC_BUF_CODE, 0 );
+                i32LastAddress  = PicBuf_ArrayIndexToTargetAddress(PIC_BUF_CODE, PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex);
+
                 if (PIC_DeviceInfo.wCanRead)
                 {
                     _stprintf( sz80Temp, _("Programming and Verifying CODE, 0x%06lX..0x%06lX"),
