@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxPanel" name="TMessagePanel">
+		<pos_arg>1</pos_arg>
+		<size_arg>1</size_arg>
+		<object class="wxBoxSizer" variable="BoxSizer24" member="no">
+			<orient>wxVERTICAL</orient>
+			<object class="sizeritem">
+				<object class="wxButton" name="ID_CLEAR_MSG_BUTTON" variable="aClearMsgButton" member="yes">
+					<label>Clear</label>
+					<handler function="onClearMsgButtonClick" entry="EVT_BUTTON" />
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_TOP</flag>
+				<border>1</border>
+			</object>
+			<object class="sizeritem">
+				<object class="wxTextCtrl" name="ID_MESSAGE_LOG_TEXTCTRL" variable="aMessageLog" member="yes">
+					<style>wxTE_MULTILINE|wxTE_READONLY</style>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+				<border>1</border>
+				<option>1</option>
+			</object>
+		</object>
+	</object>
+</wxsmith>
