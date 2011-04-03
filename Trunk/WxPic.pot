@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-26 23:31+0100\n"
+"POT-Creation-Date: 2011-04-03 19:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -842,300 +842,321 @@ msgid "Erased"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:484 src\MainFrame-2.cpp:596 src\MainFrame-2.cpp:740
+#: src\MainFrame-2.cpp:484 src\MainFrame-2.cpp:551 src\MainFrame-2.cpp:747
 #: src\MainFrame.cpp:564 src\MainFrame.cpp:1069
 msgid "Erasing FAILED !"
 msgstr ""
 
-# P1
-#: src\MainFrame-2.cpp:520
-#, c-format
-msgid "Replaced OSCCAL word in buffer: old=0x%06lX, new=0x%06lX ."
-msgstr ""
-
-# P1
-#: src\MainFrame-2.cpp:530
-#, c-format
-msgid "Using old OSCCAL word from buffer (0x%06lX) ."
-msgstr ""
-
 # P2
-#: src\MainFrame-2.cpp:537
-#, c-format
-msgid "Warning: using default OSC CALIB word instead of 0x%06lX ."
-msgstr ""
-
-# P2
-#: src\MainFrame-2.cpp:559
+#: src\MainFrame-2.cpp:514
 #, c-format
 msgid ""
 "Warning: Last program addr (0x%06lX) exceeds device memory size (0x%06lX) !"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:564
+#: src\MainFrame-2.cpp:519
 msgid "Select YES to ignore this problem and truncate the buffer contents."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:565
+#: src\MainFrame-2.cpp:520
 msgid "Problem encountered before CODE MEMORY programming"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:573
+#: src\MainFrame-2.cpp:528
 msgid "Skipped CODE MEMORY programming."
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:589
+#: src\MainFrame-2.cpp:544
 msgid "Erasing CODE"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:602
+#: src\MainFrame-2.cpp:572
+#, c-format
+msgid "Replaced OSCCAL word in buffer: old=0x%06lX, new=0x%06lX ."
+msgstr ""
+
+# P1
+#: src\MainFrame-2.cpp:582
+#, c-format
+msgid "Using old OSCCAL word from buffer (0x%06lX) ."
+msgstr ""
+
+# P2
+#: src\MainFrame-2.cpp:589
+#, c-format
+msgid "Warning: using default OSC CALIB word instead of 0x%06lX ."
+msgstr ""
+
+# P1
+#: src\MainFrame-2.cpp:609
 #, c-format
 msgid "Programming and Verifying CODE, 0x%06lX..0x%06lX"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:607
+#: src\MainFrame-2.cpp:614
 #, c-format
 msgid "Programming CODE, 0x%06lX..0x%06lX"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:686 src\MainFrame-2.cpp:1070
+#: src\MainFrame-2.cpp:693 src\MainFrame-2.cpp:1077
 #, c-format
 msgid "Verifying CODE, 0x%06lX..0x%06lX"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:703
+#: src\MainFrame-2.cpp:710
 msgid "Cannot Program CODE MEMORY, nothing in buffer."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:710 src\MainFrame-2.cpp:778 src\MainFrame-2.cpp:934
+#: src\MainFrame-2.cpp:717 src\MainFrame-2.cpp:785 src\MainFrame-2.cpp:941
 msgid "USER BREAK while programming."
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:734
+#: src\MainFrame-2.cpp:741
 msgid "Erasing: DATA .."
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:745
+#: src\MainFrame-2.cpp:752
 #, c-format
 msgid "Programming DATA, 0x%06lX..0x%06lX"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:759 src\MainFrame-2.cpp:1097
+#: src\MainFrame-2.cpp:766 src\MainFrame-2.cpp:1104
 #, c-format
 msgid "Verifying DATA, 0x%06lX..0x%06lX"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:793
+#: src\MainFrame-2.cpp:800
 msgid "Restoring BANDGAP calibration bits for CONFIG-WORD"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:796
+#: src\MainFrame-2.cpp:803
 #, c-format
 msgid "Cfg word before restoring BG calib: 0x%06lX"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:805
+#: src\MainFrame-2.cpp:812
 #, c-format
 msgid "Cfg word after restoring BG calib: 0x%06lX"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:829
+#: src\MainFrame-2.cpp:836
 #, c-format
 msgid "Programming CONFIG, 0x%06lX..0x%06lX"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:844 src\MainFrame-2.cpp:1122
+#: src\MainFrame-2.cpp:851 src\MainFrame-2.cpp:1129
 #, c-format
 msgid "Verifying CONFIG, 0x%06lX..0x%06lX"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:870
+#: src\MainFrame-2.cpp:877
 msgid "Suspicious: Buffer contains no data for the CONFIGURATION BITS."
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:903 src\MainFrame.cpp:978
+#: src\MainFrame-2.cpp:910 src\MainFrame.cpp:978
 msgid "Programming CONFIG-WORD"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:908
+#: src\MainFrame-2.cpp:915
 #, c-format
 msgid "Config word = 0x%06lX; Config mask = 0x%06lX"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:946
+#: src\MainFrame-2.cpp:953
 msgid "Programming finished, no errors."
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:950
+#: src\MainFrame-2.cpp:957
 msgid "Programming finished, nothing to do."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:957
+#: src\MainFrame-2.cpp:964
 msgid "ERROR: Programming FAILED !"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1005
+#: src\MainFrame-2.cpp:1012
 msgid "Cannot verify at different voltages with this hardware."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1083
+#: src\MainFrame-2.cpp:1090
 msgid "No PROGRAM CODE in buffer to verify."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1107
+#: src\MainFrame-2.cpp:1114
 msgid "No DATA MEMORY in buffer to verify."
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:1145
+#: src\MainFrame-2.cpp:1152
 #, c-format
 msgid " Verifying CONFIG-WORD%c"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1177
+#: src\MainFrame-2.cpp:1184
 msgid "USER BREAK while verifying."
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:1187
+#: src\MainFrame-2.cpp:1194
 msgid "Verify finished, no errors."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1189
+#: src\MainFrame-2.cpp:1196
 msgid "Nothing to verify in buffer."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1195
+#: src\MainFrame-2.cpp:1202
 msgid "ERROR: Verifying FAILED !"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:1213 src\MainFrame.cpp:331
+#: src\MainFrame-2.cpp:1220 src\MainFrame.cpp:331
 msgid "Load HEX File"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:1218 src\MainFrame.cpp:1605
+#: src\MainFrame-2.cpp:1225 src\MainFrame.cpp:1605
 msgid "HEX files (INHX8M, *.hex)|*.hex"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:1221
+#: src\MainFrame-2.cpp:1228
 msgid "HEX files (INHX8M, *.hex)|*.hex;*.HEX|*.HEX"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1255
+#: src\MainFrame-2.cpp:1262
 #, c-format
 msgid "Can't open hexfile \"%s\""
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1276
-#, c-format
-msgid "Results from LoadHex: LastProgAdr=0x%06lX LastDataAdr=0x%06lX"
+#: src\MainFrame-2.cpp:1283
+msgid "Results from LoadHex: "
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1281
+#: src\MainFrame-2.cpp:1285
+msgid "No Code "
+msgstr ""
+
+# P3
+#: src\MainFrame-2.cpp:1287
+#, c-format
+msgid "LastProgAdr=0x%06lX "
+msgstr ""
+
+# P3
+#: src\MainFrame-2.cpp:1290
+msgid "No Data"
+msgstr ""
+
+# P3
+#: src\MainFrame-2.cpp:1292
+#, c-format
+msgid "LastDataAdr=0x%06lX"
+msgstr ""
+
+# P3
+#: src\MainFrame-2.cpp:1294
 #, c-format
 msgid " (%s)"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1289
+#: src\MainFrame-2.cpp:1302
 #, c-format
 msgid "Info: Config word set to 0x%06lX from command line ."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1301
+#: src\MainFrame-2.cpp:1314
 msgid "Aborting LoadAndProgram because of error(s)"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1327
+#: src\MainFrame-2.cpp:1340
 msgid ""
 "Dump would overwrite existing file.\n"
 "  Erase old file ?"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1328
+#: src\MainFrame-2.cpp:1341
 msgid "Confirm overwrite"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1339
+#: src\MainFrame-2.cpp:1352
 msgid "Can't create hexfile"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1355
+#: src\MainFrame-2.cpp:1368
 msgid ".. stopped parsing cmd-line"
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1364
+#: src\MainFrame-2.cpp:1377
 msgid "Update all tabs: CODE memory .."
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1367
+#: src\MainFrame-2.cpp:1380
 msgid "Update all tabs: DATA memory .."
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1370
+#: src\MainFrame-2.cpp:1383
 msgid "Update all tabs: ID and Config memory dump .."
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1373
+#: src\MainFrame-2.cpp:1386
 msgid "Update all tabs: Device/Config tab .."
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1376
+#: src\MainFrame-2.cpp:1389
 msgid "Update all tabs: Interface display .."
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1379
+#: src\MainFrame-2.cpp:1392
 msgid "Update all tabs: Options display .."
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1384
+#: src\MainFrame-2.cpp:1397
 msgid "Update all tabs: DONE ."
 msgstr ""
 
