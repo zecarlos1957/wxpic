@@ -206,6 +206,8 @@
 		<Unit filename="src\CodeMemPanel.h" />
 		<Unit filename="src\CommandOption.cpp" />
 		<Unit filename="src\CommandOption.h" />
+		<Unit filename="src\Config.cpp" />
+		<Unit filename="src\Config.h" />
 		<Unit filename="src\ConfigMemoryPanel.cpp" />
 		<Unit filename="src\ConfigMemoryPanel.h" />
 		<Unit filename="src\DataMemPanel.cpp" />
@@ -230,8 +232,8 @@
 		<Unit filename="src\OptionPanel.cpp" />
 		<Unit filename="src\OptionPanel.h" />
 		<Unit filename="src\SVNVersion.h" />
-		<Unit filename="src\WinPicPr\Config.cpp" />
-		<Unit filename="src\WinPicPr\Config.h" />
+		<Unit filename="src\SessionDialog.cpp" />
+		<Unit filename="src\SessionDialog.h" />
 		<Unit filename="src\WinPicPr\Devices.cpp" />
 		<Unit filename="src\WinPicPr\Devices.h" />
 		<Unit filename="src\WinPicPr\LoadHex.cpp" />
@@ -268,6 +270,7 @@
 		<Unit filename="wxsmith\TInterfacePanel.wxs" />
 		<Unit filename="wxsmith\TMessagePanel.wxs" />
 		<Unit filename="wxsmith\TOptionPanel.wxs" />
+		<Unit filename="wxsmith\TSessionDialog.wxs" />
 		<Extensions>
 			<code_completion />
 			<envvars />
@@ -284,6 +287,7 @@
 					<wxPanel wxs="wxsmith/TOptionPanel.wxs" src="src\OptionPanel.cpp" hdr="src\OptionPanel.h" name="TOptionPanel" language="CPP" />
 					<wxPanel wxs="wxsmith/TInterfacePanel.wxs" src="src\InterfacePanel.cpp" hdr="src\InterfacePanel.h" name="TInterfacePanel" language="CPP" />
 					<wxPanel wxs="wxsmith/TMessagePanel.wxs" src="src\MessagePanel.cpp" hdr="src\MessagePanel.h" name="TMessagePanel" language="CPP" />
+					<wxDialog wxs="wxsmith/TSessionDialog.wxs" src="src/SessionDialog.cpp" hdr="src/SessionDialog.h" name="TSessionDialog" language="CPP" />
 				</resources>
 			</wxsmith>
 		</Extensions>

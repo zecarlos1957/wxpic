@@ -16,7 +16,7 @@
 #include "Appl.h"
 #include "CommandOption.h"
 #include "Language.h"
-#include <WinPicPr/Config.h>
+#include "Config.h"
 #include <WinPicPr/PIC_HW.h>
 #include <WinPicPr/PIC_HEX.h>
 #include <WinPicPr/PIC_PRG.h>

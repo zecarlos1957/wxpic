@@ -8,8 +8,8 @@
 
 
 #include <Appl.h>      // call the APPLication to display message strings
-#include "PIC_HW.h"   // interface types etc for default values
-#include "PIC_PRG.h"
+#include <WinPicPr/PIC_HW.h>   // interface types etc for default values
+#include <WinPicPr/PIC_PRG.h>
 
 #define _I_AM_CONFIG_  /* for single-source-variables in CONFIG.H */
 #include "Config.h"
