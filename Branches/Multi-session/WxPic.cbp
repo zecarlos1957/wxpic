@@ -253,14 +253,14 @@
 		<Unit filename="src\WinPicPr\PIC_PRG.cpp" />
 		<Unit filename="src\WinPicPr\PIC_PRG.h" />
 		<Unit filename="src\WinPicPr\SpecHwIo.h" />
+		<Unit filename="src\WinPicPr\YHF_tools\QFile.cpp" />
+		<Unit filename="src\WinPicPr\YHF_tools\QFile.h" />
 		<Unit filename="src\WinPicPr\dsPIC_PRG.cpp" />
 		<Unit filename="src\WinPicPr\dsPIC_PRG.h" />
 		<Unit filename="src\WinRing0\OlsApiInit.h" />
 		<Unit filename="src\WinRing0\OlsApiInitDef.h" />
 		<Unit filename="src\WinRing0\OlsDef.h" />
 		<Unit filename="src\WxApp.cpp" />
-		<Unit filename="src\YHF_tools\QFile.cpp" />
-		<Unit filename="src\YHF_tools\QFile.h" />
 		<Unit filename="wxsmith\AboutU.wxs" />
 		<Unit filename="wxsmith\CodeMemPanel.wxs" />
 		<Unit filename="wxsmith\MainFrame.wxs" />
