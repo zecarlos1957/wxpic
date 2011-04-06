@@ -3,7 +3,6 @@
 /*-------------------------------------------------------------------------*/
 
 #include <wx/string.h>
-#include <wx/confbase.h>
 #include <wx/app.h>
 
 

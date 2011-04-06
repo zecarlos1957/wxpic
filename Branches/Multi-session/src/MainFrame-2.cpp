@@ -19,6 +19,7 @@
 #include "MainFrame.h"
 #include "CommandOption.h"
 #include "Appl.h"
+#include "Config.h"
 
 #include <wx/intl.h>
 #include <wx/string.h>
@@ -36,7 +37,6 @@
 #include <WinPicPr/PIC16F7x_PRG.h>
 #include <WinPicPr/PIC10F_PRG.h>
 #include <WinPicPr/PIC18F_PRG.h>
-#include <WinPicPr/Config.h>
 
 #define MAX_MESSAGES_IN_LOG     500
 

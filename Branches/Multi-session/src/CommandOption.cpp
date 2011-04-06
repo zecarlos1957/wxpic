@@ -5,7 +5,7 @@
 
 #include "CommandOption.h"
 #include "Appl.h"
-#include <WinPicPr/Config.h>
+#include "Config.h"
 #include <wx/string.h>
 #include <wx/cmdline.h>
 

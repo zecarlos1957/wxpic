@@ -1,6 +1,7 @@
 #include "DeviceCfgPanel.h"
 #include "MainFrame.h"
 #include "Appl.h"
+#include "Config.h"
 
 //(*InternalHeaders(TDeviceCfgPanel)
 #include <wx/font.h>
@@ -10,7 +11,6 @@
 #include <wx/settings.h>
 #include <wx/msgdlg.h>
 
-#include <WinPicPr/Config.h>
 #include <WinPicPr/PIC_PRG.h>
 #include <WinPicPr/PIC_HEX.h>
 

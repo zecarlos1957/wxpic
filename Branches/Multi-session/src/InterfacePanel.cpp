@@ -2,6 +2,7 @@
 #include "MainFrame.h"
 #include "Appl.h"
 #include "Language.h"
+#include "Config.h"
 #include <../resources/Resource.h>
 
 //(*InternalHeaders(TInterfacePanel)
@@ -13,7 +14,6 @@
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
 #include <wx/dir.h>
-#include <WinPicPr/Config.h>
 #include <WinPicPr/PIC_HW.h>
 
 //(*IdInit(TInterfacePanel)

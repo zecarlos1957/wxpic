@@ -3,6 +3,7 @@
 #include "CommandOption.h"
 #include "Language.h"
 #include "Appl.h"
+#include "Config.h"
 
 //(*InternalHeaders(TOptionPanel)
 #include <wx/intl.h>
@@ -12,7 +13,6 @@
 #include <wx/colordlg.h>
 #include <wx/settings.h>
 
-#include <WinPicPr/Config.h>
 #include <WinPicPr/PIC_PRG.h>
 #include <WinPicPr/PIC_HW.h>
 
