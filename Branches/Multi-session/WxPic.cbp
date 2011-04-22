@@ -234,6 +234,7 @@
 		<Unit filename="src\SVNVersion.h" />
 		<Unit filename="src\SessionDialog.cpp" />
 		<Unit filename="src\SessionDialog.h" />
+		<Unit filename="src\SessionManagerInt.h" />
 		<Unit filename="src\WinPicPr\Devices.cpp" />
 		<Unit filename="src\WinPicPr\Devices.h" />
 		<Unit filename="src\WinPicPr\LoadHex.cpp" />

@@ -72,36 +72,6 @@
 				</object>
 				<object class="wxMenu" name="ID_RECENT_FILES_SUB_MENU" variable="aRecentFileSubMenu" member="yes">
 					<label>Recent &amp;Files</label>
-					<object class="wxMenuItem" name="ID_RECENT_FILE1_MENU_ITEM" variable="aRecentFile1MenuItem" member="yes">
-						<label>** None **</label>
-						<enabled>0</enabled>
-						<handler function="OnRecentFile1MenuItemSelected" entry="EVT_MENU" />
-					</object>
-					<object class="wxMenuItem" name="ID_RECENT_FILE2_MENU_ITEM" variable="aRecentFile2MenuItem" member="yes">
-						<label>** None **</label>
-						<enabled>0</enabled>
-						<handler function="OnRecentFile2MenuItemSelected" entry="EVT_MENU" />
-					</object>
-					<object class="wxMenuItem" name="ID_RECENT_FILE3_MENU_ITEM" variable="aRecentFile3MenuItem" member="yes">
-						<label>** None **</label>
-						<enabled>0</enabled>
-						<handler function="OnRecentFile3MenuItemSelected" entry="EVT_MENU" />
-					</object>
-					<object class="wxMenuItem" name="ID_RECENT_FILE4_MENU_ITEM" variable="aRecentFile4MenuItem" member="yes">
-						<label>** None **</label>
-						<enabled>0</enabled>
-						<handler function="OnRecentFile4MenuItemSelected" entry="EVT_MENU" />
-					</object>
-					<object class="wxMenuItem" name="ID_RECENT_FILE5_MENU_ITEM" variable="aRecentFile5MenuItem" member="yes">
-						<label>** None **</label>
-						<enabled>0</enabled>
-						<handler function="OnRecentFile5MenuItemSelected" entry="EVT_MENU" />
-					</object>
-					<object class="wxMenuItem" name="ID_RECENT_FILE6_MENU_ITEM" variable="aRecentFile6MenuItem" member="yes">
-						<label>** None **</label>
-						<enabled>0</enabled>
-						<handler function="OnRecentFile6MenuItemSelected" entry="EVT_MENU" />
-					</object>
 					<object class="separator" />
 					<object class="wxMenuItem" name="ID_CLEAR_RECENT_MENU_ITEM" variable="aClearRecentMenuItem" member="yes">
 						<label>Clear recent file history</label>

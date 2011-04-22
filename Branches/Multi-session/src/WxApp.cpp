@@ -10,9 +10,8 @@
 
 
 #include "MainFrame.h"
+#include "Config.h"
 #include <wx/app.h>
-#include <wx/snglinst.h>
-#include <wx/msgdlg.h>
 #include <wx/filename.h>
 #include "Appl.h"
 #include "Language.h"
@@ -22,6 +21,15 @@
 #include <wx/image.h>
 //*)
 
+
+#if 0
+int BreakPoint (void)
+{
+    return 0;
+}
+int BreakOnInit = BreakPoint();
+#endif
+
 class MyApp : public wxApp
 {
 	public:
@@ -29,9 +37,6 @@ class MyApp : public wxApp
 		virtual int  OnExit();
 
         MyApp(void) {}
-
-    private:
-        wxSingleInstanceChecker aInstanceChecker;
 };
 
 IMPLEMENT_APP(MyApp);
@@ -40,33 +45,19 @@ bool MyApp::OnInit()
 {
     bool wxsOK = true;
 
-    TLanguage::Init();
-    MainFrame::TheIniFile.SetPath(_T("/LANGUAGE"));
-    MainFrame::TheIniFile.Read(_T("Name"), &MainFrame::TheLanguageName);
-    if (MainFrame::TheLanguageName != BUILT_IN_NAME)
-        TLanguage::SetLanguage(MainFrame::TheLanguageName);
-    if (MainFrame::TheLanguageName.IsEmpty())
-        MainFrame::TheLanguageName = BUILT_IN_NAME;
-    TLanguage::SetHelp();
-
-    if (aInstanceChecker.Create(APPLICATION_NAME)
-    &&  aInstanceChecker.IsAnotherRunning())
-    {
-        wxMessageBox( _("Please do not start more than\none instance of this program !"),
-           _("Error - WxPic already running"),
-           wxICON_EXCLAMATION | wxOK );
-        wxsOK = false;
-    }
-
-    TResource::Load();
-    SetTopWindow(MainFrame::TheMainFrame);
-
-    //(*AppInitialize
-    wxInitAllImageHandlers();
-    //*)
+    wxsOK = TSessionConfig::Init(NULL);
 
     if (wxsOK)
+    {
+        TResource::Load();
+        SetTopWindow(MainFrame::TheMainFrame);
+
+        //(*AppInitialize
+        wxInitAllImageHandlers();
+        //*)
+
         wxsOK = MainFrame::CreateAndShow();
+    }
 
     return wxsOK;
 }

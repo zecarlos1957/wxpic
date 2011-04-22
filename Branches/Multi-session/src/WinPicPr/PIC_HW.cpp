@@ -190,13 +190,13 @@ bool COM_OpenPicPort(void)
         memset( &COM_sOverlappedIo, 0, sizeof(OVERLAPPED)); // structure for OVERLAPPED I/O
         COM_sOverlappedIo.hEvent = ::CreateEvent( NULL, true, false, NULL );
         COM_hComPort = CreateFile(
-                           Config.sz40ComPortName,        // pointer to name of the file
-                           GENERIC_READ | GENERIC_WRITE,  // access (read-write) mode
-                           0,                             // share mode
-                           NULL,                          // pointer to security attributes
-                           OPEN_EXISTING,                 // how to create
-                           FILE_FLAG_OVERLAPPED,          // file attributes..
-                           NULL );                        // handle to file with attributes to copy
+                           TSessionConfig::GetComPortName(), // pointer to name of the file
+                           GENERIC_READ | GENERIC_WRITE,     // access (read-write) mode
+                           0,                                // share mode
+                           NULL,                             // pointer to security attributes
+                           OPEN_EXISTING,                    // how to create
+                           FILE_FLAG_OVERLAPPED,             // file attributes..
+                           NULL );                           // handle to file with attributes to copy
         if( COM_hComPort == INVALID_HANDLE_VALUE )
         {
             _tcscpy(PicHw_sz255LastError, _("Cannot open COM port"));
@@ -385,7 +385,7 @@ bool COM_OpenPicPort(void)
         //    READ and WRITE operations without the OVERLAPPED hassle.
 
         int fd; /* File descriptor for the port */
-        szPort = wxString( Config.sz40ComPortName );
+        szPort = wxString( TSessionConfig::GetComPortName() );
 
         fd = open(szPort.mb_str(), O_RDWR | O_NOCTTY | O_NDELAY);
         if (fd == -1)
@@ -952,7 +952,7 @@ bool LPT_OpenPicPort(void)
 
     if(fResult==true)
     {
-        switch(Config.iLptPortNr)
+        switch(TSessionConfig::GetLptPortNr())
         {
         case 1:
             LPT_io_address = 0x0378;
@@ -966,10 +966,10 @@ bool LPT_OpenPicPort(void)
         }
     }
 
-    if(Config.iLptIoAddress != 0)
+    if(TSessionConfig::GetLptIoAddress() != 0)
     {
         // use the "unusual" I/O address if there is something specified.
-        LPT_io_address = Config.iLptIoAddress;
+        LPT_io_address = TSessionConfig::GetLptIoAddress();
     }
 
     if(LPT_io_address == 0)
@@ -984,11 +984,12 @@ bool LPT_OpenPicPort(void)
     //  unfortunately in certain situations Windoze just doesn't care
     //  and changes some output bits.
     // Windows XP does not seem to recognize the "LPT1" as a device name at all.
-    if(Config.iLptPortNr>=1 && Config.iLptPortNr<=4)
+    int LptPortNr = TSessionConfig::GetLptPortNr();
+    if ((LptPortNr >= 1) && (LptPortNr <= 2))
     {
-        sprintf( szPort, "LPT%d", Config.iLptPortNr );
+        sprintf( szPort, "LPT%d", LptPortNr );
         szPort[4]='\0';
-        if (Config.iVerboseMessages)
+        if (TSessionConfig::GetVerboseMessages())
         {
             wxString Log;
             Log.Printf(_("Open %hs port"), szPort);
@@ -999,7 +1000,7 @@ bool LPT_OpenPicPort(void)
         {
             _stprintf(PicHw_sz255LastError, _("Cannot occupy LPT port %d"), errno);
             //  fResult = false;  // no... try to use the port anyway !
-            if (Config.iVerboseMessages)
+            if (TSessionConfig::GetVerboseMessages())
                 APPL_ShowMsg( 0, PicHw_sz255LastError );
         }
 
@@ -1047,10 +1048,10 @@ bool LPT_OpenPicPort(void)
         {
             _tcscpy(PicHw_sz255LastError, _("Error Initialize WinRing0\n"));
             fResult = false;
-            if (Config.iVerboseMessages)
+            if (TSessionConfig::GetVerboseMessages())
                 APPL_ShowMsg( 0, PicHw_sz255LastError );
         }
-        else if (Config.iVerboseMessages)
+        else if (TSessionConfig::GetVerboseMessages())
             APPL_ShowMsg( 0, _("WinRing0 initialized") );
 
     } // end if <looks like a valid LPT-port *NUMBER* to try to occupy it>
@@ -1075,11 +1076,11 @@ void LPT_ClosePicPort(void)
     {
         fclose(LPT_pfileLptPort);
         LPT_pfileLptPort = NULL;
-        if (Config.iVerboseMessages)
+        if (TSessionConfig::GetVerboseMessages())
             APPL_ShowMsg( 0, _("LPT port released") );
     }
     DeinitOpenLibSys(&m_hOpenLibSys);
-    if (Config.iVerboseMessages)
+    if (TSessionConfig::GetVerboseMessages())
         APPL_ShowMsg( 0, _("WinRing0 de-initialized") );
 
     PicHw_fLptPortOpened = false;
@@ -1096,7 +1097,7 @@ bool LPT_OpenPicPort(void)
         LPT_ClosePicPort();
     }
     PicHw_fLptPortOpened = false;
-    switch(Config.iLptPortNr)
+    switch(TSessionConfig::GetLptPortNr())
     {
     case 1:
         LPT_io_address = 0x0378;
@@ -1109,10 +1110,10 @@ bool LPT_OpenPicPort(void)
         break;
     }
 
-    if(Config.iLptIoAddress != 0)
+    if(TSessionConfig::GetLptIoAddress() != 0)
     {
 // use the "unusual" I/O address if there is something specified.
-        LPT_io_address = Config.iLptIoAddress;
+        LPT_io_address = TSessionConfig::GetLptIoAddress();
     }
 
     if(LPT_io_address == 0)
@@ -1122,11 +1123,12 @@ bool LPT_OpenPicPort(void)
     }
 
 // Open the LPT port to prevent other applications to fool around with it,
-    if(Config.iLptPortNr>=1 && Config.iLptPortNr<=4)
+    int LptPortNr = TSessionConfig::GetLptPortNr();
+    if((LptPortNr >= 1) && (LptPortNr<=2))
     {
-        Port = wxString::Format( wxT("/dev/parport"), Config.iLptPortNr-1 );
+        Port = wxString::Format( wxT("/dev/parport"), LptPortNr-1 );
 
-        if (Config.iVerboseMessages)
+        if (TSessionConfig::GetVerboseMessages())
         {
             wxString Log;
             Log.Printf(_("Open %hs port"), Port.c_str());
@@ -1137,7 +1139,7 @@ bool LPT_OpenPicPort(void)
         {
             _stprintf(PicHw_sz255LastError, _("Cannot occupy LPT port %d"), errno);
 //  fResult = false;  // no... try to use the port anyway !
-            if (Config.iVerboseMessages)
+            if (TSessionConfig::GetVerboseMessages())
                 APPL_ShowMsg( 0, PicHw_sz255LastError );
         }
         else if (!PrivilegeRequested)
@@ -2309,7 +2311,7 @@ bool PIC_HW_SetInterfaceType( int new_interface_type )
             return false;
         }
         fResult = PicHw_SelectProgrammerHardware(
-                      new_interface_type, Config.sz255InterfaceSupportFile );
+                      new_interface_type, TSessionConfig::GetInterfaceFile() );
         return fResult;
 
     case PIC_INTF_TYPE_PIP84_V1       : // parallel, by Johan Bodin (SM6LKM)
@@ -2332,7 +2334,7 @@ bool PIC_HW_SetInterfaceType( int new_interface_type )
             return false;   // LastError already set !
         }
         fResult = PicHw_SelectProgrammerHardware(
-                      new_interface_type, Config.sz255InterfaceSupportFile );
+                      new_interface_type, TSessionConfig::GetInterfaceFile() );
         if( (fResult==true) && (PicHw_FuncPtr!=NULL) )
         {
             PicHw_wLptDataBits=0xFF; // set a "safe" value for all LPT data bits...
@@ -2397,13 +2399,13 @@ void PIC_HW_Delay_50ns(void)
     //   In fact, it waits AT LEAST 50 NANOSECONDS PLUS AN ADDITIONAL NUMBER
     //   OF MICROSECONDS required by the interface: Config.iExtraClkDelay_us )
     uint32_t dwAdditionalDelayLoops = 0;
-    if( Config.iExtraClkDelay_us > 0 )
+    if( TSessionConfig::GetExtraClkDelay_us() > 0 )
     {
-        dwAdditionalDelayLoops += 20 * (uint32_t)Config.iExtraClkDelay_us * PIC_HW_dwCount50ns ;
+        dwAdditionalDelayLoops += 20 * (uint32_t)TSessionConfig::GetExtraClkDelay_us() * PIC_HW_dwCount50ns ;
     }
 
     // To trace problems with "very slow" interfaces :
-    if( Config.iSlowInterface )
+    if( TSessionConfig::GetSlowInterface() )
     {
         // add another 5 microseconds for this "Very Slow Mode" :
         dwAdditionalDelayLoops += 100 * PIC_HW_dwCount50ns ;
@@ -2411,7 +2413,7 @@ void PIC_HW_Delay_50ns(void)
 
     // Note: Most interfaces (especially the SERIAL) have a signal rise time
     // of ~250ns..500ns at the end of the cable, so 50ns-pulses are just an illusion .
-    // But not a big issue since the introduction of Config.iExtraClkDelay_us ...
+    // But not a big issue since the introduction of ExtraClkDelay_us ...
     PIC_HW_ShortDelay( PIC_HW_dwCount50ns + dwAdditionalDelayLoops );
 
 } // end PIC_HW_Delay_50ns()
@@ -2426,13 +2428,13 @@ void PIC_HW_Delay_500ns(void)
 //    even 500 nanoseconds are too short ! )
 {
     uint32_t dwAdditionalDelayLoops = 0;
-    if( Config.iExtraClkDelay_us > 0 )
+    if( TSessionConfig::GetExtraClkDelay_us() > 0 )
     {
-        dwAdditionalDelayLoops += 20 * (uint32_t)Config.iExtraClkDelay_us * PIC_HW_dwCount50ns ;
+        dwAdditionalDelayLoops += 20 * (uint32_t)TSessionConfig::GetExtraClkDelay_us() * PIC_HW_dwCount50ns ;
     }
 
     // To trace problems with "very slow" interfaces :
-    if( Config.iSlowInterface )
+    if( TSessionConfig::GetSlowInterface() )
     {
         // add another 5 microseconds for this "Very Slow Mode" :
         dwAdditionalDelayLoops += 100 * PIC_HW_dwCount50ns ;
@@ -2926,11 +2928,11 @@ bool PIC_HW_SetClockAndData( bool clock_high, bool data_high )
 
 int PIC_HW_GetDataBit(void)
 {
-    if( Config.iExtraRdDelay_us )  // does the INTERFACE need an additional delay
+    if( TSessionConfig::GetExtraRdDelay_us() )  // does the INTERFACE need an additional delay
     {
         // before we can sample the state of the data-in line ?
         // (JDM2 seems to, especially when 'PortTalk' is in use)
-        PIC_HW_Delay_us( Config.iExtraRdDelay_us );  // extra delay before sampling data-in
+        PIC_HW_Delay_us( TSessionConfig::GetExtraRdDelay_us() );  // extra delay before sampling data-in
     }
     switch(PIC_HW_interface.type)
     {
@@ -3162,13 +3164,15 @@ void PIC_HW_ClockOut( uint16_t data_bit )
 {
     // "clocks" a single bit out to the PIC
     PIC_HW_SetClockAndData(true, data_bit);
-    if( Config.iSlowInterface )  // this option for "bad, slow interfaces" was added 2005-06
-        PIC_HW_Delay_us(10 * PIC_DeviceInfo.lTi_Clock_us + Config.iExtraClkDelay_us );
-    else PIC_HW_Delay_us( PIC_DeviceInfo.lTi_Clock_us + Config.iExtraClkDelay_us );
+    if( TSessionConfig::GetSlowInterface() )  // this option for "bad, slow interfaces" was added 2005-06
+        PIC_HW_Delay_us(10 * PIC_DeviceInfo.lTi_Clock_us + TSessionConfig::GetExtraClkDelay_us() );
+    else
+        PIC_HW_Delay_us( PIC_DeviceInfo.lTi_Clock_us + TSessionConfig::GetExtraClkDelay_us() );
     PIC_HW_SetClockAndData(false,data_bit);
-    if( Config.iSlowInterface )
-        PIC_HW_Delay_us(10 * PIC_DeviceInfo.lTi_Clock_us + Config.iExtraClkDelay_us );
-    else PIC_HW_Delay_us(PIC_DeviceInfo.lTi_Clock_us + Config.iExtraClkDelay_us );
+    if( TSessionConfig::GetSlowInterface() )
+        PIC_HW_Delay_us(10 * PIC_DeviceInfo.lTi_Clock_us + TSessionConfig::GetExtraClkDelay_us() );
+    else
+        PIC_HW_Delay_us(PIC_DeviceInfo.lTi_Clock_us + TSessionConfig::GetExtraClkDelay_us() );
 // ex: PIC_HW_SetClockAndData(false, false);
 // but: there's no need to set the data bit back to zero here (except.. see below)
 #if(1) // Added 2007-05-08 for testing purposes :
@@ -3190,7 +3194,7 @@ void PIC_HW_ClockOut( uint16_t data_bit )
         // against RS-232-GROUND after stopping the program at this point. Result:
         // RTS=pin4 on DSUB9 : -9.7 Volts (against pin5=GND)
         // DTR=pin7 on DSUB9 : -5.5 Volts (against pin5=GND)
-        if( Config.iSlowInterface ) // extra delay to recharge the JDM 2 :
+        if( TSessionConfig::GetSlowInterface() ) // extra delay to recharge the JDM 2 :
             PIC_HW_Delay_us(20 * PIC_DeviceInfo.lTi_Clock_us + 50/*us*/ );
         else PIC_HW_Delay_us( 2 * PIC_DeviceInfo.lTi_Clock_us + 50/*us*/ );
     } // end if < JDM 2 >
@@ -3236,9 +3240,10 @@ int PIC_HW_ClockIn(void)
     //                    is also customizeable via interface definition file.
     PIC_HW_SetClockAndData( true,
                             PicHw_iStateOfDataOutWhileReading); // state of data-output-line while reading
-    if( Config.iSlowInterface )
-        PIC_HW_Delay_us(10 * PIC_DeviceInfo.lTi_Clock_us + Config.iExtraClkDelay_us );
-    else PIC_HW_Delay_us(PIC_DeviceInfo.lTi_Clock_us + Config.iExtraClkDelay_us );
+    if( TSessionConfig::GetSlowInterface() )
+        PIC_HW_Delay_us(10 * PIC_DeviceInfo.lTi_Clock_us + TSessionConfig::GetExtraClkDelay_us() );
+    else
+        PIC_HW_Delay_us(PIC_DeviceInfo.lTi_Clock_us + TSessionConfig::GetExtraClkDelay_us() );
     iResult = PIC_HW_GetDataBit();          // sample data from PIC while clock=HIGH
     if(PIC_HW_interface.type==PIC_INTF_TYPE_JDM2)
     {
@@ -3246,7 +3251,7 @@ int PIC_HW_ClockIn(void)
         PIC_HW_SetClockAndData( false, true );
 //     PIC_HW_SetClockAndData( false, false );
 #if(1) // extra delay to make the clock low time longer than the high time :
-        if( Config.iSlowInterface ) // extra delay to recharge the JDM 2 :
+        if( TSessionConfig::GetSlowInterface() ) // extra delay to recharge the JDM 2 :
             PIC_HW_Delay_us(20 * PIC_DeviceInfo.lTi_Clock_us + 50/*us*/ );
         else PIC_HW_Delay_us( 2 * PIC_DeviceInfo.lTi_Clock_us + 50/*us*/ );
 #endif
@@ -3255,9 +3260,10 @@ int PIC_HW_ClockIn(void)
     {
         PIC_HW_SetClockAndData( false, true  );
     }
-    if( Config.iSlowInterface )
-        PIC_HW_Delay_us(10 * PIC_DeviceInfo.lTi_Clock_us + Config.iExtraClkDelay_us );
-    else PIC_HW_Delay_us(PIC_DeviceInfo.lTi_Clock_us + Config.iExtraClkDelay_us );
+    if( TSessionConfig::GetSlowInterface() )
+        PIC_HW_Delay_us(10 * PIC_DeviceInfo.lTi_Clock_us + TSessionConfig::GetExtraClkDelay_us() );
+    else
+        PIC_HW_Delay_us(PIC_DeviceInfo.lTi_Clock_us + TSessionConfig::GetExtraClkDelay_us() );
     return iResult;   // negative return means 'error' here
 #endif // OLD,NEW
 
@@ -3282,7 +3288,7 @@ bool PIC_HW_DisconnectFromTarget(void) // since 2002-09-09
 
     if( PIC_HW_CanSelectVdd() )      // since 2005-09-29 :
     {
-        PIC_HW_SelectVdd( Config.iIdleSupplyVoltage );  // back to the "normal" voltage
+        PIC_HW_SelectVdd( TSessionConfig::GetIdleSupplyVoltage() );  // back to the "normal" voltage
     }
     PicHw_iConnectedToTarget = 0;    // no longer "connected to target" now...
 
@@ -3330,7 +3336,7 @@ bool PIC_HW_ConnectToTarget(void)  // since 2002-09-09
     bool fResult;
 
 // before we start, update this param from the config... ugly but simple
-// PHWInfo.iSlowInterface = Config.iSlowInterface;
+// PHWInfo.iSlowInterface = TSessionConfig::GetSlowInterface();
 
 //  if(PIC_HW_interface.type==PIC_INTF_TYPE_PLUGIN_DLL)
 //   { // hardware driven through a "plugin" (DLL):
@@ -3431,7 +3437,7 @@ void PIC_HW_ProgMode(void)  // switch PIC into programming mode
         // EX: tried the following ugly sequence TWO TIMES in the hope it works better.
         // EX: for(int i=0; i<2; ++i)
         // Result : The ugly "two-times-trick" didn't work either. More research needed.
-        if(Config.iNeedPowerBeforeRaisingMCLR)    // the old "Vdd before Vpp"-annoyance..
+        if(TSessionConfig::GetNeedPowerBeforeMCLR())    // the old "Vdd before Vpp"-annoyance..
         {
             // here for old PICs which may have Vpp ("power") before raising MCLR to the Vpp level:
 
@@ -3449,7 +3455,7 @@ void PIC_HW_ProgMode(void)  // switch PIC into programming mode
             //        while C2 remains at 8 volts.
             // wait a short time for the Vpp(!) switch ..
             //     (the PIC itself only needs to see MCLR=LOW for 2 us) :
-            if( Config.iSlowInterface )
+            if( TSessionConfig::GetSlowInterface() )
                 PIC_HW_Delay_us(1000);  // added 2005-06 for testing bad interfaces
             else PIC_HW_Delay_us(100);   // normal mode, works for "good" interfaces
             PIC_HW_SetVpp(true);  // Now there should be a faster rise on /MCLR = "Vpp",
@@ -3460,13 +3466,13 @@ void PIC_HW_ProgMode(void)  // switch PIC into programming mode
             // (even if you don't want it that way), Vpp rises from -5 to +8 volts.
             // ex: PIC_HW_LongDelay_ms(10); // make sure the supply voltage is stable (JDM programmer)
             // don't wait too long, some cap in the JDM may be discharged too soon !
-            if( Config.iSlowInterface )
+            if( TSessionConfig::GetSlowInterface() )
                 PIC_HW_Delay_us(5000);  // added 2005-06 for testing bad interfaces
             else PIC_HW_Delay_us(500);   // normal mode, works for "good" interfaces
         }
-        else  // JDM-2,  Config.iNeedPowerBeforeRaisingMCLR = 0 -------------->>>
+        else  // JDM-2,  TSessionConfig::GetNeedPowerBeforeMCLR() = 0 -------------->>>
         {
-            // Config.iNeedPowerBeforeRaisingMCLR = 0  means:
+            // TSessionConfig::GetNeedPowerBeforeMCLR() = 0  means:
             //   "do NOT turn Vdd on before lifting MCLR from 0V to Vpp"
             // Here, for the JDM programmer, raise Vpp to 13 Volt BEFORE turning Vdd on :
             // This is tricky and VERY UGLY, and it failed quite often (!)
@@ -3494,7 +3500,7 @@ void PIC_HW_ProgMode(void)  // switch PIC into programming mode
             // Unfortunately this also starts charging C3, but not very fast.
             // (about 0.5 volt per millisecond when tested on DL4YHF's machine).
             // wait a very short time for the Vpp(!) switch
-            if( Config.iSlowInterface )
+            if( TSessionConfig::GetSlowInterface() )
                 PIC_HW_Delay_us(500);  // added 2005-06 for testing bad interfaces
             else PIC_HW_Delay_us(50);   // normal mode, works for "good" interfaces
 
@@ -3521,9 +3527,9 @@ void PIC_HW_ProgMode(void)  // switch PIC into programming mode
     else
     {
         //----------------------- ALL OTHER PROGRAMMERS (except "JDM") --------------------------
-        if(Config.iNeedPowerBeforeRaisingMCLR)  // Result of the "long story", here in PIC_HW_ProgMode()...
+        if(TSessionConfig::GetNeedPowerBeforeMCLR())  // Result of the "long story", here in PIC_HW_ProgMode()...
         {
-            // Config.iNeedPowerBeforeRaisingMCLR = 1 means:
+            // TSessionConfig::GetNeedPowerBeforeMCLR() = 1 means:
             //   "Turn Vdd on, wait <100 us, then lift MCLR from 0V to Vpp"
             //   Turning on Vdd before Vpp seems to be important for a 16F818,
             //   though ITS programming spec says absolutely NOTHING about this !
@@ -3538,7 +3544,7 @@ void PIC_HW_ProgMode(void)  // switch PIC into programming mode
             PIC_HW_SetDataEnable( true );  // Enable data OUTPUT (serial data TO PIC)
             PIC_HW_SetVpp(false);          // ensure Vpp is off
             PIC_HW_SetVdd(false);          // ensure Vdd is off
-            if( Config.iSlowInterface )
+            if( TSessionConfig::GetSlowInterface() )
                 PIC_HW_Delay_us(8000);  // added 2005-06 for testing bad interfaces
             else PIC_HW_Delay_us(800);   // 800us to discharge a 100nF capacitor via 4k7
             PIC_HW_PullMclrToGnd(false); // release MCLR/Vpp (don't pull to ground any longer, D4=LOW for "AN589")
@@ -3548,7 +3554,7 @@ void PIC_HW_ProgMode(void)  // switch PIC into programming mode
             if( PIC_HW_interface.wSeparateVddAndVppControl )  // 0=no, 1=yes
             {
                 PIC_HW_SetVdd(true);    // turn PIC's supply voltage on
-                if( Config.iSlowInterface ) // wait a very short time for the Vdd(!) switch
+                if( TSessionConfig::GetSlowInterface() ) // wait a very short time for the Vdd(!) switch
                     PIC_HW_Delay_us(500);  // a test for BAD interfaces
                 else PIC_HW_Delay_us(50);   // this should work for BETTER interfaces
                 PIC_HW_SetVpp(true);    // lift MCLR from 0 V to 13 V within 100 us
@@ -3561,12 +3567,12 @@ void PIC_HW_ProgMode(void)  // switch PIC into programming mode
                 //   The ugly on-off-on-off sequence to charge an electrolyte capacitor in certain
                 //   ugly programmers has been removed because it causes trouble with new PICs...
                 //   ... Sorry for those folks using ridiculously simple programmers ...
-                if( Config.iSlowInterface )
+                if( TSessionConfig::GetSlowInterface() )
                     PIC_HW_Delay_us(10 * PIC_DeviceInfo.lTi_Prog_us); // test for "bad" interfaces
                 else PIC_HW_Delay_us(PIC_DeviceInfo.lTi_Prog_us);      // normal mode for "good" interfaces
                 PIC_HW_SetVdd(true);    // turn PIC's supply voltage on (no effect for COM84)
                 // wait a very short time for the Vdd(!) switch ..
-                if( Config.iSlowInterface )
+                if( TSessionConfig::GetSlowInterface() )
                     PIC_HW_Delay_us(500); // extra long delay for "bad" interfaces
                 else PIC_HW_Delay_us(50);  // orignal delay for "good" interfaces
                 PIC_HW_SetVpp(true);    // an utterly slow rise on MCLR (because of discharged cap)
@@ -3577,12 +3583,12 @@ void PIC_HW_ProgMode(void)  // switch PIC into programming mode
                 else // if there is NO charge pump for "Vpp", use the typical "Vpp-ON-delay",
                 {
                     // then turn Vpp off for a short time, and turn it on to produce a FAST RISE on Vpp/MCLR:
-                    if( Config.iSlowInterface )
+                    if( TSessionConfig::GetSlowInterface() )
                         PIC_HW_Delay_us( 10 * PIC_HW_interface.vpp_on_delay_us );
                     else PIC_HW_Delay_us(PIC_HW_interface.vpp_on_delay_us);  // time required by INTERFACE (often 200ms)
                     PIC_HW_SetVpp(false);   // Vdd(!) capacitor should be charged now,
                     //   the next positive slope on Vpp will be steeper
-                    if( Config.iSlowInterface )
+                    if( TSessionConfig::GetSlowInterface() )
                         PIC_HW_Delay_us(500); // extra long delay for "bad" interfaces
                     else PIC_HW_Delay_us(50);  // normal mode: wait a very short time for the Vpp(!) switch
                     PIC_HW_SetVpp(true);    // now this should be a faster rise on /MCLR = "Vpp"
@@ -3591,7 +3597,7 @@ void PIC_HW_ProgMode(void)  // switch PIC into programming mode
         }
         else
         {
-            // Config.iNeedPowerBeforeRaisingMCLR = 0  means:
+            // TSessionConfig::GetNeedPowerBeforeMCLR() = 0  means:
             //   "do NOT turn Vdd on before lifting MCLR from 0V to Vpp"
             //   Caution, a 16F876A (and possibly some others) DO NOT WORK WITH THIS Vpp/Vdd sequence !
             // Programming spec for 12F675 has a timing diagram which suggests to
@@ -3614,7 +3620,7 @@ void PIC_HW_ProgMode(void)  // switch PIC into programming mode
             PIC_HW_SetDataEnable( true );  // Enable data OUTPUT (serial data TO PIC)
             PIC_HW_SetVpp(false);    // ensure Vpp off
             PIC_HW_SetVdd(false);    // ensure Vdd off
-            if( Config.iSlowInterface )
+            if( TSessionConfig::GetSlowInterface() )
                 PIC_HW_Delay_us(8000);
             else PIC_HW_Delay_us(800);   // 800us to discharge a 100nF capacitor via 4k7
             PIC_HW_PullMclrToGnd(false); // release MCLR/Vpp (don't pull to ground any longer, D4=LOW for "AN589")
@@ -3645,13 +3651,13 @@ void PIC_HW_ProgMode(void)  // switch PIC into programming mode
             }
             else // no need to toggle TxD, use the normal (precise) delay routine :
             {
-                if( Config.iSlowInterface )
+                if( TSessionConfig::GetSlowInterface() )
                     PIC_HW_Delay_us(10 * PIC_HW_interface.vpp_on_delay_us);
                 else PIC_HW_Delay_us(PIC_HW_interface.vpp_on_delay_us);  // time required by INTERFACE (often 200ms)
                 PIC_HW_Delay_us(PIC_DeviceInfo.lTi_Prog_us);  // time required by PIC DEVICE
             }
 
-        } // end else <Config.iNeedPowerBeforeRaisingMCLR = 0>
+        } // end else <TSessionConfig::GetNeedPowerBeforeMCLR() = 0>
     } // end if < not "JDM" programmer >
 
     // caller must not forget to turn Vpp & Vdd off after he's ready.
@@ -3711,9 +3717,10 @@ void PIC_HW_SerialOut_Command6(int cmd , bool fFlush )
     PIC_HW_SetClockAndData(false,false );  // start condition
     PIC_HW_SetClockEnable( true );
     PIC_HW_SetDataEnable( true );   // "Enable" signals only for AN589 programmer
-    if( Config.iSlowInterface )
-        PIC_HW_Delay_us(10 * PIC_DeviceInfo.lTi_Clock_us + Config.iExtraClkDelay_us ); // test for "bad" interfaces
-    else PIC_HW_Delay_us(PIC_DeviceInfo.lTi_Clock_us + Config.iExtraClkDelay_us );      // normal mode for "good" interfaces
+    if( TSessionConfig::GetSlowInterface() )
+        PIC_HW_Delay_us(10 * PIC_DeviceInfo.lTi_Clock_us + TSessionConfig::GetExtraClkDelay_us() ); // test for "bad" interfaces
+    else
+        PIC_HW_Delay_us(PIC_DeviceInfo.lTi_Clock_us + TSessionConfig::GetExtraClkDelay_us() );      // normal mode for "good" interfaces
     for ( b=0; b<6; ++b )
         PIC_HW_ClockOut(cmd&(1<<b));
     PIC_HW_SetClockAndData(false, true );  // data input not driven for 1us
@@ -3724,9 +3731,10 @@ void PIC_HW_SerialOut_Command6(int cmd , bool fFlush )
     // Wait <TDLY1> from data sheet.  "PIP02" does not seem to do this !!
     // Note: The "JDM programmer" needs a longer clock-low-time
     //       to charge C3 to 5 volts again !
-    if( Config.iSlowInterface )
-        PIC_HW_Delay_us(10 * PIC_DeviceInfo.lTi_Clock_us + Config.iExtraClkDelay_us ); // "bad" interfaces
-    else PIC_HW_Delay_us(PIC_DeviceInfo.lTi_Clock_us + Config.iExtraClkDelay_us );      // "good" interfaces
+    if( TSessionConfig::GetSlowInterface() )
+        PIC_HW_Delay_us(10 * PIC_DeviceInfo.lTi_Clock_us + TSessionConfig::GetExtraClkDelay_us() ); // "bad" interfaces
+    else
+        PIC_HW_Delay_us(PIC_DeviceInfo.lTi_Clock_us + TSessionConfig::GetExtraClkDelay_us() );      // "good" interfaces
     if( PIC_HW_interface.type==PIC_INTF_TYPE_JDM2 )
     {
         //    Some additional delay to recharge C3 (22uF) in the JDM programmer.
@@ -3765,14 +3773,14 @@ bool PIC_HW_Init(void)
  * The "default" interface (taken from Config) is "opened" if required.
  */
 {
-//   PHWInfo.iSlowInterface = Config.iSlowInterface;
+//   PHWInfo.iSlowInterface = TSessionConfig::GetSlowInterface();
     PicHw_fVppIsOn = PicHw_fVddIsOn = PicHw_fMclrPulledToGnd = false;
     PicHw_fClockIsHigh = PicHw_fDataOutIsHigh = false;
     PicHw_fClockIsEnabled = PicHw_fDataIsEnabled = PicHw_fTogglingTxD = false;
     PicHw_iPresentVddSelection /*PHWInfo.iPresentVddSelection*/ = 1;  // 0=low, 1=norm, 2=high supply voltage
     PIC_HW_SingleTimingLoopCalibration();  // for 50- and 500ns-delay
 
-    return PIC_HW_SetInterfaceType( Config.pic_interface_type );
+    return PIC_HW_SetInterfaceType( TSessionConfig::GetInterfaceType() );
 
 } // end ..Init()
 

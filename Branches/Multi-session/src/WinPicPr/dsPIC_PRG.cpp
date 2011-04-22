@@ -142,7 +142,7 @@ void dsPIC_STDP_ExecuteCoreInstruction(
    { // For the JDM programmer, turn DATA (out) off as soon as possible
      // to avoid discharging C3 (22uF) :
      PIC_HW_SetClockAndData(false, false );
-     if( Config.iSlowInterface )
+     if( TSessionConfig::GetSlowInterface() )
           PIC_HW_Delay_us( 100 );
      else PIC_HW_Delay_us( 50 );   // just imagine how many thousands of "core instructions" we need !
    } // end if < "JDM" programmer >
@@ -213,7 +213,7 @@ uint16_t dsPIC_STDP_ReadVISIRegister( void )
      // to avoid discharging C3 (22uF) :
      PIC_HW_SetClockAndData(false, false );
      // some time for the JDM interface to "recharge" C3 :
-     if( Config.iSlowInterface )
+     if( TSessionConfig::GetSlowInterface() )
           PIC_HW_Delay_us( 100 );
      else PIC_HW_Delay_us( 50 );   // just imagine how many thousands of "core instructions" we need !
    } // end if < "JDM" programmer >
@@ -235,7 +235,7 @@ bool dsPIC_EnterSTDPMode( void )
   //
   // This is almost the same as entering "programming mode"
   // for the PIC16Fxxx-family, with
-  //  Config.iNeedPowerBeforeRaisingMCLR = true ,
+  //  TSessionConfig::GetNeedPowerBeforeMCLR() = true ,
   // so use the routine in PIC_HW.CPP which is already complicated enough
   // due to the large variety of programming interfaces !
   // Because this *may* change, use dsPIC_EnterSTDPMode()

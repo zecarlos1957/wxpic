@@ -212,7 +212,7 @@ bool PIC16F7x_ProgramAll(
         PicBuf_GetBufferWord( PIC16F7x_iCurrTargetAddress, &dwTemp ); // here: CODE MEMORY
         if(  (PIC16F7x_fHaveReadOscCalib)
                 && (PIC16F7x_iCurrTargetAddress==PIC_DeviceInfo.lAddressOscCal)
-                && (! Config.iDontCareForOsccal) )
+                && (! TSessionConfig::GetDontCareForOsccal()) )
         {
             // restore the orginal OSCCAL word for this special location :
             dwTemp = PIC16F7x_wReadOscCalibWord;

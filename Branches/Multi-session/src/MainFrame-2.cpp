@@ -61,7 +61,8 @@
     if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
         APPL_LogEvent( _("CreateForm: Setting PIC-Device") );
 
-    TDeviceCfgPanel::SetDevice(Config.sz40DeviceName);
+    wxString DeviceName = TSessionConfig::GetDeviceName();
+    TDeviceCfgPanel::SetDevice(DeviceName.mb_str(wxConvISO8859_1));
 
     PIC_HEX_ClearBuffers(); // contents of some memory buffers depends on PIC_DeviceInfo !
 
@@ -131,25 +132,6 @@ void MainFrame::ShowProgress (int pPercentage)
 //---------------------------------------------------------------
 //---------------------------------------------------------------
 
-void MainFrame::SaveLayout (void)
-{
-    /* Save some windows stuff like old screen position & size.              */
-    TheIniFile.SetPath(_T("/Layout"));
-    wxRect WindowRect = GetRect();
-    TheIniFile.Write(_T("Left"),  WindowRect.GetLeft  ());
-    TheIniFile.Write(_T("Top"),   WindowRect.GetTop   ());
-    TheIniFile.Write(_T("Width"), WindowRect.GetWidth ());
-    TheIniFile.Write(_T("Height"),WindowRect.GetHeight());
-    TheIniFile.Write(_T("CodeMemBgColor"), aCodeMemTab->aCodeMemGrid->GetDefaultCellBackgroundColour().GetAsString(wxC2S_HTML_SYNTAX));
-    TheIniFile.Write(_T("CodeMemFgColor"), aCodeMemTab->aCodeMemGrid->GetDefaultCellTextColour().GetAsString(wxC2S_HTML_SYNTAX));
-    TheIniFile.Write(_T("DataMemBgColor"), aDataMemTab->aDataMemGrid->GetDefaultCellBackgroundColour().GetAsString(wxC2S_HTML_SYNTAX));
-    TheIniFile.Write(_T("DataMemFgColor"), aDataMemTab->aDataMemGrid->GetDefaultCellTextColour().GetAsString(wxC2S_HTML_SYNTAX));
-
-    // The "most recent file" list is only a part of the user interface:
-    TheIniFile.SetPath(_T("/MostRecentFiles"));
-    for (int i=0; i<=5; ++i)
-        TheIniFile.Write(wxString::Format(_T("file%d"),i), GetMRFname(i));
-}
 
 /**static*/
 void MainFrame::ChangeDefaultGridForegroundColour(wxGrid *Grid, const wxColour &NewForegroundColour)
@@ -175,120 +157,7 @@ void MainFrame::ChangeDefaultGridBackgroundColour(wxGrid *Grid, const wxColour &
                 Grid->SetCellBackgroundColour(Row, Col, NewBackgroundColour);
 }
 
-void MainFrame::LoadLayout (void)
-{
-//   IniFile=new wxConfig(ExtractFilePath(Application->ExeName)+CFG_INI_FILE_NAME);
-    TheIniFile.SetPath(_T("/Layout"));
-    SetSize(TheIniFile.Read(_T("Left"),   -1),
-            TheIniFile.Read(_T("Top"),    -1),
-            TheIniFile.Read(_T("Width"),  -1),
-            TheIniFile.Read(_T("Height"), -1));
 
-    wxColour Color;
-    if (Color.Set(TheIniFile.Read(_T("CodeMemBgColor"), _T("#000000"))))
-        ChangeDefaultGridForegroundColour(aCodeMemTab->aCodeMemGrid, Color);
-    if (Color.Set(TheIniFile.Read(_T("CodeMemFgColor"), _T("#33FF33"))))
-        ChangeDefaultGridForegroundColour(aCodeMemTab->aCodeMemGrid, Color);
-    if (Color.Set(TheIniFile.Read(_T("DataMemBgColor"), _T("#FFFFFF"))))
-        ChangeDefaultGridForegroundColour(aDataMemTab->aDataMemGrid, Color);
-    if (Color.Set(TheIniFile.Read(_T("DataMemFgColor"), _T("#000000"))))
-        ChangeDefaultGridForegroundColour(aDataMemTab->aDataMemGrid, Color);
-
-
-    // The "most recent file" list is only a part of the user interface:
-    TheIniFile.SetPath(_T("/MostRecentFiles"));
-    for (int i=0; i<=5; ++i)
-        SetMRFname( i, aEmptyMRFname );
-    for (int i=0; i<=5; ++i)
-        AddMRFname( TheIniFile.Read(wxString::Format(_T("file%d"),i), aEmptyMRFname) );
-
-}
-
-
-//---------------------------------------------------------------------------
-wxString MainFrame::GetMRFname(int iMRFindex)
-{
-    switch (iMRFindex)
-    {
-    case 0:
-        return aRecentFile1MenuItem->GetLabel();
-    case 1:
-        return aRecentFile2MenuItem->GetLabel();
-    case 2:
-        return aRecentFile3MenuItem->GetLabel();
-    case 3:
-        return aRecentFile4MenuItem->GetLabel();
-    case 4:
-        return aRecentFile5MenuItem->GetLabel();
-    case 5:
-        return aRecentFile6MenuItem->GetLabel();
-    default:
-        return aEmptyMRFname;
-    }
-} // end GetMRFname()
-
-
-void MainFrame::SetMRFname(int iMRFindex, wxString s)
-{
-    switch (iMRFindex)
-    {
-    case 0:
-        aRecentFile1MenuItem->SetText(s);
-        aRecentFile1MenuItem->Enable(s!=aEmptyMRFname);
-        break;
-    case 1:
-        aRecentFile2MenuItem->SetText(s);
-        aRecentFile2MenuItem->Enable(s!=aEmptyMRFname);
-        break;
-    case 2:
-        aRecentFile3MenuItem->SetText(s);
-        aRecentFile3MenuItem->Enable(s!=aEmptyMRFname);
-        break;
-    case 3:
-        aRecentFile4MenuItem->SetText(s);
-        aRecentFile4MenuItem->Enable(s!=aEmptyMRFname);
-        break;
-    case 4:
-        aRecentFile5MenuItem->SetText(s);
-        aRecentFile5MenuItem->Enable(s!=aEmptyMRFname);
-        break;
-    case 5:
-        aRecentFile6MenuItem->SetText(s);
-        aRecentFile6MenuItem->Enable(s!=aEmptyMRFname);
-        break;
-    default:
-        break;
-    }
-} // end SetMRFname()
-
-
-void MainFrame::AddMRFname(wxString s)
-{
-    int i;
-    for (i=0; i<=5; ++i)
-    {
-        if ( s == GetMRFname(i) )
-            return;    // name is already in the list; no need to add it
-    }
-    for (i=0; i<=5; ++i)
-    {
-        if ( GetMRFname(i) == aEmptyMRFname )
-        {
-            // found a free entry ..
-            SetMRFname(i, s);
-            return;
-        }
-    }
-    // Arrived here: the list of most recent files is full, and it's a NEW name.
-    // Scroll the list, so the oldest file disappears BELOW THE BOTTOM,
-    //                  and the new file will be entered AT THE TOP.
-    for ( i=4; i>=0; --i)
-    {
-        SetMRFname(i+1, GetMRFname(i) );
-    }
-    SetMRFname(0, s);
-
-} // end AddMRFname()
 
 
 //---------------------------------------------------------------------------
@@ -450,19 +319,16 @@ bool MainFrame::ProgramPic(void)
         PIC_HW_SelectVdd( 1/*norm*/ );  // use the "normal" voltage (=5V) for programming
     }
 
-    fProgramAll = false;      // what are we going to do, "program EVERYTHING" or just a part ?
-    if (  (Config.iProgramWhat==PIC_PROGRAM_ALL)
-            ||( Config.iProgramWhat==(PIC_PROGRAM_CODE+PIC_PROGRAM_CONFIG)
-                && (PIC_DeviceInfo.lDataEEPROMSizeInByte <= 0) )  // PICs w/o EEPROM ?
-       )
-    {
-        fProgramAll = true;
-    }
+    // what are we going to do, "program EVERYTHING" or just a part ?
+    fProgramAll = (  (TSessionConfig::GetProgramWhat() == PIC_PROGRAM_ALL)
+                    || ( TSessionConfig::GetProgramWhat() == (PIC_PROGRAM_CODE+PIC_PROGRAM_CONFIG)
+                        && (PIC_DeviceInfo.lDataEEPROMSizeInByte <= 0) )  // PICs w/o EEPROM ?
+               );
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // First optional step: bulk erase (all but CALIBRATION BITS where applicable)
     if ( fProgramAll
-            && (Config.iUseCompleteChipErase)
+            && (TSessionConfig::GetUseCompleteChipErase())
             && (PIC_DeviceInfo.iCodeMemType==PIC_MT_FLASH)
             && (PIC_DeviceInfo.wCodeProgAlgo!=PIC_ALGO_PIC10F) // for PIC10F20x, erase is part of "ProgramAll" !
             && (PIC_DeviceInfo.wCodeProgAlgo!=PIC_ALGO_PIC16F7X) // ... similar "special case" for PIC16F74 etc
@@ -500,9 +366,8 @@ bool MainFrame::ProgramPic(void)
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Second, optional, but usually the most important step: program CODE
-    if (Config.iProgramWhat&PIC_PROGRAM_CODE)
+    if (TSessionConfig::GetProgramWhat() & PIC_PROGRAM_CODE)
     {
-
         //-- It is necessary to write the program memory if it is not empty
         //-- Or if it contains an OSCCAL word
         if ( (PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex >= 0)
@@ -533,9 +398,9 @@ bool MainFrame::ProgramPic(void)
             if (fOkToGo)
             {
                 // Erase code memory  only  if not already "erased ALL" :
-                if ( (Config.iProgramWhat!=PIC_PROGRAM_ALL) && (PIC_DeviceInfo.iCodeMemType==PIC_MT_FLASH)
-                        && (PIC_DeviceInfo.wCodeProgAlgo!=PIC_ALGO_PIC10F) // for PIC10F20x, there is only "ProgramAll" !
-                        && (PIC_DeviceInfo.wCodeProgAlgo!=PIC_ALGO_PIC16F7X) // ... similar for PIC16F74 ("ProgramAll")
+                if ( (TSessionConfig::GetProgramWhat() != PIC_PROGRAM_ALL) && (PIC_DeviceInfo.iCodeMemType == PIC_MT_FLASH)
+                      && (PIC_DeviceInfo.wCodeProgAlgo != PIC_ALGO_PIC10F) // for PIC10F20x, there is only "ProgramAll" !
+                      && (PIC_DeviceInfo.wCodeProgAlgo != PIC_ALGO_PIC16F7X) // ... similar for PIC16F74 ("ProgramAll")
                    )
                 {
                     // If the option "program all" is NOT selected, must erase program memory here
@@ -558,7 +423,7 @@ bool MainFrame::ProgramPic(void)
                 //   (which in fact is a RETLW at the end of the program memory)
                 // smuggle it into the code memory buffer now:
                 if (    (PIC_DeviceInfo.lAddressOscCal >= 0)
-                        && (!Config.iDontCareForOsccal)  )
+                        && (!TSessionConfig::GetDontCareForOsccal())  )
                 {
                     // there SHOULD BE an oscillator calib word:
                     if ( PicBuf_GetBufferWord(PIC_DeviceInfo.lAddressOscCal, &dw ) > 0)
@@ -710,7 +575,7 @@ bool MainFrame::ProgramPic(void)
             APPL_ShowMsg( 0, _("Cannot Program CODE MEMORY, nothing in buffer.") );
             m_iMessagePanelUsage = MP_USAGE_WARNING;
         } // end else < no program in memory >
-    } // end if(Config.iProgramWhat&PIC_PROGRAM_CODE)
+    } // end if(TSessionConfig::GetProgramWhat()&PIC_PROGRAM_CODE)
 
     if (APPL_iUserBreakFlag)
     {
@@ -723,7 +588,7 @@ bool MainFrame::ProgramPic(void)
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Third, optional step: program DATA EEPROM
-    if ( ( Config.iProgramWhat&PIC_PROGRAM_DATA )
+    if ( ( TSessionConfig::GetProgramWhat() & PIC_PROGRAM_DATA )
             &&(PIC_DeviceInfo.wCodeProgAlgo!=PIC_ALGO_PIC10F) // PIC10F20x has no data EEPROM !
        )
     {
@@ -733,7 +598,7 @@ bool MainFrame::ProgramPic(void)
         {
             fDidSomething = true;
 
-            if ( (Config.iProgramWhat!=PIC_PROGRAM_ALL) && (PIC_DeviceInfo.iCodeMemType==PIC_MT_FLASH) )
+            if ( (TSessionConfig::GetProgramWhat() != PIC_PROGRAM_ALL) && (PIC_DeviceInfo.iCodeMemType==PIC_MT_FLASH) )
             {
                 // If the option "program all" is NOT selected, must erase program memory here
                 // before programming it !
@@ -778,7 +643,7 @@ bool MainFrame::ProgramPic(void)
             } // end if < code memory not verified yet >
 
         }
-    } // end   if(  (Config.iProgramWhat&PIC_PROGRAM_DATA)
+    } // end   if(  (TSessionConfig::GetProgramWhat() & PIC_PROGRAM_DATA)
 
     if (APPL_iUserBreakFlag)
     {
@@ -791,14 +656,14 @@ bool MainFrame::ProgramPic(void)
     // Intermediate step (moved here 2006-07): - - - - - - - - - - - - - - - - >
     //  Restore the original BANDGAP calibration bits for some 14-bit devices
     //  in the config-memory-buffer, before writing the config memory / config word:
-    if ( (Config.iDontCareForBGCalib==0)
+    if ( (TSessionConfig::GetDontCareForBGCalib() == 0)
             && (PIC_iHaveErasedCalibration )
             && (PIC_lBandgapCalibrationBits>=0)
             && (PIC_DeviceInfo.wCfgmask_bandgap!=0) )
     {
         // restore the bandgap calibration bits which have been read before bulk-erase ?
         APPL_ShowMsg( 0, _("Restoring BANDGAP calibration bits for CONFIG-WORD") );
-        if (Config.iVerboseMessages)
+        if (TSessionConfig::GetVerboseMessages())
         {
             _stprintf(sz80Temp, _("Cfg word before restoring BG calib: 0x%06lX"),
                       PicBuf_GetConfigWord(0) );
@@ -807,7 +672,7 @@ bool MainFrame::ProgramPic(void)
         PicBuf_SetConfigWord( 0,
                               (PicBuf_GetConfigWord(0) & ~PIC_DeviceInfo.wCfgmask_bandgap)
                               |(PIC_lBandgapCalibrationBits & PIC_DeviceInfo.wCfgmask_bandgap) );
-        if (Config.iVerboseMessages)
+        if (TSessionConfig::GetVerboseMessages())
         {
             _stprintf(sz80Temp, _("Cfg word after restoring BG calib: 0x%06lX"),
                       PicBuf_GetConfigWord(0) );
@@ -825,7 +690,7 @@ bool MainFrame::ProgramPic(void)
             && (PIC_DeviceInfo.wCodeProgAlgo!=PIC_ALGO_PIC16F7X) // ... similar for PIC16F74 ("ProgramAll")
        )
     {
-        if (  (Config.iProgramWhat & PIC_PROGRAM_CONFIG)
+        if (  (TSessionConfig::GetProgramWhat() & PIC_PROGRAM_CONFIG)
                 && (PicBuf[PIC_BUF_CONFIG].i32LastUsedArrayIndex >= 0 )
            )
         {
@@ -866,7 +731,7 @@ bool MainFrame::ProgramPic(void)
         } // end if <option to program CODE memory> and <CONFIG memory present>
         else  // why not program configuration memory ?
         {
-            if (  (Config.iProgramWhat & PIC_PROGRAM_CONFIG)
+            if (  (TSessionConfig::GetProgramWhat() & PIC_PROGRAM_CONFIG)
                     && (PicBuf[PIC_BUF_CONFIG].i32LastUsedArrayIndex < 0 ) )
             {
                 // Suspicious: shall programm CONFIG memory (as usual),
@@ -905,12 +770,12 @@ bool MainFrame::ProgramPic(void)
         //     because that way the "code memory" could not be verified !
         //
         if (  (PicPrg_iConfWordProgrammed==0)
-                && ( Config.iProgramWhat & PIC_PROGRAM_CONFIG)!=0 )   // May I ... ?
+                && ( TSessionConfig::GetProgramWhat() & PIC_PROGRAM_CONFIG)!=0 )   // May I ... ?
         {
             _stprintf( sz80Temp, _("Programming CONFIG-WORD") );
             APPL_ShowMsg( 0, sz80Temp );
 
-            if (Config.iVerboseMessages)
+            if (TSessionConfig::GetVerboseMessages())
             {
                 _stprintf(sz80Temp, _("Config word = 0x%06lX; Config mask = 0x%06lX"),
                           PicBuf_GetConfigWord(0) ,
@@ -932,7 +797,7 @@ bool MainFrame::ProgramPic(void)
                 ++error_count;
             }
 
-        } // end if (Config.iProgramWhat&PIC_PROGRAM_CONFIG) ..
+        } // end if (TSessionConfig::GetProgramWhat() & PIC_PROGRAM_CONFIG) ..
     } // end if < "classic config word" for 12- or 14- bit PIC devices only >
 
 
@@ -971,7 +836,7 @@ bool MainFrame::ProgramPic(void)
     }
 
 
-    if (Config.iDisconnectAfterProg)
+    if (TSessionConfig::GetDisconnectAfterProg())
         DisconnectTarget();  // since 2002-09-26 . Suggested by Johan Bodin.
 
     UpdateAllSheets(); // and make the changes visible on the screen
@@ -1004,7 +869,7 @@ bool MainFrame::VerifyPic(void)
     PicPrg_iConfMemVerified = PicPrg_iConfWordVerified= 0;  // force verify
 
     fVerifyAtDifferentVoltages = false;
-    if (Config.iVerifyAtDifferentVoltages)
+    if (TSessionConfig::GetUseDifferentVoltages())
     {
         if (PIC_HW_CanSelectVdd() )
             fVerifyAtDifferentVoltages = true;
@@ -1067,7 +932,7 @@ bool MainFrame::VerifyPic(void)
             else // not 12-bit core ...
             {
                 // verify CODE ?
-                if ( Config.iProgramWhat & PIC_PROGRAM_CODE )
+                if ( TSessionConfig::GetProgramWhat() & PIC_PROGRAM_CODE )
                 {
                     if ( PicBuf[PIC_BUF_CODE].i32LastUsedArrayIndex >= 0 )
                     {
@@ -1094,7 +959,7 @@ bool MainFrame::VerifyPic(void)
 
 
                 // verify DATA EEPROM ?
-                if ( Config.iProgramWhat & PIC_PROGRAM_DATA )
+                if ( TSessionConfig::GetProgramWhat() & PIC_PROGRAM_DATA )
                 {
                     if ( PicBuf[PIC_BUF_DATA].i32LastUsedArrayIndex >= 0 )
                     {
@@ -1118,7 +983,7 @@ bool MainFrame::VerifyPic(void)
 
 
                 // Verify CONFIGURATION MEMORY and/or "ID locations" ?
-                if ( Config.iProgramWhat & PIC_PROGRAM_CONFIG )
+                if ( TSessionConfig::GetProgramWhat() & PIC_PROGRAM_CONFIG )
                 {
                     if ( PicBuf[PIC_BUF_CONFIG].i32LastUsedArrayIndex >= 0 )
                     {
@@ -1176,7 +1041,7 @@ bool MainFrame::VerifyPic(void)
 
     if ( PIC_HW_CanSelectVdd() )
     {
-        PIC_HW_SelectVdd( Config.iIdleSupplyVoltage );  // back to the "normal" voltage
+        PIC_HW_SelectVdd( TSessionConfig::GetIdleSupplyVoltage() );  // back to the "normal" voltage
     }
 
     if (APPL_iUserBreakFlag)
@@ -1228,7 +1093,7 @@ bool MainFrame::RunHexOpenDialog(void)
         _("HEX files (INHX8M, *.hex)|*.hex;*.HEX|*.HEX");
     #endif
     aFileDialog->SetWildcard(theHexFileFilter);
-    wxFileName DefaultFile(Config.sz255HexFileName);
+    wxFileName DefaultFile(TSessionConfig::GetHexFileName());
     aFileDialog->SetFilename(DefaultFile.GetFullName());
     if ( DefaultFile.FileExists() )
         aFileDialog->SetPath(DefaultFile.GetFullPath());
@@ -1237,8 +1102,7 @@ bool MainFrame::RunHexOpenDialog(void)
     aFileDialog->SetWindowStyle(wxFD_OPEN | wxFD_FILE_MUST_EXIST);
     if ( aFileDialog->ShowModal() == wxID_OK)
     {
-        _tcscpy( Config.sz255HexFileName, aFileDialog->GetPath().c_str() );
-        ConfigChanged = true;
+        TSessionConfig::SetHexFileName(aFileDialog->GetPath());
         return true;
     }
     return false;
@@ -1267,17 +1131,18 @@ bool MainFrame::LoadFileAndProgramPic(const wxChar *fn, bool program_too)
         }
     }
 
-    AddMRFname( wxString(fn) );  // add this file to the list of 'recent files'
+    //-- add this file to the list of 'recent files'
+    updateMRFMenu (TSessionConfig::AddMostRecentFile( wxString(fn) ));
 
     /* Initialize buffers to remove old junk from program & data eeprom ? */
-    if (Config.iClearBufBeforeLoad)
+    if (TSessionConfig::GetClearBufBeforeLoad())
     {
         PIC_HEX_ClearBuffers();
     }
 
     ok  = ( PIC_HEX_LoadFile(fn)==0);  // 0 here means "NO error"
 
-    if (Config.iVerboseMessages)
+    if (TSessionConfig::GetVerboseMessages())
     {
         cp = sz255Temp;
         cp += _stprintf(cp, _("Results from LoadHex: "));
@@ -1412,3 +1277,31 @@ void MainFrame::addLines (wxString &pText, void (wxAboutDialogInfo::*pAdder)(con
     }
 }
 
+
+void MainFrame::updateMRFMenu (const wxArrayString &pMRFTable)
+{
+    aMRFTable = pMRFTable;
+    int FileCount = aMRFTable.GetCount();
+    int MenuCount = aRecentFileSubMenu->GetMenuItemCount() - 2;
+    while (MenuCount < FileCount)
+    {
+        int Id = wxID_HIGHEST+1+MenuCount;
+        aRecentFileSubMenu->Insert(0, new wxMenuItem(aRecentFileSubMenu, Id, aMRFTable[MenuCount], wxEmptyString, wxITEM_NORMAL));
+        Connect(Id, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&MainFrame::onMRFMenuItemSelected);
+        ++MenuCount;
+    }
+    while (MenuCount > FileCount)
+    {
+        --MenuCount;
+        wxMenuItem *ToBeDeleted = aRecentFileSubMenu->GetMenuItems().front();
+        Disconnect(wxID_HIGHEST+1+MenuCount, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&MainFrame::onMRFMenuItemSelected);
+        aRecentFileSubMenu->Destroy(ToBeDeleted);
+    }
+
+    wxMenuItemList::compatibility_iterator CurItem = aRecentFileSubMenu->GetMenuItems().GetFirst();
+    for (int i = 1; i <= MenuCount; ++i)
+    {
+        CurItem->GetData()->SetItemLabel (aMRFTable[MenuCount-i]);
+        CurItem = CurItem->GetNext();
+    }
+}

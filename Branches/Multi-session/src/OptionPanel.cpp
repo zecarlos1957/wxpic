@@ -165,7 +165,7 @@ TOptionPanel::TOptionPanel(wxWindow* parent,wxWindowID id,const wxPoint& pos,con
     wxArrayString LanguageList = TLanguage::GetLanguageNameList();
     for (unsigned i = 0; i < LanguageList.Count(); ++i)
         aLanguageChoice->Append (LanguageList[i]);
-    aLanguageChoice->SetStringSelection(MainFrame::TheLanguageName);
+    aLanguageChoice->SetStringSelection(TSessionConfig::GetLanguageName());
 }
 
 TOptionPanel::~TOptionPanel()
@@ -307,22 +307,22 @@ void TOptionPanel::UpdateOptionsDisplay(void)
 {
     ++(MainFrame::TheMainFrame->m_Updating);
 
-    aProgCodeMemChk->SetValue((Config.iProgramWhat & PIC_PROGRAM_CODE) != 0);
-    aProgDataMemChk->SetValue((Config.iProgramWhat & PIC_PROGRAM_DATA) != 0);
-    aProgConfigMemChk->SetValue((Config.iProgramWhat & PIC_PROGRAM_CONFIG)!=0);
-    aUseBulkEraseChk->SetValue(Config.iUseCompleteChipErase);  // may be disabled !
-    aDisconnectAfterProgChk->SetValue(Config.iDisconnectAfterProg);
-    aVerifyDiffVddsChk->SetValue(Config.iVerifyAtDifferentVoltages);
+    aProgCodeMemChk->SetValue((TSessionConfig::GetProgramWhat() & PIC_PROGRAM_CODE) != 0);
+    aProgDataMemChk->SetValue((TSessionConfig::GetProgramWhat() & PIC_PROGRAM_DATA) != 0);
+    aProgConfigMemChk->SetValue((TSessionConfig::GetProgramWhat() & PIC_PROGRAM_CONFIG)!=0);
+    aUseBulkEraseChk->SetValue(TSessionConfig::GetUseCompleteChipErase());  // may be disabled !
+    aDisconnectAfterProgChk->SetValue(TSessionConfig::GetDisconnectAfterProg());
+    aVerifyDiffVddsChk->SetValue(TSessionConfig::GetUseDifferentVoltages());
     aVerifyDiffVddsChk->Enable(PIC_HW_CanSelectVdd());
 //   if(PIC_HW_CanSelectVdd() )  // don't DISABLE this checkmark but..
 //        Chk_VerifyDiffVdds->Font->Color = clBlack;
 //    else // .. make it gray if it has no meaningfull function
 //        Chk_VerifyDiffVdds->Font->Color = clGray;
 
-    aDontCareForOsccalChk->SetValue(Config.iDontCareForOsccal);
-    aDontCareForBGCalibChk->SetValue(Config.iDontCareForBGCalib);
-    aClrBeforeLoadChk->SetValue(Config.iClearBufBeforeLoad);
-    aVddBeforeMCLRChk->SetValue(Config.iNeedPowerBeforeRaisingMCLR); // read a long story in PIC_HW_ProgMode() !
+    aDontCareForOsccalChk->SetValue(TSessionConfig::GetDontCareForOsccal());
+    aDontCareForBGCalibChk->SetValue(TSessionConfig::GetDontCareForBGCalib());
+    aClrBeforeLoadChk->SetValue(TSessionConfig::GetClearBufBeforeLoad());
+    aVddBeforeMCLRChk->SetValue(TSessionConfig::GetNeedPowerBeforeMCLR()); // read a long story in PIC_HW_ProgMode() !
     // Note: this MAY be contrary to PIC_DeviceInfo.wVppVddSequence,
     //  but the user may decide to change the Vpp/Vdd sequence
     //  depending on his programmer hardware, and to experiment
@@ -330,11 +330,11 @@ void TOptionPanel::UpdateOptionsDisplay(void)
     //  early chip revisions of the 16F628) .
     // Since 2005-10-25, the path into MBLAB's "device"-folder
     // can be specified here - so we don't have to copy those *.DEV-files :
-    aMplabDevDirEdit->ChangeValue(Config.sz255MplabDevDir);
+    aMplabDevDirEdit->ChangeValue(TSessionConfig::GetMplabDevDir());
 
     // group "Debugging"...
     aSimulateOnlyChk->SetValue(PIC_PRG_iSimulateOnly);
-    aVerboseMsgsChk->SetValue(Config.iVerboseMessages);
+    aVerboseMsgsChk->SetValue(TSessionConfig::GetVerboseMessages());
 
 
     if (MainFrame::TheMainFrame->m_Updating>0)
@@ -349,30 +349,33 @@ void TOptionPanel::onProgOptionChanged(wxCommandEvent& event)
 {
     if (MainFrame::TheMainFrame->m_Updating) return;
 
+    int ProgramWhat = TSessionConfig::GetProgramWhat();
     if ( aProgCodeMemChk->GetValue() )
-        Config.iProgramWhat |= PIC_PROGRAM_CODE;
-    else Config.iProgramWhat &=~PIC_PROGRAM_CODE;
+        ProgramWhat |= PIC_PROGRAM_CODE;
+    else
+        ProgramWhat &=~PIC_PROGRAM_CODE;
     if ( aProgDataMemChk->GetValue() )
-        Config.iProgramWhat |= PIC_PROGRAM_DATA;
-    else Config.iProgramWhat &=~PIC_PROGRAM_DATA;
+        ProgramWhat |= PIC_PROGRAM_DATA;
+    else
+        ProgramWhat &=~PIC_PROGRAM_DATA;
     if ( aProgConfigMemChk->GetValue() )
-        Config.iProgramWhat |= PIC_PROGRAM_CONFIG;
-    else Config.iProgramWhat &=~PIC_PROGRAM_CONFIG;
-    Config.iUseCompleteChipErase = aUseBulkEraseChk->GetValue(); // may be passive, anyway
-    Config.iDisconnectAfterProg= aDisconnectAfterProgChk->GetValue();
-    Config.iVerifyAtDifferentVoltages= aVerifyDiffVddsChk->GetValue();
-    Config.iDontCareForOsccal  = aDontCareForOsccalChk->GetValue();
-    Config.iDontCareForBGCalib = aDontCareForBGCalibChk->GetValue();
-    Config.iClearBufBeforeLoad = aClrBeforeLoadChk->GetValue();
-    Config.iNeedPowerBeforeRaisingMCLR = aVddBeforeMCLRChk->GetValue();  // read a long story in PIC_HW_ProgMode() !
+        ProgramWhat |= PIC_PROGRAM_CONFIG;
+    else
+        ProgramWhat &=~PIC_PROGRAM_CONFIG;
+    TSessionConfig::SetProgramWhat(ProgramWhat);
+    TSessionConfig::SetUseCompleteChipErase(aUseBulkEraseChk->GetValue());
+    TSessionConfig::SetDisconnectAfterProg(aDisconnectAfterProgChk->GetValue());
+    TSessionConfig::SetUseDifferentVoltages(aVerifyDiffVddsChk->GetValue());
+    TSessionConfig::SetDontCareForOsccal(aDontCareForOsccalChk->GetValue());
+    TSessionConfig::SetDontCareForBGCalib(aDontCareForBGCalibChk->GetValue());
+    TSessionConfig::SetClearBufBeforeLoad(aClrBeforeLoadChk->GetValue());
+    TSessionConfig::SetNeedPowerBeforeMCLR(aVddBeforeMCLRChk->GetValue());  // read a long story in PIC_HW_ProgMode() !
 
-    _tcsncpy( Config.sz255MplabDevDir, aMplabDevDirEdit->GetValue().c_str(), 255 );
+    TSessionConfig::SetMplabDevDir(aMplabDevDirEdit->GetValue());
 
     // From group "Debugging" ...
+    TSessionConfig::SetVerboseMessages(aVerboseMsgsChk->GetValue());
     PIC_PRG_iSimulateOnly= aSimulateOnlyChk->GetValue();
-    Config.iVerboseMessages=aVerboseMsgsChk->GetValue();
-
-    ConfigChanged = true ;  // save on exit
 } // end MainFrame::ProgOptionsChanged()
 //---------------------------------------------------------------------------
 
@@ -381,9 +384,8 @@ void TOptionPanel::onProgOptionChanged(wxCommandEvent& event)
 ////---------------------------------------------------------------------------
 void TOptionPanel::onLanguageChoiceSelect(wxCommandEvent& event)
 {
-    MainFrame::TheLanguageName = aLanguageChoice->GetStringSelection();
+    TSessionConfig::ChangeLanguage(aLanguageChoice->GetStringSelection());
     wxMessageBox(_("WxPic must be restarted to take into account the new language selection"), _("WxPic restart needed to apply language"));
-    ConfigChanged = true;
 }
 
 
@@ -396,17 +398,13 @@ void TOptionPanel::onCodeMemColourButtonClick(wxCommandEvent& event)
     Colour.SetColour(aCodeMemColourButton->GetForegroundColour());
     aColourDialog->SetLabel(_("Code Memory Text"));
     if (aColourDialog->ShowModal() == wxID_OK)
-    {
         aCodeMemColourButton->SetForegroundColour(Colour.GetColour());
-        ConfigChanged = true;
-    }
+
     Colour.SetColour(aCodeMemColourButton->GetBackgroundColour());
     aColourDialog->SetLabel(_("Code Memory Background"));
     if (aColourDialog->ShowModal() == wxID_OK)
-    {
         aCodeMemColourButton->SetBackgroundColour(Colour.GetColour());
-        ConfigChanged = true;
-    }
+
     MainFrame::TheMainFrame->aCodeMemTab->UpdateCodeMemDisplay();
 }
 //---------------------------------------------------------------------------
@@ -422,14 +420,12 @@ void TOptionPanel::onDataMemColourButtonClick(wxCommandEvent& event)
     if (aColourDialog->ShowModal() == wxID_OK)
     {
         aDataMemColourButton->SetForegroundColour(Colour.GetColour());
-        ConfigChanged = true;
     }
     Colour.SetColour(aDataMemColourButton->GetBackgroundColour());
     aColourDialog->SetLabel(_("Data Memory Background"));
     if (aColourDialog->ShowModal() == wxID_OK)
     {
         aDataMemColourButton->SetBackgroundColour(Colour.GetColour());
-        ConfigChanged = true;
     }
     MainFrame::TheMainFrame->aDataMemTab->UpdateDataMemDisplay();
 }
@@ -472,9 +468,8 @@ void TOptionPanel::updateFromMPLabDevText(void)
 
 void TOptionPanel::updateMPLabDevDir (const wxString &pDirPath)
 {
-    _tcsncpy( Config.sz255MplabDevDir, pDirPath.c_str(), 255 );
+    TSessionConfig::SetMplabDevDir(pDirPath);
     TDeviceCfgPanel::SetDevice(PIC_DeviceInfo.sz40DeviceName);
-    ConfigChanged = true;
 }
 
 

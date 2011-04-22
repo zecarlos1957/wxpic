@@ -186,11 +186,8 @@ bool PIC_PRG_SetDeviceType(T_PicDeviceInfo *pDeviceInfo )
     uint32_t dwFamily, dwWriteBufSize_bytes, dwEraseBufSize_bytes; // for PIC18Fxxx(x)
 
 // Emergency brake for the code memory size...
-    if (Config.dwUnknownCodeMemorySize > PIC_BUF_CODE_SIZE)
-    {
-        Config.dwUnknownCodeMemorySize = PIC_BUF_CODE_SIZE;
-        ConfigChanged = true ;  // save on exit
-    }
+    if (TSessionConfig::GetUnknownCodeMemorySize() > PIC_BUF_CODE_SIZE)
+        TSessionConfig::SetUnknownCodeMemorySize(PIC_BUF_CODE_SIZE);
 
     if (pDeviceInfo)
         PIC_DeviceInfo = *pDeviceInfo;
@@ -220,9 +217,9 @@ bool PIC_PRG_SetDeviceType(T_PicDeviceInfo *pDeviceInfo )
     if ( strcmp(PIC_DeviceInfo.sz40DeviceName, "PIC??????")==0 )
     {
         // replace some device parameters if the device type is unknown :
-        PIC_DeviceInfo.lCodeMemSize  = Config.dwUnknownCodeMemorySize;
-        PIC_DeviceInfo.lDataEEPROMSizeInByte=Config.dwUnknownDataMemorySize;
-        if (Config.iUnknownDevHasFlashMemory)
+        PIC_DeviceInfo.lCodeMemSize  = TSessionConfig::GetUnknownCodeMemorySize();
+        PIC_DeviceInfo.lDataEEPROMSizeInByte = TSessionConfig::GetUnknownDataMemorySize();
+        if (TSessionConfig::GetHasFlashMemory())
             PIC_DeviceInfo.iCodeMemType=PIC_MT_FLASH;   // 12Fxxx, 16Fxxx -> 14 bit per word
         else   PIC_DeviceInfo.iCodeMemType=PIC_MT_EPROM;
     }
@@ -628,7 +625,7 @@ void SaveOscCalWord (void)
     uint16_t w;
     // Read OSCCAL *from code memory* before bulk erase ?    ( only for PIC12Fxxx + PIC16Fxxx )
     //  This precious information must be READ and PRESERVED before bulk erase.
-    //  (Saving the value is safe, regardless of Config.iDontCareForOsccal here !)
+    //  (Saving the value is safe, regardless of TSessionConfig::GetDontCareForOsccal() here !)
     if (PIC_PRG_iSimulateOnly)
     {
         w = 0x3478;  // this may be a valid oscillator calibration word (RETLW 0x78)
@@ -647,7 +644,7 @@ void SaveOscCalWord (void)
         w = ( PIC_HW_SerialRead_14Bit() & 0x3FFF);
     } // end if <simulate or not>
 
-    if (Config.iVerboseMessages)
+    if (TSessionConfig::GetVerboseMessages())
         APPL_ShowMsg( 0, _( "Read osccal, result 0x%06lX" ), w );
 
     if ( (w!=0x3FFF) || (PIC_lOscillatorCalibrationWord<0) )
@@ -678,7 +675,7 @@ void SaveBandgapCalBit (void)
     if (((w & dwVerifyMask) != (0x3FFF & dwVerifyMask)) || (PIC_lBandgapCalibrationBits < 0))
         PIC_lBandgapCalibrationBits = (w & PIC_DeviceInfo.wCfgmask_bandgap);
 
-    if (Config.iVerboseMessages)
+    if (TSessionConfig::GetVerboseMessages())
         APPL_ShowMsg( 0, _( "Read cfg with bandgap ref, result 0x%06lX" ), w );
 } // end if(PIC_DeviceInfo.wCfgmask_bandgap != 0)
 
@@ -745,7 +742,7 @@ bool PIC_PRG_Erase(int iEraseOptions)
         else
         {
             // BULK ERASE or CHIP ERASE(newer devices) to unprotect and erase everything.
-            if (Config.iVerboseMessages)
+            if (TSessionConfig::GetVerboseMessages())
             {
                 APPL_ShowMsg( 0, _( "Erasing chip using algorithm \"%hs\" ." ),
                               PicDev_AlgorithmCodeToString(PIC_DeviceInfo.wEraseAlgo) );
@@ -936,7 +933,7 @@ bool PIC_PRG_Erase(int iEraseOptions)
 
                 // If the user checked "no special treatment for OSCCAL," then
                 // we will turn on support for erasing the calibration words
-                if (Config.iDontCareForOsccal)
+                if (TSessionConfig::GetDontCareForOsccal())
                 {
                     // increment internal address counter
                     for ( i=0; i<9; ++i )
@@ -995,7 +992,7 @@ bool PIC_PRG_Erase(int iEraseOptions)
                 //       BUT IT IS NOT ! ! ! ! (spot the difference yourself) ...
                 // So here is the "erase everything" procedure for PIC16F818/819 :
                 w = PIC_PRG_ReadConf(); // read configuration word, to check if we used protection ;-)
-                if (Config.iVerboseMessages)
+                if (TSessionConfig::GetVerboseMessages())
                 {
                     _stprintf(sz80Temp, _( "EraseAll: Read config word 0x%06lX" ), w);
                     APPL_ShowMsg( 0, sz80Temp );
@@ -2540,7 +2537,7 @@ bool PIC_PRG_Program(
             wProgAlgo = PIC_DeviceInfo.wCodeProgAlgo;    // programming algorithm for CODE MEMORY
         }
 
-    if (Config.iVerboseMessages)
+    if (TSessionConfig::GetVerboseMessages())
     {
         APPL_ShowMsg( 0, _("Programming 0x%06lX..0x%06lX, algo=\"%hs\", CanRead=%d ."),
                       dwDeviceAddress,

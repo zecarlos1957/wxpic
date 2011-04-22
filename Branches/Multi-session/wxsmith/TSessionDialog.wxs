@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxDialog" name="TSessionDialog">
+		<title>Manage Session List</title>
+		<id_arg>0</id_arg>
+		<handler function="OnClose" entry="EVT_CLOSE" />
+		<object class="wxBoxSizer" variable="BoxSizer1" member="no">
+			<orient>wxVERTICAL</orient>
+			<object class="sizeritem">
+				<object class="wxBoxSizer" variable="BoxSizer5" member="no">
+					<object class="sizeritem">
+						<object class="wxBoxSizer" variable="BoxSizer3" member="no">
+							<orient>wxVERTICAL</orient>
+							<object class="sizeritem">
+								<object class="wxStaticBoxSizer" variable="StaticBoxSizer3" member="no">
+									<label>Session List</label>
+									<object class="sizeritem">
+										<object class="wxListBox" name="ID_SESSION_LISTBOX" variable="aSessionListBox" member="yes">
+											<default>-1</default>
+											<tooltip>Select the session to start</tooltip>
+											<style>wxLB_SINGLE|wxLB_NEEDED_SB</style>
+										</object>
+										<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+										<border>2</border>
+										<option>1</option>
+									</object>
+								</object>
+								<flag>wxALL|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxBoxSizer" variable="BoxSizer2" member="no">
+							<orient>wxVERTICAL</orient>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_NEW_BUTTON" variable="aNewButton" member="yes">
+									<label>New Session</label>
+									<tooltip>Create a new session with current configuration and set it current</tooltip>
+									<handler function="onNewButtonClick" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+								<border>2</border>
+							</object>
+							<object class="sizeritem">
+								<object class="wxStaticBoxSizer" variable="StaticBoxSizer2" member="no">
+									<label>Selected Session</label>
+									<orient>wxVERTICAL</orient>
+									<object class="sizeritem">
+										<object class="wxButton" name="ID_START_BUTTON" variable="aStartButton" member="yes">
+											<label>Start Session</label>
+											<tooltip>Switch to the selected session</tooltip>
+											<handler function="onStartButtonClick" entry="EVT_BUTTON" />
+										</object>
+										<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+										<border>2</border>
+									</object>
+									<object class="sizeritem">
+										<object class="wxButton" name="ID_START_CLOSE_BUTTON" variable="aStartCloseButton" member="yes">
+											<label>Start and Close</label>
+											<tooltip>Run WxPic in the selected session</tooltip>
+											<handler function="onStartCloseButtonClick" entry="EVT_BUTTON" />
+										</object>
+										<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+										<border>2</border>
+									</object>
+									<object class="spacer">
+										<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+										<size>0,20</size>
+									</object>
+									<object class="sizeritem">
+										<object class="wxButton" name="ID_DELETE_BUTTON" variable="aDeleteButton" member="yes">
+											<label>Delete Session</label>
+											<tooltip>Delete the session select in the list</tooltip>
+											<handler function="onDeleteButtonClick" entry="EVT_BUTTON" />
+										</object>
+										<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+										<border>2</border>
+									</object>
+								</object>
+								<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+							</object>
+							<object class="spacer">
+								<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+								<size>0,20</size>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_REFRESH_BUTTON" variable="aRefreshButton" member="yes">
+									<label>Refresh List</label>
+									<tooltip>Refresh the session list in case it has been modified by an other instance</tooltip>
+									<handler function="onRefreshButtonClick" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+								<border>2</border>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_BUTTON1" variable="Button1" member="yes">
+									<label>Help</label>
+								</object>
+								<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+								<border>2</border>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_CLOSE_BUTTON" variable="aCloseButton" member="yes">
+									<label>Close</label>
+									<tooltip>Close this dialog</tooltip>
+									<handler function="onCloseButtonClick" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+								<border>2</border>
+							</object>
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticBoxSizer" variable="StaticBoxSizer1" member="no">
+					<label>Current Session</label>
+					<orient>wxVERTICAL</orient>
+					<object class="sizeritem">
+						<object class="wxBoxSizer" variable="BoxSizer4" member="no">
+							<object class="sizeritem">
+								<object class="wxStaticText" name="ID_STATICTEXT2" variable="StaticText2" member="yes">
+									<label>Name:</label>
+								</object>
+								<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+								<border>2</border>
+							</object>
+							<object class="sizeritem">
+								<object class="wxTextCtrl" name="ID_SESSION_NAME_EDIT" variable="aSessionNameEdit" member="yes">
+									<value>No current session</value>
+									<maxlength>30</maxlength>
+									<enabled>0</enabled>
+									<handler function="onSessionNameEditText" entry="EVT_TEXT" />
+								</object>
+								<flag>wxALL|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+								<border>2</border>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+					</object>
+					<object class="sizeritem">
+						<object class="wxBoxSizer" variable="BoxSizer6" member="no">
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_RENAME_BUTTON" variable="aRenameButton" member="yes">
+									<label>Rename</label>
+									<enabled>0</enabled>
+									<tooltip>Set the name of the current session</tooltip>
+									<handler function="onRenameButtonClick" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+								<border>2</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_SAVE_BUTTON" variable="aSaveButton" member="yes">
+									<label>Save Configuration</label>
+									<enabled>0</enabled>
+									<tooltip>Save the configuration of the current session</tooltip>
+								</object>
+								<flag>wxALL|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+								<border>2</border>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxALL|wxALIGN_BOTTOM|wxALIGN_CENTER_HORIZONTAL</flag>
+					</object>
+				</object>
+				<flag>wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+			</object>
+		</object>
+	</object>
+</wxsmith>

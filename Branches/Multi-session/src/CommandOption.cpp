@@ -70,12 +70,10 @@ bool TCommandOption::Load (const wxApp *pApp)
             WinPic_fCommandLineOption_NoDelay = true;
         if (Parser.Found(theDeviceOptionName, &OptionValue))
         {
-            const wxWX2MBbuf DeviceName = OptionValue.mb_str(wxConvISO8859_1);
-            if (strcmp( DeviceName, Config.sz40DeviceName) != 0)
+            if (OptionValue != TSessionConfig::GetDeviceName())
             {
                 APPL_ShowMsg( 0, _("Info: Device set to \"%s\" via command line"), OptionValue.c_str() );
-                strncpy(Config.sz40DeviceName, DeviceName, 40);
-                ConfigChanged = true ;  // save on exit
+                TSessionConfig::SetDeviceName(OptionValue);
             }
         }
         if (Parser.Found(theConfigOptionName, &OptionValue))
@@ -135,7 +133,7 @@ bool TCommandOption::Load (const wxApp *pApp)
                 Error = _("Error: File name too long (max length=255)");
                 break;
             }
-            wxStrcpy(Config.sz255HexFileName, OptionValue.c_str());
+            TSessionConfig::SetHexFileName(OptionValue.c_str());
             if (!WinPic_fCommandLineOption_Read
             &&  ((WinPic_fCommandLineOption_Program | WinPic_fCommandLineOption_Verify)
               || ( !WinPic_fCommandLineOption_Quit && wxFileExists(OptionValue) ) ))

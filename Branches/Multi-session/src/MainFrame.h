@@ -65,9 +65,6 @@ class MainFrame: public wxFrame
             MP_USAGE_COMMAND_TIMER,
         };
 
-        static wxConfig     TheIniFile;
-        static wxString     TheLanguageName;
-
 
 		//(*Declarations(MainFrame)
 		wxMenuItem* aDiscardEditMenuItem;
@@ -78,8 +75,6 @@ class MainFrame: public wxFrame
 		wxMenuItem* aExitNoSaveMenuItem;
 		wxMenu* aRecentFileSubMenu;
 		wxMenuItem* aSelectDevMenuItem;
-		wxMenuItem* aRecentFile2MenuItem;
-		wxMenuItem* aRecentFile5MenuItem;
 		wxNotebook* aNotebook;
 		TDataMemPanel* aDataMemTab;
 		wxMenuItem* aProgramIdMenuItem;
@@ -90,10 +85,8 @@ class MainFrame: public wxFrame
 		wxGauge* aProgressGauge;
 		wxMenuItem* aHelpIndexMenuItem;
 		wxMenuItem* aProgramCfgMenuItem;
-		wxMenuItem* aRecentFile6MenuItem;
 		wxMenu* aDeviceMenu;
 		wxTimer aTimer;
-		wxMenuItem* aRecentFile4MenuItem;
 		TDeviceCfgPanel* aDeviceCfgTab;
 		wxMenuItem* aDsPicProgMenuItem;
 		TInterfacePanel* aInterfaceTab;
@@ -121,9 +114,7 @@ class MainFrame: public wxFrame
 		wxMenu* aHelpMenu;
 		wxMenuItem* aResetMenuItem;
 		wxMenuItem* aBlankCheckMenuItem;
-		wxMenuItem* aRecentFile1MenuItem;
 		wxMenuItem* aBatchPrgMenuItem;
-		wxMenuItem* aRecentFile3MenuItem;
 		wxMenuBar* MenuBar;
 		//*)
 
@@ -175,12 +166,6 @@ class MainFrame: public wxFrame
 		static const long ID_LOAD_MENU_ITEM;
 		static const long ID_LOAD_N_PRG_MENU_ITEM;
 		static const long ID_RLOAD_N_PRG_MENU_ITEM;
-		static const long ID_RECENT_FILE1_MENU_ITEM;
-		static const long ID_RECENT_FILE2_MENU_ITEM;
-		static const long ID_RECENT_FILE3_MENU_ITEM;
-		static const long ID_RECENT_FILE4_MENU_ITEM;
-		static const long ID_RECENT_FILE5_MENU_ITEM;
-		static const long ID_RECENT_FILE6_MENU_ITEM;
 		static const long ID_CLEAR_RECENT_MENU_ITEM;
 		static const long ID_RECENT_FILES_SUB_MENU;
 		static const long ID_DUMP_TO_HEX_MENU_ITEM;
@@ -233,12 +218,6 @@ class MainFrame: public wxFrame
 		void OnLoadMenuItemSelected(wxCommandEvent& event);
 		void OnLoadNProgMenuItemSelected(wxCommandEvent& event);
 		void OnReloadNProgMenuItemSelected(wxCommandEvent& event);
-		void OnRecentFile1MenuItemSelected(wxCommandEvent& event);
-		void OnRecentFile2MenuItemSelected(wxCommandEvent& event);
-		void OnRecentFile3MenuItemSelected(wxCommandEvent& event);
-		void OnRecentFile4MenuItemSelected(wxCommandEvent& event);
-		void OnRecentFile5MenuItemSelected(wxCommandEvent& event);
-		void OnRecentFile6MenuItemSelected(wxCommandEvent& event);
 		void OnClearRecentMenuItemSelected(wxCommandEvent& event);
 		void OnExitMenuItemSelected(wxCommandEvent& event);
 		void OnExitNoSaveMenuItemSelected(wxCommandEvent& event);
@@ -304,17 +283,13 @@ class MainFrame: public wxFrame
 		void OnButton6Click(wxCommandEvent& event);
 		void onHelpOnIdButtonClick(wxCommandEvent& event);
 		//*)
-		void onChar(wxKeyEvent& event);
+		void onChar(wxKeyEvent& pEvent);
         void onMenuOpen(wxMenuEvent &pEvent);
+        void onMRFMenuItemSelected(wxCommandEvent& pEvent);
 
-        wxString          aEmptyMRFname;
+        wxArrayString     aMRFTable;
         wxAboutDialogInfo aAboutInfo;
 
-        void     SaveLayout   (void);
-        void     LoadLayout   (void);
-        wxString GetMRFname   (int iMRFindex);
-        void     SetMRFname   (int iMRFindex, wxString s);
-        void     AddMRFname   (wxString s);
 		void     doAddTextLog (const wxChar *szText);
 
         wxString ProgramWhatInfoString(void);
@@ -332,6 +307,7 @@ class MainFrame: public wxFrame
         void initAuto         (void);
         void initMore         (void);
         void addLines         (wxString &pText, void (wxAboutDialogInfo::*pAdder)(const wxString&));
+        void updateMRFMenu    (const wxArrayString &pMRFTable);
 
  	public:
        void UpdateCodeMemRange( int iWhichMemory, long i32NLocations, int iUCMoptions );
@@ -350,7 +326,6 @@ class MainFrame: public wxFrame
         void LoadCommand (void);
         void LoadAndProgramCommand(void);
         void ReloadAndProgClick(void);
-        void LoadMRF(int iMRFindex);
 
 //        bool AppHelp(Word Command, int Data, bool &CallHelp);
         static void ChangeDefaultGridForegroundColour(wxGrid *Grid, const wxColour &NewForegroundColour);

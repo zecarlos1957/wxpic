@@ -62,7 +62,7 @@ bool PIC10F_EnterProgMode( void )
 // > Then raise Vpp from VIL ("zero") to VIHH (12 V).
 //
 // This is almost the same as entering "programming mode"
-// for the PIC16Fxxx-family, with Config.iNeedPowerBeforeRaisingMCLR = true (!).
+// for the PIC16Fxxx-family, with TSessionConfig::GetNeedPowerBeforeMCLR() = true (!).
 {
 //  int i;
 
@@ -124,7 +124,7 @@ bool PIC10F_EnterProgMode( void )
 #if(1)      // time between Vdd and Vpp seemed a bit too long, due to the terribly slow I/O-port driver
                 PIC_HW_SetVdd(true);    // turn PIC's supply voltage on
                 // wait a short time before raising Vpp (*AFTER Vdd*)
-                if( Config.iSlowInterface )  // this option for "bad, slow interfaces" was added 2005-06
+                if( TSessionConfig::GetSlowInterface() )  // this option for "bad, slow interfaces" was added 2005-06
                     PIC_HW_Delay_us(20);
                 else PIC_HW_Delay_us(5);
                 // The PIC10F20x prog spec says "Tppdp MIN 5us" but not too clear what it is !
@@ -149,7 +149,7 @@ bool PIC10F_EnterProgMode( void )
                 // (like in the COM84 adapter, which has a Vpp(!) but no Vdd(!) control line)
                 PIC_HW_LongDelay_ms(200);  // wait until Vpp is really 0 volt
                 PIC_HW_SetVdd(true);    // turn PIC's supply voltage on (no effect for COM84)
-                if( Config.iSlowInterface )
+                if( TSessionConfig::GetSlowInterface() )
                     PIC_HW_Delay_us(20);
                 else PIC_HW_Delay_us(5); // see WoBu's rant about lousy programming specs above !
                 PIC_HW_PullMclrToGnd(false); // stop pulling MCLR to ground (added 2008-05-29)
@@ -209,7 +209,7 @@ void PIC10F_SendCmd6(uint8_t bCmd6,  bool fFlush)
     PIC_HW_SetClockAndData(false,false );  // start condition
     PIC_HW_SetClockEnable( true );         // some interfaces may need this..
     PIC_HW_SetDataEnable( true );   // "Enable" signals only for AN589 programmer
-    if( Config.iSlowInterface )
+    if( TSessionConfig::GetSlowInterface() )
         PIC_HW_Delay_us(100);
     else PIC_HW_Delay_us(1);        // wait at least TDLY2 from last edge of previous cmd
 
@@ -217,11 +217,11 @@ void PIC10F_SendCmd6(uint8_t bCmd6,  bool fFlush)
     {
         data_bit = (bCmd6&(1<<i)) != 0;     // get next command bit (0 or 1)
         PIC_HW_SetClockAndData(true, data_bit);
-        if( Config.iSlowInterface )
+        if( TSessionConfig::GetSlowInterface() )
             PIC_HW_Delay_us(50);    // extra long delay for "bad" interfaces
         else PIC_HW_Delay_us(1);     // normal mode for "good" interfaces
         PIC_HW_SetClockAndData(false,data_bit); // bit latched on falling edge !  so data must remain valid !
-        if( Config.iSlowInterface )
+        if( TSessionConfig::GetSlowInterface() )
             PIC_HW_Delay_us(50);    // extra long delay for "bad" interfaces
         else PIC_HW_Delay_us(1);     // normal mode for "good" interfaces
     }
@@ -246,11 +246,11 @@ void PIC10F_SendData14(uint16_t wData14)
     PIC_HW_SetClockEnable( true );         // some interfaces may need this..
     PIC_HW_SetDataEnable( true );          // "Enable" signals only for AN589 programmer
     PIC_HW_SetClockAndData(true, false);   // Send START bit ..
-    if( Config.iSlowInterface )
+    if( TSessionConfig::GetSlowInterface() )
         PIC_HW_Delay_us(50);    // extra long delay for "bad" interfaces
     else PIC_HW_Delay_us(1);     // specified delay for "good" interfaces
     PIC_HW_SetClockAndData(false,false);   // > input data is "don't care" for start bit
-    if( Config.iSlowInterface )
+    if( TSessionConfig::GetSlowInterface() )
         PIC_HW_Delay_us(50);    // extra long delay for "bad" interfaces
     else PIC_HW_Delay_us(1);     // specified delay for "good" interfaces
     // Now send 14 data bits, LSB first, the two last bits are ignored for this 12-bit core :
@@ -258,20 +258,20 @@ void PIC10F_SendData14(uint16_t wData14)
     {
         data_bit = (wData14&(1<<i)) != 0;     // get next data bit (0 or 1)
         PIC_HW_SetClockAndData(true, data_bit); // send data bit
-        if( Config.iSlowInterface )
+        if( TSessionConfig::GetSlowInterface() )
             PIC_HW_Delay_us(50);    // extra long delay for "bad" interfaces
         else PIC_HW_Delay_us(1);     // specified delay for "good" interfaces
         PIC_HW_SetClockAndData(false,data_bit); // bit latched on falling edge !  so data must remain valid !
-        if( Config.iSlowInterface )
+        if( TSessionConfig::GetSlowInterface() )
             PIC_HW_Delay_us(50);    // extra long delay for "bad" interfaces
         else PIC_HW_Delay_us(1);     // specified delay for "good" interfaces
     }
     PIC_HW_SetClockAndData(true, false);   // Send STOP bit ..
-    if( Config.iSlowInterface )
+    if( TSessionConfig::GetSlowInterface() )
         PIC_HW_Delay_us(50);       // extra long delay for "bad" interfaces
     else PIC_HW_Delay_us(1);        // specified delay for "good" interfaces
     PIC_HW_SetClockAndData(false,false);   // > input data is "don't care" for stop bit
-    if( Config.iSlowInterface )
+    if( TSessionConfig::GetSlowInterface() )
         PIC_HW_Delay_us(50);
     else PIC_HW_Delay_us(1);
 } // end PIC10F_SendData14()
@@ -342,7 +342,7 @@ void PIC10F_CompareToVerify( uint16_t wReadValue, uint16_t *pwMemFlags )
         if( (uint32_t)(wReadValue&0x0FFF) != (uint32_t)(dwTemp&0x0FFF) )
         {
             if ( PIC10F_iCurrTargetAddress!=PIC_DeviceInfo.lAddressOscCal
-                    || Config.iDontCareForOsccal ) // ok to complain about THIS location ?
+                    || TSessionConfig::GetDontCareForOsccal() ) // ok to complain about THIS location ?
             {
                 ++PIC10F_iNrOfErrors;
                 *pwMemFlags |= PIC_BUFFER_FLAG_VFY_ERROR;
@@ -620,7 +620,7 @@ bool PIC10F_ProgramAll(
                 }
                 else
                 {
-                    if( Config.iDontCareForOsccal )
+                    if( TSessionConfig::GetDontCareForOsccal() )
                     {
                         APPL_ShowMsg( 0, _("PIC10F: Option \"Don't care for OSCCAL\" set, using a 'default' OSCCAL word !!"));
                         PIC10F_wReadOscCalibWord = PIC10F_wReadOscCalibBackup = 0x0C00;
@@ -676,7 +676,7 @@ bool PIC10F_ProgramAll(
     //    Why ? Because programming may fail AFTER SUCCESSFULLY ERASING the PIC,
     //          and in that case the user shall simply "try again".
     PicBuf_SetBufferWord( PIC_DeviceInfo.lAddressOscCal, PIC10F_wReadOscCalibWord );
-    if( ! Config.iDontCareForOsccal )
+    if( ! TSessionConfig::GetDontCareForOsccal() )
     {
         // A VALID OSCCAL VALUE for this chip will be found in the buffer then .
         // A PIC10F20x firmware without the MOVLW instruction at the reset vector
@@ -694,7 +694,7 @@ bool PIC10F_ProgramAll(
     //     "full device bulk erase" here (== "chip erase" in other specs).
     //     It erases EVERYTHING: program memory, config word, User ID locations,
     //     and even the backup oscillator calibration word !
-    if( Config.iUseCompleteChipErase )
+    if( TSessionConfig::GetUseCompleteChipErase() )
     {
         // > To perform a FULL DEVICE BULK ERASE (aka "chip erase" ?! ),
         // > increment PC to "0x200/0x400" (NONSENSE, ANOTHER ERROR IN DS41228D)
@@ -739,14 +739,14 @@ bool PIC10F_ProgramAll(
         // get next word from buffer (normal code memory location or OSCCAL) :
         PicBuf_GetBufferWord( PIC10F_iCurrTargetAddress, &dwTemp );
         w = dwTemp;  // word from buffer
-        if( (PIC10F_iCurrTargetAddress==PIC_DeviceInfo.lAddressOscCal) && (! Config.iDontCareForOsccal) )
+        if( (PIC10F_iCurrTargetAddress==PIC_DeviceInfo.lAddressOscCal) && (! TSessionConfig::GetDontCareForOsccal()) )
         {
             // restore the orginal OSCCAL word for this special location :
             w = PIC10F_wReadOscCalibWord;
         }
         w &= 0x0FFF;                    // 12 bit only  !
         if(   (iPicPrgAction & PIC_ACTION_WRITE)
-                || ((PIC10F_iCurrTargetAddress==PIC_DeviceInfo.lAddressOscCal) && (! Config.iDontCareForOsccal))
+                || ((PIC10F_iCurrTargetAddress==PIC_DeviceInfo.lAddressOscCal) && (! TSessionConfig::GetDontCareForOsccal()))
           )
         {
             if( ! PIC10F_ProgAndVerifyOneLocation( PIC10F_iCurrTargetAddress, w, 0x0FFF,
@@ -764,7 +764,7 @@ bool PIC10F_ProgramAll(
     // Arrived here, CODE MEMORY is finished, but not the ID locations and the config word.
     //  PC is at the first user ID location now (0x100 for PIC10F200/4, 0x200 for PIC10F202/6)
     PIC10F_iCurrTargetAddress = PIC10F_iCurrTargetAddress;  // DEBUG: must be 256 or 512 (dec.)
-    if( Config.iUseCompleteChipErase )
+    if( TSessionConfig::GetUseCompleteChipErase() )
     {
         // the User ID locations can only be reprogrammed after "erasing ALL" (?)
         for(i=0; i<=3; ++i)
@@ -780,7 +780,7 @@ bool PIC10F_ProgramAll(
         // Very important after "erase all":  Restore the BACKUP OSCCAL value !
         if( ! PIC10F_ProgAndVerifyOneLocation( PIC10F_iCurrTargetAddress, PIC10F_wReadOscCalibBackup, 0x0FFF, true ) )
             ++PIC10F_iNrOfErrors;
-    } // end if( Config.iUseCompleteChipErase )
+    } // end if( TSessionConfig::GetUseCompleteChipErase() )
     else  // didn't "erase ALL", so cannot program the User ID locations
     {
         //  ... instead skip them :

@@ -53,8 +53,8 @@ const long TInterfacePanel::ID_CHECKBOX23 = wxNewId();
 
 static struct
 {
-    int           InterfaceType;
-    const wxChar *InterfaceName;
+    EInterfaceType InterfaceType;
+    const wxChar  *InterfaceName;
 } InterfaceTab[PIC_INTF_TYPE_MAX] = {
     { PIC_INTF_TYPE_UNKNOWN,        _("(unknown)") },
     { PIC_INTF_TYPE_COM84,          _("COM84 programmer for serial port") },
@@ -272,21 +272,21 @@ static bool IsWeirdLptPortAddr (int pPortAddress)
 TInterfacePanel::EIoAddressUsage TInterfacePanel::setLptPortAddress (void)
 {
     EIoAddressUsage Result;
-    switch(Config.iLptPortNr)
+    switch(TSessionConfig::GetLptPortNr())
     {
         case 1:
-            Config.iLptIoAddress = 0x0378;
+            TSessionConfig::SetLptIoAddress(0x0378);
             Result = usageDISPLAY;
             break;
         case 2:
-            Config.iLptIoAddress = 0x0278;
+            TSessionConfig::SetLptIoAddress(0x0278);
             Result = usageDISPLAY;
             break;
         default:
-            if (Config.iLptIoAddress == 0)
-                Config.iLptIoAddress = 0x0378;
+            if (TSessionConfig::GetLptIoAddress() == 0)
+                TSessionConfig::SetLptIoAddress(0x0378);
             Result = usageINPUT;
-            if (IsWeirdLptPortAddr(Config.iLptIoAddress))
+            if (IsWeirdLptPortAddr(TSessionConfig::GetLptIoAddress()))
             {
                 aAcceptAllIoAddresses = true;
                 Result = usageINPUT_WARN;
@@ -316,18 +316,14 @@ static uint32_t IsSerialInterface =
 void TInterfacePanel::UpdateInterfaceType(void)
 {
     ++(MainFrame::TheMainFrame->m_Updating);
-    if ((Config.pic_interface_type >= PIC_INTF_TYPE_MAX)
-    ||  (Config.pic_interface_type < 0))
-    {
-        Config.pic_interface_type = 0;
-        ConfigChanged = true;
-    }
 
-    aInterfaceTypeText->SetLabel((PIC_HW_SetInterfaceType(Config.pic_interface_type))
+    aInterfaceTypeText->SetLabel((PIC_HW_SetInterfaceType(TSessionConfig::GetInterfaceType()))
                                  ? wxString(_("Interface Type ok."))
                                  : _("Interface error: ") + wxString(PicHw_sz255LastError));
 
-    EInterfacePortType IsSerialPort = ((IsSerialInterface>>Config.pic_interface_type) & true) ? portSERIAL : portPARALLEL;
+    EInterfacePortType IsSerialPort = ((IsSerialInterface>>TSessionConfig::GetInterfaceType()) & true)
+                                        ? portSERIAL
+                                        : portPARALLEL;
     if (IsSerialPort != aPortType)
     {
         aPortType = IsSerialPort;
@@ -357,7 +353,7 @@ void TInterfacePanel::UpdateInterfaceType(void)
                 aInterfacePortChoice->Append( _("None") );
 #endif
 
-            if (!aInterfacePortChoice->SetStringSelection(Config.sz40ComPortName))
+            if (!aInterfacePortChoice->SetStringSelection(TSessionConfig::GetComPortName()))
             {
                 aInterfacePortChoice->SetSelection(0);
                 copyPortSelectionToConfig();
@@ -370,7 +366,7 @@ void TInterfacePanel::UpdateInterfaceType(void)
             aInterfacePortChoice->Append(_("(at address)") );
             aInterfacePortChoice->Append(_T("LPT1"));
             aInterfacePortChoice->Append(_T("LPT2"));
-            aInterfacePortChoice->SetSelection(Config.iLptPortNr);
+            aInterfacePortChoice->SetSelection(TSessionConfig::GetLptPortNr());
         } // end if < interface on LPT port >
 //        else
 //        {
@@ -378,17 +374,17 @@ void TInterfacePanel::UpdateInterfaceType(void)
 //        } // end else < neither serial nor parallel port >
     }
 
-    aInterfaceTypeChoice->SetSelection(InterfaceType2PortSelection[Config.pic_interface_type]);
+    aInterfaceTypeChoice->SetSelection(InterfaceType2PortSelection[TSessionConfig::GetInterfaceType()]);
 
-    aCustomDefFileText->SetValue(Config.sz255InterfaceSupportFile);
-    aCustomDefFileText->Enable((Config.pic_interface_type==PIC_INTF_TYPE_CUSTOM_LPT)
-            ||(Config.pic_interface_type==PIC_INTF_TYPE_CUSTOM_COM));
+    aCustomDefFileText->SetValue(TSessionConfig::GetInterfaceFile());
+    aCustomDefFileText->Enable((TSessionConfig::GetInterfaceType()==PIC_INTF_TYPE_CUSTOM_LPT)
+            ||(TSessionConfig::GetInterfaceType()==PIC_INTF_TYPE_CUSTOM_COM));
 
     updateIoAddressDisplay((aPortType == portSERIAL) ? usageNONE : setLptPortAddress());
 
-    aExtraRdDelayEdit ->SetValue(wxString::Format(_T("%d"), Config.iExtraRdDelay_us ));
-    aExtraClkDelayEdit->SetValue(wxString::Format(_T("%d"), Config.iExtraClkDelay_us));
-    aSlowInterfaceChk ->SetValue(Config.iSlowInterface);
+    aExtraRdDelayEdit ->SetValue(wxString::Format(_T("%d"), TSessionConfig::GetExtraRdDelay_us() ));
+    aExtraClkDelayEdit->SetValue(wxString::Format(_T("%d"), TSessionConfig::GetExtraClkDelay_us() ));
+    aSlowInterfaceChk ->SetValue(TSessionConfig::GetSlowInterface());
 
     if (MainFrame::TheMainFrame->m_Updating>0)
         --(MainFrame::TheMainFrame->m_Updating);
@@ -435,11 +431,11 @@ void TInterfacePanel::updateIoAddressDisplay(EIoAddressUsage pUsage)
             aIoPortAddressEdit->SetValue(wxEmptyString);
         aCurIoAddress = 0;
     }
-    else if (Config.iLptIoAddress != aCurIoAddress)
+    else if (TSessionConfig::GetLptIoAddress() != aCurIoAddress)
     {
-        _stprintf(str80,_T("%04X"), Config.iLptIoAddress);
+        _stprintf(str80,_T("%04X"), TSessionConfig::GetLptIoAddress());
         aIoPortAddressEdit->SetValue(str80);
-        aCurIoAddress = Config.iLptIoAddress;
+        aCurIoAddress = TSessionConfig::GetLptIoAddress();
     }
     aCurIoAddressUsage = pUsage;
 }
@@ -466,16 +462,14 @@ void TInterfacePanel::changeIoPortAddress (void)
             {
                 // Accept the address "under protest"
                 IoAddressUsage = usageINPUT_WARN;
-                Config.iLptIoAddress = PortAddr;
-                ConfigChanged = true ;  // save on exit
+                TSessionConfig::SetLptIoAddress(PortAddr);
             }
             // else // do NOT accept the address (leave it unchanged)
         }
         else
         {
             IoAddressUsage = usageINPUT;
-            Config.iLptIoAddress = PortAddr;
-            ConfigChanged = true ;  // save on exit
+            TSessionConfig::SetLptIoAddress(PortAddr);
         }
     }
     else // SERIAL ("COM")
@@ -836,10 +830,9 @@ void TInterfacePanel::onVddSelectRadioSelect(wxCommandEvent& event)
 {
     if (MainFrame::TheMainFrame->m_Updating>0)
         return;
-    Config.iIdleSupplyVoltage = aVddSelectRadio->GetSelection(); /* low supply voltage (typically 2.X volts) */
-    if (! PIC_HW_SelectVdd( Config.iIdleSupplyVoltage ) )
+    TSessionConfig::SetIdleSupplyVoltage(aVddSelectRadio->GetSelection()); /* low supply voltage (typically 2.X volts) */
+    if (! PIC_HW_SelectVdd( TSessionConfig::GetIdleSupplyVoltage() ) )
         MainFrame::AddTextToLog( _("PIC- Select Vdd failed") );
-    ConfigChanged = true ;  // save on exit
 }
 //---------------------------------------------------------------------------
 
@@ -862,27 +855,25 @@ void TInterfacePanel::onGreenLedBitmapClick(wxCommandEvent& event)
 
 void TInterfacePanel::onInterfaceTypeChoiceSelect(wxCommandEvent& event)
 {
-    int iInterfaceType;
+    int iInterfaceIndex;
 
     if (MainFrame::TheMainFrame->m_Updating)
         return;
     if ( APPL_i32CustomizeOptions & APPL_CUST_NO_INTERFACE_SELECTION )
         return;
 
-    iInterfaceType = aInterfaceTypeChoice->GetSelection();
-    if (iInterfaceType<0) iInterfaceType=0;
-    iInterfaceType = InterfaceTab[iInterfaceType].InterfaceType;
+    iInterfaceIndex = aInterfaceTypeChoice->GetSelection();
+    if (iInterfaceIndex<0) iInterfaceIndex=0;
 
-    _tcsncpy(
-//        (iInterfaceType == PIC_INTF_TYPE_PLUGIN_DLL) ? Config.sz80InterfacePluginDLL :
-        Config.sz255InterfaceSupportFile, aCustomDefFileText->GetValue().c_str(), 256 );
+    EInterfaceType InterfaceType = InterfaceTab[iInterfaceIndex].InterfaceType;
+
+    TSessionConfig::SetInterfaceFile(aCustomDefFileText->GetValue());
 //  if( iInterfaceType == PIC_INTF_TYPE_PLUGIN_DLL )
 //       strncpy( Config.sz80InterfacePluginDLL,   Ed_CustomInterfaceDefFile->Text.c_str(), 80 );
 //  else strncpy( Config.sz255InterfaceSupportFile, Ed_CustomInterfaceDefFile->Text.c_str(), 256 );
-    Config.pic_interface_type = iInterfaceType;
+    TSessionConfig::SetInterfaceType(InterfaceType);
     UpdateInterfaceType();
 //    MainFrame::TheMainFrame->aOptionTab->UpdateOptionsDisplay();
-    ConfigChanged = true ;  // save on exit
 }
 //---------------------------------------------------------------------------
 
@@ -903,17 +894,10 @@ void TInterfacePanel::onInterfacePortChoiceSelect(wxCommandEvent& event)
 
 void TInterfacePanel::copyPortSelectionToConfig (void)
 {
-    if ( aPortType == portSERIAL )
-    {
-        wxString portname = aInterfacePortChoice->GetStringSelection();
-        _tcsncpy(Config.sz40ComPortName, portname.c_str(), 40 );
-        Config.sz40ComPortName[40]=_T('\0');
-    }
+    if (aPortType == portSERIAL)
+        TSessionConfig::SetComPortName(aInterfacePortChoice->GetStringSelection());
     else // not SERIAL but PARALLEL interface... please don't ask for USB ;-)
-    {
-        Config.iLptPortNr = aInterfacePortChoice->GetSelection();
-    }
-    ConfigChanged = true ;  // save changes on exit
+        TSessionConfig::SetLptPortNr(aInterfacePortChoice->GetSelection());
 //---------------------------------------------------------------------------
 }
 
@@ -970,15 +954,15 @@ void TInterfacePanel::onCustomInterfSelectButtonClick(wxCommandEvent& event)
     if (MainFrame::TheMainFrame->aFileDialog->ShowModal() == wxID_OK)
     {
         Filename.Assign(MainFrame::TheMainFrame->aFileDialog->GetPath());
-        _tcsncpy(
+        TSessionConfig::SetInterfaceFile(Filename.GetFullPath());
+//        _tcsncpy(
 //            (interface_type == PIC_INTF_TYPE_PLUGIN_DLL)?Config.sz80InterfacePluginDLL:
-            Config.sz255InterfaceSupportFile, Filename.GetFullPath(), 256);
+//            Config.sz255InterfaceSupportFile, , 256);
 //    if( interface_type == PIC_INTF_TYPE_PLUGIN_DLL )
 //         strncpy( Config.sz80InterfacePluginDLL,   Ed_CustomInterfaceDefFile->Text.c_str(), 80 );
 //    else strncpy( Config.sz255InterfaceSupportFile, Ed_CustomInterfaceDefFile->Text.c_str(), 256 );
 
         UpdateInterfaceType();
-        ConfigChanged = true ;  // save on exit
     }
 
     if ( MainFrame::TheMainFrame->m_Updating )
@@ -998,20 +982,19 @@ void TInterfacePanel::onSlowInterfaceChkClick(wxCommandEvent& event)
     long ExtraDelay;
     if (aExtraRdDelayEdit->GetValue().ToLong(&ExtraDelay,10))
     {
-        Config.iExtraRdDelay_us = std::max(0L, std::min(10000L, ExtraDelay));
+        TSessionConfig::SetExtraRdDelay_us(std::max(0L, std::min(10000L, ExtraDelay)));
         aExtraRdDelayEdit->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
     }
     else
         aExtraRdDelayEdit->SetBackgroundColour(wxColour(0xFF,0x80,0x80));
     if (aExtraClkDelayEdit->GetValue().ToLong(&ExtraDelay,10))
     {
-        Config.iExtraClkDelay_us = std::max(0L, std::min(10000L, ExtraDelay));
+        TSessionConfig::SetExtraClkDelay_us(std::max(0L, std::min(10000L, ExtraDelay)));
         aExtraClkDelayEdit->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
     }
     else
         aExtraClkDelayEdit->SetBackgroundColour(wxColour(0xFF,0x80,0x80));
-    Config.iSlowInterface  = aSlowInterfaceChk->GetValue();
-    ConfigChanged = true ;  // save on exit
+    TSessionConfig::SetSlowInterface(aSlowInterfaceChk->GetValue());
 }
 //---------------------------------------------------------------------------
 

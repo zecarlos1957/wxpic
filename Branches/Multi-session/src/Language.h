@@ -28,6 +28,9 @@
 class TLanguage
 {
 public:
+    //-- Default Language Name
+    static const wxString TheDefaultName;
+
     //-- This initialisation method must be called first
     //-- Return true upon success
     static bool                 Init                (void);

@@ -17,7 +17,9 @@
 #include <wx/filename.h>
 
 
+const wxString TLanguage::TheDefaultName = _T("Built-in");
 TLanguage *TLanguage::theSingleton = NULL;
+
 
 /* static */
 bool TLanguage::Init (void)

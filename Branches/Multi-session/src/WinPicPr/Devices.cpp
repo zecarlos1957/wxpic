@@ -3783,8 +3783,8 @@ bool PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo )
                 //   Microchip's MPLAB DEVICE folder (so the dev-files don't necessarily
                 //   have to be copied, though I recommend copying them because who knows
                 //   if they don't change the file formats in future ! )
-                if ( Config.sz255MplabDevDir[0] != 0 )
-                    DevFilename.AssignDir(Config.sz255MplabDevDir);
+                if ( TSessionConfig::GetMplabDevDir()[0] != 0 )
+                    DevFilename.AssignDir(TSessionConfig::GetMplabDevDir());
                 else
                 {
                     DevFilename.Assign(wxStandardPaths::Get().GetDataDir(), wxEmptyString);

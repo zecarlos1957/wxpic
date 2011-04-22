@@ -34,8 +34,6 @@
 #include "SVNVersion.h"
 
 MainFrame *MainFrame::TheMainFrame = NULL;
-wxConfig   MainFrame::TheIniFile(APPLICATION_NAME);
-wxString   MainFrame::TheLanguageName;
 
 
 enum {
@@ -73,12 +71,6 @@ const long MainFrame::ID_PROGRESS_GAUGE = wxNewId();
 const long MainFrame::ID_LOAD_MENU_ITEM = wxNewId();
 const long MainFrame::ID_LOAD_N_PRG_MENU_ITEM = wxNewId();
 const long MainFrame::ID_RLOAD_N_PRG_MENU_ITEM = wxNewId();
-const long MainFrame::ID_RECENT_FILE1_MENU_ITEM = wxNewId();
-const long MainFrame::ID_RECENT_FILE2_MENU_ITEM = wxNewId();
-const long MainFrame::ID_RECENT_FILE3_MENU_ITEM = wxNewId();
-const long MainFrame::ID_RECENT_FILE4_MENU_ITEM = wxNewId();
-const long MainFrame::ID_RECENT_FILE5_MENU_ITEM = wxNewId();
-const long MainFrame::ID_RECENT_FILE6_MENU_ITEM = wxNewId();
 const long MainFrame::ID_CLEAR_RECENT_MENU_ITEM = wxNewId();
 const long MainFrame::ID_RECENT_FILES_SUB_MENU = wxNewId();
 const long MainFrame::ID_DUMP_TO_HEX_MENU_ITEM = wxNewId();
@@ -174,24 +166,6 @@ void MainFrame::initAuto (void)
     aReloadNProgMenuItem = new wxMenuItem(aFileMenu, ID_RLOAD_N_PRG_MENU_ITEM, _("&Reload && Program"), wxEmptyString, wxITEM_NORMAL);
     aFileMenu->Append(aReloadNProgMenuItem);
     aRecentFileSubMenu = new wxMenu();
-    aRecentFile1MenuItem = new wxMenuItem(aRecentFileSubMenu, ID_RECENT_FILE1_MENU_ITEM, _("** None **"), wxEmptyString, wxITEM_NORMAL);
-    aRecentFileSubMenu->Append(aRecentFile1MenuItem);
-    aRecentFile1MenuItem->Enable(false);
-    aRecentFile2MenuItem = new wxMenuItem(aRecentFileSubMenu, ID_RECENT_FILE2_MENU_ITEM, _("** None **"), wxEmptyString, wxITEM_NORMAL);
-    aRecentFileSubMenu->Append(aRecentFile2MenuItem);
-    aRecentFile2MenuItem->Enable(false);
-    aRecentFile3MenuItem = new wxMenuItem(aRecentFileSubMenu, ID_RECENT_FILE3_MENU_ITEM, _("** None **"), wxEmptyString, wxITEM_NORMAL);
-    aRecentFileSubMenu->Append(aRecentFile3MenuItem);
-    aRecentFile3MenuItem->Enable(false);
-    aRecentFile4MenuItem = new wxMenuItem(aRecentFileSubMenu, ID_RECENT_FILE4_MENU_ITEM, _("** None **"), wxEmptyString, wxITEM_NORMAL);
-    aRecentFileSubMenu->Append(aRecentFile4MenuItem);
-    aRecentFile4MenuItem->Enable(false);
-    aRecentFile5MenuItem = new wxMenuItem(aRecentFileSubMenu, ID_RECENT_FILE5_MENU_ITEM, _("** None **"), wxEmptyString, wxITEM_NORMAL);
-    aRecentFileSubMenu->Append(aRecentFile5MenuItem);
-    aRecentFile5MenuItem->Enable(false);
-    aRecentFile6MenuItem = new wxMenuItem(aRecentFileSubMenu, ID_RECENT_FILE6_MENU_ITEM, _("** None **"), wxEmptyString, wxITEM_NORMAL);
-    aRecentFileSubMenu->Append(aRecentFile6MenuItem);
-    aRecentFile6MenuItem->Enable(false);
     aRecentFileSubMenu->AppendSeparator();
     aClearRecentMenuItem = new wxMenuItem(aRecentFileSubMenu, ID_CLEAR_RECENT_MENU_ITEM, _("Clear recent file history"), wxEmptyString, wxITEM_NORMAL);
     aRecentFileSubMenu->Append(aClearRecentMenuItem);
@@ -280,12 +254,6 @@ void MainFrame::initAuto (void)
     Connect(ID_LOAD_MENU_ITEM,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnLoadMenuItemSelected);
     Connect(ID_LOAD_N_PRG_MENU_ITEM,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnLoadNProgMenuItemSelected);
     Connect(ID_RLOAD_N_PRG_MENU_ITEM,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnReloadNProgMenuItemSelected);
-    Connect(ID_RECENT_FILE1_MENU_ITEM,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnRecentFile1MenuItemSelected);
-    Connect(ID_RECENT_FILE2_MENU_ITEM,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnRecentFile2MenuItemSelected);
-    Connect(ID_RECENT_FILE3_MENU_ITEM,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnRecentFile3MenuItemSelected);
-    Connect(ID_RECENT_FILE4_MENU_ITEM,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnRecentFile4MenuItemSelected);
-    Connect(ID_RECENT_FILE5_MENU_ITEM,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnRecentFile5MenuItemSelected);
-    Connect(ID_RECENT_FILE6_MENU_ITEM,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnRecentFile6MenuItemSelected);
     Connect(ID_CLEAR_RECENT_MENU_ITEM,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnClearRecentMenuItemSelected);
     Connect(ID_DUMP_TO_HEX_MENU_ITEM,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::onDumpBufferMenuItemSelected);
     Connect(ID_EXIT_NO_SAVE_MENU_ITEM,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnExitNoSaveMenuItemSelected);
@@ -319,6 +287,8 @@ void MainFrame::initAuto (void)
 
 void MainFrame::initMore (void)
 {
+    updateMRFMenu(TSessionConfig::GetMostRecentFiles());
+
     Connect(ID_OPEN_HEX_FILE_TOOL,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&MainFrame::OnLoadMenuItemSelected);
     Connect(ID_SAVE_HEX_FILE_TOOL,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&MainFrame::onDumpBufferMenuItemSelected);
     Connect(ID_RELOAD_PROG_TOOL,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&MainFrame::OnReloadNProgMenuItemSelected);
@@ -340,11 +310,18 @@ void MainFrame::initMore (void)
 
     m_original_title = GetLabel();
 
-    //-- Initialize and Read parameters
-    aEmptyMRFname = aRecentFile1MenuItem->GetLabel();
-    CFG_Init();
-    CFG_Load(TheIniFile);
-    LoadLayout();
+    wxRect WindowRect(-1, -1, -1, -1);
+    wxColour CodeFgCol, CodeBgCol, DataFgCol, DataBgCol;
+    TSessionConfig::GetRectAndColour (WindowRect, CodeFgCol, CodeBgCol, DataFgCol, DataBgCol);
+    SetSize(WindowRect);
+    if (CodeFgCol.IsOk())
+        ChangeDefaultGridForegroundColour(aCodeMemTab->aCodeMemGrid, CodeFgCol);
+    if (CodeBgCol.IsOk())
+        ChangeDefaultGridBackgroundColour(aCodeMemTab->aCodeMemGrid, CodeBgCol);
+    if (DataFgCol.IsOk())
+        ChangeDefaultGridForegroundColour(aDataMemTab->aDataMemGrid, DataFgCol);
+    if (DataBgCol.IsOk())
+        ChangeDefaultGridBackgroundColour(aDataMemTab->aDataMemGrid, DataBgCol);
 
     aCodeMemTab->aCodeMemGrid->SetHexFormat(16);
     aDataMemTab->aDataMemGrid->SetHexFormat(8);
@@ -402,7 +379,6 @@ void MainFrame::initMore (void)
 
 MainFrame::~MainFrame()
 {
-	TheIniFile.Flush();
 }
 
 
@@ -533,7 +509,7 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
                 {
                     // read the PIC device and dump the result into a HEX file.
                     // This is done BEFORE the device is (optionally) erased !
-                    if (! ReadPicAndDumpToFile( Config.sz255HexFileName ) )
+                    if (! ReadPicAndDumpToFile( TSessionConfig::GetHexFileName() ) )
                     {
                         siCmdTickCount = 0;
                         CommandOption.WinPic_fCommandLineOption_NoDelay = false;  // slow down !
@@ -569,14 +545,14 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
                         if ( CommandOption.WinPic_fCommandLineOption_Load )
                         {
                             // Load a HEX file into memory  but do NOT program it yet :
-                            if (! LoadFileAndProgramPic( Config.sz255HexFileName, false/*load+prog*/ ) )
+                            if (! LoadFileAndProgramPic( TSessionConfig::GetHexFileName(), false/*load+prog*/ ) )
                             {
                                 StopParsingCmdLine_Internal();
                             }
                             else
                             {
                                 APPL_ShowMsg( 0, _("Loaded file \"%s\" through command line ."),
-                                            Config.sz255HexFileName );
+                                            TSessionConfig::GetHexFileName() );
                             }
                             CommandOption.WinPic_fCommandLineOption_Load = false; // done.
                         } // end if( WinPic_fCommandLineOption_Load )
@@ -584,7 +560,7 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
                             if ( CommandOption.WinPic_fCommandLineOption_Program )
                             {
                                 // Load a HEX file into memory  *AND*  program the PIC device :
-                                if (! LoadFileAndProgramPic( Config.sz255HexFileName, true/*load+prog*/ ) )
+                                if (! LoadFileAndProgramPic( TSessionConfig::GetHexFileName(), true/*load+prog*/ ) )
                                 {
                                     StopParsingCmdLine_Internal();
                                 }
@@ -729,7 +705,7 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
             if ( m_fReloadAndProgClicked )
             {
                 m_fReloadAndProgClicked = false;
-                LoadFileAndProgramPic( Config.sz255HexFileName, true );
+                LoadFileAndProgramPic( TSessionConfig::GetHexFileName(), true );
                 aInterfaceTab->UpdateInterfaceTestDisplay();
             }
             break; // end case < no BATCH PROGRAMMING mode >
@@ -810,7 +786,7 @@ void MainFrame::OnLoadMenuItemSelected(wxCommandEvent& event)
 //void MainFrame::Load1Click(TObject *Sender)
 {
     if (RunHexOpenDialog())
-        LoadFileAndProgramPic( Config.sz255HexFileName, false );
+        LoadFileAndProgramPic( TSessionConfig::GetHexFileName(), false );
 }
 //---------------------------------------------------------------------------
 
@@ -823,7 +799,7 @@ void MainFrame::OnLoadNProgMenuItemSelected(wxCommandEvent& event)
 void MainFrame::LoadAndProgramCommand(void)
 {
     if (RunHexOpenDialog())
-        LoadFileAndProgramPic( Config.sz255HexFileName, true );
+        LoadFileAndProgramPic( TSessionConfig::GetHexFileName(), true );
     aInterfaceTab->UpdateInterfaceTestDisplay();
 }
 //---------------------------------------------------------------------------
@@ -840,50 +816,12 @@ void MainFrame::ReloadAndProgClick(void)
 //---------------------------------------------------------------------------
 
 //
-void MainFrame::OnRecentFile1MenuItemSelected(wxCommandEvent& event)
-{
-    LoadMRF(0);
-}
 
-void MainFrame::OnRecentFile2MenuItemSelected(wxCommandEvent& event)
+void MainFrame::onMRFMenuItemSelected(wxCommandEvent& pEvent)
 {
-    LoadMRF(1);
-}
-
-void MainFrame::OnRecentFile3MenuItemSelected(wxCommandEvent& event)
-{
-    LoadMRF(2);
-}
-
-void MainFrame::OnRecentFile4MenuItemSelected(wxCommandEvent& event)
-{
-    LoadMRF(3);
-}
-
-void MainFrame::OnRecentFile5MenuItemSelected(wxCommandEvent& event)
-{
-    LoadMRF(4);
-}
-
-void MainFrame::OnRecentFile6MenuItemSelected(wxCommandEvent& event)
-{
-    LoadMRF(5);
-}
-
-//---------------------------------------------------------------------------
-void MainFrame::LoadMRF(int iMRFindex)
-{
-    wxString s = GetMRFname(iMRFindex);
-    if (s != _T(""))
-    {
-        _tcscpy( Config.sz255HexFileName, s.c_str() );
-        ConfigChanged = true;
-        if ( LoadFileAndProgramPic( s.c_str(), false/*load only, don't program*/ ) )
-        {
-            // only if there was no "load"-error, show the normal tool-window again
-//       UpdateToolWindow();
-        }
-    }
+    wxString &FileName = aMRFTable[pEvent.GetId()-(wxID_HIGHEST+1)];
+    if (LoadFileAndProgramPic( FileName.c_str(), false/*load only, don't program*/ ))
+        TSessionConfig::SetHexFileName(FileName);
 }
 //---------------------------------------------------------------------------
 
@@ -894,8 +832,8 @@ void MainFrame::LoadMRF(int iMRFindex)
 void MainFrame::OnClearRecentMenuItemSelected(wxCommandEvent& event)
 //void MainFrame::MI_ClearMRFsClick(TObject *Sender)
 {
-    for (int i=0; i<=5; ++i)
-        SetMRFname( i, aEmptyMRFname );
+    TSessionConfig::ClearMostRecentFiles();
+    aMRFTable.Clear();
 }
 //---------------------------------------------------------------------------
 
@@ -994,7 +932,7 @@ void MainFrame::onProgramCfgMenuItemSelected(wxCommandEvent& event)
         APPL_ShowMsg( 0, _("Programming CONFIG-WORD FAILED.") );
     }
 
-    if (Config.iDisconnectAfterProg)
+    if (TSessionConfig::GetDisconnectAfterProg())
         DisconnectTarget();  // since 2002-09-26 . Suggested by Johan Bodin.
 
     aInterfaceTab->UpdateInterfaceTestDisplay();
@@ -1020,7 +958,7 @@ void MainFrame::onProgramIdMenuItemSelected(wxCommandEvent& event)
         APPL_ShowMsg( 0, _("Programming ID-LOCATIONS FAILED.") );
     }
 
-    if (Config.iDisconnectAfterProg)
+    if (TSessionConfig::GetDisconnectAfterProg())
         DisconnectTarget();  // since 2002-09-26 . Suggested by Johan Bodin.
 
     aInterfaceTab->UpdateInterfaceTestDisplay();
@@ -1036,14 +974,14 @@ void MainFrame::onEraseMenuItemSelected(wxCommandEvent& event)
     PIC_PRG_iBatchProgState = BATCH_PROG_OFF;
     if (PIC_DeviceInfo.iCodeMemType==PIC_MT_FLASH )
     {
-        if (! Config.iUseCompleteChipErase )
+        if (! TSessionConfig::GetUseCompleteChipErase() )
         {
             if (wxMessageBox(
                         _("The BULK ERASE option is disabled\n   in the programmer options.\n Erase EVERYTHING anyway ?"),
                         _("Confirm ERASE ALL"),
                         wxICON_QUESTION | wxYES_NO | wxCANCEL ) != wxYES )
                 return;
-        } // end if(! Config.iUseCompleteChipErase )
+        } // end if(! TSessionConfig::GetUseCompleteChipErase() )
         pszMsg = _("Erasing ...");
         aStatusBar->SetStatusText(pszMsg);
 //    if(ToolForm) ToolForm->ShowMsg(pszMsg,TWMSG_NO_ERROR);
@@ -1096,7 +1034,7 @@ void MainFrame::onReadMenuItemSelected(wxCommandEvent& event)
     APPL_iUserBreakFlag = 0;
     ok = PIC_PRG_ReadAll(false, &not_blank);  // READ, not only blank check
 
-    if (Config.iDisconnectAfterProg)
+    if (TSessionConfig::GetDisconnectAfterProg())
         DisconnectTarget();  // since 2002-09-26 . Suggested by Johan Bodin.
 
     UpdateAllSheets();  // incl  UpdateInterfaceTestDisplay()
@@ -1215,7 +1153,7 @@ void MainFrame::onVerifyMenuItemSelected(wxCommandEvent& event)
     QueryAndApplyHexEditIfRequired();
     if ( VerifyPic() )
     {
-        if (Config.iDisconnectAfterProg)
+        if (TSessionConfig::GetDisconnectAfterProg())
             DisconnectTarget();  // since 2002-09-26 . Suggested by Johan Bodin.
     }
     else  // VerifyPic failed :
@@ -1314,18 +1252,18 @@ wxString MainFrame::ProgramWhatInfoString(void)
 {
     wxString sResult;
     int iNeedSeparator=0;
-    if (Config.iProgramWhat & PIC_PROGRAM_CODE)
+    if (TSessionConfig::GetProgramWhat() & PIC_PROGRAM_CODE)
     {
         sResult = _("CODE");
         iNeedSeparator=1;
     }
-    if (Config.iProgramWhat & PIC_PROGRAM_DATA)
+    if (TSessionConfig::GetProgramWhat() & PIC_PROGRAM_DATA)
     {
         if ( iNeedSeparator ) sResult=sResult + _T("+");
         sResult = sResult + _("DATA");
         iNeedSeparator=1;
     }
-    if (Config.iProgramWhat & PIC_PROGRAM_CONFIG)
+    if (TSessionConfig::GetProgramWhat() & PIC_PROGRAM_CONFIG)
     {
         if ( iNeedSeparator ) sResult=sResult + _T("+");
         sResult = sResult + _("CONFIG");
@@ -1339,59 +1277,30 @@ wxString MainFrame::ProgramWhatInfoString(void)
 void MainFrame::onMenuOpen(wxMenuEvent &pEvent)
 //void MainFrame::File1Click(TObject *Sender)
 {
-    int i,j;
     PIC_PRG_iBatchProgState = BATCH_PROG_OFF;
     // Rename some menu items according to programmer options
     aLoadNProgMenuItem->SetText(
         /*Menu_LoadAndProgram->Caption =*/ wxString(_("Load && &Program Device"))
         + _T(" (") + ProgramWhatInfoString() + _T(")..."));
-    wxFileName HexFilename(Config.sz255HexFileName);
+    wxFileName HexFilename(TSessionConfig::GetHexFileName());
     aReloadNProgMenuItem->SetText(
         /*MI_ReloadAndProg->Caption =*/ wxString(_("&Reload && Program"))
-        + _T(" \"") + HexFilename.GetFullName()/*ExtractFileName(Config.sz255HexFileName)*/ + _T("\""));
-    for (i=j=0; i<=5; ++i)
-    {
-        if ( GetMRFname(i) != wxEmptyString ) ++j;
-    }
-    aFileMenu->FindItem(ID_RECENT_FILES_SUB_MENU)->Enable(j>0);
-//  MI_MRFs->Enabled = (j>0);
-//}
-////---------------------------------------------------------------------------
-//
-//void MainFrame::Menu_DeviceClick(TObject *Sender)
-//{
+        + _T(" \"") + HexFilename.GetFullName()/*ExtractFileName(TSessionConfig.GetHexFileName())*/ + _T("\""));
+    aFileMenu->FindItem(ID_RECENT_FILES_SUB_MENU)->Enable(aMRFTable.GetCount()>0);
+
     PIC_PRG_iBatchProgState = BATCH_PROG_OFF;
     // Rename some menu items according to programmer options
     aProgramMenuItem->SetText(
-//  Menu_ProgramDevice->Caption =
         wxString(_( "Program")) + _T(" (" )
         + ProgramWhatInfoString() + _T(")"));
-//}
-////---------------------------------------------------------------------------
-//
-//
-////---------------------------------------------------------------------------
-//void MainFrame::Menu_ToolsClick(TObject *Sender)
-//{
+
     aBatchPrgMenuItem->Check(PIC_PRG_iBatchProgState != BATCH_PROG_OFF);
-//  Menu_StartBatchProgramming->Checked = (PIC_PRG_iBatchProgState != BATCH_PROG_OFF);
 
     aDsPicReadMenuItem->Enable(PIC_DeviceInfo.iBitsPerInstruction==24);
     aDsPicProgMenuItem->Enable(PIC_DeviceInfo.iBitsPerInstruction==24);
-//  MI_dsPIC_ReadExecutiveCodeMem->Enabled  = (PIC_DeviceInfo.iBitsPerInstruction==24);
-//  MI_dsPIC_WriteExecutiveCodeMem->Enabled = (PIC_DeviceInfo.iBitsPerInstruction==24);
 
-//  MI_ShowToolWin->Checked = (ToolForm!=NULL && ToolForm->Visible);
-//  MI_ShowToolbar->Checked = Pnl_Tools->Visible;
-//}
-////---------------------------------------------------------------------------
-//
-////---------------------------------------------------------------------------
-//void MainFrame::Edit1Click(TObject *Sender)
-//{
     PIC_PRG_iBatchProgState = BATCH_PROG_OFF;
     aEnabHexEditMenuItem->Check(aCodeMemTab->aCodeMemGrid->IsEditable());
-//  Menu_EnableEdit->Checked = !REd_CodeMem->ReadOnly;
 }
 //---------------------------------------------------------------------------
 
@@ -1759,11 +1668,6 @@ void MainFrame::onDsPicProgMenuItemSelected(wxCommandEvent& event)
 
 void MainFrame::OnClose(wxCloseEvent& event)
 {
-//---------------------------------------------------------------------------
-//void MainFrame::FormClose(TObject *Sender, TCloseAction &Action)
-//{ // The OnClose-method of the main form should save the config & clean up
-
-//---------------------------------------------------------------------------
     if (    (PIC_iHaveErasedCalibration)
             && ((PIC_lBandgapCalibrationBits >= 0) || (PIC_lOscillatorCalibrationWord >=0) )
             && ((PIC_DeviceInfo.wCfgmask_bandgap!=0) || (PIC_DeviceInfo.lAddressOscCal >= 0) )
@@ -1771,8 +1675,6 @@ void MainFrame::OnClose(wxCloseEvent& event)
        )
     {
         wxBell();
-//        for(int i=0;i<10;++i)
-//            MessageBeep(0xFFFFFFFF);
         if (wxMessageBox( _("Some CALIBRATION BITS have been erased\nbut not written back to the PIC yet.\n"
                             "Terminate anyway and loose these bits forever ?"),
                           _("*** PIC Programmer Warning ***"),
@@ -1783,18 +1685,16 @@ void MainFrame::OnClose(wxCloseEvent& event)
         }
     }
 
-    if ( m_fMaySaveSettings && ConfigChanged )
-    {
-        SaveLayout();
-        strncpy(Config.sz40DeviceName, PIC_DeviceInfo.sz40DeviceName, 40) ;
-        CFG_Save(TheIniFile);
-        TheIniFile.SetPath(_T("/LANGUAGE"));
-        TheIniFile.Write(_T("Name"), MainFrame::TheLanguageName);
-    } // end if( m_fMaySaveSettings )
 
-//   if(ToolForm)
-//      ToolForm->Close(); // not called automagically ?!
-//   PIC_HW_Close();
+    if ( m_fMaySaveSettings )
+        TSessionConfig::SaveCurConfig();
+
+    TSessionConfig::SaveRectAndCloseSession(GetRect(),
+                                            aCodeMemTab->aCodeMemGrid->GetDefaultCellTextColour(),
+                                            aCodeMemTab->aCodeMemGrid->GetDefaultCellBackgroundColour(),
+                                            aDataMemTab->aDataMemGrid->GetDefaultCellTextColour(),
+                                            aDataMemTab->aDataMemGrid->GetDefaultCellBackgroundColour());
+
     Destroy();
 }
 //---------------------------------------------------------------

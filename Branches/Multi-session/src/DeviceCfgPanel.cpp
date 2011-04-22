@@ -425,13 +425,13 @@ void TDeviceCfgPanel::ApplyConfigBitGrid(void)
         MainFrame::TheMainFrame->aOptionTab->aMplabDirLabel->SetForegroundColour(Colour);
         MainFrame::TheMainFrame->aOptionTab->aMplabDirLabel->Refresh();
     }
-    ConfigChanged = true;
 }
 
 
 void TDeviceCfgPanel::onPartNameChoiceSelect(wxCommandEvent& event)
 {
     if (MainFrame::TheMainFrame->m_Updating) return;
+    TSessionConfig::SetDeviceName(aPartNameChoice->GetStringSelection());
     wxCharBuffer DeviceName = aPartNameChoice->GetStringSelection().mb_str(wxConvISO8859_1);
     SetDevice(DeviceName);
     UpdateDeviceConfigTab( true/*fUpdateHexWord*/ );
@@ -445,8 +445,8 @@ void TDeviceCfgPanel::onPartNameChoiceSelect(wxCommandEvent& event)
     // to the current state on the "Other Options" panel, show a warning .
     // Why not simply switch without asking ? Because for many devices,
     //   the proper Vdd/Vpp switching sequence is UNKNOWN or NOWHERE SPECIFIED !
-    if ( ( (PIC_DeviceInfo.wVppVddSequence==PROGMODE_VPP_THEN_VDD/*0*/) && (Config.iNeedPowerBeforeRaisingMCLR) )
-            ||( (PIC_DeviceInfo.wVppVddSequence==PROGMODE_VDD_THEN_VPP/*1*/) && (!Config.iNeedPowerBeforeRaisingMCLR) )
+    if ( ( (PIC_DeviceInfo.wVppVddSequence==PROGMODE_VPP_THEN_VDD/*0*/) && (TSessionConfig::GetNeedPowerBeforeMCLR()) )
+            ||( (PIC_DeviceInfo.wVppVddSequence==PROGMODE_VDD_THEN_VPP/*1*/) && (!TSessionConfig::GetNeedPowerBeforeMCLR()) )
        )
     {
         // this message should occur after switching from 16F628 to F818 (for example)
@@ -459,9 +459,9 @@ void TDeviceCfgPanel::onPartNameChoiceSelect(wxCommandEvent& event)
         {
             // user agrees to let the program select the 'proper'(??) setting...
             if (PIC_DeviceInfo.wVppVddSequence==PROGMODE_VDD_THEN_VPP)
-                Config.iNeedPowerBeforeRaisingMCLR = 1;
+                TSessionConfig::SetNeedPowerBeforeMCLR(1);
             else
-                Config.iNeedPowerBeforeRaisingMCLR = 0;
+                TSessionConfig::SetNeedPowerBeforeMCLR(0);
         }
         UpdateDeviceConfigTab( true/*fUpdateHexWord*/ );
         MainFrame::TheMainFrame->aOptionTab->UpdateOptionsDisplay();
@@ -540,9 +540,8 @@ void TDeviceCfgPanel::onProgMemSizeTextText(wxCommandEvent& event)
                 &&  (Size < PIC_BUF_CODE_SIZE)
                 &&  (Size > 0))
         {
-            Config.dwUnknownCodeMemorySize = Size;
-            PIC_DeviceInfo.lCodeMemSize = Config.dwUnknownCodeMemorySize;
-            ConfigChanged = true ;  // save on exit
+            TSessionConfig::SetUnknownCodeMemorySize(Size);
+            PIC_DeviceInfo.lCodeMemSize = TSessionConfig::GetUnknownCodeMemorySize();
         }
         else
             aProgMemSizeText->SetBackgroundColour(wxColour(0xFF,0x7F,0x7F));
@@ -563,8 +562,8 @@ void TDeviceCfgPanel::onEepromMemSizeTextText(wxCommandEvent& event)
         if (aEepromMemSizeText->GetValue().ToLong(&Size)
                 && (Size >= 0))
         {
-            PIC_DeviceInfo.lDataEEPROMSizeInByte = Config.dwUnknownDataMemorySize = Size;
-            ConfigChanged = true ;  // save on exit
+            TSessionConfig::SetUnknownDataMemorySize(Size);
+            PIC_DeviceInfo.lDataEEPROMSizeInByte = Size;
         }
         else
             aEepromMemSizeText->SetBackgroundColour(wxColour(0xFF,0x7F,0x7F));
@@ -582,14 +581,13 @@ void TDeviceCfgPanel::onHasFlashMemoryChkClick(wxCommandEvent& event)
     {
         // which kind of FLASH memory, 12..14 bit per location, or more ?
         PIC_DeviceInfo.iCodeMemType=PIC_MT_FLASH;   // 12Fxxx, 16Fxxx -> 14 bit per word
-        Config.iUnknownDevHasFlashMemory=1;
+        TSessionConfig::SetHasFlashMemory(1);
     }
     else
     {
         PIC_DeviceInfo.iCodeMemType=PIC_MT_EPROM;
-        Config.iUnknownDevHasFlashMemory=0;
+        TSessionConfig::SetHasFlashMemory(0);
     }
-    ConfigChanged = true ;  // save on exit
 }
 //---------------------------------------------------------------------------
 
