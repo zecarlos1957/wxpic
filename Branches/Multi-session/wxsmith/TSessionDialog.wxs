@@ -4,7 +4,7 @@
 		<title>Manage Session List</title>
 		<id_arg>0</id_arg>
 		<handler function="OnClose" entry="EVT_CLOSE" />
-		<object class="wxBoxSizer" variable="BoxSizer1" member="no">
+		<object class="wxBoxSizer" variable="aMainBoxSizer" member="yes">
 			<orient>wxVERTICAL</orient>
 			<object class="sizeritem">
 				<object class="wxBoxSizer" variable="BoxSizer5" member="no">
@@ -19,13 +19,15 @@
 											<default>-1</default>
 											<tooltip>Select the session to start</tooltip>
 											<style>wxLB_SINGLE|wxLB_NEEDED_SB</style>
+											<handler function="onSessionListBoxSelect" entry="EVT_LISTBOX" />
+											<handler function="onSessionListBoxDClick" entry="EVT_LISTBOX_DCLICK" />
 										</object>
 										<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
 										<border>2</border>
 										<option>1</option>
 									</object>
 								</object>
-								<flag>wxALL|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+								<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
 								<option>1</option>
 							</object>
 						</object>
@@ -162,6 +164,7 @@
 									<label>Save Configuration</label>
 									<enabled>0</enabled>
 									<tooltip>Save the configuration of the current session</tooltip>
+									<handler function="onSaveButtonClick" entry="EVT_BUTTON" />
 								</object>
 								<flag>wxALL|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
 								<border>2</border>

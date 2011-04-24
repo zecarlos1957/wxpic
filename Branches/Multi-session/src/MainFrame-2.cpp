@@ -1,17 +1,19 @@
 /*-------------------------------------------------------------------------*/
-/* MainFrame-2.cpp                                                         */
+/*  Filename: MainFrame-2.cpp                                              */
 /*                                                                         */
 /*  Purpose:                                                               */
-/*       Manage the WxPic Main Window                                      */
-/*       Separate from MainFrame.cpp that has been split                   */
-/*       to avoid managing files > 2000 lines                              */
-/*       All functions that don't managed window events are here           */
+/*     Part 2 of Implementation of MainFrame.h                             */
+/*     Separate from MainFrame.cpp that has been split                     */
+/*     to avoid managing files > 2000 lines                                */
+/*     All functions that don't managed window events are here             */
 /*                                                                         */
 /*  Author:                                                                */
-/*       Copyright 2009 Philippe Chevrier pch@laposte.net                  */
-/*       from software originally written by Wolfgang Buescher (DL4YHF)    */
+/*     Copyright 2009-2011 Philippe Chevrier pch @ laposte.net             */
+/*     from software originally written by Wolfgang Buescher (DL4YHF)      */
 /*                                                                         */
 /*  License:                                                               */
+/*     Ported Code is licensed under GPLV3 conditions with original code   */
+/*     restriction :                                                       */
 /*     Use of this sourcecode for commercial purposes strictly forbidden ! */
 /*                                                                         */
 /*-------------------------------------------------------------------------*/
@@ -20,6 +22,7 @@
 #include "CommandOption.h"
 #include "Appl.h"
 #include "Config.h"
+#include "SessionList.h"
 
 #include <wx/intl.h>
 #include <wx/string.h>
@@ -61,8 +64,7 @@
     if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
         APPL_LogEvent( _("CreateForm: Setting PIC-Device") );
 
-    wxString DeviceName = TSessionConfig::GetDeviceName();
-    TDeviceCfgPanel::SetDevice(DeviceName.mb_str(wxConvISO8859_1));
+    TDeviceCfgPanel::UpdateDevice();
 
     PIC_HEX_ClearBuffers(); // contents of some memory buffers depends on PIC_DeviceInfo !
 
@@ -1304,4 +1306,30 @@ void MainFrame::updateMRFMenu (const wxArrayString &pMRFTable)
         CurItem->GetData()->SetItemLabel (aMRFTable[MenuCount-i]);
         CurItem = CurItem->GetNext();
     }
+}
+
+
+void MainFrame::updateSessionList(void)
+{
+    const TSessionManager::TSessionInfo *SessionInfo = TSessionConfig::GetCurSessionTab();
+    int Session = 0;
+    TSessionListBuilder ListBuilder(SessionInfo, aSessionChoice);
+    while (SessionInfo->State != TSessionManager::sessionStateLAST)
+    {
+        if (SessionInfo->State != TSessionManager::sessionStateNONE)
+            ListBuilder.AddEntry(Session);
+        ++Session;
+        ++SessionInfo;
+    }
+}
+
+
+void MainFrame::updateAllConfig  (void)
+{
+    TDeviceCfgPanel::UpdateDevice();
+    aOptionTab->UpdateOptionsDisplay();
+    aInterfaceTab->UpdateInterfaceType();
+    aConfigMemoryTab->UpdateIdAndConfMemDisplay();
+    aDeviceCfgTab->UpdateDeviceConfigTab(true);
+    updateSessionList();
 }

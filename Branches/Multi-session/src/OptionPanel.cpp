@@ -1,3 +1,20 @@
+/*-------------------------------------------------------------------------*/
+/*  Filename: OptionPanel.cpp                                              */
+/*                                                                         */
+/*  Purpose:                                                               */
+/*     Manage the WxPic Options Panel                                      */
+/*                                                                         */
+/*  Author:                                                                */
+/*     Copyright 2009-2011 Philippe Chevrier pch @ laposte.net             */
+/*     from software originally written by Wolfgang Buescher (DL4YHF)      */
+/*                                                                         */
+/*  License:                                                               */
+/*     Ported Code is licensed under GPLV3 conditions with original code   */
+/*     restriction :                                                       */
+/*     Use of this sourcecode for commercial purposes strictly forbidden ! */
+/*                                                                         */
+/*-------------------------------------------------------------------------*/
+
 #include "OptionPanel.h"
 #include "MainFrame.h"
 #include "CommandOption.h"
@@ -469,7 +486,7 @@ void TOptionPanel::updateFromMPLabDevText(void)
 void TOptionPanel::updateMPLabDevDir (const wxString &pDirPath)
 {
     TSessionConfig::SetMplabDevDir(pDirPath);
-    TDeviceCfgPanel::SetDevice(PIC_DeviceInfo.sz40DeviceName);
+    TDeviceCfgPanel::UpdateDevice();
 }
 
 

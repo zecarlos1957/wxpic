@@ -1,3 +1,17 @@
+/*-------------------------------------------------------------------------*/
+/*  Filename: SessionDialog.cpp                                            */
+/*                                                                         */
+/*  Purpose:                                                               */
+/*     Implementation of SessionDialog.h                                   */
+/*                                                                         */
+/*  Author:                                                                */
+/*     Copyright 2011 Philippe Chevrier pch @ laposte.net                  */
+/*                                                                         */
+/*  License:                                                               */
+/*     New WxPic Code is licensed under GPLV3 conditions                   */
+/*                                                                         */
+/*-------------------------------------------------------------------------*/
+
 #include "SessionDialog.h"
 #include <wx/msgdlg.h>
 
@@ -7,34 +21,10 @@
 //*)
 
 
-class TListBuilder
-{
-public:
-    /**/ TListBuilder (const TSessionManager::TSessionInfo *pSessionInfoTab)
-    : aSessionInfoTab(pSessionInfoTab)
-    {};
-    //-- Add a aSessionListBox entry
-    void AddEntry (int pSession, const wxChar *pStatus)
-    {
-        wxString Result = aSessionInfoTab[pSession].Name + _T(' ');
-        if (pSession == 0)
-            Result += _("[Default]");
-        Result += _T('(') + pStatus + _T(')');
-        aListLabelArray.Add(Result);
-        aSessionIndexArray.Add(pSession);
-    }
-
-    void SetList  (wxListBox *pSessionListBox)
-    {
-        pSessionListBox->Set(aListLabelArray, (void**)&(aSessionIndexArray[0]));
-    }
-
-private:
-    const TSessionManager::TSessionInfo * const aSessionInfoTab;
-    wxArrayString  aListLabelArray;
-    wxArrayInt     aSessionIndexArray;
-};
-
+//-- Some frequently used string providing functions
+static const wxString &getAvailableString (void) { static wxString Result = _("Available"); return Result; }
+static const wxString &getInUseString     (void) { static wxString Result = _("In Use");    return Result; }
+static const wxString &getCurrentString   (void) { static wxString Result = _("Current");   return Result; }
 
 
 
@@ -70,19 +60,18 @@ TSessionDialog::TSessionDialog(TSessionManager &pSessionManager, wxWindow* paren
 	wxBoxSizer* BoxSizer5;
 	wxBoxSizer* BoxSizer2;
 	wxStaticBoxSizer* StaticBoxSizer3;
-	wxBoxSizer* BoxSizer1;
 	wxStaticBoxSizer* StaticBoxSizer1;
 	wxBoxSizer* BoxSizer3;
 
 	Create(parent, wxID_ANY, _("Manage Session List"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
-	BoxSizer1 = new wxBoxSizer(wxVERTICAL);
+	aMainBoxSizer = new wxBoxSizer(wxVERTICAL);
 	BoxSizer5 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer3 = new wxBoxSizer(wxVERTICAL);
 	StaticBoxSizer3 = new wxStaticBoxSizer(wxHORIZONTAL, this, _("Session List"));
 	aSessionListBox = new wxListBox(this, ID_SESSION_LISTBOX, wxDefaultPosition, wxDefaultSize, 0, 0, wxLB_SINGLE|wxLB_NEEDED_SB, wxDefaultValidator, _T("ID_SESSION_LISTBOX"));
 	aSessionListBox->SetToolTip(_("Select the session to start"));
 	StaticBoxSizer3->Add(aSessionListBox, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 2);
-	BoxSizer3->Add(StaticBoxSizer3, 1, wxALL|wxALIGN_LEFT|wxALIGN_BOTTOM, 0);
+	BoxSizer3->Add(StaticBoxSizer3, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 0);
 	BoxSizer5->Add(BoxSizer3, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 0);
 	BoxSizer2 = new wxBoxSizer(wxVERTICAL);
 	aNewButton = new wxButton(this, ID_NEW_BUTTON, _("New Session"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_NEW_BUTTON"));
@@ -110,7 +99,7 @@ TSessionDialog::TSessionDialog(TSessionManager &pSessionManager, wxWindow* paren
 	aCloseButton->SetToolTip(_("Close this dialog"));
 	BoxSizer2->Add(aCloseButton, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 2);
 	BoxSizer5->Add(BoxSizer2, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
-	BoxSizer1->Add(BoxSizer5, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 0);
+	aMainBoxSizer->Add(BoxSizer5, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 0);
 	StaticBoxSizer1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Current Session"));
 	BoxSizer4 = new wxBoxSizer(wxHORIZONTAL);
 	StaticText2 = new wxStaticText(this, ID_STATICTEXT2, _("Name:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT2"));
@@ -130,11 +119,13 @@ TSessionDialog::TSessionDialog(TSessionManager &pSessionManager, wxWindow* paren
 	aSaveButton->SetToolTip(_("Save the configuration of the current session"));
 	BoxSizer6->Add(aSaveButton, 1, wxALL|wxALIGN_LEFT|wxALIGN_BOTTOM, 2);
 	StaticBoxSizer1->Add(BoxSizer6, 0, wxALL|wxALIGN_BOTTOM|wxALIGN_CENTER_HORIZONTAL, 0);
-	BoxSizer1->Add(StaticBoxSizer1, 0, wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
-	SetSizer(BoxSizer1);
-	BoxSizer1->Fit(this);
-	BoxSizer1->SetSizeHints(this);
+	aMainBoxSizer->Add(StaticBoxSizer1, 0, wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
+	SetSizer(aMainBoxSizer);
+	aMainBoxSizer->Fit(this);
+	aMainBoxSizer->SetSizeHints(this);
 
+	Connect(ID_SESSION_LISTBOX,wxEVT_COMMAND_LISTBOX_SELECTED,(wxObjectEventFunction)&TSessionDialog::onSessionListBoxSelect);
+	Connect(ID_SESSION_LISTBOX,wxEVT_COMMAND_LISTBOX_DOUBLECLICKED,(wxObjectEventFunction)&TSessionDialog::onSessionListBoxDClick);
 	Connect(ID_NEW_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TSessionDialog::onNewButtonClick);
 	Connect(ID_START_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TSessionDialog::onStartButtonClick);
 	Connect(ID_START_CLOSE_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TSessionDialog::onStartCloseButtonClick);
@@ -143,6 +134,7 @@ TSessionDialog::TSessionDialog(TSessionManager &pSessionManager, wxWindow* paren
 	Connect(ID_CLOSE_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TSessionDialog::onCloseButtonClick);
 	Connect(ID_SESSION_NAME_EDIT,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&TSessionDialog::onSessionNameEditText);
 	Connect(ID_RENAME_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TSessionDialog::onRenameButtonClick);
+	Connect(ID_SAVE_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TSessionDialog::onSaveButtonClick);
 	Connect(wxID_ANY,wxEVT_CLOSE_WINDOW,(wxObjectEventFunction)&TSessionDialog::OnClose);
 	//*)
 
@@ -156,12 +148,13 @@ TSessionDialog::~TSessionDialog()
     delete[] aSessionInfoTab;
 }
 
-void TSessionDialog::fillSessionList (void)
+void TSessionDialog::fillSessionList (bool pDontUpdateCurrent)
 {
     if (aSessionInfoTab != NULL)
         delete[] aSessionInfoTab;
+    aIsSaved = false;
     aSessionInfoTab = aSessionManager.GetSessionTab();
-    TListBuilder ListBuilder(aSessionInfoTab);
+    TSessionListBuilder ListBuilder(aSessionInfoTab, aSessionListBox);
     for (aSessionCount = 0; /*until return*/; ++aSessionCount)
     {
         switch (aSessionInfoTab[aSessionCount].State)
@@ -171,11 +164,11 @@ void TSessionDialog::fillSessionList (void)
             break;
 
         case TSessionManager::sessionStateIDLE:
-            ListBuilder.AddEntry(aSessionCount, _("Available"));
+            ListBuilder.AddEntry(aSessionCount, getAvailableString());
             break;
 
         case TSessionManager::sessionStateUSED:
-            ListBuilder.AddEntry(aSessionCount, _("In Use"));
+            ListBuilder.AddEntry(aSessionCount, getInUseString());
             break;
 
         case TSessionManager::sessionStateCUR:
@@ -184,17 +177,20 @@ void TSessionDialog::fillSessionList (void)
         case TSessionManager::sessionStateDIRT:
             aSaveButton->Enable(!aIsSaved);
             aCurrentSession = aSessionCount;
-            ListBuilder.AddEntry(aSessionCount, _("Current"));
-            aSessionNameEdit->SetValue(aSessionInfoTab[aSessionCount].Name);
-            aSessionNameEdit->Enable();
-            aIsNameChanged = false;
+            ListBuilder.AddEntry(aSessionCount, getCurrentString());
+            if (!pDontUpdateCurrent)
+            {
+                aSessionNameEdit->SetValue(aSessionInfoTab[aSessionCount].Name);
+                aSessionNameEdit->Enable();
+                setNameSynch();
+            }
             break;
 
         case TSessionManager::sessionStateLAST:
-            ListBuilder.SetList(aSessionListBox);
             aSessionNameEdit->Enable((aCurrentSession >= 0));
             aNewButton->Enable(aHasFreeSession);
             setButtonStatus();
+            aMainBoxSizer->Fit(this);
             return;
         }
     }
@@ -223,18 +219,43 @@ void TSessionDialog::saveConfig (void)
 
 void TSessionDialog::renameSession (void)
 {
+    bool NoChange = false;
+    bool Failed   = false;
+
     wxString  NewName = aSessionNameEdit->GetValue();
-    bool      Result  = aSessionManager.RenameConfig(NewName);
+    for (int i = 0; i < aSessionCount; ++i)
+        if (aSessionInfoTab[i].Name == NewName)
+        {
+            if (i == aCurrentSession)
+                NoChange = true;
+            else
+                Failed = true;
+        }
+
+    bool Result = NoChange || (!Failed && aSessionManager.RenameConfig(NewName));
     if (!Result)
+    {
         wxMessageBox(wxString::Format(_("Another session is already named '%s'."), NewName.c_str()),
                    _("Rename Session Failure"));
+        if (!Failed)
+            //-- The renaming failed but we didn't know it would
+            //-- So refresh the list so that this becomes clear
+            //-- But do not update the session name list
+            fillSessionList(/*pDontUpdateCurrent*/true);
+    }
     else
-        aIsNameChanged = false;
+    {
+        setNameSynch();
+        if (!NoChange)
+            //-- No need to update current this is already done
+            fillSessionList(/*pDontUpdateCurrent*/true);
+    }
 }
 
-int TSessionDialog::getSelSession (void) const
+void TSessionDialog::setNameSynch (void)
 {
-    return (int)aSessionListBox->GetClientData(aSessionListBox->GetSelection());
+    aIsNameChanged = false;
+    aRenameButton->Disable();
 }
 
 
@@ -243,10 +264,14 @@ int TSessionDialog::startSession (void)
     if (!askAll(/*pIsCreate*/false))
         return -1;
 
-    int Result = aSessionManager.SetSession(getSelSession());
+    int Result = aSessionManager.SetSession(TSessionListBuilder::GetSelectedSession(aSessionListBox));
     if (Result < 0)
+    {
         wxMessageBox(_("A conflict occured with another WxPic instance."),
                      _("Start Session Failure"));
+        //-- Refresh the session list to understand the problem
+        fillSessionList();
+    }
     return Result;
 }
 
@@ -266,9 +291,9 @@ bool TSessionDialog::askSaveConfig (bool pIsCreate)
                                 _("Save your configuration"),
                                 wxYES_NO | wxNO_DEFAULT | wxCANCEL | wxICON_QUESTION,
                                 this);
-    if (Answer == wxID_YES)
+    if (Answer == wxYES)
         saveConfig();
-    return (Answer != wxID_CANCEL);
+    return (Answer != wxCANCEL);
 }
 
 
@@ -281,11 +306,19 @@ bool TSessionDialog::askRename (void)
                                 _("Rename your Session"),
                                 wxYES_NO | wxNO_DEFAULT | wxCANCEL | wxICON_QUESTION,
                                 this);
-    if (Answer == wxID_YES)
+    if (Answer == wxYES)
         renameSession();
-    return (Answer != wxID_CANCEL);
+    return (Answer != wxCANCEL);
 }
 
+
+bool TSessionDialog::isStartable (void) const
+{
+    bool Result = false;
+    if (aSessionListBox->GetSelection() >= 0)
+        Result = (aSessionInfoTab[TSessionListBuilder::GetSelectedSession(aSessionListBox)].State == TSessionManager::sessionStateIDLE);
+    return Result;
+}
 
 
 //----------------------------------------
@@ -308,21 +341,19 @@ void TSessionDialog::onNewButtonClick(wxCommandEvent& event)
 
 void TSessionDialog::onStartButtonClick(wxCommandEvent& event)
 {
-    startSession();
-    fillSessionList();
+    if (startSession() >= 0)
+        fillSessionList();
 }
 
 void TSessionDialog::onStartCloseButtonClick(wxCommandEvent& event)
 {
     if (startSession() >= 0)
         Close();
-    else
-        fillSessionList();
 }
 
 void TSessionDialog::onDeleteButtonClick(wxCommandEvent& event)
 {
-    TSessionManager::TSessionState Result = aSessionManager.DeleteSession(getSelSession());
+    TSessionManager::TSessionState Result = aSessionManager.DeleteSession(TSessionListBuilder::GetSelectedSession(aSessionListBox));
     fillSessionList();
     switch (Result)
     {
@@ -341,7 +372,7 @@ void TSessionDialog::onDeleteButtonClick(wxCommandEvent& event)
 
 void TSessionDialog::onRefreshButtonClick(wxCommandEvent& event)
 {
-    fillSessionList();
+    fillSessionList(/*pDontUpdateCurrent*/true);
 }
 
 void TSessionDialog::onCloseButtonClick(wxCommandEvent& event)
@@ -354,12 +385,16 @@ void TSessionDialog::OnClose(wxCloseEvent& event)
     if (event.CanVeto() && !askRename())
         event.Veto();
     else
-        Destroy();
+        EndModal(0);
 }
 
 void TSessionDialog::onSessionNameEditText(wxCommandEvent& event)
 {
-    aIsNameChanged = true;
+    if (!aIsNameChanged)
+    {
+        aIsNameChanged = true;
+        aRenameButton->Enable();
+    }
 }
 
 void TSessionDialog::onRenameButtonClick(wxCommandEvent& event)
@@ -370,4 +405,25 @@ void TSessionDialog::onRenameButtonClick(wxCommandEvent& event)
 void TSessionDialog::onSaveButtonClick(wxCommandEvent& event)
 {
     aSessionManager.SaveConfig();
+    aIsSaved = true;
+    aSaveButton->Disable();
+}
+
+void TSessionDialog::onSessionListBoxSelect(wxCommandEvent& event)
+{
+    bool Available = isStartable();
+    aStartButton->Enable(Available);
+    aStartCloseButton->Enable(Available);
+    aDeleteButton->Enable(Available);
+}
+
+void TSessionDialog::onSessionListBoxDClick(wxCommandEvent& event)
+{
+    if (!isStartable())
+        wxMessageBox(_("This session is not available."),
+                     _("Start Session Failure"),
+                     wxOK,
+                     this);
+    else if (startSession() >= 0)
+        Close();
 }

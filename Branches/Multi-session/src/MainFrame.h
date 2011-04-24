@@ -1,13 +1,16 @@
 /*-------------------------------------------------------------------------*/
-/* MainFrame.h                                                             */
+/*  Filename: MainFrame.cpp                                                */
 /*                                                                         */
 /*  Purpose:                                                               */
 /*       Manage the WxPic Main Window.                                     */
+/*                                                                         */
 /*  Author:                                                                */
-/*       Copyright 2009 Philippe Chevrier pch@laposte.net                  */
+/*       Copyright 2009-2011 Philippe Chevrier pch @ laposte.net           */
 /*       from software originally written by Wolfgang Buescher (DL4YHF)    */
 /*                                                                         */
 /*  License:                                                               */
+/*     Ported Code is licensed under GPLV3 conditions with original code   */
+/*     restriction :                                                       */
 /*     Use of this sourcecode for commercial purposes strictly forbidden ! */
 /*                                                                         */
 /*-------------------------------------------------------------------------*/
@@ -94,6 +97,7 @@ class MainFrame: public wxFrame
 		wxMenu* aSpecialMenuItem;
 		wxMenuItem* aClearFuseMenuItem;
 		wxMenuItem* aLoadNProgMenuItem;
+		wxMenuItem* aChangeSessionMenuItem;
 		wxMenu* aEditMenu;
 		TConfigMemoryPanel* aConfigMemoryTab;
 		wxMenuItem* aDevDumpMenuItem;
@@ -130,6 +134,7 @@ class MainFrame: public wxFrame
         };
 
 		wxToolBar* aToolBar;
+		wxChoice*  aSessionChoice;
 		wxToolBarToolBase* aVerifyProgramTool;
 		wxToolBarToolBase* aSaveHexFileTool;
 		wxToolBarToolBase* aReadProgramTool;
@@ -169,6 +174,7 @@ class MainFrame: public wxFrame
 		static const long ID_CLEAR_RECENT_MENU_ITEM;
 		static const long ID_RECENT_FILES_SUB_MENU;
 		static const long ID_DUMP_TO_HEX_MENU_ITEM;
+		static const long ID_CHANGE_SESSION_MENU;
 		static const long ID_EXIT_NO_SAVE_MENU_ITEM;
 		static const long ID_EXIT_MENU_ITEM;
 		static const long ID_CLEAR_BUFFER_MENU_ITEM;
@@ -205,6 +211,7 @@ class MainFrame: public wxFrame
 		static const long ID_VERIFY_PROGRAM_TOOL;
 		static const long ID_READ_PROGRAM_TOOL;
 		static const long ID_TOOLBAR;
+		static const long ID_SESSION_CHOICE;
 
 	private:
 
@@ -282,10 +289,12 @@ class MainFrame: public wxFrame
 		void onLanguageChoiceSelect(wxCommandEvent& event);
 		void OnButton6Click(wxCommandEvent& event);
 		void onHelpOnIdButtonClick(wxCommandEvent& event);
+		void onChangeSessionMenuItemSelected(wxCommandEvent& event);
 		//*)
 		void onChar(wxKeyEvent& pEvent);
         void onMenuOpen(wxMenuEvent &pEvent);
         void onMRFMenuItemSelected(wxCommandEvent& pEvent);
+		void onSessionChoiceSelect(wxCommandEvent& pEvent);
 
         wxArrayString     aMRFTable;
         wxAboutDialogInfo aAboutInfo;
@@ -308,6 +317,8 @@ class MainFrame: public wxFrame
         void initMore         (void);
         void addLines         (wxString &pText, void (wxAboutDialogInfo::*pAdder)(const wxString&));
         void updateMRFMenu    (const wxArrayString &pMRFTable);
+        void updateSessionList(void);
+        void updateAllConfig  (void);
 
  	public:
        void UpdateCodeMemRange( int iWhichMemory, long i32NLocations, int iUCMoptions );

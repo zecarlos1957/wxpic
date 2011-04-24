@@ -234,7 +234,8 @@
 		<Unit filename="src\SVNVersion.h" />
 		<Unit filename="src\SessionDialog.cpp" />
 		<Unit filename="src\SessionDialog.h" />
-		<Unit filename="src\SessionManagerInt.h" />
+		<Unit filename="src\SessionList.cpp" />
+		<Unit filename="src\SessionList.h" />
 		<Unit filename="src\WinPicPr\Devices.cpp" />
 		<Unit filename="src\WinPicPr\Devices.h" />
 		<Unit filename="src\WinPicPr\LoadHex.cpp" />
@@ -262,7 +263,6 @@
 		<Unit filename="src\WinRing0\OlsApiInitDef.h" />
 		<Unit filename="src\WinRing0\OlsDef.h" />
 		<Unit filename="src\WxApp.cpp" />
-		<Unit filename="wxsmith\AboutU.wxs" />
 		<Unit filename="wxsmith\CodeMemPanel.wxs" />
 		<Unit filename="wxsmith\MainFrame.wxs" />
 		<Unit filename="wxsmith\TConfigMemoryPanel.wxs" />
@@ -280,7 +280,6 @@
 				<gui name="wxWidgets" src="WxApp.cpp" main="-- None --" init_handlers="necessary" language="CPP" />
 				<resources>
 					<wxFrame wxs="wxsmith/MainFrame.wxs" src="src\MainFrame.cpp" hdr="src\MainFrame.h" name="MainFrame" language="CPP" />
-					<wxDialog wxs="wxsmith/AboutU.wxs" src="src\AboutU.cpp" hdr="src\AboutU.h" name="TAbtForm" language="CPP" />
 					<wxPanel wxs="wxsmith/CodeMemPanel.wxs" src="src\CodeMemPanel.cpp" hdr="src\CodeMemPanel.h" name="TCodeMemPanel" language="CPP" />
 					<wxPanel wxs="wxsmith/TDataMemPanel.wxs" src="src\DataMemPanel.cpp" hdr="src\DataMemPanel.h" name="TDataMemPanel" language="CPP" />
 					<wxPanel wxs="wxsmith/TDeviceCfgPanel.wxs" src="src\DeviceCfgPanel.cpp" hdr="src\DeviceCfgPanel.h" name="TDeviceCfgPanel" language="CPP" />

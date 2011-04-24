@@ -1,3 +1,20 @@
+/*-------------------------------------------------------------------------*/
+/*  Filename: DeviceCfgPanel.h                                             */
+/*                                                                         */
+/*  Purpose:                                                               */
+/*     Manage the Device Configuration Panel                               */
+/*                                                                         */
+/*  Author:                                                                */
+/*     Copyright 2009-2011 Philippe Chevrier pch @ laposte.net             */
+/*     from software originally written by Wolfgang Buescher (DL4YHF)      */
+/*                                                                         */
+/*  License:                                                               */
+/*     Ported Code is licensed under GPLV3 conditions with original code   */
+/*     restriction :                                                       */
+/*     Use of this sourcecode for commercial purposes strictly forbidden ! */
+/*                                                                         */
+/*-------------------------------------------------------------------------*/
+
 #ifndef DEVICECFGPANEL_H
 #define DEVICECFGPANEL_H
 
@@ -47,7 +64,7 @@ class TDeviceCfgPanel: public wxPanel
         void UpdateConfigBitGrid(void);
         void ApplyConfigBitGrid(void);
 
-        static void SetDevice(const char *pDeviceName);
+        static void UpdateDevice(void);
 
 	protected:
 

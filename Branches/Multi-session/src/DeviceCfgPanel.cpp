@@ -1,3 +1,20 @@
+/*-------------------------------------------------------------------------*/
+/*  Filename: DeviceCfgPanel.cpp                                           */
+/*                                                                         */
+/*  Purpose:                                                               */
+/*     Implementation of DeviceCfgPanel.h                                  */
+/*                                                                         */
+/*  Author:                                                                */
+/*     Copyright 2009-2011 Philippe Chevrier pch @ laposte.net             */
+/*     from software originally written by Wolfgang Buescher (DL4YHF)      */
+/*                                                                         */
+/*  License:                                                               */
+/*     Ported Code is licensed under GPLV3 conditions with original code   */
+/*     restriction :                                                       */
+/*     Use of this sourcecode for commercial purposes strictly forbidden ! */
+/*                                                                         */
+/*-------------------------------------------------------------------------*/
+
 #include "DeviceCfgPanel.h"
 #include "MainFrame.h"
 #include "Appl.h"
@@ -172,7 +189,6 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
     m_displayed_config_word[0]  = PicBuf_GetConfigWord(0);
     m_displayed_config_word[1]  = PicBuf_GetConfigWord(1); // since 2003-12
 
-    strncpy(m_sz40DisplayedDeviceName, PIC_DeviceInfo.sz40DeviceName, 40);
 
     // Show the currently selected PIC type in the "Part"-combo list.
     // ex: Be sure that the item index matches the definition of
@@ -180,11 +196,10 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
     // Now all types in the list are filled during run-time from a table..
     if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
         APPL_LogEvent( _("UpdateDeviceConfigTab: Listing devices..") );
-    wxString DeviceName;
-    fFoundDevName = aPartNameChoice->SetStringSelection(Iso8859_1_TChar(m_sz40DisplayedDeviceName, DeviceName));
+    fFoundDevName = aPartNameChoice->SetStringSelection(TSessionConfig::GetDeviceName());
 
     aHasFlashMemoryChk->SetValue(PIC_DeviceInfo.iCodeMemType==PIC_MT_FLASH) ;
-    if (fFoundDevName && (m_sz40DisplayedDeviceName[0]!='u') )
+    if (fFoundDevName && (TSessionConfig::GetDeviceName()[0]!=_T('u')) )
     {
         MainFrame::TheMainFrame->SetLabel(MainFrame::TheMainFrame->m_original_title
                                     + _T(" - ") + aPartNameChoice->GetStringSelection());
@@ -404,12 +419,13 @@ void TDeviceCfgPanel::ApplyConfigBitGrid(void)
 } // end ApplyConfigBitGrid()
 
 
-/**static*/ void TDeviceCfgPanel::SetDevice(const char *pDeviceName)
+/**static*/ void TDeviceCfgPanel::UpdateDevice(void)
 {
     T_PicDeviceInfo MyDeviceInfo;
-
     wxColour Colour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT);
-    if ( PicDev_GetDeviceInfoByName(pDeviceName, &MyDeviceInfo) < 0 )
+
+    wxCharBuffer DeviceName = wxString(TSessionConfig::GetDeviceName()).mb_str(wxConvISO8859_1);
+    if ( PicDev_GetDeviceInfoByName(DeviceName, &MyDeviceInfo) < 0 )
         PIC_PRG_SetDeviceType( PIC_DEV_TYPE_UNKNOWN );
     else
     {
@@ -432,8 +448,7 @@ void TDeviceCfgPanel::onPartNameChoiceSelect(wxCommandEvent& event)
 {
     if (MainFrame::TheMainFrame->m_Updating) return;
     TSessionConfig::SetDeviceName(aPartNameChoice->GetStringSelection());
-    wxCharBuffer DeviceName = aPartNameChoice->GetStringSelection().mb_str(wxConvISO8859_1);
-    SetDevice(DeviceName);
+    UpdateDevice();
     UpdateDeviceConfigTab( true/*fUpdateHexWord*/ );
     MainFrame::TheMainFrame->aOptionTab->UpdateOptionsDisplay();    // a lot may have changed, depending on chip type
     MainFrame::TheMainFrame->aConfigMemoryTab->UpdateIdAndConfMemDisplay(); // number of 'valid locations' may have changed

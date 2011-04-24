@@ -1,5 +1,19 @@
+/*-------------------------------------------------------------------------*/
+/*  Filename: Config.cpp                                                   */
+/*                                                                         */
+/*  Purpose:                                                               */
+/*     Implementation of Config.h                                          */
+/*                                                                         */
+/*  Author:                                                                */
+/*     Copyright 2011 Philippe Chevrier pch @ laposte.net                  */
+/*                                                                         */
+/*  License:                                                               */
+/*     New WxPic Code is licensed under GPLV3 conditions                   */
+/*                                                                         */
+/*-------------------------------------------------------------------------*/
+
 //-------------------------------------------------------------------------
-//-- Manage the WxPic configuration
+//-- Implementation notes:
 //--   Allows up to 20 sessions to store different configurations
 //--   that can be run simultaneously
 //--
@@ -12,6 +26,7 @@
 //--   moments (such as deleting a session and then trying to rename it
 //--   with another instance)
 //-------------------------------------------------------------------------
+
 #include "Config.h"
 #include "Language.h"
 #include "SessionDialog.h"
@@ -120,6 +135,12 @@ static wxString getMRFKey (int pIndex)
     return (theConfig->aSession != sessionNONE);
 }
 
+/**static*/ bool TSessionConfig::QuickSelect (int pSession)
+{
+    wxASSERT(pSession>=0);
+    TConfigIO   ConfigIO;
+    return theConfig->doSetSession(ConfigIO, pSession, /*QuickSave*/true);
+}
 
 /**static*/void TSessionConfig::ChangeLanguage (const wxString &pLang)
 {
@@ -128,11 +149,6 @@ static wxString getMRFKey (int pIndex)
     ConfigIO.SetPath(_T("/LANGUAGE"));
     ConfigIO.Write(_T("Name"), pLang);
     theLanguageName = pLang;
-}
-
-/**static*/int GetMaxMRF (void)
-{
-    return mostRecentMAX;
 }
 
 /**static*/wxArrayString TSessionConfig::GetMostRecentFiles (void)
@@ -276,7 +292,10 @@ void TSessionConfig::SaveRectAndCloseSession (const wxRect &pRect, const wxColou
             if (!Lock->IsAnotherRunning())
             {
                 //-- This unique session is available don't need to show the session dialog
-                //-- Just load its configuration
+                //-- Just get its name and load its configuration
+                pConfigIO.SetPath(theSessionNamePath);
+                pConfigIO.Read(getSessionNumber(aSession), &aName);
+
                 loadConfig(pConfigIO, sessionDEFAULT, Lock);
                 break;
             }
@@ -312,13 +331,12 @@ TSessionManager::TSessionInfo *TSessionConfig::GetSessionTab (void) const
         }
         else
         {
-            wxSingleInstanceChecker *Lock = new wxSingleInstanceChecker (getExternSessionName(Session));
-
             wxString SessionKey = getSessionNumber(Session);
             if (ConfigIO.Exists(SessionKey))
             {
+                wxSingleInstanceChecker Lock(getExternSessionName(Session));
                 ConfigIO.Read(getSessionNumber(Session), &(CurRes->Name));
-                CurRes->State = (Lock->IsAnotherRunning())
+                CurRes->State = (Lock.IsAnotherRunning())
                                 ? TSessionManager::sessionStateUSED
                                 : TSessionManager::sessionStateIDLE;
             }
@@ -335,12 +353,13 @@ int TSessionConfig::SetSession (int pSession)
 {
     TConfigIO   ConfigIO;
 
-    wxSingleInstanceChecker *Lock = NULL;
     if (pSession < 0)
     {
+        //-- A new session has been requested, search one free
         ConfigIO.SetPath(theSessionNamePath);
         wxString SessionName;
         int Session = 1;
+        wxSingleInstanceChecker *Lock = NULL;
         while ((Lock == NULL) && (Session < sessionMAX))
         {
             Lock = new wxSingleInstanceChecker (getExternSessionName(Session));
@@ -353,29 +372,32 @@ int TSessionConfig::SetSession (int pSession)
                 ++Session;
             }
         }
+        //-- No free session has been found: failed
         if (Lock == NULL)
             return -1;
-        pSession = Session;
 
+        //-- Set the session as current session
+        aSession = Session;
+        if (aLock != NULL)
+            delete aLock;
+        aLock = Lock;
+
+        //-- Create an initial name for the session
         int Number = Session;
-        while (!RenameConfig(getSessionDefaultName(Number)))
-            Number += 100;
-    }
-    else
-    {
-        Lock = new wxSingleInstanceChecker (getExternSessionName(pSession));
-        bool InUse = Lock->IsAnotherRunning();
-        wxString SessionName;
-        if (InUse
-        ||  !ConfigIO.Read(getSessionNumber(pSession), &SessionName))
+        for (;;)
         {
-            delete Lock;
-            return -1;
+            aName = getSessionDefaultName(Number);
+            if (RenameConfig(aName))
+                break;
+            Number += 100;
         }
-        aName = SessionName;
+        //-- Save current parameters as the new session config
+        saveConfig(ConfigIO);
     }
-    loadConfig(ConfigIO, pSession, Lock);
-    return pSession;
+    else if (!doSetSession (ConfigIO, pSession, /*QuickSave*/false))
+        return -1;
+
+    return aSession;
 }
 
 TSessionManager::TSessionState TSessionConfig::DeleteSession (int pSession)
@@ -477,6 +499,33 @@ bool TSessionConfig::RenameConfig (const wxString &pNewName)
 }
 
 
+bool TSessionConfig::doSetSession (wxConfigBase &pConfigIO, int pSession, bool pQuickSave)
+{
+    if (pSession == aSession)
+        return true;  //-- Already done: exit with succes
+
+    wxSingleInstanceChecker *Lock = new wxSingleInstanceChecker (getExternSessionName(pSession));
+    bool InUse = Lock->IsAnotherRunning();
+
+    wxString SessionName;
+    pConfigIO.SetPath(theSessionNamePath);
+    if (InUse
+    ||  !pConfigIO.Read(getSessionNumber(pSession), &SessionName))
+    {
+        delete Lock;
+        return false;
+    }
+
+    if (pQuickSave && !aIsSaved)
+        saveConfig(pConfigIO);
+
+    aName = SessionName;
+    aSession = pSession;
+    loadConfig(pConfigIO, pSession, Lock);
+    return true;
+}
+
+
 void TSessionConfig::setConfigPath(wxConfigBase &pConfigIO, const wxChar *pHeading)
 {
     wxString SessionPath = getSessionPath (aSession);
@@ -535,10 +584,10 @@ void TSessionConfig::loadConfig(wxConfigBase &pConfigIO, int pSession, wxSingleI
     if (aLock != NULL)
         delete aLock;
     aLock = pLock;
-    aSession = pSession;
 
     wxString s;
 
+    //-- Read Interface parameters
     setConfigPath(pConfigIO, _T("INTERFACE"));
     pConfigIO.Read(_T("InterfaceType"),      (int*)&a.InterfaceType, a.InterfaceType);
     if ((a.InterfaceType >= PIC_INTF_TYPE_MAX) || (a.InterfaceType < PIC_INTF_TYPE_UNKNOWN))
@@ -558,19 +607,23 @@ void TSessionConfig::loadConfig(wxConfigBase &pConfigIO, int pSession, wxSingleI
 //  pConfigIO.SetPath(_T("/PROGRAMMING_ALGORITHM"));
 //  pConfigIO.Read("ProgModeSequence", &PIC_dev_param.iProgModeSequence, 0); // 0=PROGMODE_VDD_THEN_VPP (usually except for DS41173b)
 
+    //-- Read serial Interface parameters
     setConfigPath(pConfigIO, _T("COM84_INTERFACE"));
     pConfigIO.Read(_T("ComPortName"),              &s, a.ComPortName );
     setStr((TCharDataPtr)&TData::ComPortName, s.c_str(), 40) ;
 
+    //-- Read parallel Interface parameters
     setConfigPath(pConfigIO, _T("LPT_INTERFACE"));
     pConfigIO.Read(_T("LptPortNumber"),            &a.LptPortNr, 1 );
     pConfigIO.Read(_T("UnusualIoAddress"),         &a.LptIoAddress, 0 );
 
+    //-- Read Current Hex filename
     setConfigPath(pConfigIO, _T("SESSION"));
     s.Empty();
     pConfigIO.Read(_T("HexFileName"),              &s, a.HexFileName);
     setStr((TCharDataPtr)&TData::HexFileName, s.c_str(), 255 ) ;
 
+    //-- Read Programmer parameters
     setConfigPath(pConfigIO, _T("PROGRAMMER"));
     pConfigIO.Read(_T("ProgramWhat"),              &a.ProgramWhat, PIC_PROGRAM_ALL );
     pConfigIO.Read(_T("UseBulkErase"),             &a.UseCompleteChipErase, 1 );
@@ -583,6 +636,7 @@ void TSessionConfig::loadConfig(wxConfigBase &pConfigIO, int pSession, wxSingleI
 
     pConfigIO.Read(_T("VerboseMessages"),          &a.VerboseMessages, 0 );
 
+    //-- Read Device parameters
     setConfigPath(pConfigIO, _T("PIC")); // PIC-specific stuff ...
     s.Empty();
     pConfigIO.Read(_T("PathToDevFiles"),           &s );

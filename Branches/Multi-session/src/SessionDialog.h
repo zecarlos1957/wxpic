@@ -1,3 +1,17 @@
+/*-------------------------------------------------------------------------*/
+/*  Filename: SessionDialog.h                                              */
+/*                                                                         */
+/*  Purpose:                                                               */
+/*     Show and manage the Session dialog                                  */
+/*                                                                         */
+/*  Author:                                                                */
+/*     Copyright 2011 Philippe Chevrier pch @ laposte.net                  */
+/*                                                                         */
+/*  License:                                                               */
+/*     New WxPic Code is licensed under GPLV3 conditions                   */
+/*                                                                         */
+/*-------------------------------------------------------------------------*/
+
 #ifndef SESSIONDIALOG_H
 #define SESSIONDIALOG_H
 
@@ -10,7 +24,7 @@
 #include <wx/dialog.h>
 //*)
 
-#include "SessionManagerInt.h"
+#include "SessionList.h"
 
 class TSessionDialog: public wxDialog
 {
@@ -27,6 +41,7 @@ class TSessionDialog: public wxDialog
 		wxButton* aStartButton;
 		wxButton* aStartCloseButton;
 		wxButton* Button1;
+		wxBoxSizer* aMainBoxSizer;
 		wxButton* aNewButton;
 		wxTextCtrl* aSessionNameEdit;
 		wxButton* aRefreshButton;
@@ -66,7 +81,8 @@ class TSessionDialog: public wxDialog
 
 
         //-- Define the content of the control aSessionListBox
-        void fillSessionList (void);
+        //-- if not pDontUpdateCurrent, fills also the current session name
+        void fillSessionList (bool pDontUpdateCurrent = false);
         //-- Set the Enable state for the buttons that depends on the selection
         void setButtonStatus (void);
         //-- Save the configuration of current session
@@ -75,14 +91,16 @@ class TSessionDialog: public wxDialog
         int  startSession    (void);
         //-- Rename the session and clear name change indicator
         void renameSession   (void);
-        //-- Get the index of the selected session in the session list (must exist)
-        int  getSelSession   (void) const;
+        //-- Mark that the Session Name is unmodified
+        void setNameSynch    (void);
         //-- Ask for saving unsave config. Return false if user canceled
         bool askSaveConfig   (bool pIsCreate);
         //-- Ask for saving unsave config. Return false if user canceled
         bool askRename       (void);
         //-- Combine the 2 question on Session Change
         bool askAll          (bool pIsCreate) { return askSaveConfig(pIsCreate) && askRename(); }
+        //-- Test if the selected session can be started
+        bool isStartable     (void) const;
 
 		//(*Handlers(TSessionDialog)
 		void onNewButtonClick(wxCommandEvent& event);
@@ -95,6 +113,8 @@ class TSessionDialog: public wxDialog
 		void onSessionNameEditText(wxCommandEvent& event);
 		void onRenameButtonClick(wxCommandEvent& event);
 		void onSaveButtonClick(wxCommandEvent& event);
+		void onSessionListBoxSelect(wxCommandEvent& event);
+		void onSessionListBoxDClick(wxCommandEvent& event);
 		//*)
 
 		DECLARE_EVENT_TABLE()
