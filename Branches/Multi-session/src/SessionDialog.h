@@ -44,6 +44,7 @@ class TSessionDialog: public wxDialog
 		wxBoxSizer* aMainBoxSizer;
 		wxButton* aNewButton;
 		wxTextCtrl* aSessionNameEdit;
+		wxButton* aDropChangeButton;
 		wxButton* aRefreshButton;
 		wxButton* aRenameButton;
 		wxButton* aSaveButton;
@@ -67,6 +68,7 @@ class TSessionDialog: public wxDialog
 		static const long ID_SESSION_NAME_EDIT;
 		static const long ID_RENAME_BUTTON;
 		static const long ID_SAVE_BUTTON;
+		static const long ID_DROP_CHANGE_BUTTON;
 		//*)
 
 	private:
@@ -85,8 +87,8 @@ class TSessionDialog: public wxDialog
         void fillSessionList (bool pDontUpdateCurrent = false);
         //-- Set the Enable state for the buttons that depends on the selection
         void setButtonStatus (void);
-        //-- Save the configuration of current session
-        void saveConfig      (void);
+        //-- Save or Cancel the configuration changes of current session
+        void saveConfig      (bool pCancel = false);
         //-- Start a new session and return the session number (-1 if creation failed)
         int  startSession    (void);
         //-- Rename the session and clear name change indicator
@@ -115,6 +117,7 @@ class TSessionDialog: public wxDialog
 		void onSaveButtonClick(wxCommandEvent& event);
 		void onSessionListBoxSelect(wxCommandEvent& event);
 		void onSessionListBoxDClick(wxCommandEvent& event);
+		void onDropChangeButtonClick(wxCommandEvent& event);
 		//*)
 
 		DECLARE_EVENT_TABLE()

@@ -160,6 +160,7 @@ public:
     int            SetSession    (int pSession);
     TSessionState  DeleteSession (int pSession);
     void           SaveConfig    (void);
+    void           RevertConfig  (void);
     bool           RenameConfig  (const wxString &pNewName);
     //--------------------------------------------
 
@@ -215,9 +216,9 @@ private:
     bool doSetSession      (wxConfigBase &pConfigIO, int pSession, bool pQuickSave);
     //-- Save the configuration of current session
     void saveConfig        (wxConfigBase &pConfigIO);
-    //-- Load the configuration the specified session and make it current
-    //-- Lock is the session Lock that must have been acquired
-    void loadConfig        (wxConfigBase &pConfigIO, int pSession, wxSingleInstanceChecker *pLock);
+    //-- Load the current configuration
+    //-- pLock is the session Lock that must have been acquired (or NULL if session is already current)
+    void loadConfig        (wxConfigBase &pConfigIO, wxSingleInstanceChecker *pLock);
     //-- Set the configuration path on given heading of current session
     void setConfigPath     (wxConfigBase &pConfigIO, const wxChar *pHeading);
 

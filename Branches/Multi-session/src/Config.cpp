@@ -296,7 +296,7 @@ void TSessionConfig::SaveRectAndCloseSession (const wxRect &pRect, const wxColou
                 pConfigIO.SetPath(theSessionNamePath);
                 pConfigIO.Read(getSessionNumber(aSession), &aName);
 
-                loadConfig(pConfigIO, sessionDEFAULT, Lock);
+                loadConfig(pConfigIO, Lock);
                 break;
             }
             //-- The default session is already used, free the lock on this session
@@ -430,6 +430,15 @@ void TSessionConfig::SaveConfig (void)
     }
 }
 
+void TSessionConfig::RevertConfig (void)
+{
+    if (!aIsSaved)
+    {
+        TConfigIO   ConfigIO;
+        loadConfig(ConfigIO, /*Lock*/NULL);
+    }
+}
+
 bool TSessionConfig::RenameConfig (const wxString &pNewName)
 {
     TConfigIO   ConfigIO;
@@ -521,7 +530,7 @@ bool TSessionConfig::doSetSession (wxConfigBase &pConfigIO, int pSession, bool p
 
     aName = SessionName;
     aSession = pSession;
-    loadConfig(pConfigIO, pSession, Lock);
+    loadConfig(pConfigIO, Lock);
     return true;
 }
 
@@ -579,11 +588,16 @@ void TSessionConfig::saveConfig (wxConfigBase &pConfigIO)
     aIsSaved = true;
 }
 
-void TSessionConfig::loadConfig(wxConfigBase &pConfigIO, int pSession, wxSingleInstanceChecker *pLock)
+void TSessionConfig::loadConfig(wxConfigBase &pConfigIO, wxSingleInstanceChecker *pLock)
 {
-    if (aLock != NULL)
-        delete aLock;
-    aLock = pLock;
+    if (pLock != NULL)
+    {
+        //-- If we have 2 locks delete the old one
+        if (aLock != NULL)
+            delete aLock;
+        //-- If we have a new Lock this is the one to keep
+        aLock = pLock;
+    }
 
     wxString s;
 

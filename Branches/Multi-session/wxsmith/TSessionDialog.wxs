@@ -52,7 +52,7 @@
 									<orient>wxVERTICAL</orient>
 									<object class="sizeritem">
 										<object class="wxButton" name="ID_START_BUTTON" variable="aStartButton" member="yes">
-											<label>Start Session</label>
+											<label>Switch to</label>
 											<tooltip>Switch to the selected session</tooltip>
 											<handler function="onStartButtonClick" entry="EVT_BUTTON" />
 										</object>
@@ -61,7 +61,7 @@
 									</object>
 									<object class="sizeritem">
 										<object class="wxButton" name="ID_START_CLOSE_BUTTON" variable="aStartCloseButton" member="yes">
-											<label>Start and Close</label>
+											<label>Switch and Close</label>
 											<tooltip>Run WxPic in the selected session</tooltip>
 											<handler function="onStartCloseButtonClick" entry="EVT_BUTTON" />
 										</object>
@@ -74,8 +74,8 @@
 									</object>
 									<object class="sizeritem">
 										<object class="wxButton" name="ID_DELETE_BUTTON" variable="aDeleteButton" member="yes">
-											<label>Delete Session</label>
-											<tooltip>Delete the session select in the list</tooltip>
+											<label>Delete...</label>
+											<tooltip>Delete the session and all its configuration parameters</tooltip>
 											<handler function="onDeleteButtonClick" entry="EVT_BUTTON" />
 										</object>
 										<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
@@ -152,7 +152,7 @@
 								<object class="wxButton" name="ID_RENAME_BUTTON" variable="aRenameButton" member="yes">
 									<label>Rename</label>
 									<enabled>0</enabled>
-									<tooltip>Set the name of the current session</tooltip>
+									<tooltip>Apply the modification of the name of the current session</tooltip>
 									<handler function="onRenameButtonClick" entry="EVT_BUTTON" />
 								</object>
 								<flag>wxALL|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
@@ -163,8 +163,19 @@
 								<object class="wxButton" name="ID_SAVE_BUTTON" variable="aSaveButton" member="yes">
 									<label>Save Configuration</label>
 									<enabled>0</enabled>
-									<tooltip>Save the configuration of the current session</tooltip>
+									<tooltip>Save the configuration changes</tooltip>
 									<handler function="onSaveButtonClick" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
+								<border>2</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_DROP_CHANGE_BUTTON" variable="aDropChangeButton" member="yes">
+									<label>Drop Changes</label>
+									<enabled>0</enabled>
+									<tooltip>Drop session configuration changes</tooltip>
+									<handler function="onDropChangeButtonClick" entry="EVT_BUTTON" />
 								</object>
 								<flag>wxALL|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
 								<border>2</border>

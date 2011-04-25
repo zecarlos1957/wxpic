@@ -41,6 +41,7 @@ const long TSessionDialog::ID_STATICTEXT2 = wxNewId();
 const long TSessionDialog::ID_SESSION_NAME_EDIT = wxNewId();
 const long TSessionDialog::ID_RENAME_BUTTON = wxNewId();
 const long TSessionDialog::ID_SAVE_BUTTON = wxNewId();
+const long TSessionDialog::ID_DROP_CHANGE_BUTTON = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(TSessionDialog,wxDialog)
@@ -78,15 +79,15 @@ TSessionDialog::TSessionDialog(TSessionManager &pSessionManager, wxWindow* paren
 	aNewButton->SetToolTip(_("Create a new session with current configuration and set it current"));
 	BoxSizer2->Add(aNewButton, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 2);
 	StaticBoxSizer2 = new wxStaticBoxSizer(wxVERTICAL, this, _("Selected Session"));
-	aStartButton = new wxButton(this, ID_START_BUTTON, _("Start Session"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_START_BUTTON"));
+	aStartButton = new wxButton(this, ID_START_BUTTON, _("Switch to"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_START_BUTTON"));
 	aStartButton->SetToolTip(_("Switch to the selected session"));
 	StaticBoxSizer2->Add(aStartButton, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 2);
-	aStartCloseButton = new wxButton(this, ID_START_CLOSE_BUTTON, _("Start and Close"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_START_CLOSE_BUTTON"));
+	aStartCloseButton = new wxButton(this, ID_START_CLOSE_BUTTON, _("Switch and Close"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_START_CLOSE_BUTTON"));
 	aStartCloseButton->SetToolTip(_("Run WxPic in the selected session"));
 	StaticBoxSizer2->Add(aStartCloseButton, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 2);
 	StaticBoxSizer2->Add(0,20,0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 0);
-	aDeleteButton = new wxButton(this, ID_DELETE_BUTTON, _("Delete Session"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_DELETE_BUTTON"));
-	aDeleteButton->SetToolTip(_("Delete the session select in the list"));
+	aDeleteButton = new wxButton(this, ID_DELETE_BUTTON, _("Delete..."), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_DELETE_BUTTON"));
+	aDeleteButton->SetToolTip(_("Delete the session and all its configuration parameters"));
 	StaticBoxSizer2->Add(aDeleteButton, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 2);
 	BoxSizer2->Add(StaticBoxSizer2, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 0);
 	BoxSizer2->Add(0,20,0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 0);
@@ -112,12 +113,16 @@ TSessionDialog::TSessionDialog(TSessionManager &pSessionManager, wxWindow* paren
 	BoxSizer6 = new wxBoxSizer(wxHORIZONTAL);
 	aRenameButton = new wxButton(this, ID_RENAME_BUTTON, _("Rename"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_RENAME_BUTTON"));
 	aRenameButton->Disable();
-	aRenameButton->SetToolTip(_("Set the name of the current session"));
+	aRenameButton->SetToolTip(_("Apply the modification of the name of the current session"));
 	BoxSizer6->Add(aRenameButton, 1, wxALL|wxALIGN_LEFT|wxALIGN_BOTTOM, 2);
 	aSaveButton = new wxButton(this, ID_SAVE_BUTTON, _("Save Configuration"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SAVE_BUTTON"));
 	aSaveButton->Disable();
-	aSaveButton->SetToolTip(_("Save the configuration of the current session"));
+	aSaveButton->SetToolTip(_("Save the configuration changes"));
 	BoxSizer6->Add(aSaveButton, 1, wxALL|wxALIGN_LEFT|wxALIGN_BOTTOM, 2);
+	aDropChangeButton = new wxButton(this, ID_DROP_CHANGE_BUTTON, _("Drop Changes"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_DROP_CHANGE_BUTTON"));
+	aDropChangeButton->Disable();
+	aDropChangeButton->SetToolTip(_("Drop session configuration changes"));
+	BoxSizer6->Add(aDropChangeButton, 1, wxALL|wxALIGN_LEFT|wxALIGN_BOTTOM, 2);
 	StaticBoxSizer1->Add(BoxSizer6, 0, wxALL|wxALIGN_BOTTOM|wxALIGN_CENTER_HORIZONTAL, 0);
 	aMainBoxSizer->Add(StaticBoxSizer1, 0, wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
 	SetSizer(aMainBoxSizer);
@@ -135,6 +140,7 @@ TSessionDialog::TSessionDialog(TSessionManager &pSessionManager, wxWindow* paren
 	Connect(ID_SESSION_NAME_EDIT,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&TSessionDialog::onSessionNameEditText);
 	Connect(ID_RENAME_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TSessionDialog::onRenameButtonClick);
 	Connect(ID_SAVE_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TSessionDialog::onSaveButtonClick);
+	Connect(ID_DROP_CHANGE_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TSessionDialog::onDropChangeButtonClick);
 	Connect(wxID_ANY,wxEVT_CLOSE_WINDOW,(wxObjectEventFunction)&TSessionDialog::OnClose);
 	//*)
 
@@ -176,6 +182,7 @@ void TSessionDialog::fillSessionList (bool pDontUpdateCurrent)
             //-- No break here
         case TSessionManager::sessionStateDIRT:
             aSaveButton->Enable(!aIsSaved);
+            aDropChangeButton->Enable(!aIsSaved);
             aCurrentSession = aSessionCount;
             ListBuilder.AddEntry(aSessionCount, getCurrentString());
             if (!pDontUpdateCurrent)
@@ -210,11 +217,15 @@ void TSessionDialog::setButtonStatus (void)
 }
 
 
-void TSessionDialog::saveConfig (void)
+void TSessionDialog::saveConfig (bool pCancel)
 {
-    aSessionManager.SaveConfig();
+    if (pCancel)
+        aSessionManager.RevertConfig();
+    else
+        aSessionManager.SaveConfig();
     aIsSaved = true;
     aSaveButton->Enable(false);
+    aDropChangeButton->Enable(false);
 }
 
 void TSessionDialog::renameSession (void)
@@ -404,9 +415,7 @@ void TSessionDialog::onRenameButtonClick(wxCommandEvent& event)
 
 void TSessionDialog::onSaveButtonClick(wxCommandEvent& event)
 {
-    aSessionManager.SaveConfig();
-    aIsSaved = true;
-    aSaveButton->Disable();
+    saveConfig();
 }
 
 void TSessionDialog::onSessionListBoxSelect(wxCommandEvent& event)
@@ -426,4 +435,9 @@ void TSessionDialog::onSessionListBoxDClick(wxCommandEvent& event)
                      this);
     else if (startSession() >= 0)
         Close();
+}
+
+void TSessionDialog::onDropChangeButtonClick(wxCommandEvent& event)
+{
+    saveConfig(/*Cancel*/true);
 }

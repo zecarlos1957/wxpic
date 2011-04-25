@@ -64,8 +64,12 @@ public:
     virtual TSessionState  DeleteSession (int pSession) = 0;
 
     //-- Save the current configuration in the current session
-    virtual void SaveConfig (void) = 0;    //-- Rename the current session with the given name
+    virtual void SaveConfig (void) = 0;
 
+    //-- Cancel the configuration changes by reloading the saved session configuration
+    virtual void RevertConfig (void) = 0;
+
+    //-- Rename the current session with the given name
     //-- Return false if another session has already taken this name
     virtual bool RenameConfig (const wxString &pNewName) = 0;
 
