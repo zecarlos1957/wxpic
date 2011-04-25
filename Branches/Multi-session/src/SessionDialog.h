@@ -101,8 +101,8 @@ class TSessionDialog: public wxDialog
         bool askRename       (void);
         //-- Combine the 2 question on Session Change
         bool askAll          (bool pIsCreate) { return askSaveConfig(pIsCreate) && askRename(); }
-        //-- Test if the selected session can be started
-        bool isStartable     (void) const;
+        //-- Test if the selected session can be started and optionally returns the current session number
+        bool isStartable     (int *pSelectedSession = NULL) const;
 
 		//(*Handlers(TSessionDialog)
 		void onNewButtonClick(wxCommandEvent& event);

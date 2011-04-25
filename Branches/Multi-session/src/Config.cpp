@@ -48,8 +48,6 @@ static const wxChar *theMRFileIndexKey  = _T("LastIndex");
 
 enum
 {
-    sessionNONE    = -1,
-    sessionDEFAULT = 0,
     sessionMAX     = 20,
 
     mostRecentMAX  = 6, //-- No more than 10 to keep index on one digit
@@ -83,11 +81,11 @@ static wxString getExternSessionName (int pSession)
 }
 static wxString getSessionPath (int pSession)
 {
-    return (pSession == sessionDEFAULT) ? wxString(_T("Config")) : wxString::Format(_T("Session%02d-Config"), pSession);
+    return (pSession == TSessionManager::sessionDEFAULT) ? wxString(_T("Config")) : wxString::Format(_T("Session%02d-Config"), pSession);
 }
 static wxString getSessionDefaultName (int pSession)
 {
-    return (pSession == sessionDEFAULT) ? wxString(_T("Default")) : wxString::Format(_T("Session%02d"), pSession);
+    return (pSession == TSessionManager::sessionDEFAULT) ? wxString(_T("Default")) : wxString::Format(_T("Session%02d"), pSession);
 }
 static wxString getSessionNumber (int pSession)
 {

@@ -209,11 +209,11 @@ void TSessionDialog::fillSessionList (bool pDontUpdateCurrent)
 
 void TSessionDialog::setButtonStatus (void)
 {
-    int SelectedSession = aSessionListBox->GetSelection();
-    bool IsIdleSession = (SelectedSession != wxNOT_FOUND) && (aSessionInfoTab[SelectedSession].State == TSessionManager::sessionStateIDLE);
-    aStartButton->Enable(IsIdleSession);
-    aStartCloseButton->Enable(IsIdleSession);
-    aDeleteButton->Enable(IsIdleSession && (SelectedSession != 0));
+    int SelectedSession;
+    bool Available = isStartable(&SelectedSession);
+    aStartButton->Enable(Available);
+    aStartCloseButton->Enable(Available);
+    aDeleteButton->Enable(Available && (SelectedSession != 0));
 }
 
 
@@ -323,11 +323,17 @@ bool TSessionDialog::askRename (void)
 }
 
 
-bool TSessionDialog::isStartable (void) const
+bool TSessionDialog::isStartable (int *pSelectedSession) const
 {
     bool Result = false;
+    int  SelectedSession = TSessionManager::sessionNONE;
     if (aSessionListBox->GetSelection() >= 0)
-        Result = (aSessionInfoTab[TSessionListBuilder::GetSelectedSession(aSessionListBox)].State == TSessionManager::sessionStateIDLE);
+    {
+        SelectedSession = TSessionListBuilder::GetSelectedSession(aSessionListBox);
+        Result = (aSessionInfoTab[SelectedSession].State == TSessionManager::sessionStateIDLE);
+    }
+    if (pSelectedSession != NULL)
+        *pSelectedSession = SelectedSession;
     return Result;
 }
 
@@ -364,6 +370,13 @@ void TSessionDialog::onStartCloseButtonClick(wxCommandEvent& event)
 
 void TSessionDialog::onDeleteButtonClick(wxCommandEvent& event)
 {
+    if (wxMessageBox(_("Are you sure you want to delete the session and all its configuration?"),
+                     _("Delete Session Confirmation"),
+                     wxOK | wxCANCEL | wxICON_QUESTION,
+                     this)
+        == wxCANCEL)
+        return;
+
     TSessionManager::TSessionState Result = aSessionManager.DeleteSession(TSessionListBuilder::GetSelectedSession(aSessionListBox));
     fillSessionList();
     switch (Result)
@@ -420,10 +433,7 @@ void TSessionDialog::onSaveButtonClick(wxCommandEvent& event)
 
 void TSessionDialog::onSessionListBoxSelect(wxCommandEvent& event)
 {
-    bool Available = isStartable();
-    aStartButton->Enable(Available);
-    aStartCloseButton->Enable(Available);
-    aDeleteButton->Enable(Available);
+    setButtonStatus();
 }
 
 void TSessionDialog::onSessionListBoxDClick(wxCommandEvent& event)

@@ -36,6 +36,11 @@ public:
         sessionStateLAST,  //-- Dummy session indicating last session in the table
     };
 
+    enum TSessionIndex
+    {
+        sessionNONE    = -1,
+        sessionDEFAULT = 0,
+    };
 
     struct TSessionInfo
     {
