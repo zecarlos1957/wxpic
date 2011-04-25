@@ -85,7 +85,7 @@
 				</object>
 				<object class="separator" />
 				<object class="wxMenuItem" name="ID_CHANGE_SESSION_MENU" variable="aChangeSessionMenuItem" member="yes">
-					<label>Change &amp;Session</label>
+					<label>Manage &amp;Sessions...</label>
 					<handler function="onChangeSessionMenuItemSelected" entry="EVT_MENU" />
 				</object>
 				<object class="wxMenuItem" name="ID_EXIT_NO_SAVE_MENU_ITEM" variable="aExitNoSaveMenuItem" member="yes">

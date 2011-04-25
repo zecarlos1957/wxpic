@@ -180,7 +180,7 @@ void MainFrame::initAuto (void)
     aDumpBufferMenuItem = new wxMenuItem(aFileMenu, ID_DUMP_TO_HEX_MENU_ITEM, _("&Dump buffer to HEX file..."), wxEmptyString, wxITEM_NORMAL);
     aFileMenu->Append(aDumpBufferMenuItem);
     aFileMenu->AppendSeparator();
-    aChangeSessionMenuItem = new wxMenuItem(aFileMenu, ID_CHANGE_SESSION_MENU, _("Change &Session"), wxEmptyString, wxITEM_NORMAL);
+    aChangeSessionMenuItem = new wxMenuItem(aFileMenu, ID_CHANGE_SESSION_MENU, _("Manage &Sessions..."), wxEmptyString, wxITEM_NORMAL);
     aFileMenu->Append(aChangeSessionMenuItem);
     aExitNoSaveMenuItem = new wxMenuItem(aFileMenu, ID_EXIT_NO_SAVE_MENU_ITEM, _("Exit without saving the settings"), wxEmptyString, wxITEM_NORMAL);
     aFileMenu->Append(aExitNoSaveMenuItem);
