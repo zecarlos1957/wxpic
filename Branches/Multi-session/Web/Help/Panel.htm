@@ -26,6 +26,12 @@
       <li><a href="#OptionPanel">The Options Page</a></li>
       <li><a href="#InterfacePanel">The Interface Page</a></li>
       <li><a href="#MessagePanel">The Messages Page</a></li>
+      <li><a href="#SessionDialog">The Session  Dialog</a>
+        <ul>
+          <li><a href="#SessionDefinition">Session Definition</a></li>
+          <li><a href="#SessionFunctions">Session Manager Operations</a></li>
+        </ul>
+      </li>
     </ul>
 </div>
 
@@ -42,7 +48,7 @@
 <ul class="top-menu">
   <li><a href="index.htm">Help Index</a></li>
   <li><a href="Menu.htm">Menus and Buttons</a></li>
-  <li class="local">Pages</li>
+  <li class="local">Pages and Dialog</li>
   <li><a href="Faq.htm">FAQ</a></li>
 </ul>
 <div class="content">
@@ -64,7 +70,7 @@
   <dt><a href="#MessagePanel">Messages</a></dt>
   <dd>Displays the error and debug messages.</dd>
 </dl>
-<a class="return" href="#Top">Haut</a>
+<a class="return" href="#Top">Top</a>
 <h2><a name="CodePanel" id="CodePanel"></a>The Code Page</h2>
 <p><img src="Code.png" width="285" height="212" /></p>
 <p>This page displays the code buffer content modified by the user editing if any. Editing is possible when enabled through the  <a href="Menu.htm#AllowEditMenu">Enable HEX editor menu</a>.</p>
@@ -80,11 +86,11 @@
   <dt>Special word (calibration)</dt>
   <dd>Violet</dd>
 </dl>
-<a class="return" href="#Top">Haut</a>
+<a class="return" href="#Top">Top</a>
 <h2><a name="DataPanel" id="DataPanel"></a>The Data Page</h2>
 <p><img src="Data.png" width="189" height="265" /></p>
 <p>This page displays the data buffer content modified by the user editing if any. Editing is possible when enabled through the <a href="Menu.htm#AllowEditMenu">Enable HEX editor menu</a>.</p>
-<p><a class="return" href="#Top">Haut</a></p>
+<p><a class="return" href="#Top">Top</a></p>
 <h2><a name="PICConfig" id="PICConfig"></a>The Device Configuration Page</h2>
 <p><img src="ConfigPic.png" width="631" height="293" /></p>
 <p><a name="DeviceSelect" id="DeviceSelect"></a>This page allows to select the device to program in a dropdown list. It is possible to declare new devices by editing the  <a href="devlist_format.htm" class="quote">Device.ini</a> file.</p>
@@ -99,7 +105,7 @@
 <p>The list of parameters depends on the selected device.</p>
 <p>The modification of the configuration word hexadecimal value is immediatly validated and reported in the parameter table.</p>
 <p>The saved before erase information is the values of calibration data that are factory programmed but that are erased by the erase operation. WxPic saves this information to be able to reprogram them and avoid loosing the calibration values. In addition this information is displayed in this page.</p>
-<a class="return" href="#Top">Haut</a>
+<a class="return" href="#Top">Top</a>
 <h2><a name="MemConfig" id="MemConfig"></a>The Config Memory</h2>
 <p><img src="ConfigMem.png" width="525" height="232" /></p>
 <p>This page displays in a table the value of configuration buffer words. It contains among others the configuration words managed by the <a href="#PICConfig">Device Config Page</a>. Each row of the table displays a device configuration buffer word. The columns indicates respectively:</p>
@@ -113,16 +119,16 @@
 <p>The checkbox allows to display, when checked, all the words of the configuration buffer even those that are reserved. The reserved words are not modifiable and often not used. When reserved words are displayed they are marked with an star in the left column.</p>
 <p>The device ID provides the value of the words that indicates device model (for those that supports this feature). The translation of this value in device name is provided. It should correspond to the <a href="#DeviceSelect">selected device</a>.</p>
 <p>The <span class="quote">Apply Edits</span> button allows to apply the changes made to the hexadecimal or binary representation of the configuration buffer content.</p>
-<h3><a class="return" href="#Top">Haut</a> </h3>
+<h3><a class="return" href="#Top">Top</a> </h3>
 <h3><a name="ConfigNId" id="ConfigNId"></a>Configuration memory and ID Locations </h3>
 <p>Most of the configuration memory addresses store identification information (ID). These locations most often contain four or seven bits per location. For example in &quot;14-bit&quot; devices these locations are mapped to addresses 0x2000 to 0x2003. In contrast to the code memory, the ID locations can be read unscrambled even if the PIC is protected. </p>
 <p>In MPASM (the assembler from microchip), there is the __idlocs command (with two underscores) to set these bits, but only the lowest 4 bits in every location. The __idlocs command bundles 4 * 4 bits in a single 32-bit value, presumably because older PICs only had 4 usable bits per ID location. But the 12F675 for example has seven bits per location ! </p>
 <p>With WxPic, you can read / modify / write the ID locations (all bits). If ID location data are contained in a HEX file, they will be loaded and displayed also. WxPic does not display the data in MPASM's 4*4-bit-format, it uses a table where all bits are displayed in binary form. You can edit the contents of the grid table. After doing so, click the <span class="quote">Apply edits</span> button under the table. Clicking this  button copies the table contents into an internal buffer, but does not program them into the PIC immediately - the ID locations will be programmed together with the other programmable parts in a PIC. </p>
-<h3><a class="return" href="#Top">Haut</a> <a name="DisplayTable" id="DisplayTable"></a>Other Config Data</h3>
+<h3><a class="return" href="#Top">Top</a> <a name="DisplayTable" id="DisplayTable"></a>Other Config Data</h3>
 <p>The &quot;Device ID word&quot; can be used to identify a chip after reading the PIC. This 14-bit word is mapped to address 0x2006, but not all PICs seem to have it (a test with an old 16F84 always returned 0x3FFF as device ID). The lower 4 or 5 bits may contain the PIC's revision number in some devices. WxPic tries to decode the device ID word and shows the result on the &quot;ID locations&quot; tab. If there is a conflict between the selected PIC device and the readout ID word, the Device ID display turns red. If WxPic cannot find a match for the device ID of the new chip, you may add a new entry to the device database as <a href="devlist_format.htm#device_id_value">explained here</a> (don't forget to set the parameter <span class="quote">DeviceIdValue</span> to the new chip's device ID).</p>
 <p>The &quot;Config Memory&quot; tab may also show the contents of some other special function registers which did not fit on the &quot;Configuration Bits&quot; tab. For example, you will find the PIC10F20x's Backup OSCCAL Value in this table. </p>
 <p>Because it is entirely unknown how many (and which) cells will be used in the configuration memory in future devices, WxPic's device table  contains information of all really &quot;implemented&quot; cells. More about this in the <a href="devlist_format.htm">chapter about the file  <span class="quote">DEVICES.INI</span></a>, which describes how to add support for future devices.</p>
-<a class="return" href="#Top">Haut</a>
+<a class="return" href="#Top">Top</a>
 <h2><a name="OptionPanel" id="OptionPanel"></a>The Options Page</h2>
 <p><img src="Options.png" width="548" height="230" /></p>
 <p>This page regroups the choices allowing to modify the WxPic behavior.</p>
@@ -133,7 +139,7 @@
 <p><a name="ColourChange" id="ColourChange"></a>The buttons Code memory color and Data memory color allows to select the display colours of respectively the Code and Data pages. They display the colour dialog twice each. The first time to select the foreground colour, the second time to select the background colour. Red colours should be avoided because they are used to display the errors and the special words.</p>
 <p><a name="DevFiles" id="DevFiles"></a>The field <span class="quote">MPLAB DEV-file directory</span> must refer the sub-directory Device of <a href="http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&amp;nodeId=1406&amp;dDocName=en019469&amp;part=SW007002" target="_blank">MPLAB</a> installation where the PIC device definition files provided by Microchip are. Usually this directory is <span class="quote">C:\Program Files\Microchip\MPLAB IDE\Device</span>. If this path is wrong and the current device description file cannot be found, the field title turns red. It will turn black only when the error is fixed (i.e. a path is entered where the needed device file is found).</p>
 <p>When this field is left empty, WxPic search for the device description files in the <span class="quote">Devices</span> subdirectory of the WxPic installation directory. Copying those files here could be a good idea in case a future version would not provide them or would use a different format.</p>
-<a class="return" href="#Top">Haut</a>
+<a class="return" href="#Top">Top</a>
 <h2><a name="InterfacePanel" id="InterfacePanel"></a>The Interface Page</h2>
 <p><img src="Interface.png" width="483" height="225" /></p>
 <p>This page regroups the selection, configuration and tests of the programmer interface.</p>
@@ -146,12 +152,97 @@
 <p>This error is caused by Windows writting to the LPT port without even verifying that it has been open by an application. This is probably used to detect a plug-and-play peripheral (printer) that would be plugged on the LPT port. The  method to de-activate this polling is to modify the registry:</p>
 <p class="quote">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Parport\Parameters] &quot;DisableWarmPoll&quot;=dword:00000001</p>
 <p>This method is not documented by Microsoft. So it is not sure it will always work. Though it has successfully been tested on XP SP2 and VISTA. You can double-click on the file <span class="quote">DisablePolling.reg</span> at the root of WxPic intallation directory to perform this change. In case you would need to restore the polling of the port use  <span class="quote">EnablePollingBack.reg</span> </p>
-<p><a class="return" href="#Top">Haut</a></p>
+<p><a class="return" href="#Top">Top</a></p>
 <h2><a name="MessagePanel" id="MessagePanel"></a>The Messages Page</h2>
 <p><img src="Messages.png" width="482" height="224" /></p>
 <p>This pages displays the status, debugging and error messages. It should be usefull only in case of error to analyze the details. This is also the page that is displayed during Batch programming. The log window must have the focus when pressing Enter to confirm the start programming for the next device of the batch.</p>
 <p>The Clear button allows to empty the message window. It is necessary to perform this operation when the window content size become to large.</p>
-<a class="return" href="#Top">Retour</a>
+<p><a class="return" href="#Top">Top</a></p>
+<h2><a name="SessionDialog" id="SessionDialog"></a>The Session Management Dialog</h2>
+<p><img src="ManageSessions.png" alt="Session Management Dialog Snapshot" width="358" height="350" /></p>
+<p>This dialog can be invoked by selecting <a href="Menu.htm#ManageSessionMenu"><span class="quote">Manage Sessions...</span> in the <span class="quote">File</span> Menu</a>.</p>
+<p>It will also be displayed at WxPic Startup if more that one session is defined. In this case no session will be <a href="#CurrentDefinition" class="quote">Current</a>.</p>
+<p><a class="return" href="#Top">Top</a></p>
+<h3><a name="SessionDefinition" id="SessionDefinition"></a>Session Definition</h3>
+<p>A session defines a WxPic Configuration. Switching session allows to quicly switch from one configuration to another. In addition different sessions can be run concurently by different instances of WxPic. But be aware that these instances will fail to share the same interface port. Therefore the configurations of sessions to be used concurently MUST refer to different interface ports (such as COM1 and LPT1 or COM1 and COM2). Note that it is not recommended to use more instances than you have cores (or threads for multi-threaded cores) in your computer CPU because each instance of WxPic uses a full thread while working with the adapter.</p>
+<dl>
+  <dt>The parameters of a session configuration are:</dt>
+  <dd>
+  		<ul>
+        	<li>The Interface Port,</li>
+            <li>The Adapter Definition,</li>
+  		    <li>The Programmed Device Model,</li>
+  		    <li>The Default Hex File,</li>
+  		    <li>The Programming Modes.</li>
+	    </ul>
+  </dd>
+  <dt>A session configuration does not include:</dt>
+  <dd>
+    <ul>
+      <li>The User Interface Language,</li>
+      <li>The List of Recent Files,</li>
+      <li>The session names,</li>
+      <li>The WxPic Window position and size,</li>
+      <li>The colours used in <a href="#CodePanel" class="quote">Code</a> and <a href="#DataPanel" class="quote">Data</a> panels.</li>
+      </ul>
+      This
+  means that these parameters are shared between sessions, saved on each modification for the first three, saved on program exit for the next two.</dd>
+  </dl>
+<p>It exists 2 special sessions</p>
+<dl>
+  <dt><a name="CurrentSession" id="CurrentSession"></a>The Current Session</dt>
+  <dd>This is the session currently in use by the current instance of WxPic. Its configuration is loaded in the program. Though while the Session Management dialog is open, the changes made to the configuration are not reflected in the main WxPic Window below. It will be updated when it gets back the focus.<br /> 
+    If several instances of WxPic are running concurrently they cannot have both the same Current Session. It exists only one case when the Current session does not exist: this is at WxPic startup if more than one session is defined. In this case the <a href="#SessionDialog">Session Management Dialog</a> is displayed without any Current session.</dd>
+  <dt><a name="DefaultSession" id="DefaultSession"></a>The Default Session</dt>
+  <dd>This session will always be displayed at the top of the list with the <span class="quote">[Default]</span> marker. It will be created automatically the first time you run WxPic. This automatic creation is uses either  default parameter values, or when available, parameters recovered from a previous session-less version of WxPic (versions prior V1.3). The Default Session cannot be deleted but its configuration can be edited without restriction.</dd>
+  </dl>
+<p>The session states are:</p>
+<dl>
+  <dt><a name="AvailableDefinition" id="AvailableDefinition"></a>Available</dt>
+  <dd>The session is defined but no WxPic instance was using it.</dd>
+  <dt><a name="InUseDefinition" id="InUseDefinition"></a>In use</dt>
+  <dd>The session is not available because it is used by another WxPic instance.</dd>
+  <dt><a name="CurrentDefinition" id="CurrentDefinition"></a>Current</dt>
+  <dd>The session is used by this instance (the one that displays this state). Only one session is Current in each WxPic instance, this is <a href="#CurrentSession">the Current Session</a>.</dd>
+  </dl>
+<p>In the session list, the state of the session is indicated between parenthesis after the session name. Note that the session state is determined at the moment the list is displayed or when an operation in this WxPic instance modifies the state of the list. But it is not updated when another WxPic instance causes a status change.</p>
+<p><a class="return" href="#Top">Top</a></p>
+<h3><a name="SessionFunctions" id="SessionFunctions"></a>Session Manager Operations</h3>
+<dl>
+  <dt><a name="NewSession" id="NewSession"></a>New Session</dt>
+  <dd>Creates a new session that will be added to the list. This session starts with the same configuration as the previous session configuration or with default parameters when there was no current session. The created session becomes the <a href="#CurrentDefinition" class="quote">Current</a> session. <br />
+    No more than 20 sessions can exist at a given time. So <span class="quote">New Session</span> button will be disabled if this number of sessions have been reached.<br />
+    The Operation may fail if another instance of WxPic has already created the 20th session</dd>
+  <dt><a name="SwitchTo" id="SwitchTo"></a>Switch to</dt>
+  <dd>Set the selected session in the list as the <a href="#CurrentDefinition" class="quote">Current</a> session. Loads the configuration of  this session. The former <a href="#CurrentDefinition" class="quote">Current</a> session is freed and becomes <a href="#AvailableDefinition" class="quote">Available</a>. If that session had unsaved parameters, a confirmation is requested, allowing either Saving these changes before switching to the new configuration, Droping these changes or cancelling the <span class="quote">Switch&nbsp;to</span> operation. And if the session name had been modified but not saved, a similar dialog will be displayed to allow renaming the session before leaving it. <br />
+    It is not possible to start using a session already used. So the <span class="quote">Switch&nbsp;to</span> button will be disabled if the selected session is not <a href="fr/Panel.htm#DisponibleDefinition" class="quote">Available</a>.<br />
+    The Operation may fail if another instance of WxPic has deleted or started using the selected session.</dd>
+  <dt><a name="SwitchClose" id="SwitchClose"></a>Switch and Close</dt>
+  <dd>Execute successively a <a href="#SwitchTo" class="quote">Switch&nbsp;to</a> operation followed by a <a href="#SessionMngClose" class="quote">Close</a> operation. Refer to these operation definitions. The <a href="#SessionMngClose" class="quote">Close</a> operation will not be performed if the <a href="#SwitchTo" class="quote">Switch&nbsp;to</a> operation fails or is cancelled. Note that double left-click on an <a href="#AvailableDefinition" class="quote">Available</a> session is a shortcut to invoke this Operation.</dd>
+  <dt><a name="DeleteSession" id="DeleteSession"></a>Delete...</dt>
+  <dd>Delete the selected session. A confirmation will be requested because deleted sessions can't be restored.<br />
+    It is not allowed to delete a session that is  <a href="#InUseDefinition" class="quote">In use</a> or <a href="#CurrentDefinition" class="quote">Current</a>. Therefore the <span class="quote">Delete...</span> button is disabled if the selected session is not <a href="#AvailableDefinition" class="quote">Available</a>.<br />
+    The operation may fail if another instance of WxPic has deleted or started using the selected session.</dd>
+  <dt><a name="RefreshList" id="RefreshList"></a>Refresh list</dt>
+  <dd>Update the content of the Session List. This is only usefull if you have updated the session states from another instance of WxPic. The list is automatically updated upon modification performed in this instance of WxPic or each times an operation fails because of an unexpected change made from another instance.</dd>
+  <dt><a name="SessionHelp" id="SessionHelp"></a>Help</dt>
+  <dd>Display this section of the help</dd>
+  <dt><a name="SessionMngClose" id="SessionMngClose"></a>Close</dt>
+  <dd>Close the dialog. If no session is <a href="#CurrentDefinition" class="quote">Current</a> at this time WxPic will exit. Else the WxPic operations will resume with the configuration of the <a href="#CurrentDefinition" class="quote">Current</a> session. If the session name had been modified but not saved, a confirmation dialog will be displayed allowing either Renaming the session before closing, Droping these changes or cancelling the <span class="quote">Close</span> operation.</dd>
+  <dt><a name="RenameSession" id="RenameSession"></a>Rename</dt>
+  <dd>Apply the changes made to the current session name in the text field above the button. Note that Session name length is limited to 30 characters maximum.<br />
+    This button is disabled if no change has been made to the session name.</dd>
+  <dt><a name="SaveConfig" id="SaveConfig"></a>Save Configuration</dt>
+  <dd>Save the configuration of the <a href="#CurrentDefinition" class="quote">Current</a> session.<br />
+    This button is disabled if the session has no modified parameter.</dd>
+  <dt><a name="DropChange" id="DropChange"></a>Drop Change</dt>
+  <dd>Discard the changes made to the configuration of the <a href="#CurrentDefinition" class="quote">Current</a> session.<br />
+    This button is disabled if the session has no modified parameter.</dd>
+</dl>
+<p><a class="return" href="#Top"></a></p>
+<dl>
+  <dt><a class="return" href="#Top">Top</a></dt>
+</dl>
 </div>
 </body>
 </html>

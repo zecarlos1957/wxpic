@@ -26,6 +26,12 @@
       <li><a href="#OptionPanel">La page des Options</a></li>
       <li><a href="#InterfacePanel">La page de l'Interface</a></li>
       <li><a href="#MessagePanel">La page des Messages</a></li>
+      <li><a href="#SessionDialog">Le Dialogue des Sessions</a>
+        <ul>
+          <li><a href="#SessionDefinition">Définition de la notion de Session</a></li>
+          <li><a href="#SessionFunctions">Opérations du Gestionnaire de Sessions</a></li>
+        </ul>
+      </li>
     </ul>
     
    
@@ -41,7 +47,7 @@
 <ul class="top-menu">
   <li><a href="index.htm">Index de l'Aide</a></li>
   <li><a href="Menu.htm">Menus et Boutons</a></li>
-  <li class="local">Pages</li>
+  <li class="local">Pages et dialogue</li>
   <li><a href="Faq.htm">FAQ</a></li>
 </ul>
 <div class="content">
@@ -111,7 +117,7 @@
 <p>Plus de détails sont donnés sur ces mots de configuration <a href="#ConfigNId">ci-dessous</a>.</p>
 <p>Dans le panneau de droite, les boutons radio permettent de choisir entre les représentations hexadécimale ou binaire. Celle-ci est utilisée pour les valeurs de tous les mots de la mémoire de configuration de cette page.</p>
 <p>La case à cocher permet d'afficher, quand elle est cochée, tous les mots de la mémoire de configuration, même ceux qui sont réservés (non modifiable et éventuellement non utilisé). Lorsqu'ils sont affichés ces mots sont marqués par une astérisque dans la deuxième colonne.</p>
-<p>L'identification du composant fournit la valeur du mot indiquant le type du composant pour ceux qui supportent cette information. La traduction de cette valeur en un nom de composant est affichée. Elle devrait correspondre au <a href="#DeviceSelect">composant sélectionné</a>. Le mot d'identification du composant permet de vérifier l'identité du composant après l'avoir lu. Ce mot de 14 bits se trouve à l'adresse x2006, mais tous les composants ne semblent pas en être pourvu (un test sur un vieux 16F84 retourne toujours 3FFF comme ID composant). Les 4 ou 5 bits de poids faible peuvent contenir un indice de révision sur certains composants. WxPic essaye de décoder le mot d'identification du composant et montre le résultat sous ident composant dans le panneau de droite. S'il y a un conflit entre le composant sélectionné et l'identificateur lu, l'identificateur devient rouge. Si WxPic ne peut pas trouver une correspondance entre un composant connu et le numéro lu, vous pouvez ajouter une nouvelle entrée dans la base des composants comme <a href="../devlist_format.htm#device_id_value">expliqué ici</a> (n'oubliez pas de mettre à jour le paramètre <span class="quote">DeviceIdValue</span> avec le nouveau numéro).</p>
+<p>L'identification du composant fournit la valeur du mot indiquant le type du composant pour ceux qui supportent cette information. La traduction de cette valeur en un nom de composant est affichée. Elle devrait correspondre au <a href="#DeviceSelect">composant sélectionné</a>. Le mot d'identification du composant permet de vérifier l'identité du composant après l'avoir lu. Ce mot de 14 bits se trouve à l'adresse x2006, mais tous les composants ne semblent pas en être pourvu (un test sur un vieux 16F84 retourne toujours 3FFF comme ID composant). Les 4 ou 5 bits de poids faible peuvent contenir un indice de révision sur certains composants. WxPic essaye de décoder le mot d'identification du composant et montre le résultat sous ident composant dans le panneau de droite. S'il y a un conflit entre le composant sélectionné et l'identification lue, l'identification devient rouge. Si WxPic ne peut pas trouver une correspondance entre un composant connu et le numéro lu, vous pouvez ajouter une nouvelle entrée dans la base des composants comme <a href="../devlist_format.htm#device_id_value">expliqué ici</a> (n'oubliez pas de mettre à jour le paramètre <span class="quote">DeviceIdValue</span> avec le nouveau numéro).</p>
 <p>Le bouton <span class="quote">Valider</span> permet d'appliquer les modifications effectuées sur les valeurs des mots de la mémoire de configuration.</p>
 <a class="return" href="#Top">Haut</a>
 <h3><a name="ConfigNId" id="ConfigNId"></a>Données d'identification</h3>
@@ -119,20 +125,20 @@
 <p>MPASM (l'assembleur de Microchip) possède la directive __idlocs (avec 2 soulignés) pour définir ces bits, mais uniquement les 4 bits de poids faible de chaque adresse. Cette directive concatène 4 x 4 bits dans une unique valeur de 32 bits, probablement car les anciens PIC n'avaient que 4 bits utilisable par adresse. Mais le PIC12F675 par exemple a 7 bits par adresse&nbsp;!</p>
 <p>Avec WxPic vous pouvez lire / modifier / écrire tous les bits des adresses d'identification. Si des données sont contenues dans un fichier HEX pour ces adresses, elles seront chargées et affichées. WxPic n'affiche pas la donnée au format 4 x 4 bits, il utilise un tableau où chaque bit est affiché en binaire. Le tableau est éditable. Appuyer sur le bouton <span class="quote">Valider</span> en bas à droite permet de mettre à jour la mémoire de WxPic avec les modifications effectuées. Cela ne programme par pour autant immédiatement le PIC. Cela se fait en demandant une opération de programmation.</p>
 <h3><a class="return" href="#Top">Haut</a> <a name="DisplayTable" id="DisplayTable"></a>Autres Données</h3>
-<p>Le mot d'identification du composant permet de vérifier l'identiter du composant après l'avoir lu. Ce mot de 14 bits se trouve à l'adresse x2006, mais tous les composants ne semblent pas en être pourvu (un test sur un vieux 16F84 retourne toujours 3FFF comme ID composant). Les 4 ou 5 bits de poids faible peuvent contenir un indice de révision sur certains composants. WxPic essaye de décoder le mot d'identification du composant et montre le résultat sous ident composant dans le panneau de droite. S'il y a un conflit entre le composant sélectionné et l'identificateur lu, l'identificateur devient rouge. Si WxPic ne peut pas trouver une correspondance entre un composant connu et le numéro lu, vous pouvez ajouter une nouvelle entrée dans la base des composants comme <a href="../devlist_format.htm#device_id_value">expliqué ici</a> (n'oubliez pas de mettre à jour le paramètre <span class="quote">DeviceIdValue</span> avec le nouveau numéro).</p>
-<p>La mémoire de configuration peut aussi parfois contenir d'autres registes spéciaux qui ne rentre pas dans les mots de configuration. Par exemple le mot de Backup OSCCAL du PIC10F20x est dans cette table.</p>
+<p>Le mot d'identification du composant permet de vérifier l'identité du composant après l'avoir lu. Ce mot de 14 bits se trouve à l'adresse x2006, mais tous les composants ne semblent pas en être pourvu (un test sur un vieux 16F84 retourne toujours 3FFF comme ID composant). Les 4 ou 5 bits de poids faible peuvent contenir un indice de révision sur certains composants. WxPic essaye de décoder le mot d'identification du composant et montre le résultat sous ident composant dans le panneau de droite. S'il y a un conflit entre le composant sélectionné et l'identification lue, l'identification devient rouge. Si WxPic ne peut pas trouver une correspondance entre un composant connu et le numéro lu, vous pouvez ajouter une nouvelle entrée dans la base des composants comme <a href="../devlist_format.htm#device_id_value">expliqué ici</a> (n'oubliez pas de mettre à jour le paramètre <span class="quote">DeviceIdValue</span> avec le nouveau numéro).</p>
+<p>La mémoire de configuration peut aussi parfois contenir d'autres registres spéciaux qui ne rentre pas dans les mots de configuration. Par exemple le mot de Backup OSCCAL du PIC10F20x est dans cette table.</p>
 <p>Comme il est impossible de savoir combien et quelles adresses seront utilisées dans les futurs composants, la table des composants de WxPic contient une indication des adresses effectivement implémentées. Vous trouverez plus d'information à ce sujet dans le <a href="../devlist_format.htm">chapitre sur le fichier <span class="quote">DEVICE.INI</span></a>, qui décrit comment ajouter un support pour les futurs composants.</p>
 <a class="return" href="#Top">Haut</a>
 <h2></h2>
 <h2><a name="OptionPanel" id="OptionPanel"></a>La page des Options</h2>
 <p><img src="Options.png" width="529" height="199" /></p>
-<p>Cette page regroupe des choix permetant de modifier le mode de fonctionnement de WxPic</p>
+<p>Cette page regroupe des choix permettant de modifier le mode de fonctionnement de WxPic</p>
 <p>Les cases Programmer la mémoire CODE, les DONNEES et la CONFIGURATION, permettent, en ne les cochant pas, de restreindre la programmation du PIC aux mémoires restant cochées.</p>
 <p>Vider la Mémoire avant de charger un fichier HEX permet de garantir que les mots non-spécifiés par le fichier seront inutilisés. A l'inverse, ne pas cocher la case permet de combiner le contenu de plusieurs fichiers HEX.</p>
-<p>Etablir Vdd avant Vpp change l'ordonnancement des alimentations du PIC. Choisir la valeur qui convient pour le composant et le programmateur.</p>
-<p>La listes des langues permet de sélectionner une traduction de l'interface de WxPic. Celle-ci ne sera active qu'après le prochain démarrage de WxPic. Attention si WxPic est arrété avec l'option <a href="Menu.htm#QuitMenu">Quitter sans sauver les paramètres</a> le changement de langue ne sera pas sauvegardé et donc pas appliqué au démarage suivant.</p>
+<p>Établir Vdd avant Vpp change l'ordonnancement des alimentations du PIC. Choisir la valeur qui convient pour le composant et le programmateur.</p>
+<p>La listes des langues permet de sélectionner une traduction de l'interface de WxPic. Celle-ci ne sera active qu'après le prochain démarrage de WxPic. Attention si WxPic est arrêté avec l'option <a href="Menu.htm#QuitMenu">Quitter sans sauver les paramètres</a> le changement de langue ne sera pas sauvegardé et donc pas appliqué au démarrage suivant.</p>
 <p><a name="ColourChange" id="ColourChange"></a>Les boutons Couleur du code et Couleur des données permettent de changer la couleur d'affichage des <a href="#CodePanel" class="glossary">pages Code</a> et <a href="#DataPanel" class="glossary">Données</a>. Ils affichent le dialogue de choix des couleurs deux fois. La première fois sélectionner la couleur du texte, la seconde fois sélectionner la couleur du fond. Les couleurs proches du rouge sont déconseillées car elles sont déjà utilisées pour afficher les erreurs et les mots spéciaux.</p>
-<p>Le champ <span class="quote">Répertoire des fichiers Dev de MPLAB</span> doit pointer le sous-répertoire Device du répertoire d'installation de <a href="http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&amp;nodeId=1406&amp;dDocName=en019469&amp;part=SW007002" target="_blank">MPLAB</a> où sont rangé les fichiers de définition des composant PIC produits par <a href="http://www.microchip.com/" target="_blank">Microchip</a>. Généralement ce répertoire est: <span class="quote">C:\Program Files\Microchip\MPLAB IDE\Device</span>.  Si ce répertoire est incorrecte et que le fichier de description du composant courrant ne peut y être trouvé, le titre du champ passe en rouge. Il redeviendra noir uniquement lorsque l'erreur sera corrigée (c'est à dire lorsque la description du composant pourra être trouvée à l'endroit indiqué).</p>
+<p>Le champ <span class="quote">Répertoire des fichiers Dev de MPLAB</span> doit pointer le sous-répertoire Device du répertoire d'installation de <a href="http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&amp;nodeId=1406&amp;dDocName=en019469&amp;part=SW007002" target="_blank">MPLAB</a> où sont rangé les fichiers de définition des composant PIC produits par <a href="http://www.microchip.com/" target="_blank">Microchip</a>. Généralement ce répertoire est: <span class="quote">C:\Program Files\Microchip\MPLAB IDE\Device</span>.  Si ce répertoire est incorrecte et que le fichier de description du composant courant ne peut y être trouvé, le titre du champ passe en rouge. Il redeviendra noir uniquement lorsque l'erreur sera corrigée (c'est à dire lorsque la description du composant pourra être trouvée à l'endroit indiqué).</p>
 <p>Si ce champ est vide WxPic cherche les fichiers de description des composants dans le répertoire <span class="quote">Devices</span> sous le répertoire d'installation de WxPic. Copier ces fichiers à cet endroit pourrait être un bon choix au cas où une future version de <a href="http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&amp;nodeId=1406&amp;dDocName=en019469&amp;part=SW007002" target="_blank">MPLAB</a> n'utiliserait plus ces fichiers Dev ou utiliserait un autre format incompatible.</p>
 <a class="return" href="#Top">Haut</a>
 <h2><a name="InterfacePanel" id="InterfacePanel"></a>La page de l'Interface</h2>
@@ -141,17 +147,97 @@
 <p>La liste en haut à droite permet de choisir le type de programmateur utilisé. Ce choix conditionne le type de port sélectionnable. Le champ adresse permet de sélectionner une adresse différente de l'adresse par défaut. C'est généralement une erreur grave de changer cette valeur, cela pouvant aller jusqu'au plantage du PC.</p>
 <p>Pour les interfaces de type custom il faut sélectionner le fichier qui décrit le fonctionnement du programmateur grâce au bouton Sélectionner du Fichier de définition de l'interface. Il est aussi possible de saisir directement le chemin du répertoire dans le champ texte. <a href="../Adapter.htm">Le fichier de définition de l'interface</a> contient des règles permettant de la commander.</p>
 <p>Les autres champs en dessous permettent de modifier les durées dans les cycles d'accès au programmateur. Il ne faut généralement pas y toucher.</p>
-<p>Les cases à cocher à gauche permettent de modifier manuellement l'état des sorties de commande du programmateur. Il indique aussi l'état de l'entrée, et si le programmateur en possède, l'état des LEDs et du bouton. Cela ne devrait être utile que pour la mise au point d'un nouveau programmateur. En effet WxPic effectue automatiquement des vérifications de bon fonctionnement du programmateur. Le résultat est affiché dans le cadre du panel de droite. Le bouton Initialiser en haut à gauche permet de relancer cet auto-test.</p>
-<p><a name="Priv" id="Priv"></a>ATTENTION: Pour pouvoir utiliser un adaptateur sur port parallèle, il faut installer et exécuter WxPix dans un compte administrateur. Pour les utilisateurs de VISTA, il faudra en outre enregistrer WxPic comme un programme privilégié. Pour cela cliquer avec le bouton droit sur le racourci utilisé pour lancer WxPic et choisissez Propriété. Dans l'onglet <span class="quote">Compatibilité</span> cocher la case du bas.</p>
+<p>Les cases à cocher à gauche permettent de modifier manuellement l'état des sorties de commande du programmateur. Il indique aussi l'état de l'entrée, et si le programmateur en possède, l'état des LEDs et du bouton. Cela ne devrait être utile que pour la mise au point d'un nouveau programmateur. En effet WxPic effectue automatiquement des vérifications de bon fonctionnement du programmateur. Le résultat est affiché dans le cadre du panneau de droite. Le bouton Initialiser en haut à gauche permet de relancer cet auto-test.</p>
+<p><a name="Priv" id="Priv"></a>ATTENTION: Pour pouvoir utiliser un adaptateur sur port parallèle, il faut installer et exécuter WxPic dans un compte administrateur. Pour les utilisateurs de VISTA, il faudra en outre enregistrer WxPic comme un programme privilégié. Pour cela cliquer avec le bouton droit sur le raccourci utilisé pour lancer WxPic et choisissez Propriété. Dans l'onglet <span class="quote">Compatibilité</span> cocher la case du bas.</p>
 <p><a name="Fool" id="Fool"></a>Lors de l'utilisation du port parallèle, il arrive souvent d'obtenir l'erreur&nbsp;: <span class="quote">WARNING ! Windows fooled around with the LPT port bits !</span></p>
 <p>Cette erreur est causée par Windows qui accède au port parallèle sans vérifier qu'une application l'a ouvert. Cela sert probablement à détecter le branchement d'un périphérique (imprimante) plug-and-play. La méthode pour désactiver cet accès c'est de modifier la base de registre&nbsp;:</p>
 <p class="quote">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Parport\Parameters] &quot;DisableWarmPoll&quot;=dword:00000001</p>
 <p>Cette méthode n'est pas documentée par MS. Si bien qu'il n'est pas sûr que cela fonctionne toujours. Cependant cela a été testé avec succès avec XP SP2 et VISTA. Vous pouvez double-cliquer sur le fichier <span class="quote">DisablePolling.reg</span> dans le répertoire d'installation de WxPic pour effectuer la modification de la base de registre. Au cas vous avez besoin de ré-activer le polling du port, utilisez le fichier <span class="quote">EnablePollingBack.reg</span><a class="return" href="#Top">Haut</a></p>
 <h2><a name="MessagePanel" id="MessagePanel"></a>La page des Messages</h2>
 <p><img src="Messages.png" width="548" height="255" /></p>
-<p>Dans cette page sont affichés les messages d'erreur et de déboggage. Il ne sera utile de s'y reporter que pour analyser les détails d'une erreur. Il y a cependant un exception: La programmation par lot. L'entrée doit être sur la fenêtre de messages pour presser Entrer lors de la confirmation du démarrage de la programmation du prochain composant du lot.</p>
+<p>Dans cette page sont affichés les messages d'erreur et de débogage. Il ne sera utile de s'y reporter que pour analyser les détails d'une erreur. Il y a cependant un exception: La programmation par lot. L'entrée doit être sur la fenêtre de messages pour presser Entrer lors de la confirmation du démarrage de la programmation du prochain composant du lot.</p>
 <p>Le bouton Effacer permet de vider la zone des messages. C'est nécessaire de le faire lorsque le nombre de messages devient trop important.</p>
-<a class="return" href="#Top">Retour</a>
+<p><a class="return" href="#Top">Haut</a></p>
+<h2><a name="SessionDialog" id="SessionDialog"></a>Le Dialogue de gestion des Sessions</h2>
+<p><img src="ManageSessions.png" alt="Session Management Dialog Snapshot" width="337" height="350" /></p>
+<p>Ce dialogue s'ouvre en grâce à <a href="Menu.htm#ManageSessionMenu"><span class="quote">Gérer les Sessions...</span> dans le menu <span class="quote">Fichier</span></a>.</p>
+<p>Il est aussi affiché au démarrage de WxPic s'il existe plus d'une session. Dans ce cas aucune session ne sera <a href="#EnCoursDefinition">En cours</a>.</p>
+<p><a class="return" href="#Top">Haut</a></p>
+<h3><a name="SessionDefinition" id="SessionDefinition"></a>Définition de la notion de Session</h3>
+<p>Une session définit une configuration de WxPic. Changer de session permet de rapidement basculer d'une configuration à une autre. En outre, différentes sessions peuvent être utilisées simultanément par différentes instances de WxPic. Attention cependant, ces différentes instances ne peuvent PAS partager le même port d'interface. Donc les configurations de sessions destinées à fonctionner simultanément DOIVENT faire référence à des ports d'interface différents (comme COM1 et LPT1 ou COM1 et COM2). Notez aussi qu'il n'est pas recommandé d'utiliser simultanément plus d'instances de WxPic qu'il y a de Coeur (ou de fils d'exécution - threads - pour les processeurs utilisant cette technologie) dans le(s) processeur(s) de votre machine. En effet WxPic monopolise un fil d'exécution par instance lorsqu'il accède à l'adaptateur.</p>
+<dl>
+  <dt>Les paramètres de configuration d'une session sont&nbsp;:</dt>
+  <dd>
+    <ul>
+      <li>Le port d'Interface,</li>
+      <li>La définition de l'Adaptateur,</li>
+      <li>Le modèle du composant programmé,</li>
+      <li>Le fichier Hex par défaut,</li>
+      <li>Les modes de programmation.</li>
+    </ul>
+  </dd>
+  <dt>La configuration d'une session n'inclut PAS&nbsp;:</dt>
+  <dd>
+    <ul>
+      <li>La langue de l'interface utilisateur,</li>
+      <li>La liste des fichiers récents,</li>
+      <li>Les nom des sessions,</li>
+      <li>La position et la taille de la fenêtre de WxPic,</li>
+      <li>Les couleurs utilisées dans les pages <a href="#CodePanel" class="quote">Code</a> et <a href="#DataPanel" class="quote">Données</a>.</li>
+    </ul>
+    Ces paramètres sont partagés par toutes les sessions. Les 3 premiers sont sauvegardés à chaque modification. Les 2 autres sont sauvegardés lors de l'arrêt de WxPic.</dd>
+</dl>
+<p>Il existe 2 sessions particulières&nbsp;:</p>
+<dl>
+  <dt><a name="SessionEnCours" id="SessionEnCours"></a>La Session  en cours</dt>
+  <dd>C'est la session utilisée par cette instance de WxPic. Sa configuration est chargée. Cependant tant que le Dialogue de gestion des sessions est ouvert, les modifications de la configuration ne sont pas visibles dans la fenêtre principale de WxPic. Cette fenêtre ne sera mise à jour que lorsqu'elle récupérera la main après la fermeture du dialogue. Il existe un seul cas où il n'y a pas de session <a href="#EnCoursDefinition" class="quote">En cours</a>, c'est lors du démarrage de WxPic, avant que l'utilisateur choisisse une session parmi plusieurs.</dd>
+  <dt><a name="SessionParDefaut" id="SessionParDefaut"></a>La Session par défaut</dt>
+  <dd>Cette session est toujours affichée en haut de la liste et est marquée de l'étiquette  <span class="quote">[Défaut]</span>. Elle est crée automatiquement la première fois que WxPic est lancé. La configuration de cette session est alors initialisée avec les valeurs par défaut des paramètres ou, lorsqu'une version antérieure à V1.3 a été utilisée avant, avec les anciens paramètres sauvegardés par cette version. La Session par Défaut ne peut être supprimée, mais sa configuration peut être modifiée sans restriction.</dd>
+</dl>
+<p>Les états possibles pour les sessions sont&nbsp;:</p>
+<dl>
+  <dt><a name="DisponibleDefinition" id="DisponibleDefinition"></a>Disponible</dt>
+  <dd>La session a été créée mais aucune instance de WxPic ne l'utilise.</dd>
+  <dt><a name="UtiliseDefinition" id="UtiliseDefinition"></a>Utilisée</dt>
+  <dd>La session n'est pas disponible car elle est utilisée par une autre instance de WxPic.</dd>
+  <dt><a name="EnCoursDefinition" id="EnCoursDefinition"></a>En cours</dt>
+  <dd>C'est la session utilisée à ce moment par cette instance (celle qui affiche cet état). Une seule session est <span class="quote">En cours</span> par instance, c'est la <a href="#SessionEnCours">Session en cours</a>.</dd>
+</dl>
+<p>Dans la liste des sessions, l'état des sessions est indiqué entre parenthèses après le nom de la session. Notez que cet état est déterminé au moment où la liste est affichée ou lorsqu'une opération faite depuis le dialogue qui affiche la liste, modifie l'état des sessions. Mais cet état n'est pas mis à jour lors des modifications effectuées par une autre instance. La fonction Rafraîchir permet de forcer manuellement une mise à jour dans ce cas.</p>
+<p><a class="return" href="#Top">Haut</a></p>
+<h3><a name="SessionFunctions" id="SessionFunctions"></a>Opérations du Gestionnaire de Sessions</h3>
+<dl>
+  <dt><a name="NewSession" id="NewSession"></a>Nouvelle Session</dt>
+  <dd>Crée une nouvelle session qui sera ajoutée à la liste. Cette session est créée avec la même configuration que celle de la précédente session en cours, ou avec les paramètres par défaut s'il n'y avait pas de session en cours. La nouvelle session devient la session <a href="#EnCoursDefinition" class="quote">En cours</a>.<br />
+    Au maximum,  20 sessions peuvent être créées. Si bien que le bouton <span class="quote">Nouvelle Session</span> est désactivé si ce nombre de sessions est atteint.<br />
+    L'opération peut échouer si une autre instance de WxPic a déjà créé les 20 sessions.</dd>
+  <dt><a name="SwitchTo" id="SwitchTo"></a>Utiliser</dt>
+  <dd>Démarre l'utilisation de la session sélectionnée qui devient <a href="#EnCoursDefinition" class="quote">En cours</a>. Charge la configuration attachée à cette session. L'ancienne session <a href="#EnCoursDefinition" class="quote">En cours</a> est libérée et devient <a href="#DisponibleDefinition" class="quote">Disponible</a>.  Si cette dernière session avaient des paramètres modifiés non sauvegardés, une confirmation est demandée. Elle permet, soit de sauvegarder les modifications avant de basculer vers la nouvelle session, soit d'ignorer ces modifications et donc les perdre, soit d'annuler complètement le changement de session. Et si le nom de l'ancienne session a été modifié mais pas sauvegardé, un dialogue similaire est affiché. Son rôle est de permettre la sauvegarde du nouveau nom avant le basculement.<br />
+    Il n'est pas possible d'utiliser une session qui l'est déjà. Donc le bouton <span class="quote">Utiliser</span> sera désactivé si la session sélectionnée n'est pas <a href="#DisponibleDefinition"class="quote">Disponible</a>.<br />
+    L'opération peut échouer si une autre instance de WxPic a supprimé ou utilisé la session sélectionnée.</dd>
+  <dt><a name="SwitchClose" id="SwitchClose"></a>Utiliser et Fermer</dt>
+  <dd>Exécute successivement une opération <a href="#SwitchTo" class="quote">Utiliser</a> suivie d'une opération <a href="#SessionMngClose" class="quote">Fermer</a>. Référez-vous aux définitions de ces opérations. L'opération <a href="#SessionMngClose" class="quote">Fermer</a> ne sera pas effectuée si l'opération <a href="#SwitchTo" class="quote">Utiliser</a> a échoué ou a été annulée. Le double clic gauche sur une session <a href="#DisponibleDefinition" class="quote">Disponible</a> est un raccourci pour exécuter cette opération.</dd>
+  <dt><a name="DeleteSession" id="DeleteSession"></a>Supprimer...</dt>
+  <dd>Supprime la  session sélectionnée. Une confirmation sera demandée car les sessions supprimées ne peuvent pas être récupérées.<br />
+    Il n'est pas autorisé de supprimer une session qui est <a href="#UtiliseDefinition" class="quote">Utilisée</a> ou <a href="#EnCoursDefinition" class="quote">En cours</a>. Donc le bouton Supprimer... sera désactivé si la session sélectionnée n'est pas <a href="#DisponibleDefinition" class="quote">Disponible</a>.<br />
+    L'opération peut échouer si une autre instance de WxPic a supprimé ou commencé à utiliser la session sélectionnée.</dd>
+  <dt><a name="RefreshList" id="RefreshList"></a>Rafraîchir</dt>
+  <dd>Met à jour le contenu de la liste des Sessions. Ceci n'est utile que si vous avez changé l'état des sessions à partir d'une autre instance de WxPic. En effet la liste est automatiquement mise à jour suite aux opérations faites dans cette instances, même lorsqu'elles ont échoué à cause d'un changement d'état venant d'une autre instance.</dd>
+  <dt><a name="SessionHelp" id="SessionHelp"></a>Aide</dt>
+  <dd>Affiche cette section de l'aide</dd>
+  <dt><a name="SessionMngClose" id="SessionMngClose"></a>Fermer</dt>
+  <dd>Ferme le dialogue. Si aucune session n'est <a href="#EnCoursDefinition" class="quote">En cours</a> au moment de la fermeture, WxPic se termine. Sinon les opérations de WxPic continuent avec la configuration de la session <a href="#EnCoursDefinition" class="quote">En cours</a>. Si le nom de la session a été modifié mais pas enregistré, un dialogue de confirmation sera affiché permettant soit d'enregistrer le nouveau nom avant de continuer, d'ignorer la modification du nom ou d'annuler la fermeture du dialogue.</dd>
+  <dt><a name="RenameSession" id="RenameSession"></a>Renommer</dt>
+  <dd>Enregistre la modification du nom de la session <a href="#EnCoursDefinition" class="quote">En cours</a> qui a été effectuée dans le champs texte au dessus du bouton. Notez que le nom d'une session est limité à 30 caractères maximum.<br />
+    Ce bouton est désactivé si le nom de la session n'a pas été modifié.</dd>
+  <dt><a name="SaveConfig" id="SaveConfig"></a>Enregistrer</dt>
+  <dd>Enregistre les modifications de la session <a href="#EnCoursDefinition" class="quote">En cours</a>.<br />
+    Ce bouton est désactivé si la session n'a aucun paramètre modifié dans sa configuration.</dd>
+  <dt><a name="DropChange" id="DropChange"></a>Rejeter Modif</dt>
+  <dd>Rejette les modifications effectué à la configuration de la session <a href="#EnCoursDefinition" class="quote">En cours</a>, depuis sa dernière sauvegarde ou, à défaut, depuis le début de son utilisation.<br />
+    Ce bouton est désactivé si la session <a href="#EnCoursDefinition" class="quote">En cours</a> n'a pas de paramètre modifié.</dd>
+</dl>
+<p><a class="return" href="#Top">Haut</a></p>
 </div>
 </body>
 </html>

@@ -28,7 +28,7 @@
 <ul class="top-menu">
   <li><a href="index.htm">Help Index</a></li>
   <li class="local">Menus and Buttons</li>
-  <li><a href="Panel.htm">Pages</a></li>
+  <li><a href="Panel.htm">Pages and Dialog</a></li>
   <li><a href="Faq.htm">FAQ</a></li>
 </ul>
 <div class="content">
@@ -44,7 +44,8 @@
   <li><a name="VerifyButton" id="VerifyButton"></a><img src="ChipVerify.png" width="16" height="16" class="bullet" /> Verify that the device memory is identical to the WxPic's buffers. In case of difference the erroneaous code and data words are displayed in red in the code and data pages.</li>
   <li><a name="ReadButton" id="ReadButton"></a><img src="ChipRead.png" width="16" height="16" class="bullet" /> Read the device memory and store it in the WxPic's buffers.</li>
 </ul>
-<a class="return" href="#Top">Top</a>
+<p><img src="SessionSelect.png" alt="The Session quick selector" width="132" height="23" align="absmiddle" />&nbsp;The last item in the bar is the Session quick selector. It allows to switch to a new session. The selected session must be <a href="Panel.htm#AvailableDefinition" class="quote">Available</a> for the operation to succeed else an error will be raised and no session change will occur. Before switching if the configuration is modified it is saved. Use the <a href="Panel.htm#SessionDialog">Session Management Dialog</a> if you don't want to save the modifications of the configuration.</p>
+<p><a class="return" href="#Top">Top</a></p>
 <h2><a name="Menu" id="Menu"></a>The Menus</h2>
 <p>WxPic provides the following menus:</p>
 <ul>
@@ -67,6 +68,9 @@
   <dd>Display the names of the 6 most recently loaded  Hex files. Choosing one of these files reload its content in the buffers.</dd>
   <dt><a name="DumpMemoryMenu" id="DumpMemoryMenu"></a><span class="term">Dump buffer to HEX file...&nbsp;</span></dt>
   <dd>Write in HEX format the content of the buffers in a file to be defined.</dd>
+  <dt><a name="ManageSessionMenu" id="ManageSessionMenu"></a>Manage Sessions...</dt>
+  <dd>Open the <a href="Panel.htm#SessionDialog">Session Management Dialog</a>.</dd>
+  <dt></dt>
   <dt><a name="QuitMenu" id="QuitMenu"></a><span class="term">Exit without saving the settings&nbsp;</span></dt>
   <dd>Quit WxPic without saving the changes made to the WxPic's configuration since the program startup.</dd>
   <dt><a name="QuitSaveMenu" id="QuitSaveMenu"></a><span class="term">Exit&nbsp;</span></dt>

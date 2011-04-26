@@ -28,7 +28,7 @@
 <ul class="top-menu">
   <li><a href="index.htm">Index de l'Aide</a></li>
   <li class="local">Menus et Boutons</li>
-  <li><a href="Panel.htm">Pages</a></li>
+  <li><a href="Panel.htm">Pages et Dialogue</a></li>
   <li><a href="Faq.htm">FAQ</a></li>
 </ul>
 <div class="content">
@@ -44,7 +44,8 @@
   <li><a name="VerifyButton" id="VerifyButton"></a><img src="../ChipVerify.png" width="16" height="16" class="bullet" /> Vérifie que le contenu de la mémoire du composant est identique à celui de la mémoire de WxPic. En cas de différence les mots de code et de données en erreur sont affichés en rouge dans les pages de code et de données.</li>
   <li><a name="ReadButton" id="ReadButton"></a><img src="../ChipRead.png" width="16" height="16" class="bullet" /> Lit le contenu de la mémoire du PIC et l'enregistre dans la mémoire de WxPic.</li>
 </ul>
-<a class="return" href="#Top">Haut</a>
+<p><img src="SessionSelect.png" alt="The Session quick selector" width="132" height="23" align="absmiddle" />&nbsp;Le dernier élément de la barre est le commutateur rapide de session. Il permet de passer rapidement d'une session à une autre. La session choisie doit être <a href="Panel.htm#DisponibleDefinition" class="quote">Disponible</a> pour que l'opération réussise sinon une erreur sera diagnostiquée et le changement de session n'aura pas lieu. Avant le changement de session, si la configuration d'origine avait été modifiée, elle est automatiquement sauvegardée. Utiliser le <a href="Panel.htm#SessionDialog">Dialogue de gestion des sessions</a> si vous ne désirez pas sauvegarder les modifications de la configuration.</p>
+<p><a class="return" href="#Top">Haut</a></p>
 <h2><a name="Menu" id="Menu"></a>Les menus</h2>
 <p>WxPic offre les menus suivants:</p>
 <ul>
@@ -67,6 +68,8 @@
   <dd>Affiche les nom des 6 fichiers HEX les plus récemment chargés. Le choix d'un de ces fichiers recharge sont contenu en mémoire.</dd>
   <dt><a name="DumpMemoryMenu" id="DumpMemoryMenu"></a><span class="term">Écrire la mémoire dans un fichier HEX...&nbsp;</span>: </dt>
   <dd>Écrit au format HEX le contenu de la mémoire dans un fichier à définir.</dd>
+  <dt><a name="ManageSessionMenu" id="ManageSessionMenu"></a>Gérer les Sessions...</dt>
+  <dd>Ouvre le <a href="Panel.htm#SessionDialog">Dialogue de gestion des sessions</a>.</dd>
   <dt><a name="QuitMenu" id="QuitMenu"></a><span class="term">Quitter sans sauver les paramètres&nbsp;</span>: </dt>
   <dd>Ferme WxPic sans enregistrer les modifications de configuration effectuées depuis l'ouverture du programme.</dd>
   <dt><a name="QuitSaveMenu" id="QuitSaveMenu"></a><span class="term">Quitter&nbsp;</span> : </dt>
