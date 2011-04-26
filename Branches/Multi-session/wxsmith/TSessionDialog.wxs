@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <wxsmith>
 	<object class="wxDialog" name="TSessionDialog">
-		<title>Manage Session List</title>
+		<title>Manage Sessions</title>
 		<id_arg>0</id_arg>
 		<handler function="OnClose" entry="EVT_CLOSE" />
 		<object class="wxBoxSizer" variable="aMainBoxSizer" member="yes">

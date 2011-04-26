@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WxPic V1.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-25 15:07+0200\n"
+"POT-Creation-Date: 2011-04-25 16:45+0200\n"
 "PO-Revision-Date: 2009-05-31 20:00+0200\n"
 "Last-Translator: pch @ laposte.net\n"
 "Language-Team: French\n"
@@ -2004,7 +2004,7 @@ msgstr "Disponible"
 # P1
 #: src\SessionDialog.cpp:26
 msgid "In Use"
-msgstr "Utilisé"
+msgstr "Utilisée"
 
 # P1
 #: src\SessionDialog.cpp:27
@@ -2013,7 +2013,7 @@ msgstr "En cours"
 
 # P1
 #: src\SessionDialog.cpp:67
-msgid "Manage Session List"
+msgid "Manage Sessions"
 msgstr "Gestion des Sessions"
 
 # P1
@@ -3253,5 +3253,3 @@ msgstr ""
 #, c-format
 msgid "  Config memory %lX is not blank."
 msgstr ""
-
-
