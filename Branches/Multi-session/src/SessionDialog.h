@@ -40,12 +40,12 @@ class TSessionDialog: public wxDialog
 		wxButton* aCloseButton;
 		wxButton* aStartButton;
 		wxButton* aStartCloseButton;
-		wxButton* Button1;
 		wxBoxSizer* aMainBoxSizer;
 		wxButton* aNewButton;
 		wxTextCtrl* aSessionNameEdit;
 		wxButton* aDropChangeButton;
 		wxButton* aRefreshButton;
+		wxButton* aHelpButton;
 		wxButton* aRenameButton;
 		wxButton* aSaveButton;
 		wxButton* aDeleteButton;
@@ -62,7 +62,7 @@ class TSessionDialog: public wxDialog
 		static const long ID_START_CLOSE_BUTTON;
 		static const long ID_DELETE_BUTTON;
 		static const long ID_REFRESH_BUTTON;
-		static const long ID_BUTTON1;
+		static const long ID_HELP_BUTTON;
 		static const long ID_CLOSE_BUTTON;
 		static const long ID_STATICTEXT2;
 		static const long ID_SESSION_NAME_EDIT;
@@ -118,6 +118,7 @@ class TSessionDialog: public wxDialog
 		void onSessionListBoxSelect(wxCommandEvent& event);
 		void onSessionListBoxDClick(wxCommandEvent& event);
 		void onDropChangeButtonClick(wxCommandEvent& event);
+		void onHelpButtonClick(wxCommandEvent& event);
 		//*)
 
 		DECLARE_EVENT_TABLE()

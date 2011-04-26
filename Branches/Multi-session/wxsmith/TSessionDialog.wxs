@@ -98,8 +98,9 @@
 								<border>2</border>
 							</object>
 							<object class="sizeritem">
-								<object class="wxButton" name="ID_BUTTON1" variable="Button1" member="yes">
+								<object class="wxButton" name="ID_HELP_BUTTON" variable="aHelpButton" member="yes">
 									<label>Help</label>
+									<handler function="onHelpButtonClick" entry="EVT_BUTTON" />
 								</object>
 								<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM</flag>
 								<border>2</border>

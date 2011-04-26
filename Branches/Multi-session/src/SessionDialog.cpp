@@ -13,6 +13,8 @@
 /*-------------------------------------------------------------------------*/
 
 #include "SessionDialog.h"
+#include "Language.h"
+#include <../resources/Resource.h>
 #include <wx/msgdlg.h>
 
 //(*InternalHeaders(TSessionDialog)
@@ -35,7 +37,7 @@ const long TSessionDialog::ID_START_BUTTON = wxNewId();
 const long TSessionDialog::ID_START_CLOSE_BUTTON = wxNewId();
 const long TSessionDialog::ID_DELETE_BUTTON = wxNewId();
 const long TSessionDialog::ID_REFRESH_BUTTON = wxNewId();
-const long TSessionDialog::ID_BUTTON1 = wxNewId();
+const long TSessionDialog::ID_HELP_BUTTON = wxNewId();
 const long TSessionDialog::ID_CLOSE_BUTTON = wxNewId();
 const long TSessionDialog::ID_STATICTEXT2 = wxNewId();
 const long TSessionDialog::ID_SESSION_NAME_EDIT = wxNewId();
@@ -94,8 +96,8 @@ TSessionDialog::TSessionDialog(TSessionManager &pSessionManager, wxWindow* paren
 	aRefreshButton = new wxButton(this, ID_REFRESH_BUTTON, _("Refresh List"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_REFRESH_BUTTON"));
 	aRefreshButton->SetToolTip(_("Refresh the session list in case it has been modified by an other instance"));
 	BoxSizer2->Add(aRefreshButton, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 2);
-	Button1 = new wxButton(this, ID_BUTTON1, _("Help"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
-	BoxSizer2->Add(Button1, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 2);
+	aHelpButton = new wxButton(this, ID_HELP_BUTTON, _("Help"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_HELP_BUTTON"));
+	BoxSizer2->Add(aHelpButton, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 2);
 	aCloseButton = new wxButton(this, ID_CLOSE_BUTTON, _("Close"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CLOSE_BUTTON"));
 	aCloseButton->SetToolTip(_("Close this dialog"));
 	BoxSizer2->Add(aCloseButton, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_BOTTOM, 2);
@@ -136,6 +138,7 @@ TSessionDialog::TSessionDialog(TSessionManager &pSessionManager, wxWindow* paren
 	Connect(ID_START_CLOSE_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TSessionDialog::onStartCloseButtonClick);
 	Connect(ID_DELETE_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TSessionDialog::onDeleteButtonClick);
 	Connect(ID_REFRESH_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TSessionDialog::onRefreshButtonClick);
+	Connect(ID_HELP_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TSessionDialog::onHelpButtonClick);
 	Connect(ID_CLOSE_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TSessionDialog::onCloseButtonClick);
 	Connect(ID_SESSION_NAME_EDIT,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&TSessionDialog::onSessionNameEditText);
 	Connect(ID_RENAME_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TSessionDialog::onRenameButtonClick);
@@ -450,4 +453,11 @@ void TSessionDialog::onSessionListBoxDClick(wxCommandEvent& event)
 void TSessionDialog::onDropChangeButtonClick(wxCommandEvent& event)
 {
     saveConfig(/*Cancel*/true);
+}
+
+void TSessionDialog::onHelpButtonClick(wxCommandEvent& event)
+{
+    wxHelpControllerBase *Help = TLanguage::GetHelpController();
+    if (Help != NULL)
+        Help->DisplaySection(TResource::HELPID_SESSION_MGR);
 }

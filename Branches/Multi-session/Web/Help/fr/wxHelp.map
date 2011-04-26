@@ -5,4 +5,5 @@
   <entry id="2" url="Faq.htm"></entry>
   <entry id="3" url="../LptPort.htm"></entry>
   <entry id="4" url="Menu.htm">Menu Bouton Programme</entry>
+  <entry id="5" url="Panel.htm" anchor="SessionDialog"></entry>
 </map>

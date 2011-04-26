@@ -30,6 +30,8 @@ public:
         HELPID_ID_LOCATIONS,
         HELPID_FAQ_LISTS,
         HELPID_LPT_INTERFACES,
+        HELPID_MENU,
+        HELPID_SESSION_MGR,
     };
 
 private:
