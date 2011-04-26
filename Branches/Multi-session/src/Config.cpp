@@ -173,6 +173,9 @@ static wxString getMRFKey (int pIndex)
     if (i == FileCount)
     {
         //-- pName is not found, it must be added
+        //-- If the table is already full, remove the oldest item first
+        if (FileTable.GetCount() >= mostRecentMAX)
+            FileTable.RemoveAt(0);
         FileTable.Add(pName);
         ++LastIndex;
         if (LastIndex == mostRecentMAX)
@@ -188,14 +191,7 @@ static wxString getMRFKey (int pIndex)
 {
     TConfigIO       ConfigIO;
 
-    ConfigIO.SetPath(theMRFPath);
-
-    for (int i = 0; i < mostRecentMAX; ++i)
-    {
-        wxString CurIndexImage = getMRFKey(i);
-        if (ConfigIO.Exists(CurIndexImage))
-            ConfigIO.DeleteEntry(CurIndexImage);
-    }
+    ConfigIO.DeleteGroup(theMRFPath);
 }
 
 void TSessionConfig::GetRectAndColour (wxRect &pRect, wxColour &pCodeFgCol, wxColour &pCodeBgCol, wxColour &pDataFgCol, wxColour &pDataBgCol)
@@ -469,7 +465,7 @@ bool TSessionConfig::RenameConfig (const wxString &pNewName)
 /**static*/int TSessionConfig::getMostRecentFiles(wxConfigBase &pConfigIO, wxArrayString &pFileTable)
 {
     //-- Legacy flag indicates that we have not found the new format of Most Recent File
-    //-- This is the first time the program runs
+    //-- This is the first time the program runs (or the operator has cleared the MRF list)
     //-- Though it may exist old data from an old version using slightly different format
     bool Legacy = true;
     int  Result = mostRecentMAX-1;
@@ -488,7 +484,8 @@ bool TSessionConfig::RenameConfig (const wxString &pNewName)
     do
     {
         ++CurIndex;
-        CurIndex %= mostRecentMAX;
+        if (CurIndex == mostRecentMAX)
+            CurIndex = 0;
 
         if (pConfigIO.Read (getMRFKey(CurIndex), &MRFile, wxEmptyString)
         &&  (MRFile[0] != _T('*'))) //-- In old versions, unused entries were marked by a name starting with *
@@ -500,8 +497,7 @@ bool TSessionConfig::RenameConfig (const wxString &pNewName)
     while (CurIndex != Result);
     if (Legacy)
         pConfigIO.Write(theMRFileIndexKey, getMRFKey(LastFound));
-    else
-        wxASSERT(LastFound == Result);
+
     return Result;
 }
 
