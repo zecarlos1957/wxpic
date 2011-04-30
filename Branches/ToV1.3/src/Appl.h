@@ -5,7 +5,10 @@
 /*     Ported to Linux by Erdem U. Altinyurt                               */
 /*-------------------------------------------------------------------------*/
 
-#include "CommandOption.h"
+#ifndef APPL_H
+#define APPL_H
+
+#include <wx/string.h>
 #include <stdint.h>
 
 
@@ -108,6 +111,8 @@ bool EscapeCommFunction( int fd, int flag);
 bool GetCommModemStatus( int fd, uint32_t *flag );
 uint8_t ReadIoPortByte(uint16_t);
 void WriteIoPortByte(uint16_t,uint16_t);
-#endif
+#else
+#include <wx/App.h>  //-- Get windows.h definitions
+#endif // ndef __WXMSW__
 
-/* EOF <appl.h> */
+#endif // APPL_H
