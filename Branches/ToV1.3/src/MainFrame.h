@@ -52,10 +52,10 @@ class MainFrame: public wxFrame
 		MainFrame(void);
 		virtual ~MainFrame();
 
-		static bool CreateAndShow (void);
-		static void SetStatusText (const wxString &Text);
-		static void AddTextToLog  (const wxChar   *szText);
-		static void ShowProgress  (int             pPercentage);
+		static wxWindow *CreateAndShow (void);
+		static void      SetStatusText (const wxString &Text);
+		static void      AddTextToLog  (const wxChar   *szText);
+		static void      ShowProgress  (int             pPercentage);
 
 		 // "usages" of the message panel ( m_iMessagePanelUsage, Pnl_Message->Caption)
         enum EMpUsage

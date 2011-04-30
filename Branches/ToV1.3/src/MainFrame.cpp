@@ -18,7 +18,6 @@
 
 #include "MainFrame.h"
 #include "Appl.h"
-#include "CommandOption.h"
 #include "Language.h"
 #include "Config.h"
 #include <WinPicPr/PIC_HW.h>
@@ -460,12 +459,6 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
                                   +wxString(PicHw_sz255LastError) );
                 }
 
-            // Check interface + delay routine ONCE
-            if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-            {
-                APPL_LogEvent( _("Init: Testing the interface") );
-            }
-
             aInterfaceTab->TestTheInterface();  // try to find out if the interface is there
             TestDelayRoutine();  // check the programmer's DELAY routine
 
@@ -486,25 +479,25 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
         //     Most likely, this will be an instruction to LOAD a file
         //     which will be programmed into the device later, etc.
         // There will DELIBERATELY be a certain delay between executing all args.
-        if ( CommandOption.WinPic_fCommandLineMode || CommandOption.WinPic_fCommandLineOption_Load )
+        if ( TSessionConfig::IsCommandLineMode() || TSessionConfig::IsLoadOption() )
         {
-            int iSecToGo = CommandOption.WinPic_fCommandLineMode ? 20 : 5; // Unit: "timer ticks" a 50 ms
+            int iSecToGo = TSessionConfig::IsCommandLineMode() ? 20 : 5; // Unit: "timer ticks" a 50 ms
             iSecToGo = (long)(iSecToGo - siCmdTickCount) * 200L / 1000L;
-            if ( !(CommandOption.WinPic_fCommandLineOption_NoDelay) && (iSecToGo>0) )
+            if ( !TSessionConfig::IsNoDelayOption() && (iSecToGo>0) )
             {
                 wxChar sz80Actions[81];
                 sz80Actions[0]=0;
-                if ( CommandOption.WinPic_fCommandLineOption_Read )
+                if ( TSessionConfig::IsReadOption() )
                     _tcscat(sz80Actions,_T("READ+"));
-                if ( CommandOption.WinPic_fCommandLineOption_Erase )
+                if ( TSessionConfig::IsEraseOption() )
                     _tcscat(sz80Actions,_T("ERASE+"));
-                if ( CommandOption.WinPic_fCommandLineOption_Load )
+                if ( TSessionConfig::IsLoadOption() )
                     _tcscat(sz80Actions,_T("LOAD+"));
-                if ( CommandOption.WinPic_fCommandLineOption_Program )
+                if ( TSessionConfig::IsProgramOption() )
                     _tcscat(sz80Actions,_T("PROGRAM+"));
-                if ( CommandOption.WinPic_fCommandLineOption_Verify)
+                if ( TSessionConfig::IsVerifyOption() )
                     _tcscat(sz80Actions,_T("VERIFY+"));
-                if ( CommandOption.WinPic_fCommandLineOption_Quit )
+                if ( TSessionConfig::IsQuitOption() )
                     _tcscat(sz80Actions,_T("QUIT"));
                 i = _tcslen(sz80Actions);
                 if (i>1 && sz80Actions[i-1]=='+')
@@ -519,105 +512,97 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
             {
                 // Arrived here, the command line has been PARSED but not EXECUTED yet.
                 // All actions must be performed in a quite senseful sequence ...
-                if ( CommandOption.WinPic_fCommandLineOption_Read )
+                if ( TSessionConfig::IsReadOption() )
                 {
                     // read the PIC device and dump the result into a HEX file.
                     // This is done BEFORE the device is (optionally) erased !
                     if (! ReadPicAndDumpToFile( TSessionConfig::GetHexFileName() ) )
                     {
                         siCmdTickCount = 0;
-                        CommandOption.WinPic_fCommandLineOption_NoDelay = false;  // slow down !
+                        TSessionConfig::ClearNoDelayOption();  // slow down !
                     }
-                    CommandOption.WinPic_fCommandLineOption_Read = false; // done.
+                    TSessionConfig::ClearReadOption(); // done.
                 } // end if( WinPic_fCommandLineOption_Read )
-                else
-                    if ( CommandOption.WinPic_fCommandLineOption_Erase )
+                else if ( TSessionConfig::IsEraseOption() )
+                {
+                    // (bulk-)Erase the PIC device :
+                    aStatusBar->SetStatusText(_("Erasing ...")); // used in various places
+                    Update();
+                    if ( PIC_PRG_Erase( PIC_ERASE_ALL | PIC_SAVE_CALIBRATION) ) // here in command-line mode
                     {
-                        // (bulk-)Erase the PIC device :
-                        aStatusBar->SetStatusText(_("Erasing ...")); // used in various places
-                        Update();
-                        if ( PIC_PRG_Erase( PIC_ERASE_ALL | PIC_SAVE_CALIBRATION) ) // here in command-line mode
+                        if ( PIC_iHaveErasedCalibration
+                                && ((PIC_DeviceInfo.wCfgmask_bandgap != 0) || (PIC_DeviceInfo.lAddressOscCal >= 0)) )
                         {
-                            if ( PIC_iHaveErasedCalibration
-                                    && ((PIC_DeviceInfo.wCfgmask_bandgap != 0) || (PIC_DeviceInfo.lAddressOscCal >= 0)) )
-                            {
-                                APPL_ShowMsg( 0, _("Device has been erased. PROGRAM TO RESTORE CALIB BITS !!") ); // used more than once !
-                                m_iMessagePanelUsage = MP_USAGE_WARNING;
-                            }
-                            else
-                            {
-                                APPL_ShowMsg( 0, _("Device has been erased.") );  // used more than once !
-                                m_iMessagePanelUsage = MP_USAGE_INFO;
-                            }
+                            APPL_ShowMsg( 0, _("Device has been erased. PROGRAM TO RESTORE CALIB BITS !!") ); // used more than once !
+                            m_iMessagePanelUsage = MP_USAGE_WARNING;
                         }
                         else
-                            APPL_ShowMsg( 0, _("Erasing FAILED !") );
-
-                        CommandOption.WinPic_fCommandLineOption_Erase = false; // done.
-                    } // end if( WinPic_fCommandLineOption_Erase )
-                    else
-                        if ( CommandOption.WinPic_fCommandLineOption_Load )
                         {
-                            // Load a HEX file into memory  but do NOT program it yet :
-                            if (! LoadFileAndProgramPic( TSessionConfig::GetHexFileName(), false/*load+prog*/ ) )
-                            {
-                                StopParsingCmdLine_Internal();
-                            }
-                            else
-                            {
-                                APPL_ShowMsg( 0, _("Loaded file \"%s\" through command line ."),
-                                            TSessionConfig::GetHexFileName() );
-                            }
-                            CommandOption.WinPic_fCommandLineOption_Load = false; // done.
-                        } // end if( WinPic_fCommandLineOption_Load )
-                        else
-                            if ( CommandOption.WinPic_fCommandLineOption_Program )
-                            {
-                                // Load a HEX file into memory  *AND*  program the PIC device :
-                                if (! LoadFileAndProgramPic( TSessionConfig::GetHexFileName(), true/*load+prog*/ ) )
-                                {
-                                    StopParsingCmdLine_Internal();
-                                }
-                                CommandOption.WinPic_fCommandLineOption_Program = false; // done.
-                            } // end if( WinPic_fCommandLineOption_Program )
-                            else
-                                if ( CommandOption.WinPic_fCommandLineOption_Verify )
-                                {
-                                    // extra VERIFY after programming
-                                    if (! VerifyPic() )
-                                    {
-                                        StopParsingCmdLine_Internal(); // error -> stop parsing command line
-                                    }
-                                    CommandOption.WinPic_fCommandLineOption_Verify = false; // done.
-                                } // end if( WinPic_fCommandLineOption_Verify )
-                                else
-                                    if ( CommandOption.WinPic_fCommandLineOption_Quit )
-                                    {
-                                        // Quit after execution of command line :
-                                        if ( CommandOption.WinPic_i200msToQuit>0 ) // wait a little longer before "quitting" ?
-                                        {
-                                            --CommandOption.WinPic_i200msToQuit;
-                                            _stprintf(sz255Msg, _("Quitting in %d seconds ... ESC to stop"),
-                                                      CommandOption.WinPic_i200msToQuit / 5 );
-                                            aStatusBar->SetStatusText(sz255Msg);
-                                            m_iMessagePanelUsage = MP_USAGE_COMMAND_TIMER;
-                                        }
-                                        else
-                                        {
-//                if( WinPic_OkToCloseDueToErasedCalibration() ) // possibly ask the user!
-//                {
-//                  PIC_iHaveErasedCalibration = false;  // don't ask again if "ok to close"..
-                                            Close();
-//                }
-                                            CommandOption.WinPic_fCommandLineOption_Quit = false; // done (??)
-                                        }
-                                    } // end if( WinPic_fCommandLineOption_Quit )
-                                    else
-                                    {
-                                        // seems all command line options are through.
-                                        // If not "quit", return to normal operation (not command-line driven)
+                            APPL_ShowMsg( 0, _("Device has been erased.") );  // used more than once !
+                            m_iMessagePanelUsage = MP_USAGE_INFO;
+                        }
+                    }
+                    else
+                        APPL_ShowMsg( 0, _("Erasing FAILED !") );
 
-                                    }
+                    TSessionConfig::ClearEraseOption(); // done.
+                } // end if( WinPic_fCommandLineOption_Erase )
+                else if ( TSessionConfig::IsLoadOption() )
+                {
+                    // Load a HEX file into memory  but do NOT program it yet :
+                    if (! LoadFileAndProgramPic( TSessionConfig::GetHexFileName(), false/*load+prog*/ ) )
+                    {
+                        StopParsingCmdLine_Internal();
+                    }
+                    else
+                    {
+                        APPL_ShowMsg( 0, _("Loaded file \"%s\" through command line ."),
+                                    TSessionConfig::GetHexFileName() );
+                    }
+                    TSessionConfig::ClearLoadOption(); // done.
+                } // end if( WinPic_fCommandLineOption_Load )
+                else if ( TSessionConfig::IsProgramOption() )
+                {
+                    // Load a HEX file into memory  *AND*  program the PIC device :
+                    if (! LoadFileAndProgramPic( TSessionConfig::GetHexFileName(), true/*load+prog*/ ) )
+                    {
+                        StopParsingCmdLine_Internal();
+                    }
+                    TSessionConfig::ClearProgramOption(); // done.
+                } // end if( WinPic_fCommandLineOption_Program )
+                else if ( TSessionConfig::IsVerifyOption() )
+                {
+                    // extra VERIFY after programming
+                    if (! VerifyPic() )
+                    {
+                        StopParsingCmdLine_Internal(); // error -> stop parsing command line
+                    }
+                    TSessionConfig::ClearVerifyOption(); // done.
+                } // end if( WinPic_fCommandLineOption_Verify )
+                else if ( TSessionConfig::IsQuitOption() )
+                {
+                    static int Remaining200ms = TSessionConfig::Get200msTimeToQuit();
+                    // Quit after execution of command line :
+                    if ( Remaining200ms > 0 ) // wait a little longer before "quitting" ?
+                    {
+                        --Remaining200ms;
+                        _stprintf(sz255Msg, _("Quitting in %d seconds ... ESC to stop"),
+                                  Remaining200ms / 5 );
+                        aStatusBar->SetStatusText(sz255Msg);
+                        m_iMessagePanelUsage = MP_USAGE_COMMAND_TIMER;
+                    }
+                    else
+                    {
+                        Close();
+                        TSessionConfig::ClearQuitOption(); // done. (??)
+                    }
+                }
+                else
+                {
+                    // seems all command line options are through.
+                    // If not "quit", return to normal operation (not command-line driven)
+                    TSessionConfig::ClearCommandLineMode();
+                }
             } // end if <time to parse the next command line argument>
         } // end if <more command line arguments to parse>
         else  // all command line arguments are through (if any)
@@ -630,7 +615,7 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
         }
 
         // Perform a few "tests" (launched from the "Debugging" panel)
-        switch (CommandOption.WinPic_iTestMode)
+        switch (TSessionConfig::TheTestMode)
         {
         case 2 :    // endlessly power on power off the PIC
             PIC_HW_ProgMode();         // first(?) Vdd on, then(?) Vpp on
@@ -654,11 +639,8 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
             }
             break;
 
-        case WP_TEST_MODE_GUI_SPEED:      // extended debug display for the USER INTERFACE
-            break;
-
         default:
-            CommandOption.WinPic_iTestMode = 0;   // cancel all unknown "test modes"
+            TSessionConfig::TheTestMode = 0;   // cancel all unknown "test modes"
             break;
 
         } // end switch(WinPic_iTestMode)
@@ -1141,8 +1123,8 @@ void MainFrame::onClearFuseMenuItemSelected(wxCommandEvent& event)
 //void MainFrame::ClearFusesClick(TObject *Sender)
 {
     /* Set the "default" configuration word : */
-    if ( CommandOption.WinPic_i32CmdLineOption_OverrideConfigWord >= 0)
-        PicBuf_SetConfigWord( 0, (uint16_t)CommandOption.WinPic_i32CmdLineOption_OverrideConfigWord );
+    if ( TSessionConfig::GetOverrideConfigWord() >= 0)
+        PicBuf_SetConfigWord( 0, (uint16_t)TSessionConfig::GetOverrideConfigWord() );
     else
         PicBuf_SetConfigWord( 0,
                               PIC_DeviceInfo.wCfgmask_unused  // all unused bits HIGH="ERASED"
@@ -1488,31 +1470,32 @@ void MainFrame::onChar(wxKeyEvent& event)
 {
     int Key = event.GetKeyCode();
     bool Handled = false;
-   // See help on OnKeyDown : "KeyPreview" must be set !
-   if((Key==13) || (Key == WXK_NUMPAD_ENTER))
+    // See help on OnKeyDown : "KeyPreview" must be set !
+    if((Key==13) || (Key == WXK_NUMPAD_ENTER))
     {
-      if(  (PIC_PRG_iBatchProgState == BATCH_PROG_WAIT_START)
+        if((PIC_PRG_iBatchProgState == BATCH_PROG_WAIT_START)
         || (PIC_PRG_iBatchProgState == BATCH_PROG_WAIT_START2) )
-       { PIC_PRG_iBatchProgState =  BATCH_PROG_STARTED;
-           Handled = true;
-//         Key=0; // handled
-       }
+        {
+            PIC_PRG_iBatchProgState =  BATCH_PROG_STARTED;
+            Handled = true;
+        }
     }
-   else if(Key==27)
+    else if(Key==27)
     {
-      APPL_iUserBreakFlag = 1;  // signal for the programming routines to leave all loops
-      if( CommandOption.WinPic_fCommandLineMode )
-       { CommandOption.WinPic_fCommandLineMode = false;
-         aStatusBar->SetStatusText(_( "ESC: Command-line driven operation cancelled !"));
-         m_iMessagePanelUsage = MP_USAGE_INFO;
-           Handled = true;
-//         Key=0; // handled
-       }
-      if(PIC_PRG_iBatchProgState != BATCH_PROG_OFF)
-       { PIC_PRG_iBatchProgState =  BATCH_PROG_TERMINATE;
-         Key=0; // handled
-           Handled = true;
-       }
+        APPL_iUserBreakFlag = 1;  // signal for the programming routines to leave all loops
+        if( TSessionConfig::IsCommandLineMode() )
+        {
+            TSessionConfig::ClearCommandLineMode();
+            aStatusBar->SetStatusText(_( "ESC: Command-line driven operation cancelled !"));
+            m_iMessagePanelUsage = MP_USAGE_INFO;
+            Handled = true;
+        }
+        if (PIC_PRG_iBatchProgState != BATCH_PROG_OFF)
+        {
+            PIC_PRG_iBatchProgState =  BATCH_PROG_TERMINATE;
+            Key=0; // handled
+            Handled = true;
+        }
     }
     if (!Handled)
         event.Skip();

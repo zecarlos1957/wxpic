@@ -35,6 +35,8 @@
 #include <wx/app.h>
 #include <wx/config.h>
 #include <wx/snglinst.h>
+#include <wx/cmdline.h>
+#include <wx/msgout.h>
 
 #include <Appl.h>      // call the APPLication to display message strings
 #include <WinPicPr/PIC_HW.h>   // interface types etc for default values
@@ -56,6 +58,8 @@ enum
 
 TSessionConfig *TSessionConfig::theConfig;
 wxString        TSessionConfig::theLanguageName;
+int             TSessionConfig::TheTestMode = 0;
+
 
 
 class TConfigIO : public wxConfig
@@ -98,7 +102,7 @@ static wxString getMRFKey (int pIndex)
 //----------------------------------------------------------------------
 //-- Public Static Methods
 
-/**static*/bool TSessionConfig::Init (wxWindow *pParent)
+/**static*/bool TSessionConfig::Init (const wxApp *pApp)
 {
     TConfigIO   ConfigIO;
 
@@ -114,14 +118,24 @@ static wxString getMRFKey (int pIndex)
         theLanguageName = TLanguage::TheDefaultName;
     TLanguage::SetHelp();
 
-    //-- Now the language and help is set
-    //-- Select the session (if necessary dialog and help will be correct)
-    theConfig = new TSessionConfig(pParent, ConfigIO);
-    bool Result = (theConfig->aSession != sessionNONE);
-    if (!Result)
-        //-- No session has been selected
-        //-- Delete the configuration (the caller will terminate immediately)
-        delete theConfig;
+    //-- Load the command line parameters
+    if (!loadCmdLineParameters(pApp))
+        return false;
+
+    bool Result;
+
+    if (theCommandLineMode | theLoadOption | theSessionIsGiven)
+        Result = loadCmdLineSession(ConfigIO);
+    else
+    {
+        //-- Select the configuration using Dialog if necessary
+        theConfig = new TSessionConfig(ConfigIO);
+        Result = (theConfig->aSession != sessionNONE);
+        if (!Result)
+            //-- No session has been selected
+            //-- Delete the configuration (the caller will terminate immediately)
+            delete theConfig;
+    }
     return Result;
 }
 
@@ -232,35 +246,24 @@ void TSessionConfig::SaveRectAndCloseSession (const wxRect &pRect, const wxColou
     ConfigIO.Write(_T("DataMemFgColor"), pDataFgCol.GetAsString(wxC2S_HTML_SYNTAX));
 }
 
-
 //----------------------------------------------------------------------
-/**/ TSessionConfig::TSessionConfig (wxWindow *pParent, wxConfigBase &pConfigIO)
+/**/ TSessionConfig::TSessionConfig (int pSession, const wxString &pSessionName, wxConfigBase &pConfigIO, wxSingleInstanceChecker *pLock)
+: aSession (pSession)
+, aLock    (pLock)
+, aName    (pSessionName)
+, aIsSaved (true)
+{
+    setDefault(); //-- In case some parameters would fail reading
+    loadConfig(pConfigIO, NULL);
+}
+
+/**/ TSessionConfig::TSessionConfig (wxConfigBase &pConfigIO)
 : aSession (sessionDEFAULT)
 , aLock    (NULL)
 , aIsSaved (false)
 {
     //-- Define default configuration parameter values
-    //--------------------------------------------------
-    memset( &a, 0, sizeof(a) );
-    _tcscpy( a.ComPortName,
-#ifdef __WXMSW__
-           wxT("COM1"));
-#else
-           wxT("/dev/ttyS0"));
-#endif
-    a.InterfaceType     = PIC_INTF_TYPE_COM84;
-    a.IdleSupplyVoltage = 1; // norm
-                             // Note: the author's "JDM 2" required at least 2 microseconds before READ,
-                             //       and 1 microseconds for every clock-L and clock-H-period;
-                             //    so setting ExtraRdDelay_us=3
-    a.ExtraClkDelay_us  = 2; //       and ExtraClkDelay_us=2 by default sounds reasonable.
-    a.ExtraRdDelay_us   = 3; // seemed to be important for the JDM2
-
-    _tcscpy(a.DeviceName, _T("PIC??????"));
-    a.UnknownCodeMemorySize = 4096;  // used for PIC_DEV_TYPE_UNKNOWN..
-    a.UnknownDataMemorySize = 256;   // ..for a trial to program exotic types
-    //--------------------------------------------------
-
+    setDefault();
 
     pConfigIO.SetPath(theSessionNamePath);
     switch (pConfigIO.GetNumberOfEntries())
@@ -282,14 +285,13 @@ void TSessionConfig::SaveRectAndCloseSession (const wxRect &pRect, const wxColou
     case 1:
         //-- If there is only one session this must be the default one
         {
-            wxSingleInstanceChecker *Lock = new wxSingleInstanceChecker (getExternSessionName(sessionDEFAULT));
+            pConfigIO.SetPath(theSessionNamePath);
+            wxSingleInstanceChecker *Lock = getLockAndName(pConfigIO, sessionDEFAULT, aName);
+            wxASSERT(Lock != NULL);
             if (!Lock->IsAnotherRunning())
             {
                 //-- This unique session is available don't need to show the session dialog
-                //-- Just get its name and load its configuration
-                pConfigIO.SetPath(theSessionNamePath);
-                pConfigIO.Read(getSessionNumber(aSession), &aName);
-
+                //-- Just load its configuration
                 loadConfig(pConfigIO, Lock);
                 break;
             }
@@ -301,8 +303,9 @@ void TSessionConfig::SaveRectAndCloseSession (const wxRect &pRect, const wxColou
     default:
         //-- We don't know yet which session will be chosen
         aSession = sessionNONE;
+
         //-- Open the session dialog for the operator to select a session
-		TSessionDialog SessionDialog(*this, pParent);
+		TSessionDialog SessionDialog(*this, NULL);
 		SessionDialog.ShowModal();
         break;
     }
@@ -329,7 +332,7 @@ TSessionManager::TSessionInfo *TSessionConfig::GetSessionTab (void) const
             if (ConfigIO.Exists(SessionKey))
             {
                 wxSingleInstanceChecker Lock(getExternSessionName(Session));
-                ConfigIO.Read(getSessionNumber(Session), &(CurRes->Name));
+                ConfigIO.Read(SessionKey, &(CurRes->Name));
                 CurRes->State = (Lock.IsAnotherRunning())
                                 ? TSessionManager::sessionStateUSED
                                 : TSessionManager::sessionStateIDLE;
@@ -352,19 +355,17 @@ int TSessionConfig::SetSession (int pSession)
         //-- A new session has been requested, search one free
         ConfigIO.SetPath(theSessionNamePath);
         wxString SessionName;
-        int Session = 1;
-        wxSingleInstanceChecker *Lock = NULL;
-        while ((Lock == NULL) && (Session < sessionMAX))
+        int Session;
+        wxSingleInstanceChecker *Lock;
+        for (Session = 1; Session < sessionMAX; ++Session)
         {
-            Lock = new wxSingleInstanceChecker (getExternSessionName(Session));
-            bool InUse = Lock->IsAnotherRunning();
-            if (InUse
-            ||  ConfigIO.Read(getSessionNumber(Session), &SessionName))
-            {
-                delete Lock;
-                Lock = NULL;
-                ++Session;
-            }
+            Lock = getLockAndName(ConfigIO, Session, SessionName);
+
+            if ((Lock != NULL) && (!Lock->IsAnotherRunning()))
+                break; //-- Found
+
+            delete Lock;
+            Lock = NULL;
         }
         //-- No free session has been found: failed
         if (Lock == NULL)
@@ -449,7 +450,7 @@ bool TSessionConfig::RenameConfig (const wxString &pNewName)
         {
             wxString Value;
             ConfigIO.Read(Key, &Value);
-            if (Value == pNewName)
+            if (Value.CmpNoCase(pNewName) == 0)
                 break;
         }
     }
@@ -507,13 +508,15 @@ bool TSessionConfig::doSetSession (wxConfigBase &pConfigIO, int pSession, bool p
     if (pSession == aSession)
         return true;  //-- Already done: exit with succes
 
-    wxSingleInstanceChecker *Lock = new wxSingleInstanceChecker (getExternSessionName(pSession));
-    bool InUse = Lock->IsAnotherRunning();
+    pConfigIO.SetPath(theSessionNamePath);
 
     wxString SessionName;
-    pConfigIO.SetPath(theSessionNamePath);
-    if (InUse
-    ||  !pConfigIO.Read(getSessionNumber(pSession), &SessionName))
+    wxSingleInstanceChecker *Lock = getLockAndName(pConfigIO, pSession, SessionName);
+
+    if (Lock == NULL)
+        return false;
+
+    if (Lock->IsAnotherRunning())
     {
         delete Lock;
         return false;
@@ -533,6 +536,29 @@ void TSessionConfig::setConfigPath(wxConfigBase &pConfigIO, const wxChar *pHeadi
 {
     wxString SessionPath = getSessionPath (aSession);
     pConfigIO.SetPath(wxString::Format(_T("/%s/%s"), SessionPath.c_str(), pHeading));
+}
+
+
+void TSessionConfig::setDefault (void)
+{
+    memset( &a, 0, sizeof(a) );
+    _tcscpy( a.ComPortName,
+#ifdef __WXMSW__
+           wxT("COM1"));
+#else
+           wxT("/dev/ttyS0"));
+#endif
+    a.InterfaceType     = PIC_INTF_TYPE_COM84;
+    a.IdleSupplyVoltage = 1; // norm
+                             // Note: the author's "JDM 2" required at least 2 microseconds before READ,
+                             //       and 1 microseconds for every clock-L and clock-H-period;
+                             //    so setting ExtraRdDelay_us=3
+    a.ExtraClkDelay_us  = 2; //       and ExtraClkDelay_us=2 by default sounds reasonable.
+    a.ExtraRdDelay_us   = 3; // seemed to be important for the JDM2
+
+    _tcscpy(a.DeviceName, _T("PIC??????"));
+    a.UnknownCodeMemorySize = 4096;  // used for PIC_DEV_TYPE_UNKNOWN..
+    a.UnknownDataMemorySize = 256;   // ..for a trial to program exotic types
 }
 
 void TSessionConfig::saveConfig (wxConfigBase &pConfigIO)
@@ -663,4 +689,234 @@ void TSessionConfig::loadConfig(wxConfigBase &pConfigIO, wxSingleInstanceChecker
 
     aIsSaved = true;
 }
+
+
+/**static*/ wxSingleInstanceChecker *TSessionConfig::getLockAndName (wxConfigBase &pConfigIO, int pSession, wxString &pSessionName)
+{
+    wxSingleInstanceChecker *Result = new wxSingleInstanceChecker(getExternSessionName(pSession));
+    if (! pConfigIO.Read(getSessionNumber(pSession), &pSessionName))
+    {
+        delete Result;
+        Result = NULL;
+    }
+    return Result;
+}
+
+
+/**static*/ bool TSessionConfig::loadCmdLineSession (wxConfigBase &pConfigIO)
+{
+    int Session;
+    wxString SessionName;
+    wxSingleInstanceChecker *Lock;
+
+    pConfigIO.SetPath(theSessionNamePath);
+
+    if (theSessionName.IsEmpty())
+    {
+        Session = 0;
+        Lock = getLockAndName(pConfigIO, 0, SessionName);
+    }
+    else
+    {
+        //-- Try to find a session that matches the given name
+        for (Session = sessionDEFAULT; Session < sessionMAX; ++Session)
+        {
+            Lock = getLockAndName(pConfigIO, Session, SessionName);
+
+            if (Lock != NULL)
+            {
+                if (SessionName.CmpNoCase(theSessionName) == 0)
+                    break; //-- Session found
+
+                delete Lock;
+                Lock = NULL;
+            }
+        }
+    }
+    //-- If no session is locked this means that the requested session does not exist
+    if (Lock == NULL)
+    {
+        printSessionNameError(_("The session '%s' does exist"));
+        return false;  /// <<-- Anticipated return
+    }
+    //-- Can't work with a session already used by another instance
+    if (Lock->IsAnotherRunning())
+    {
+        delete Lock;
+        printSessionNameError(_("The session %s is already used"));
+        return false;  /// <<-- Anticipated return
+    }
+    //-- The config has been found load it in a Config Object
+    theConfig = new TSessionConfig(Session, SessionName, pConfigIO, Lock);
+
+    //-- Adjust the Device and/or Session name if they have been defined by command line parameters
+    if (theDeviceNameIsGiven)
+        SetDeviceName(theCmdLineDeviceName);
+    if (theFilenameIsGiven)
+        SetHexFileName(theCmdLineHexFilename.c_str());
+
+    return true;
+}
+
+/**static*/ void TSessionConfig::printSessionNameError (const wxChar *pError)
+{
+    wxMessageOutput *MsgOut = wxMessageOutput::Get();
+    if (MsgOut != NULL)
+        MsgOut->Printf(pError, theSessionName.c_str());
+}
+
+
+//-------------------------------
+//-- Command Line Parameters
+//-------------------------------
+
+
+//-- Definition of Command Line Parameter variables
+//--------------------------------------------------
+bool            TSessionConfig::theCommandLineMode    = false;
+bool            TSessionConfig::theEraseOption        = false;
+bool            TSessionConfig::theLoadOption         = false;
+bool            TSessionConfig::theProgramOption      = false;
+bool            TSessionConfig::theReadOption         = false;
+bool            TSessionConfig::theVerifyOption       = false;
+bool            TSessionConfig::theQuitOption         = false;
+bool            TSessionConfig::theNoDelayOption      = false;
+bool            TSessionConfig::theQueryBeforeOverwritingFiles = true;
+bool            TSessionConfig::theDeviceNameIsGiven  = false;
+bool            TSessionConfig::theSessionIsGiven     = false;
+bool            TSessionConfig::theFilenameIsGiven    = false;
+wxString        TSessionConfig::theCmdLineDeviceName;
+wxString        TSessionConfig::theCmdLineHexFilename;
+wxString        TSessionConfig::theSessionName;
+long            TSessionConfig::theOverrideConfigWord = -1;
+int             TSessionConfig::the200msTimeToQuit    = 0;
+
+
+
+
+
+/**static*/ bool TSessionConfig::loadCmdLineParameters (const wxApp *pApp)
+{
+
+    //-- Command Line Syntax
+    //-----------------------
+    static const wxChar theProgramSwitchName  [] = wxT("p");
+    static const wxChar theEraseSwitchName    [] = wxT("e");
+    static const wxChar theReadSwitchName     [] = wxT("r");
+    static const wxChar theVerifySwitchName   [] = wxT("v");
+    static const wxChar theQuitOptionName     [] = wxT("q");
+    static const wxChar theNoDelaySwitchName  [] = wxT("nodelay");
+    static const wxChar theOverwriteSwitchName[] = wxT("overwrite");
+    static const wxChar theDeviceOptionName   [] = wxT("device");
+    static const wxChar theConfigOptionName   [] = wxT("config_word");
+    static const wxChar theSessionOptionName  [] = wxT("session");
+
+    static const wxCmdLineEntryDesc theCmdLineDesc[] =
+    {
+        { wxCMD_LINE_PARAM,  NULL,                   NULL, _("input or output HEX file"),                                               wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+        { wxCMD_LINE_SWITCH, theProgramSwitchName,   NULL, _("Program the device with content of the HEX file") },
+        { wxCMD_LINE_SWITCH, theEraseSwitchName,     NULL, _("Erase the device") },
+        { wxCMD_LINE_SWITCH, theReadSwitchName,      NULL, _("Read the device and write the result to the HEX file") },
+        { wxCMD_LINE_SWITCH, theVerifySwitchName,    NULL, _("Verify the device is programmed as defined in the HEX file") },
+        { wxCMD_LINE_OPTION, theQuitOptionName,      NULL, _("Quit WxPic at the end of the operations waiting specified delay in second"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_NEEDS_SEPARATOR },
+        { wxCMD_LINE_SWITCH, theNoDelaySwitchName,   NULL, _("Do not wait before starting the operations") },
+        { wxCMD_LINE_SWITCH, theOverwriteSwitchName, NULL, _("Do not ask before writing the HEX file when it already exists") },
+        { wxCMD_LINE_OPTION, theDeviceOptionName,    NULL, _("Define the model of the device (default=last used)"),                     wxCMD_LINE_VAL_STRING, wxCMD_LINE_NEEDS_SEPARATOR },
+        { wxCMD_LINE_OPTION, theConfigOptionName,    NULL, _("Overrides the config word value read in the HEX file (4 Hexa digits)"),   wxCMD_LINE_VAL_STRING, wxCMD_LINE_NEEDS_SEPARATOR },
+        { wxCMD_LINE_OPTION, theSessionOptionName,   NULL, _("Defines the name of the session to use instead of the default session"),  wxCMD_LINE_VAL_STRING, wxCMD_LINE_NEEDS_SEPARATOR },
+        { wxCMD_LINE_NONE }
+    };
+
+
+    wxString Error;
+    wxCmdLineParser Parser(theCmdLineDesc, pApp->argc, pApp->argv);
+    for(;;) //-- Will never loop (exit through break or return at first pass)
+    {
+        wxString OptionValue;
+        if (Parser.Parse() != 0)
+            return false;
+
+        if (Parser.Found(theNoDelaySwitchName))
+            theNoDelayOption = true;
+        theDeviceNameIsGiven = Parser.Found(theDeviceOptionName,  &theCmdLineDeviceName);
+        theSessionIsGiven    = Parser.Found(theSessionOptionName, &theSessionName);
+
+        if (Parser.Found(theConfigOptionName, &OptionValue))
+        {
+            long NewConfig = HexStringToLongint(4, OptionValue.c_str());
+            if (NewConfig >= 0)
+                theOverrideConfigWord = NewConfig;
+            else
+            {
+                Error.Printf(_("Error: Invalid Config Word value = %s"), OptionValue.c_str() );
+                break;
+            }
+        }
+        if (Parser.Found(theEraseSwitchName))
+        {
+            theEraseOption     = true;
+            theCommandLineMode = true;
+        }
+        if (Parser.Found(theProgramSwitchName))
+        {
+            theProgramOption   = true;
+            theCommandLineMode = true;
+        }
+        if (Parser.Found(theReadSwitchName))
+        {
+            theReadOption      = true;
+            theCommandLineMode = true;
+        }
+        if (Parser.Found(theVerifySwitchName))
+        {
+            theVerifyOption    = true;
+            theCommandLineMode = true;
+        }
+        long Second;
+        if (Parser.Found(theQuitOptionName, &Second))
+        {
+            if (Second < 0)
+            {
+                Error.Printf(_("Error: Invalid quit duration value = %ld (must be positive or 0)"), Second );
+                break;
+            }
+            the200msTimeToQuit = Second * 5;
+            theQuitOption      = true;
+            theCommandLineMode = true;
+        }
+        if (Parser.Found(theOverwriteSwitchName))
+        {
+            theQueryBeforeOverwritingFiles = false;
+            if (!theReadOption)
+            {
+                wxMessageOutput *MsgOut = wxMessageOutput::Get();
+                if (MsgOut != NULL)
+                    MsgOut->Printf(_("Info: Overwrite option ignored (no read option)"));
+            }
+        }
+        if (Parser.GetParamCount() > 0)
+        {
+            theCmdLineHexFilename = Parser.GetParam();
+            if (theCmdLineHexFilename.Len() > 255)
+            {
+                Error = _("Error: File name too long (max length=255)");
+                break;
+            }
+            theFilenameIsGiven = true;
+            if (!theReadOption
+            &&  ((theProgramOption | theVerifyOption)
+              || ( !theQuitOption && wxFileExists(OptionValue) ) ))
+                theLoadOption = true;
+        }
+        else if (theProgramOption | theVerifyOption | theReadOption)
+        {
+            Error = _("Error: Missing HEX file name parameter");
+            break;
+        }
+        return true;
+    }
+    Parser.SetLogo(Error);
+    Parser.Usage();
+    return false;
+} // end LoadCmdLineParameters()
 

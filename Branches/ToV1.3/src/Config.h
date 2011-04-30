@@ -24,6 +24,7 @@
 #include "SessionList.h"
 #include <WinPicPr/PIC_HW.h>
 
+class wxApp;
 class wxWindow;
 class wxConfigBase;
 class wxColour;
@@ -36,7 +37,7 @@ class TSessionConfig : public TSessionManager
 public:
     //-- Must be called once at startup
     //-- If Init returns false caller must terminate immediatly (don't call SaveRectAndCloseSession)
-    static bool Init (wxWindow *pParent);
+    static bool Init (const wxApp *pApp);
 
     //-- To be called to display the Session dialog and (possibly) change of session and config
     //-- If ShowDialog returns false caller mustt terminate AFTER CALLING SaveRectAndCloseSession
@@ -152,6 +153,41 @@ public:
     static uint32_t       GetUnknownDataMemorySize           (void) { return theConfig->a.UnknownDataMemorySize; }
     static void           SetUnknownDataMemorySize(uint32_t pValue) { theConfig->setInt((TIntDataPtr)&TData::UnknownDataMemorySize, (int)pValue); }
 
+    //-- Command Line Parameters
+
+    static bool           IsCommandLineMode                  (void) { return theCommandLineMode; }
+    static void           ClearCommandLineMode               (void) { theCommandLineMode = false; }
+
+    static bool           IsEraseOption                      (void) { return theEraseOption; }
+    static void           ClearEraseOption                   (void) { theEraseOption = false; }
+
+    static bool           IsLoadOption                       (void) { return theLoadOption; }
+    static void           ClearLoadOption                    (void) { theLoadOption = false; }
+
+    static bool           IsProgramOption                    (void) { return theProgramOption; }
+    static void           ClearProgramOption                 (void) { theProgramOption = false; }
+
+    static bool           IsReadOption                       (void) { return theReadOption; }
+    static void           ClearReadOption                    (void) { theReadOption = false; }
+
+    static bool           IsVerifyOption                     (void) { return theVerifyOption; }
+    static void           ClearVerifyOption                  (void) { theVerifyOption = false; }
+
+    static bool           IsQuitOption                       (void) { return theQuitOption; }
+    static void           ClearQuitOption                    (void) { theQuitOption = false; }
+
+    static bool           IsNoDelayOption                    (void) { return theNoDelayOption; }
+    static void           ClearNoDelayOption                 (void) { theNoDelayOption = false; }
+
+    static bool           IsQueryBeforeOverwritingFiles      (void) { return theQueryBeforeOverwritingFiles; }
+
+    static long           GetOverrideConfigWord              (void) { return theOverrideConfigWord; }
+
+    static int            Get200msTimeToQuit                 (void) { return the200msTimeToQuit; }
+
+    static bool           IsCmdLineDeviceName                (void) { return theDeviceNameIsGiven; }
+
+    static int  TheTestMode;
 
 
     //-- Interface TSessionDialog::TSessionManager
@@ -209,8 +245,9 @@ private:
     } a;
 
 
-    //-- The constructor is private because it is called only by Init
-    /**/ TSessionConfig (wxWindow *pParent, wxConfigBase &pConfigIO);
+    //-- The constructors are private because they are called only by Init
+    /**/ TSessionConfig (int pSession, const wxString &pSessionName, wxConfigBase &pConfigIO, wxSingleInstanceChecker *pLock);
+    /**/ TSessionConfig (wxConfigBase &pConfigIO);  //-- Ask operator which config to load (unless only one)
 
     //-- Set the session and if pQuickSave save config of previous session (that must exist)
     bool doSetSession      (wxConfigBase &pConfigIO, int pSession, bool pQuickSave);
@@ -219,13 +256,43 @@ private:
     //-- Load the current configuration
     //-- pLock is the session Lock that must have been acquired (or NULL if session is already current)
     void loadConfig        (wxConfigBase &pConfigIO, wxSingleInstanceChecker *pLock);
+    //-- Set config default values
+    void setDefault        (void);
     //-- Set the configuration path on given heading of current session
     void setConfigPath     (wxConfigBase &pConfigIO, const wxChar *pHeading);
 
-    static int getMostRecentFiles(wxConfigBase &pConfigIO, wxArrayString &pFileTable);
+    //-- Return the Lock and the Name of the given session
+    //-- If the session does not exist, the return Lock is NULL
+    //-- the pConfigIO must be set on the Session Name Path before calling
+    static wxSingleInstanceChecker *getLockAndName (wxConfigBase &pConfigIO, int pSession, wxString &pSessionName);
+
+    static int  getMostRecentFiles    (wxConfigBase &pConfigIO, wxArrayString &pFileTable);
+    static bool loadCmdLineParameters (const wxApp *pApp);
+    static bool loadCmdLineSession    (wxConfigBase &pConfigIO);
+    static void printSessionNameError (const wxChar *pError);
 
 
     static wxString     theLanguageName;
+
+    static bool         theCommandLineMode;
+    static bool         theEraseOption;
+    static bool         theLoadOption;
+    static bool         theProgramOption;
+    static bool         theReadOption;
+    static bool         theVerifyOption;
+    static bool         theQuitOption;
+    static bool         theNoDelayOption;
+    static bool         theQueryBeforeOverwritingFiles;
+    static bool         theDeviceNameIsGiven;
+    static bool         theConfigWordIsOveridden;
+    static bool         theSessionIsGiven;
+    static bool         theFilenameIsGiven;
+    static long         theOverrideConfigWord;
+    static int          the200msTimeToQuit;
+    static wxString     theCmdLineDeviceName;
+    static wxString     theCmdLineHexFilename;
+    static wxString     theSessionName;
+
 
     typedef wxChar TData::*TCharDataPtr;
     typedef int    TData::*TIntDataPtr;

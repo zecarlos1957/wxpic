@@ -278,8 +278,6 @@ void TConfigMemoryPanel::UpdateIdAndConfMemDisplay(void)
 //          SG_CfgMem->Cells[2][iGridLine] = sz80Temp;
 //         }
                 iGridLine++;
-                if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-                    APPL_LogEvent( _("UpdateIdAndConfMemDisplay: line %d "), iGridLine );
             } // end if < successfully retrieved data from a buffer for this location >
         }
     } // end for
@@ -313,8 +311,6 @@ void TConfigMemoryPanel::UpdateIdAndConfMemDisplay(void)
 //              SG_CfgMem->Cells[2][iGridLine] = sz80Temp;
 //            }
                 iGridLine++;
-                if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-                    APPL_LogEvent( _("UpdateIdAndConfMemDisplay: line %d "), (int)iGridLine );
             } // end if < successfully retrieved data from a buffer for this location >
         }
     } // end if < "ID memory" separated from "Config memory" >
@@ -323,14 +319,10 @@ void TConfigMemoryPanel::UpdateIdAndConfMemDisplay(void)
 //        SG_CfgMem->RowCount = iGridLine;
 //  else
 //        SG_CfgMem->RowCount = 2;
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("UpdateIdAndConfMemDisplay: Calling EndUpdate()") );
     aCfgMemGrid->EndBatch();
 //  SG_CfgMem->Cols[0]->EndUpdate();    // does this help to speed things up ?
 //  SG_CfgMem->Cols[1]->EndUpdate();
 //  SG_CfgMem->Cols[2]->EndUpdate();
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("UpdateIdAndConfMemDisplay: EndUpdate() finished") );
 
     if ( PicBuf_GetBufferWord( PIC_DeviceInfo.lDeviceIdAddr, &dw ) > 0 )
     {
@@ -347,9 +339,6 @@ void TConfigMemoryPanel::UpdateIdAndConfMemDisplay(void)
         aDevId->SetLabel(_("<error>"));
     }
 
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("UpdateIdAndConfMemDisplay: Searching Device Name by ID WORD...") );
-
     // Note 1: PicDev_GetDeviceNameByIdWord() can be TERRIBLY SLOW
     //         when called for the first time, due to the sluggish reading
     //         of the INI-file "devices.ini" .  But too late to change that now.
@@ -357,9 +346,6 @@ void TConfigMemoryPanel::UpdateIdAndConfMemDisplay(void)
     //         (like PIC16F630 and PIC18F4220), PicDev_GetDeviceNameByIdWord()
     //         needs to know the number of bits per instruction word"; 14,16,24,..
     strcpy( m_sz80DetectedPicDevName, PicDev_GetDeviceNameByIdWord(dw, PIC_DeviceInfo.iBitsPerInstruction) );
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("UpdateIdAndConfMemDisplay: Finished searching Device Name") );
-
 
     MainFrame::TheMainFrame->m_fPicDeviceConflict = false;
     if ( m_sz80DetectedPicDevName[0]!=0 )
@@ -397,9 +383,6 @@ void TConfigMemoryPanel::UpdateIdAndConfMemDisplay(void)
 
     MainFrame::TheMainFrame->aStatusBar->SetStatusText(old_msg);
     MainFrame::TheMainFrame->Update();
-
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("UpdateIdAndConfMemDisplay: finished") );
 
     --(MainFrame::TheMainFrame->m_Updating);
 

@@ -64,7 +64,7 @@ class TDeviceCfgPanel: public wxPanel
         void UpdateConfigBitGrid(void);
         void ApplyConfigBitGrid(void);
 
-        static void UpdateDevice(void);
+        static bool UpdateDevice(void);
 
 	protected:
 

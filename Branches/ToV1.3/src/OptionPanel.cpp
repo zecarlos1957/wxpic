@@ -17,7 +17,6 @@
 
 #include "OptionPanel.h"
 #include "MainFrame.h"
-#include "CommandOption.h"
 #include "Language.h"
 #include "Appl.h"
 #include "Config.h"
@@ -493,18 +492,18 @@ void TOptionPanel::updateMPLabDevDir (const wxString &pDirPath)
 //---------------------------------------------------------------------------
 void TOptionPanel::onStartTestButtonClick(wxCommandEvent& event)
 {
-    if ( CommandOption.WinPic_iTestMode )
-        CommandOption.WinPic_iTestMode = 0;
+    if ( TSessionConfig::TheTestMode )
+        TSessionConfig::TheTestMode = 0;
     else
     {
         long TestMode=aTestChoice->GetSelection();
         if (TestMode != 0)
-            CommandOption.WinPic_iTestMode = TestMode;
+            TSessionConfig::TheTestMode = TestMode;
     }
-    switch ( CommandOption.WinPic_iTestMode ) // any special "one-shot"-test ?
+    switch ( TSessionConfig::TheTestMode ) // any special "one-shot"-test ?
     {
     case 1:
-        CommandOption.WinPic_iTestMode = 0;
+        TSessionConfig::TheTestMode = 0;
         if ( wxMessageBox(
                     _("Remove the PIC from the socket,\n connect interface and power supply.\nDo you want to continue ?"),
                     _("Interface Speed Test"),
@@ -520,7 +519,7 @@ void TOptionPanel::onStartTestButtonClick(wxCommandEvent& event)
         break;
     }
 
-    if ( CommandOption.WinPic_iTestMode )
+    if ( TSessionConfig::TheTestMode )
     {
         aStartTestButton->SetLabel(_("Stop test"));
     }

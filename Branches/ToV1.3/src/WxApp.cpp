@@ -45,19 +45,16 @@ bool MyApp::OnInit()
 {
     bool wxsOK = true;
 
-    wxsOK = TSessionConfig::Init(NULL);
+    //(*AppInitialize
+    wxInitAllImageHandlers();
+    //*)
+
+    TResource::Load();
+
+    wxsOK = TSessionConfig::Init(this);
 
     if (wxsOK)
-    {
-        TResource::Load();
-        SetTopWindow(MainFrame::TheMainFrame);
-
-        //(*AppInitialize
-        wxInitAllImageHandlers();
-        //*)
-
-        wxsOK = MainFrame::CreateAndShow();
-    }
+        SetTopWindow(MainFrame::CreateAndShow());
 
     return wxsOK;
 }

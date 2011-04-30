@@ -19,7 +19,6 @@
 /*-------------------------------------------------------------------------*/
 
 #include "MainFrame.h"
-#include "CommandOption.h"
 #include "Appl.h"
 #include "Config.h"
 #include "SessionList.h"
@@ -44,43 +43,33 @@
 #define MAX_MESSAGES_IN_LOG     500
 
 
-/*static*/ bool MainFrame::CreateAndShow (void)
+/*static*/ wxWindow *MainFrame::CreateAndShow (void)
 {
-    TheMainFrame = new MainFrame();
-    //-- Overwrite the loaded configuration with the command parameters
-    if (!CommandOption.Load(wxTheApp))
-        return false;
-
 
     // Initialize the memory buffers and other stuff...
-    if ( ! PIC_HEX_Init() ) // Initialize buffers for program + data memory  (#1)
-    {
-        TheMainFrame->Close();     // buffer-init failed ? Almost impossible under windows !
-        return false;
-    }
+    if ( ! PIC_HEX_Init() )
+        throw _T("Out of Memory") ;     // buffer-init failed ? Almost impossible under windows !
+
+    TheMainFrame = new MainFrame();
+
     //-- Initialise the interface panel
     TheMainFrame->aInterfaceTab->UpdateInterfaceType();
     PIC_PRG_Init();  // Set default PIC type and type-dependent infos (#2)
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("CreateForm: Setting PIC-Device") );
 
-    TDeviceCfgPanel::UpdateDevice();
+    if (!TDeviceCfgPanel::UpdateDevice() && TSessionConfig::IsCmdLineDeviceName() )
+    {
+        wxMessageBox(wxString::Format(_("The specified Device Name %s is invalid. Command line instructions aborted."), TSessionConfig::GetDeviceName()),_("Wrong Device Name"));
+        TSessionConfig::ClearCommandLineMode();
+    }
 
     PIC_HEX_ClearBuffers(); // contents of some memory buffers depends on PIC_DeviceInfo !
 
-    if ( CommandOption.WinPic_i32CmdLineOption_OverrideConfigWord >= 0)
+    if ( TSessionConfig::GetOverrideConfigWord() >= 0)
         // override config word if specified in command line:
-        PicBuf_SetConfigWord(0, CommandOption.WinPic_i32CmdLineOption_OverrideConfigWord ) ;
-
-
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("CreateForm: Initialising help system") );
-
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("CreateForm: done") );
+        PicBuf_SetConfigWord(0, TSessionConfig::GetOverrideConfigWord() ) ;
 
     TheMainFrame->Show();
-    return true;
+    return TheMainFrame;
 }
 
 
@@ -1161,15 +1150,15 @@ bool MainFrame::LoadFileAndProgramPic(const wxChar *fn, bool program_too)
         _stprintf(cp, _(" (%s)"), fn );
         APPL_ShowMsg( 0, sz255Temp );
     }
-    if (CommandOption.WinPic_i32CmdLineOption_OverrideConfigWord>=0)
+    if (TSessionConfig::GetOverrideConfigWord() >= 0)
     {
         // replace the CONFIGURATION WORD which should have been in the config file ?
-        if ( (uint16_t)PicBuf_GetConfigWord(0) != (uint16_t)CommandOption.WinPic_i32CmdLineOption_OverrideConfigWord)
+        if ( (uint16_t)PicBuf_GetConfigWord(0) != (uint16_t)TSessionConfig::GetOverrideConfigWord() )
         {
             APPL_ShowMsg( 0, _("Info: Config word set to 0x%06lX from command line .") ,
-                          CommandOption.WinPic_i32CmdLineOption_OverrideConfigWord);
+                          TSessionConfig::GetOverrideConfigWord() );
         }
-        PicBuf_SetConfigWord( 0, CommandOption.WinPic_i32CmdLineOption_OverrideConfigWord );
+        PicBuf_SetConfigWord( 0, TSessionConfig::GetOverrideConfigWord() );
     } // end if < override configuration word > ?
 
     UpdateAllSheets(); // make the changes visible on the screen
@@ -1200,7 +1189,7 @@ bool MainFrame::LoadFileAndProgramPic(const wxChar *fn, bool program_too)
 bool MainFrame::DumpEverythingToHexFile(const wxChar *fn)
 {
 
-    if ( CommandOption.WinPic_fCommandLineOption_QueryBeforeOverwritingFiles )
+    if ( TSessionConfig::IsQueryBeforeOverwritingFiles() )
     {
         if ( wxFile::Exists(fn) )
         {
@@ -1231,8 +1220,8 @@ bool MainFrame::DumpEverythingToHexFile(const wxChar *fn)
 //---------------------------------------------------------------------------
 void MainFrame::StopParsingCmdLine_Internal(void)
 {
-    CommandOption.WinPic_fCommandLineMode = false;  // error, stop parsing command line
-    aStatusBar->SetStatusText(aStatusBar->GetStatusText() + _(".. stopped parsing cmd-line")) ;
+    TSessionConfig::ClearCommandLineMode();  // error, stop executing command line
+    aStatusBar->SetStatusText(aStatusBar->GetStatusText() + _(".. stopped executing cmd-line")) ;
     m_iMessagePanelUsage = MP_USAGE_ERROR;
 } // end StopParsingCmdLine_Internal()
 
@@ -1240,28 +1229,13 @@ void MainFrame::StopParsingCmdLine_Internal(void)
 //---------------------------------------------------------------------------
 void MainFrame::UpdateAllSheets(void)
 {
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("Update all tabs: CODE memory ..") );
     aCodeMemTab->UpdateCodeMemDisplay();     // show CODE in the hex display
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("Update all tabs: DATA memory ..") );
     aDataMemTab->UpdateDataMemDisplay();     // show EEPROM DATA  "  "  "
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("Update all tabs: ID and Config memory dump ..") );
     aConfigMemoryTab->UpdateIdAndConfMemDisplay();  // show ID and CONFIG MEMORY as hex- or bin- dump
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("Update all tabs: Device/Config tab ..") );
     aDeviceCfgTab->UpdateDeviceConfigTab(true/*fUpdateHexWord*/ );
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("Update all tabs: Interface display ..") );
     aInterfaceTab->UpdateInterfaceTestDisplay(); // show current state of control lines
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("Update all tabs: Options display ..") );
     aOptionTab->UpdateOptionsDisplay();
     Update();  // make the changes visible on the screen
-    // 2005-03-05: .. and turned the contents of the TRichEdit into a mess ?!
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("Update all tabs: DONE .") );
 } // end UpdateAllSheets()
 
 

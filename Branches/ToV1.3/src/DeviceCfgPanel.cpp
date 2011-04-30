@@ -194,8 +194,6 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
     // ex: Be sure that the item index matches the definition of
     //     PIC_DEV_TYPE_xxxx in PIC_PRG.h !!
     // Now all types in the list are filled during run-time from a table..
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("UpdateDeviceConfigTab: Listing devices..") );
     fFoundDevName = aPartNameChoice->SetStringSelection(TSessionConfig::GetDeviceName());
 
     aHasFlashMemoryChk->SetValue(PIC_DeviceInfo.iCodeMemType==PIC_MT_FLASH) ;
@@ -229,9 +227,7 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
         aConfigWordHexEdit2->ChangeValue(wxString::Format(_T("%04X"), PicBuf_GetConfigWord(1)));
     }
 
-    // Since 2005-03-11 : Fill the string grid ("table") with special configuration bits (or bit groups):
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("UpdateDeviceConfigTab: Updating config BIT GRID..") );
+    // Fill the string grid ("table") with special configuration bits
     UpdateConfigBitGrid();
 
     aProgMemSizeText  ->ChangeValue(wxString::Format(_T("%d"), PIC_DeviceInfo.lCodeMemSize));
@@ -272,9 +268,6 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
         SavedData += wxString::Format(_("  oscillator_cal:%s"), psz);
     }
     aSavedBeforeEraseText->SetLabel(SavedData);
-
-    if ( CommandOption.WinPic_iTestMode & WP_TEST_MODE_GUI_SPEED )
-        APPL_LogEvent( _("UpdateDeviceConfigTab: DONE .") );
 
     if (MainFrame::TheMainFrame->m_Updating>0)
         --(MainFrame::TheMainFrame->m_Updating);
@@ -419,13 +412,14 @@ void TDeviceCfgPanel::ApplyConfigBitGrid(void)
 } // end ApplyConfigBitGrid()
 
 
-/**static*/ void TDeviceCfgPanel::UpdateDevice(void)
+/**static*/ bool TDeviceCfgPanel::UpdateDevice(void)
 {
     T_PicDeviceInfo MyDeviceInfo;
     wxColour Colour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT);
 
     wxCharBuffer DeviceName = wxString(TSessionConfig::GetDeviceName()).mb_str(wxConvISO8859_1);
-    if ( PicDev_GetDeviceInfoByName(DeviceName, &MyDeviceInfo) < 0 )
+    bool Result = ( PicDev_GetDeviceInfoByName(DeviceName, &MyDeviceInfo) >= 0 );
+    if ( ! Result )
         PIC_PRG_SetDeviceType( PIC_DEV_TYPE_UNKNOWN );
     else
     {
@@ -441,6 +435,7 @@ void TDeviceCfgPanel::ApplyConfigBitGrid(void)
         MainFrame::TheMainFrame->aOptionTab->aMplabDirLabel->SetForegroundColour(Colour);
         MainFrame::TheMainFrame->aOptionTab->aMplabDirLabel->Refresh();
     }
+    return Result;
 }
 
 
