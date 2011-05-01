@@ -236,7 +236,8 @@ void TSessionDialog::renameSession (void)
     bool NoChange = false;
     bool Failed   = false;
 
-    wxString  NewName = aSessionNameEdit->GetValue();
+    wxString  NewName = aSessionNameEdit->GetValue().Strip(wxString::both);
+    aSessionNameEdit->SetValue(NewName);
     for (int i = 0; i < aSessionCount; ++i)
         if (aSessionInfoTab[i].Name == NewName)
         {
