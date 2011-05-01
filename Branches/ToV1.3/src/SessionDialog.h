@@ -91,8 +91,8 @@ class TSessionDialog: public wxDialog
         void saveConfig      (bool pCancel = false);
         //-- Start a new session and return the session number (-1 if creation failed)
         int  startSession    (void);
-        //-- Rename the session and clear name change indicator
-        void renameSession   (void);
+        //-- Rename the session and clear name change indicator (return false if rename failed)
+        bool renameSession   (void);
         //-- Mark that the Session Name is unmodified
         void setNameSynch    (void);
         //-- Ask for saving unsave config. Return false if user canceled

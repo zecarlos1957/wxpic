@@ -231,7 +231,7 @@ void TSessionDialog::saveConfig (bool pCancel)
     aDropChangeButton->Enable(false);
 }
 
-void TSessionDialog::renameSession (void)
+bool TSessionDialog::renameSession (void)
 {
     bool NoChange = false;
     bool Failed   = false;
@@ -265,6 +265,7 @@ void TSessionDialog::renameSession (void)
             //-- No need to update current this is already done
             fillSessionList(/*pDontUpdateCurrent*/true);
     }
+    return Result;
 }
 
 void TSessionDialog::setNameSynch (void)
@@ -322,7 +323,8 @@ bool TSessionDialog::askRename (void)
                                 wxYES_NO | wxNO_DEFAULT | wxCANCEL | wxICON_QUESTION,
                                 this);
     if (Answer == wxYES)
-        renameSession();
+        if (!renameSession())
+            return false; //-- Renaming failed so cancel
     return (Answer != wxCANCEL);
 }
 
