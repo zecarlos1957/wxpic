@@ -105,10 +105,13 @@
 <p> Il est possible d'appeler WxPic dans un fichier de commande, or dans un environnement de programmation intégré (IDE) pour effectuer automatiquement une opération sans intervention manuelle. Par exemple il est possible de demander à WxPic de charger un programme depuis un fichier HEX, d'écrire son contenu dans un composant cible et de se terminer après celà.</p>
 <p> Les options acceptées sur la ligne de commande sont les suivants&nbsp;:</p>
 <dl>
-  <dt>&lt;Tout texte ne commançant par une barre oblique ('/')&gt;</dt>
-  <dd> Considéré comme un nom de fichier. Si la ligne de commande contient l'option <a href="#pSwitch" class="refdt">/p</a>, ce fichier sera chargé en mémoire. Si le fichier ne peut pas être chargé, l'exécution de la ligne de commande est immédiatement arrêtée. Il est alors possible de rechercher manuellement le fichier.<br />
+  <p class="important">Sous Linux remplacer le '/' devant les paramètres par '-'</p>
+  <dt>&lt;Tout texte ne commançant par une barre oblique ('/') [par un tiret ('-') sous Linux]&gt;</dt>
+  <dd> Ce texte est considéré comme un nom de fichier. Si la ligne de commande contient l'option <a href="#pSwitch" class="refdt">/p</a>, ce fichier sera chargé en mémoire. Si le fichier ne peut pas être chargé, l'exécution de la ligne de commande est immédiatement arrêtée. Il est alors possible de rechercher manuellement le fichier.<br />
     Si la ligne de commande contient le paramètre <a href="#rSwitch" class="refdt">/r</a>, c'est le nom du fichier HEX qui sera produit.<br />
-    Si aucune des option <a href="#pSwitch" class="refdt">/p</a> ou <a href="#rSwitch" class="refdt">/r</a> ne sont spécifiés, le fichier sera chargé en mémoire mais pas écrit dans le composant. </dd>
+    Si aucune des option <a href="#pSwitch" class="refdt">/p</a> ou <a href="#rSwitch" class="refdt">/r</a> ne sont spécifiés, le fichier sera chargé en mémoire mais pas écrit dans le composant.<br />
+    Un seul fichier peut être spécifié. S'il contient des espaces, il doit être encadré de guillemets.
+</dd>
   <dt><a name="pSwitch" id="Parameterp"></a>/p</dt>
   <dd> Programme le composant à partir du contenu de la mémoire.</dd>
   <dt>/e</dt>
@@ -119,8 +122,8 @@
   <dd> Vérifie que le contenu du composant est identique à celui de la mémoire. Ceci n'est pas nécessaire avec l'option <a href="#pSwitch" class="refdt">/p</a> car la programmation est suivie par une vérification pour la plus par des composants.</dd>
   <dt>/q</dt>
   <dd> Termine WxPic. Sans cette commande WxPic doit être arrêté manuellement même en mode ligne de commande.  </dd>
-  <dt>/q=X</dt>
-  <dd> Termine WxPic après X secondes d'attente pour laisser le temps de lire les messages.</dd>
+  <dt>/q=&lt;n&gt;</dt>
+  <dd> Termine WxPic après <span class="quote">&lt;n&gt;</span> secondes d'attente après la fin des opérations pour laisser le temps de lire les messages. &lt;n&gt; doit être positif ou nul. Si cette commande n'est pas donnée WxPic reste ouvert à la fin de l'exécution des opérations spécifiées par la ligne de commande. Notez cependant qu'en cas d'erreur lors de l'opération de vérification, WxPic interrompt l'exécution de la ligne de commande et donc la commande <span class="quote">/q=&lt;n&gt;</span> ne sera pas exécutée.</dd>
   <dt>&nbsp;</dt>
   <dt>/nodelay</dt>
   <dd>Habituellement, en mode ligne de commande, WxPic attend quelques secondes avant de programmer afin de laisser une chance d'annuler l'opération. Avec cette option /nodelay il n'y a pas délai avant le début de la programmation.  </dd>
@@ -130,9 +133,13 @@
   <dd> Spécifie le type du composant à utiliser. Sans cette option c'est le composant utilisé lors de la dernière session qui sera utilisé. Il ne doit pas y avoir d'espace dans l'option. Exemple: <code>/device=PIC16F628</code></dd>
   <dt>/config_word=XXXX</dt>
   <dd> Écrase la valeur du mot de configuration qui aurait été lue dans un fichier HEX par la valeur spécifiée. XXXX est la valeur spécifiée avec 4 caractères hexadécimaux. Il ne doit pas y avoir d'espace dans l'option.  </dd>
+  <dt><a name="SessionCmdLine" id="SessionCmdLine"></a>/session=XXXX</dt>
+  <dd>Sélectionne la session XXXX (sans distinction de casse) à la place de la <a href="Panel.htm#SessionParDefaut">Session par Défaut</a> qui est normalement utilisée lorsque des paramètres sont spécifiés sur la ligne de commande. S'il n'existe qu'une seule session (la <a href="Panel.htm#SessionParDefaut">Session par Défaut</a>) ce paramètre est ignoré. Si aucun nom de session n'est fourni (<span class="quote">/session=</span>) c'est encore la <a href="Panel.htm#SessionParDefaut">Session par Défaut</a> qui est utilisée.<br />
+  Si le nom de session contient un espace, le paramètre doit être entouré de guillemets (par exemple: <span class="quote">/session=&quot;Ma Session&quot;</span> ou <span class="quote">&quot;/session=Ma Session&quot;</span>)<br />
+  Sous Windows il ne sera pas possible de spécifier un nom de session contenant lui-même des guillemets.</dd>
 </dl>
-<p>Le déroulement des opérations de la ligne de commande peut être interrompu en appuyant sur Echap.</p>
-<p>De plus pendant l'exécution de la ligne de commande, le menu principal reste actif. Certaines commandes à partir du menu peuvent interrompre l'exécution de la ligne de commande.</p>
+<p>Le déroulement des opérations de la ligne de commande peut être interrompu en appuyant sur Echap. Une erreur lors de la vérification interrompt également le déroulement des opérations.</p>
+<p>Lorsqu'un nom de device ou de fichier HEX est fourni par la ligne de commande, celui-ci modifie la configuration de la session choisie (par <span class="quote">/session</span> ou celle par défaut). Mais cette modification n'est pas immédiatement sauvegardée. Elle le sera si l'option <span class="quote">/q</span> est exécutée ou par une opération qui <a href="Panel.htm#SaveConfigMethods">enregistre la configuration</a>.</p>
 <p>Quelques exemples de ligne de commande: </p>
 <dl>
   <dt><code>WxPic keyer1.hex /p /q</code></dt>

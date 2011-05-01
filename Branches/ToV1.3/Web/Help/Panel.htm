@@ -175,6 +175,18 @@
   		    <li>The Default Hex File,</li>
   		    <li>The Programming Modes.</li>
 	    </ul>
+        <a name="SaveConfigMethods" id="SaveConfigMethods"></a>These parameters are saved when the configuration is saved, which is performed by one of the following actions:
+        <ul>
+          <li>Quit  WxPic in standard way (Click on the window close box or <a href="Menu.htm#QuitSaveMenu">Quit menu</a>)</li>
+          <li>Switch session using the <a href="Menu.htm#QuickSession">Session quick selector</a>,</li>
+          <li>Click on the <a href="#SaveConfig">Save Configuration Button</a>,</li>
+          <li>Confirm the Save proposition made by the <a href="#SwitchTo">Switch to</a> operation of the Session Manager.</li>
+        </ul>
+        On the other hand, these parameter changes are lost when the configuartion is discarded, which occurs with one of the following actions:
+        <ul>
+          <li><a href="Menu.htm#QuitMenu">Quit  WxPic without saving</a>,</li>
+          <li><a href="#DropChange">Drop Change</a> of the configuration.</li>
+        </ul>
   </dd>
   <dt>A session configuration does not include:</dt>
   <dd>
@@ -230,7 +242,7 @@
   <dt><a name="SessionMngClose" id="SessionMngClose"></a>Close</dt>
   <dd>Close the dialog. If no session is <a href="#CurrentDefinition" class="quote">Current</a> at this time WxPic will exit. Else the WxPic operations will resume with the configuration of the <a href="#CurrentDefinition" class="quote">Current</a> session. If the session name had been modified but not saved, a confirmation dialog will be displayed allowing either Renaming the session before closing, Droping these changes or cancelling the <span class="quote">Close</span> operation.</dd>
   <dt><a name="RenameSession" id="RenameSession"></a>Rename</dt>
-  <dd>Apply the changes made to the current session name in the text field above the button. Note that Session name length is limited to 30 characters maximum.<br />
+  <dd>Apply the changes made to the current session name in the text field above the button. Note that Session name length is limited to 30 characters maximum and that  2 sessions cannot have the same name ignoring the case. The leading and trailing spaces are ignored and series of spaces inside the name are replaced by a single space. In addition quotes should not be used in session names. Else they cannot be specified on <a href="index.htm#SessionCmdLine"> command line</a>.<br />
     This button is disabled if no change has been made to the session name.</dd>
   <dt><a name="SaveConfig" id="SaveConfig"></a>Save Configuration</dt>
   <dd>Save the configuration of the <a href="#CurrentDefinition" class="quote">Current</a> session.<br />

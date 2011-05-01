@@ -116,63 +116,57 @@
   to do an automated job without any user intervention. For example, you can
   tell WxPic to load a program from a hexfile, write it into the target device,
   and terminate itself afterwards. </p>
-<p> The following list shows all command line parameters which are accepted: </p>
+<p> The following list shows all command line parameters which are accepted:</p>
+<p class="important">For Linux replace the '/' parameter prefix by '-'</p>
 <dl>
-  <dt>&lt;any string not beginning with a slash&gt;</dt>
-  <dd> considered a file name.
-    If the command line contains a /p command (&quot;program)&quot;,&nbsp;this file will
+  <dt>&lt;any string not beginning with a slash ('/') [a dash ('-') for Linux]&gt;</dt>
+  <dd> This string is considered a file name.
+    If the command line contains a <a href="#pSwitch" class="quote">/p</a> command (&quot;program)&quot;,&nbsp;this file will
     be loaded into a buffer. If the file cannot be loaded, the evaluation of
     the command line is cancelled immediately; you can try to load the file
     &quot;manually&quot; then.
-    If the command line contains a /r command (&quot;read&quot;), this is the name of the
+    If the command line contains a <a href="#rSwitch" class="quote">/r</a> command (&quot;read&quot;), this is the name of the
     produced hex file.
     If there is only a filename specified in the command line, but none of the
     following &quot;switches&quot;, the specified file will be loaded into WxPic's buffer
-    automatically but not programmed into the device. </dd>
-  <dt>/p</dt>
-  <dd> program the buffer contents into the connected device
-  </dd>
+    automatically but not programmed into the device. <br />
+  Only one file may be specified. If it contains spaces, it must be enclosed between quotes (&quot;).</dd>
+  <dt><a name="pSwitch" id="Parameterp"></a>/p</dt>
+  <dd> Program the buffer contents into the connected device  </dd>
   <dt>/e</dt>
-  <dd> erase chip. Not necessary to use this command together with the 'program'
-    option because 'p' will automatically erase if necessary.
-  </dd>
-  <dt>/r</dt>
-  <dd> read the contents of the device and dump them into the specified HEX file </dd>
+  <dd> Erase chip. Not necessary to use this command together with the 'program'
+    option because 'p' will automatically erase if necessary.  </dd>
+  <dt><a name="rSwitch" id="rSwitch"></a>/r</dt>
+  <dd> Read the contents of the device and dump them into the specified HEX file </dd>
   <dt>/v</dt>
-  <dd> Verify. Compares the contents of the device with the specified HEX file.
+  <dd> Verify. Compare the contents of the device with the specified HEX file.
     Can be used as an &quot;extra&quot; verification together with the /p command, but
     this is usually not required because the programming algorithms for most
     PICs include verifying. </dd>
-  <dt>/q</dt>
-  <dd> terminates WxPic. Should be the last argument, if you want to terminate
-    WxPic after the job is done automatically. Without this command, you must
-    close WxPic manually, even when running in command-line mode.
-  </dd>
-  <dt>/q=5</dt>
-  <dd> also terminates WxPic, but waits for 5 seconds before quitting so you will
-    have the chance to look at any output in the message window.
-  </dd>
+  <dt>/q=&lt;n&gt;</dt>
+  <dd> Terminates WxPic after the job is done automatically + <span class="quote">&lt;n&gt;</span> seconds. <span class="quote">&lt;n&gt;</span> must be positive or null. Without this command, you must
+    close WxPic manually, even when running in command-line mode. The time before quitting may allow you to look at the message window to verify the execution traces. Though note that if an error occurs during the execution of the command line operations, the execution of these operations are aborted. So the <span class="quote">/q</span> operation executed at the end will never be executed in case of error.</dd>
   <dt>/nodelay</dt>
   <dd> Usually, when command-line driven operation is active, the program waits
     for a few seconds until &quot;the action starts&quot;. This can rescue a chip, because
     it allows you to terminate the erase-programming operation if you have started
     the wrong batchfile by mistake, etc.
     With the /nodelay option, there will be no pause before the execution of
-    the command line starts.
-  </dd>
+    the command line starts.  </dd>
   <dt>/overwrite</dt>
   <dd> With this option, WxPic won't ask before overwriting an already existing
-    disk file. Use it together with the /r command if necessary.
-  </dd>
-  <dt>/device=XXXX</dt>
+    disk file. Use it together with the /r command if necessary.  </dd>
+  <dt>/device=&lt;device-name&gt;</dt>
   <dd> Selects a new device type (to override the device used in the last WxPic
-    session). Example: /device=PIC16F628 . No space characters are allowed in
-    here !
-  </dd>
-  <dt>/config_word=XXXX</dt>
+    session). Example: <span class="quote">/device=PIC16F628</span> . No space characters are allowed in
+    here !  </dd>
+  <dt>/config_word=&lt;hex-value&gt;</dt>
   <dd> Overrides the configuration word from any loaded hex file. The parameter
-    XXXX is as a four-digit hexadecimal value.
-  </dd>
+    <span class="quote">&lt;hex-value&gt;</span> is as a four-digit hexadecimal value.  </dd>
+  <dt>/session=&lt;session-name&gt;</dt>
+  <dd>Select the session <span class="quote">&lt;session-name&gt;</span> (ignoring case) instead of the <a href="Panel.htm#SessionParDefaut">Default Session</a> that is used by default when parameters are specified on command line. If no session name is provided  (<span class="quote">/session=</span>) it is the <a href="Panel.htm#SessionParDefaut">Default Session</a> that is used whatever its name.<br />
+If the session name contains spaces, the parameter must be enclosed between quotes (for example: /session=<span class="quote">&quot;My Session&quot;</span> or <span class="quote">&quot;/session=My Session&quot;</span>)<br />
+Under Windows it is not possible to specify a session name containing quotes.</dd>
 </dl>
 <p>The command-line driven operation can be cancelled by pressing ESCAPE. The
   main menu will be enabled anyway. Selecting certain menu items also cancels

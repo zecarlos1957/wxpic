@@ -175,6 +175,18 @@
       <li>Le fichier Hex par défaut,</li>
       <li>Les modes de programmation.</li>
     </ul>
+    <a name="SaveConfigMethods" id="SaveConfigMethods"></a>Ces paramètres sont sauvegardés lorsque la configuration est enregistrée c'est à dire en effectuant l'une des actions suivantes&nbsp;:
+    <ul>
+    	<li>Quitter normalement WxPic (Clic sur la boîte de fermeture de la fenêtre ou <a href="Menu.htm#QuitSaveMenu">menu Quitter</a>)</li>
+        <li>Changer de configuration avec le <a href="Menu.htm#QuickSession">choix rapide de session</a>,</li>
+        <li>Demander l'<a href="#SaveConfig">enregistrement des paramètres de session</a>,</li>
+        <li>Confirmer la proposition de sauvegarde affichée par l'opération <a href="#SwitchTo">Utiliser</a> du gestionnaire de session.</li>
+    </ul>
+    Ces paramètres sont perdus lorsque la configuration est abandonnée c'est à dire en effectuant l'une des actions suivantes&nbsp;:
+    <ul>
+      <li><a href="Menu.htm#QuitMenu">Quitter  WxPic sans sauver</a>,</li>
+      <li><a href="#DropChange">Rejeter les modifications</a> de la configuration.</li>
+      </ul>
   </dd>
   <dt>La configuration d'une session n'inclut PAS&nbsp;:</dt>
   <dd>
@@ -228,13 +240,13 @@
   <dt><a name="SessionMngClose" id="SessionMngClose"></a>Fermer</dt>
   <dd>Ferme le dialogue. Si aucune session n'est <a href="#EnCoursDefinition" class="quote">En cours</a> au moment de la fermeture, WxPic se termine. Sinon les opérations de WxPic continuent avec la configuration de la session <a href="#EnCoursDefinition" class="quote">En cours</a>. Si le nom de la session a été modifié mais pas enregistré, un dialogue de confirmation sera affiché permettant soit d'enregistrer le nouveau nom avant de continuer, d'ignorer la modification du nom ou d'annuler la fermeture du dialogue.</dd>
   <dt><a name="RenameSession" id="RenameSession"></a>Renommer</dt>
-  <dd>Enregistre la modification du nom de la session <a href="#EnCoursDefinition" class="quote">En cours</a> qui a été effectuée dans le champs texte au dessus du bouton. Notez que le nom d'une session est limité à 30 caractères maximum.<br />
+  <dd>Enregistre la modification du nom de la session <a href="#EnCoursDefinition" class="quote">En cours</a> qui a été effectuée dans le champs texte au dessus du bouton. Notez que le nom d'une session est limité à 30 caractères maximum et que 2 sessions ne peuvent recevoir le même nom en ignorant la casse (Majuscule/minuscule). Les espaces en début et fin de nom sont supprimés, et les espaces multiples à l'intérieur du nom sont remplacés par un seul espace. D'autre part il est déconseillé d'utiliser des guillemets dans les noms de session. Sinon ils ne peuvent être spécifiés en <a href="index.htm#SessionCmdLine">ligne de commande</a>.<br />
     Ce bouton est désactivé si le nom de la session n'a pas été modifié.</dd>
   <dt><a name="SaveConfig" id="SaveConfig"></a>Enregistrer</dt>
   <dd>Enregistre les modifications de la session <a href="#EnCoursDefinition" class="quote">En cours</a>.<br />
     Ce bouton est désactivé si la session n'a aucun paramètre modifié dans sa configuration.</dd>
   <dt><a name="DropChange" id="DropChange"></a>Rejeter Modif</dt>
-  <dd>Rejette les modifications effectué à la configuration de la session <a href="#EnCoursDefinition" class="quote">En cours</a>, depuis sa dernière sauvegarde ou, à défaut, depuis le début de son utilisation.<br />
+  <dd>Rejette les modifications effectuées à la configuration de la session <a href="#EnCoursDefinition" class="quote">En cours</a>, depuis sa dernière sauvegarde ou, à défaut, depuis le début de son utilisation.<br />
     Ce bouton est désactivé si la session <a href="#EnCoursDefinition" class="quote">En cours</a> n'a pas de paramètre modifié.</dd>
 </dl>
 <p><a class="return" href="#Top">Haut</a></p>
