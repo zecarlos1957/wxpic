@@ -1301,9 +1301,6 @@ void MainFrame::updateSessionList(void)
 void MainFrame::updateAllConfig  (void)
 {
     TDeviceCfgPanel::UpdateDevice();
-    aOptionTab->UpdateOptionsDisplay();
-    aInterfaceTab->UpdateInterfaceType();
-    aConfigMemoryTab->UpdateIdAndConfMemDisplay();
-    aDeviceCfgTab->UpdateDeviceConfigTab(true);
+    UpdateAllSheets();
     updateSessionList();
 }
