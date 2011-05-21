@@ -11,6 +11,7 @@
 #include "HexGrid.h"
 #include <wx/textctrl.h>
 #include <wx/dcclient.h>
+#include <wx/settings.h>
 #include <vector>
 #include "Appl.h"
 
@@ -21,6 +22,13 @@ enum
     MAX_ASCII             = 0x007F,
     NON_ASCII_CHAR        = 0x25A1,
 };
+
+static const wxFont &getConstantFont (void)
+{
+    static wxFont ConstantFont = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
+    return ConstantFont;
+}
+
 
 class THexGridCellAttrProvider;
 
@@ -177,6 +185,7 @@ public:
 
         if (col < aColCount)
         {
+            //-- Convert Hexa String to Integer
             wxASSERT(value.Length() <= MAX_HEX_STRING_LENGTH);
             wxChar  Buffer[MAX_HEX_STRING_LENGTH+1];
             wxChar *Dst   = Buffer;
@@ -192,8 +201,10 @@ public:
             *Dst = 0;
             if (Error)
                 wxBell();
-            MemAddr += col;
             uint32_t  MemValue   = (uint32_t)_tcstol(Buffer, &Dst, 16);
+
+            //-- Update the value in the Buffer
+            MemAddr += col;
             uint32_t &EditedWord = *(RowData+col);
             if (EditedWord != MemValue)
             {
@@ -203,6 +214,7 @@ public:
         }
         else
         {
+            //-- Convert ASCII string to value
             if (value.Len() != (aCharCount<<aColPower))
                 wxBell();
             else
@@ -237,6 +249,7 @@ public:
                     wxBell();
                 else
                 {
+                    //-- When conversion succeeded copy the values in the buffer
                     bool   Changed = false;
                     for (int i = 0; i < aColCount; ++i)
                         if (aBuffer[i] != RowData[i])
@@ -362,6 +375,7 @@ public:
         aTitleAttr  ->SetReadOnly();
         aEmptyAttr  ->SetReadOnly();
         aAsciiAttr  ->SetEditor(aAsciiEditor);
+        aAsciiAttr  ->SetFont(getConstantFont());
     }
 
     void SetDimmedColour (wxColor pDimmedColour) { aDimmedAttr->SetTextColour(pDimmedColour); }
@@ -552,6 +566,7 @@ void THexGrid::setColFormat (void)
     int ColWidth, ColHeight;
     Dc.GetTextExtent(aGridTable->GetHexModel(), &ColWidth, &ColHeight);
     SetDefaultColSize(ColWidth+7);
+    Dc.SetFont(getConstantFont());
     Dc.GetTextExtent(aGridTable->GetAsciiModel(), &ColWidth, &ColHeight);
     SetColSize(GetNumberCols()-1, ColWidth+7);
     aHexEditor->SetParameters(aGridTable->GetHexFormat());
