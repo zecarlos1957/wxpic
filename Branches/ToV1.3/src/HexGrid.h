@@ -61,9 +61,10 @@ public:
 private:
     friend class THexGridTable;
     class THexGridTable          *aGridTable;
-    wxGridCellTextEditor         *aEditor;
+    wxGridCellTextEditor         *aHexEditor;
 
     void computeColours (void);
+    void setColFormat   (void);
 };
 
 #endif // HEXGRID_H_INCLUDED
