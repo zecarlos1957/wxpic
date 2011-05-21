@@ -133,6 +133,7 @@
 					<Add library="winspool" />
 					<Add directory="%wxWidgets%\lib" />
 					<Add directory="%wxWidgets%\lib\gcc_libwxpic" />
+					<Add directory="%MPATROL_DIR%\build\MinGw" />
 				</Linker>
 				<ExtraCommands>
 					<Add before="cmd /C if exist %TOOLS_DIR%\Bin\BuildVersion.bat %TOOLS_DIR%\Bin\BuildVersion.bat" />
