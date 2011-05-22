@@ -493,6 +493,7 @@ void TDeviceCfgPanel::onConfigWordHexEditText(wxCommandEvent& event)
         return;
 
     long ConfigWord;
+    aConfigWordHexEdit->Refresh();
     if (aConfigWordHexEdit->GetValue().ToLong(&ConfigWord,16))
         aConfigWordHexEdit->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
     else
