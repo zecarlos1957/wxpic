@@ -71,10 +71,18 @@
 </dl>
 <a class="return" href="#Top">Haut</a>
 <h2><a name="CodePanel" id="CodePanel"></a>La page du Code</h2>
-<p><img src="../Code.png" width="285" height="212" /></p>
+<p><img src="../Code.png" width="421" height="222" /></p>
 <p>Affiche le contenu de la mémoire code avec les éventuelles éditions effectuées. Les éditions sont possibles si elles ont été autorisées grâce au menu <a href="Menu.htm#AllowEditMenu">Autoriser l'édition mémoire</a>.</p>
-<p>La colonne de gauche indique l'adresse de début de la ligne. La ligne du haut le décalage d'adresse par rapport au début de ligne.</p>
-<p>La couleur indique l'un des quatre états suivant pour chacun des mots:</p>
+<p>La colonne de gauche indique l'adresse du premier mot de la rangée. La ligne du haut le décalage d'adresse par rapport au début de ligne. Les cellules du centre affichent chacune la représentation hexadécimale de la valeur d'un mot de la mémoire code. La colonne de droite affiche la représentation ASCII US des octets des mots de chaque rangée. Les octets d'un mot sont ordonnés en commençant par le plus faible poids. Les octets qui ne sont pas dans l'intervalle 20-7F (hexa) sont représentés par  des rectangles.</p>
+<p>Les mots peuvent être édités soit par leur représentation hexadécimale, soit par leur représentation ASCII. Quand la représentation ASCII est éditée, l'entrée est rejetée dans les cas où l'une des erreurs suivantes est présente dans la valeur validée&nbsp;:</p>
+<ul>
+  <li>Le nombre de caractères ne coreespond pas exactement au nombre d'octets dans les mots de la rangée.</li>
+  <li>Un caractère hors de l'intervalle 20-7F (hexa) a été saisi et ce n'est pas un rectangle.</li>
+  <li>Un rectangle est entré pour un octet qui n'était pas représenté par un rectangle au début de l'édition.</li>
+  <li>Une valeur convertie de l'ASCII déborde de la valeur maximale des mots.</li>
+  </ul>
+<p>Un rectangle dans l'entrée validée conserve la valeur de l'octet qu'il représente.</p>
+<p>La couleur des représentations hexadécimales indique l'un des quatre états suivant pour chacun des mots:</p>
 <dl>
   <dt>Mot utilisé</dt>
   <dd>Couleur contrastée modifiable dans la <a href="#ColourChange">page des options</a>.</dd>
@@ -87,8 +95,8 @@
 </dl>
 <a class="return" href="#Top">Haut</a>
 <h2><a name="DataPanel" id="DataPanel"></a>La page des Données</h2>
-<p><img src="../Data.png" width="189" height="265" /></p>
-<p>Affiche le contenu de la mémoire de données avec les éventuelles éditions effectuées. Les éditions sont possibles si elles ont été autorisées grâce au menu <a href="Menu.htm#AllowEditMenu">Autoriser l'édition mémoire</a>.</p>
+<p><img src="../Data.png" width="261" height="222" /></p>
+<p>Affiche le contenu de la mémoire de données avec les éventuelles éditions effectuées. Les éditions sont possibles si elles ont été autorisées grâce au menu <a href="Menu.htm#AllowEditMenu">Autoriser l'édition mémoire</a>. Le principe pour l'édition est identique à celui de la <a href="#CodePanel">Page de Code</a>.</p>
 <a class="return" href="#Top">Haut</a>
 <h2><a name="PICConfig" id="PICConfig"></a>La page de la Config PIC</h2>
 <p><img src="ConfigPic.png" width="638" height="230" /></p>

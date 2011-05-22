@@ -72,10 +72,18 @@
 </dl>
 <a class="return" href="#Top">Top</a>
 <h2><a name="CodePanel" id="CodePanel"></a>The Code Page</h2>
-<p><img src="Code.png" width="285" height="212" /></p>
-<p>This page displays the code buffer content modified by the user editing if any. Editing is possible when enabled through the  <a href="Menu.htm#AllowEditMenu">Enable HEX editor menu</a>.</p>
-<p>The left column indicates the address at the beginning of the row. The top row indicates the address offset of the column from the beginning of the row.</p>
-<p>The colour indicates the word state that can be:</p>
+<p><img src="Code.png" width="421" height="222" /></p>
+<p>This page displays the code buffer content modified by the user editing if any. Editing is possible when enabled through the  <a href="Menu.htm#AllowEditMenu">Enable HEX editor menu</a>. </p>
+<p>The left column indicates the address at the beginning of the row. The top row indicates the address offset of the column from the beginning of the row. The cells in the center display the hexadecimal  representation of the code memory word values. The right column displays the US ASCII representation of the word bytes. The word bytes are ordered Less Significant first. The bytes not in the range 20 to 7F (hexa) are displayed as a rectangle.</p>
+<p>The word values can be edited through either the Hexadecimal representation or the ASCII representation. When editing the ASCII representation, the input is rejected if one of the following error is detected:</p>
+<ul>
+  <li>The number of characters does not match exactly the number of Bytes in the words of the row.</li>
+  <li>A character not in the range 20-7F (hexa) has been entered and this is not a rectangle.</li>
+  <li>A rectangle is provided for a byte that was represented by another character before the edition.</li>
+  <li>A given ASCII value does not fit in the number of bits of the word.</li>
+</ul>
+<p>A rectangle in the input keeps unchanged the byte value that was present before editing.</p>
+<p>The colour of hexadecimal cells indicates the word state that can be:</p>
 <dl>
   <dt>Used word</dt>
   <dd>Contrasted colour that can be adjusted in the <a href="#ColourChange">Options page</a>.</dd>
@@ -88,8 +96,8 @@
 </dl>
 <a class="return" href="#Top">Top</a>
 <h2><a name="DataPanel" id="DataPanel"></a>The Data Page</h2>
-<p><img src="Data.png" width="189" height="265" /></p>
-<p>This page displays the data buffer content modified by the user editing if any. Editing is possible when enabled through the <a href="Menu.htm#AllowEditMenu">Enable HEX editor menu</a>.</p>
+<p><img src="Data.png" width="261" height="222" /></p>
+<p>This page displays the data buffer content modified by the user editing if any. Editing is possible when enabled through the <a href="Menu.htm#AllowEditMenu">Enable HEX editor menu</a>. Editing principle is identical to the <a href="#CodePanel">Code Page</a> edition</p>
 <p><a class="return" href="#Top">Top</a></p>
 <h2><a name="PICConfig" id="PICConfig"></a>The Device Configuration Page</h2>
 <p><img src="ConfigPic.png" width="631" height="293" /></p>
