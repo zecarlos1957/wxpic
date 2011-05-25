@@ -164,9 +164,6 @@ TDeviceCfgPanel::TDeviceCfgPanel(wxWindow* parent,wxWindowID id,const wxPoint& p
     aDevCfgGrid->SetRowLabelSize(250);
     ReadOnlyAttr->DecRef();
 
-    m_sz40DisplayedDeviceName[0] = 0;
-    for (int i=0; i<2; ++i)
-        m_displayed_config_word[i] = 0;
     for (int i=0; i<PICDEV_MAX_CONFIG_BIT_INFOS; ++i)
         m_pConfigBitGridRowNumber_to_ConfigBitInfoPtr[i] = NULL;
 }
@@ -178,6 +175,32 @@ TDeviceCfgPanel::~TDeviceCfgPanel()
 }
 
 
+static bool adjustedBitMask (T_PicConfigBitInfo *pConfigBitInfo, uint32_t &pConfigWordIndex, uint32_t &pConfigMask, uint32_t *pConfigWordAddress = NULL)
+{
+    // Note: even if the config memory is buffered as 16-bit WORDs,
+    //       ConfigWordIndex may be an ODD value ! In that case,
+    //       The mask and the values must be converted to
+    //       the HIGH BYTE (bits 15..8).
+    bool     Result            = false;
+    uint32_t ConfigWordAddress = pConfigBitInfo->dwAddress;
+    pConfigMask                = pConfigBitInfo->dwBitmask;    // bitmask (usually only ONE bit set in this value)
+    pConfigWordIndex           = ConfigWordAddress - PIC_DeviceInfo.lConfWordAdr;  // target offset to first config word
+
+    if (PicBuf[PIC_BUF_CONFIG].dwAddressFactor > 1)
+    {
+        Result = ((pConfigWordIndex & 1) != 0);
+        if (Result)
+            pConfigMask <<= 8;
+
+        pConfigWordIndex >>= 1;
+        ConfigWordAddress &= ~1;
+    }
+    if (pConfigWordAddress != NULL)
+        *pConfigWordAddress = ConfigWordAddress;
+    return Result;
+}
+
+
 //---------------------------------------------------------------------------
 void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
 {
@@ -186,9 +209,6 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
     bool fFoundDevName;
 
     ++(MainFrame::TheMainFrame->m_Updating);
-    m_displayed_config_word[0]  = PicBuf_GetConfigWord(0);
-    m_displayed_config_word[1]  = PicBuf_GetConfigWord(1); // since 2003-12
-
 
     // Show the currently selected PIC type in the "Part"-combo list.
     // ex: Be sure that the item index matches the definition of
@@ -216,19 +236,10 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
     }  // end if <unknown PIC device type
 
     if (fUpdateHexWord)
-    {
-        // only if the user is not editing the hex config word(s) at the moment...
-        // Show the currently used config-word and some of its elements:
-        aConfigWordHexEdit->ChangeValue(wxString::Format(_T("%04X"), m_displayed_config_word[0]));
-
-        // Since 2003-12, the PIC16F88 is supported, it was the first midrange-PIC
-        //                with TWO configuration words !
-        aConfigWordHexEdit2->Enable(PIC_DeviceInfo.wCfgmask2_used != 0x0000);
-        aConfigWordHexEdit2->ChangeValue(wxString::Format(_T("%04X"), PicBuf_GetConfigWord(1)));
-    }
+        updateCfgWords();
 
     // Fill the string grid ("table") with special configuration bits
-    UpdateConfigBitGrid();
+    UpdateConfigBitGrid(/*Rebuild*/true);
 
     aProgMemSizeText  ->ChangeValue(wxString::Format(_T("%d"), PIC_DeviceInfo.lCodeMemSize));
     aEepromMemSizeText->ChangeValue(wxString::Format(_T("%d"), PIC_DeviceInfo.lDataEEPROMSizeInByte));
@@ -275,8 +286,32 @@ void TDeviceCfgPanel::UpdateDeviceConfigTab(bool fUpdateHexWord)
 //---------------------------------------------------------------------------
 
 
+uint32_t *TDeviceCfgPanel::getConfigWord (int pConfigWordIndex)
+{
+    return MainFrame::TheMainFrame->aConfigMemoryTab->GetConfigWord(pConfigWordIndex);
+}
+
 //---------------------------------------------------------------------------
-void TDeviceCfgPanel::UpdateConfigBitGrid(void)
+
+
+void TDeviceCfgPanel::updateCfgWords (void)
+{
+    // only if the user is not editing the hex config word(s) at the moment...
+    // Show the currently used config-word and some of its elements:
+    aConfigWordHexEdit->ChangeValue( wxString::Format(_T("%04X"), *getConfigWord(0)) );
+
+    // Since 2003-12, the PIC16F88 is supported, it was the first midrange-PIC
+    //                with TWO configuration words !
+    bool HasTwoConfigWord = (PIC_DeviceInfo.wCfgmask2_used != 0x0000);
+    aConfigWordHexEdit2->Enable(HasTwoConfigWord);
+    aConfigWordHexEdit2->ChangeValue((HasTwoConfigWord)
+                                     ? wxString::Format(_T("%04X"), *getConfigWord(1) )
+                                     : wxString(wxEmptyString) );
+}
+
+
+//---------------------------------------------------------------------------
+void TDeviceCfgPanel::UpdateConfigBitGrid (bool pRebuild)
 // Shows the state of  "all important config bits" in string grid .
 // These bits were once part of a single "CONFIG WORD" (for PIC16Fxx),
 // but these bits may now be spread all over the CONFIGURATION REGISTERS .
@@ -286,130 +321,150 @@ void TDeviceCfgPanel::UpdateConfigBitGrid(void)
 //  for these bit groups, because all def's may be loaded from files .
 //  See DEVICES.CPP,  PicDev_FillConfigBitInfoTable() for details .
 {
-    int i,n;
-    wxString s, old_msg;
-    T_PicConfigBitInfo *pConfigBitInfo;
-    T_PicConfigBitSetting *pBitCombinations;
-    uint32_t dwConfigWord, dwConfigWordAddress, dwConfigMask;
+    T_PicConfigBitInfo *ConfigBitInfo;
 
     ++(MainFrame::TheMainFrame->m_Updating);
 
-    old_msg = MainFrame::TheMainFrame->aStatusBar->GetStatusText();
-    MainFrame::TheMainFrame->aStatusBar->SetStatusText(_("Updating config-BIT-grid")) ;
-    MainFrame::TheMainFrame->Update();
-
-
     aDevCfgGrid->BeginBatch();
     int RowCount = aDevCfgGrid->GetNumberRows();
-    if (RowCount > 0)
+    if ((RowCount > 0) && pRebuild)
         aDevCfgGrid->DeleteRows(0, RowCount);
 
     wxArrayString ConfigChoice;
-    pConfigBitInfo = PicDev_ConfigBitInfo;
-    i=n=0;
-    while ( pConfigBitInfo->szText && pConfigBitInfo->szText[0] ) // Fill the String Grid ("TStringGrid with Combos")..
+    ConfigBitInfo = PicDev_ConfigBitInfo;
+    int CurRow = 0;
+    while ( ConfigBitInfo->szText && ConfigBitInfo->szText[0] )
     {
-        dwConfigWordAddress = pConfigBitInfo->dwAddress; // target address (like 0x002007 for PIC16Fxxx)
-        dwConfigMask =   pConfigBitInfo->dwBitmask;    // bitmask (usually only ONE bit set in this value)
+        uint32_t ConfigWordAddress;// Address of the config word
+        uint32_t ConfigWordIndex;  // target offset to first config word
+        uint32_t ConfigMask;       // bitmask (usually only ONE bit set in this value)
+
+        bool MustAdjust = adjustedBitMask(ConfigBitInfo, ConfigWordIndex, ConfigMask, &ConfigWordAddress);
+
         // Only if the bitmask for this "config bit group" is NON-ZERO, it may be listed in the string grid..
-        if (  dwConfigMask != 0 )
+        if (ConfigMask != 0)
         {
-            aDevCfgGrid->AppendRows();
-            aDevCfgGrid->SetRowLabelValue(n, pConfigBitInfo->szText);
-            aDevCfgGrid->SetCellValue(n, configbitsCOL_ADDR, wxString::Format(_T("%06lX"), dwConfigWordAddress));
-            aDevCfgGrid->SetCellValue(n, configbitsCOL_MASK, wxString::Format(_T("%06lX"), dwConfigMask));
-            m_pConfigBitGridRowNumber_to_ConfigBitInfoPtr[n]= pConfigBitInfo;
-            if ( PicBuf_GetBufferWord(dwConfigWordAddress, &dwConfigWord) > 0 )
+            if (pRebuild)
             {
-                s = PicDev_ConfigBitValueToString( pConfigBitInfo, dwConfigWord );
+                aDevCfgGrid->AppendRows();
+                aDevCfgGrid->SetRowLabelValue(CurRow, ConfigBitInfo->szText);
+                aDevCfgGrid->SetCellValue(CurRow, configbitsCOL_ADDR, wxString::Format(_T("%06lX"), ConfigWordAddress));
+                aDevCfgGrid->SetCellValue(CurRow, configbitsCOL_MASK, wxString::Format(_T("%06lX"), ConfigMask));
+                m_pConfigBitGridRowNumber_to_ConfigBitInfoPtr[CurRow]= ConfigBitInfo;
             }
-            else // couldn't read this word from the config memory buffer -> disable checkmark
+
+            //-- Update the cell value
+            uint32_t ConfigWordValue = *getConfigWord(ConfigWordIndex);
+            if (MustAdjust)
+                //-- The bits are on the High Byte, move them to low byte
+                ConfigWordValue   >>= 8;
+            aDevCfgGrid->SetCellValue(CurRow, configbitsCOL_VALUE, PicDev_ConfigBitValueToString(ConfigBitInfo, ConfigWordValue) );
+
+            if (pRebuild)
             {
-                s = _("-inaccessible-");
-            }
-            aDevCfgGrid->SetCellValue(n, configbitsCOL_VALUE, s);
-            pBitCombinations = pConfigBitInfo->pBitCombinations;
-            if ( pBitCombinations ) // only if there is a chained list of "bit combinations"...
-            {
-                while (pBitCombinations!=NULL && ConfigChoice.Count()<100 && pBitCombinations->szComboText[0]!=0 )
+                //-- Add the possible enumerated values for the cell editor
+                T_PicConfigBitSetting *pBitCombinations = ConfigBitInfo->pBitCombinations;
+                if ( pBitCombinations ) // only if there is a chained list of "bit combinations"...
                 {
-                    ConfigChoice.Add(pBitCombinations->szComboText);
-                    pBitCombinations = pBitCombinations->pNext;
-                }
-            } // end if( pBitCombinations )
-            aDevCfgGrid->SetCellEditor(n, configbitsCOL_VALUE, new wxGridCellChoiceEditor(ConfigChoice));
-            ConfigChoice.Empty();
+                    while ( (pBitCombinations != NULL) && (pBitCombinations->szComboText[0] != 0) )
+                    {
+                        ConfigChoice.Add(pBitCombinations->szComboText);
+                        pBitCombinations = pBitCombinations->pNext;
+                    }
+                } // end if( pBitCombinations )
+                aDevCfgGrid->SetCellEditor(CurRow, configbitsCOL_VALUE, new wxGridCellChoiceEditor(ConfigChoice));
+                ConfigChoice.Empty();
+            }
 
-            ++n;
+            ++CurRow;
         } // end if < exactly ONE bit set in the bitmask, or a bunch of CP bits >
-        ++i;
-        ++pConfigBitInfo;
-        if (i>PICDEV_MAX_CONFIG_BIT_INFOS)
-            break;  // emergency break, should never happen
-    } // end while( pConfigBitInfo->szText && pConfigBitInfo->szText[0] )
-
-    MainFrame::TheMainFrame->aStatusBar->SetStatusText(old_msg);
-    MainFrame::TheMainFrame->Update();
+        ++ConfigBitInfo;
+    } // end while( ConfigBitInfo->szText && ConfigBitInfo->szText[0] )
 
     aDevCfgGrid->EndBatch();
     --(MainFrame::TheMainFrame->m_Updating);
 
 } // end UpdateConfigBitGrid()
 
+
+void TDeviceCfgPanel::UpdateCfgWordValue (void)
+{
+    updateCfgWords();
+    UpdateConfigBitGrid(/*Rebuild*/false);
+}
+
+
 //---------------------------------------------------------------------------
 void TDeviceCfgPanel::ApplyConfigBitGrid(void)
 // Parses the "values" in the string grid of "important config bits" .
 // This is -more or less- inverse to UpdateConfigBitGrid(), see above.
 {
-    int iGridRow;
-    T_PicConfigBitInfo *pConfigBitInfo;
-    uint32_t dwConfigWord, dwConfigWordAddress, dwConfigMask, dwNewValue;
-    wxChar str80[84];
-
     if ( APPL_i32CustomizeOptions & APPL_CUST_NO_CONFIG_EDITOR )
         return;
 
     int RowCount = aDevCfgGrid->GetNumberRows();
-    for (iGridRow=0; iGridRow<RowCount && iGridRow<PICDEV_MAX_CONFIG_BIT_INFOS; ++iGridRow)
+    for (int iGridRow=0; iGridRow<RowCount && iGridRow<PICDEV_MAX_CONFIG_BIT_INFOS; ++iGridRow)
     {
         // Get a pointer to the device-specific info about this "Group of CONFIG-BITS":
         //  Note: Due to Microchip's strange way to do things, these bits may bot even be ADJACENT,
-        //        but -for WinPic- all bits of one group must reside in ONE CONFIG WORD (a 16 bit).
+        //        but -for WxPic- all bits of one group must reside in ONE CONFIG WORD (a 16 bit).
         //        An example for a non-adjacent group of bits is the osc selection
         //        in the PIC16F628 with dwConfigMask=0x0013 .
-        pConfigBitInfo = m_pConfigBitGridRowNumber_to_ConfigBitInfoPtr[iGridRow];
-        if ( pConfigBitInfo ) // can only "handle" this grid line with this device-specific config-bit info...
+        T_PicConfigBitInfo *ConfigBitInfo = m_pConfigBitGridRowNumber_to_ConfigBitInfoPtr[iGridRow];
+        if ( ConfigBitInfo ) // can only "handle" this grid line with this device-specific config-bit info...
         {
-            _tcsncpy(str80, aDevCfgGrid->GetCellValue(iGridRow, configbitsCOL_VALUE).c_str(), 80 );
-            dwConfigWordAddress = pConfigBitInfo->dwAddress;  // target address (example: 0x002007 for PIC16Fxx)
-            dwConfigMask   = pConfigBitInfo->dwBitmask;    // bitmask (usually only ONE bit set in this value)
             // Try to convert the text from the COMBO BOX of this config bit group
             // into a numeric value, which can then be combined with the present content
             // of this configuration register. Use the "bitmask" to change only those bits
             // which belong to this bit group !
-            if ( PicDev_ConfigBitStringToValue( pConfigBitInfo, str80, &dwNewValue ) )
+            uint32_t NewValue;
+            if ( PicDev_ConfigBitStringToValue( ConfigBitInfo,
+                                               aDevCfgGrid->GetCellValue(iGridRow, configbitsCOL_VALUE).c_str(),
+                                               &NewValue ) )
             {
                 // only if the string value could be "interpreted" :
-                if ( PicBuf_GetBufferWord(dwConfigWordAddress, &dwConfigWord) > 0 )
-                {
-                    // Note: even if the config memory is buffered as 16-bit WORDs,
-                    //       dwConfigWordAddress may be an ODD value ! In that case,
-                    //       PicBuf_GetBufferWord() + PicBuf_SetBufferWord() only access
-                    //       the HIGH BYTE (bits 15..8) of the 16-bit buffer entry .
-                    dwConfigWord = (dwConfigWord & ~dwConfigMask) | ( dwNewValue & dwConfigMask);
-                    PicBuf_SetBufferWord(dwConfigWordAddress, dwConfigWord);
-                    MainFrame::TheMainFrame->m_update_id_and_config_display = true;  // must update "the other tab" too (later)
-                } // end if < successfully READ this configuration word >
+
+                uint32_t ConfigWordIndex;  // target offset to first config word
+                uint32_t ConfigMask;       // bitmask (usually only ONE bit set in this value)
+                if (adjustedBitMask(ConfigBitInfo, ConfigWordIndex, ConfigMask))
+                    //-- The bits are on the High Byte
+                    NewValue   <<= 8;
+
+                uint32_t &EditedCfgWord = *getConfigWord(ConfigWordIndex);
+                EditedCfgWord = (EditedCfgWord & ~ConfigMask) | ( NewValue & ConfigMask);
+                updateCfgWords();       //-- Update the Hexa Cfg Words in accordance with flag change
+                MainFrame::TheMainFrame->m_update_id_and_config_display = true;  // must update "the other tab" too (later)
             }
         } // end if < state of checkmark CHECKED or UNCHECKED, but not GRAYED >
     } // for < all elements of the CONFIG BIT CHECK LIST >
-
-    // Note: If the above edits had an effect on the 1st and 2nd "Config Word",
-    //     the TIMER METHOD(!) will detect the change a bit later
-    //     and update "everything which is needed" to make things a bit simpler.
-    //     So no reason to call UpdateDeviceConfigTab() or UpdateConfigBitGrid() here !
-
 } // end ApplyConfigBitGrid()
+
+
+void TDeviceCfgPanel::editConfigWord(int pCfgWordIndex, wxTextCtrl* pEditCtrl)
+{
+    if (MainFrame::TheMainFrame->m_Updating)
+        return;
+
+    long ConfigWord;
+    pEditCtrl->Refresh();
+    if (pEditCtrl->GetValue().ToLong(&ConfigWord,16))
+        pEditCtrl->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+    else
+    {
+        pEditCtrl->SetBackgroundColour(wxColour(0xFF,0x80,0x80));
+        return;
+    }
+
+    // Immediately 'decode' the new configuration word..
+    ++(MainFrame::TheMainFrame->m_Updating);
+
+    *getConfigWord(pCfgWordIndex) = ConfigWord;
+    UpdateConfigBitGrid(/*Rebuild*/false);
+    MainFrame::TheMainFrame->m_update_id_and_config_display = true;  // must update "the other tab" too (later)
+
+    if (MainFrame::TheMainFrame->m_Updating>0)
+        --(MainFrame::TheMainFrame->m_Updating);
+}
 
 
 /**static*/ bool TDeviceCfgPanel::UpdateDevice(void)
@@ -435,6 +490,13 @@ void TDeviceCfgPanel::ApplyConfigBitGrid(void)
         MainFrame::TheMainFrame->aOptionTab->aMplabDirLabel->SetForegroundColour(Colour);
         MainFrame::TheMainFrame->aOptionTab->aMplabDirLabel->Refresh();
     }
+    static bool Initialized = false;
+    if (!Initialized)
+    {
+        Initialized = true;
+        PIC_HEX_ClearBuffers();
+    }
+    MainFrame::TheMainFrame->UpdateAllSheets();
     return Result;
 }
 
@@ -444,11 +506,10 @@ void TDeviceCfgPanel::onPartNameChoiceSelect(wxCommandEvent& event)
     if (MainFrame::TheMainFrame->m_Updating) return;
     TSessionConfig::SetDeviceName(aPartNameChoice->GetStringSelection());
     UpdateDevice();
-    UpdateDeviceConfigTab( true/*fUpdateHexWord*/ );
+    MainFrame::TheMainFrame->aConfigMemoryTab->LoadConfigBuffer();  // Number of 'valid locations' may have changed (Load Config Memory)
     MainFrame::TheMainFrame->aOptionTab->UpdateOptionsDisplay();    // a lot may have changed, depending on chip type
-    MainFrame::TheMainFrame->aConfigMemoryTab->UpdateIdAndConfMemDisplay(); // number of 'valid locations' may have changed
-    MainFrame::TheMainFrame->aCodeMemTab->UpdateCodeMemDisplay();    // addresses and instruction width may have changed
-    MainFrame::TheMainFrame->aDataMemTab->UpdateDataMemDisplay();    // address range for DATA(~EEPROM) memory may have changed
+    MainFrame::TheMainFrame->aCodeMemTab->UpdateCodeMemDisplay();   // addresses and instruction width may have changed
+    MainFrame::TheMainFrame->aDataMemTab->UpdateDataMemDisplay();   // address range for DATA(~EEPROM) memory may have changed
 
     // Now, ONLY HERE AFTER THE USER SELECTED A NEW DEVICE, check the 'Vdd/Vpp'
     // sequence. If it is defined in the device settings, and is incompatible
@@ -473,7 +534,6 @@ void TDeviceCfgPanel::onPartNameChoiceSelect(wxCommandEvent& event)
             else
                 TSessionConfig::SetNeedPowerBeforeMCLR(0);
         }
-        UpdateDeviceConfigTab( true/*fUpdateHexWord*/ );
         MainFrame::TheMainFrame->aOptionTab->UpdateOptionsDisplay();
         MainFrame::TheMainFrame->aOptionTab->aVddBeforeMCLRChk->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT));
         MainFrame::TheMainFrame->Update();
@@ -487,27 +547,7 @@ void TDeviceCfgPanel::onPartNameChoiceSelect(wxCommandEvent& event)
 //---------------------------------------------------------------------------
 void TDeviceCfgPanel::onConfigWordHexEditText(wxCommandEvent& event)
 {
-    if (MainFrame::TheMainFrame->m_Updating)
-        return;
-    if ( APPL_i32CustomizeOptions & APPL_CUST_NO_CONFIG_EDITOR )
-        return;
-
-    long ConfigWord;
-    aConfigWordHexEdit->Refresh();
-    if (aConfigWordHexEdit->GetValue().ToLong(&ConfigWord,16))
-        aConfigWordHexEdit->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
-    else
-    {
-        aConfigWordHexEdit->SetBackgroundColour(wxColour(0xFF,0x80,0x80));
-        return;
-    }
-
-    // Immediately 'decode' the new configuration word..
-    ++(MainFrame::TheMainFrame->m_Updating);
-    PicBuf_SetConfigWord( 0 , ConfigWord );
-    UpdateDeviceConfigTab( false/*fUpdateHexWord*/ ); // don't disturb editing !
-    if (MainFrame::TheMainFrame->m_Updating>0)
-        --(MainFrame::TheMainFrame->m_Updating);
+    editConfigWord(0, aConfigWordHexEdit);
 }
 //---------------------------------------------------------------------------
 
@@ -515,24 +555,7 @@ void TDeviceCfgPanel::onConfigWordHexEditText(wxCommandEvent& event)
 //---------------------------------------------------------------------------
 void TDeviceCfgPanel::onConfigWordHexEdit2Text(wxCommandEvent& event)
 {
-    if (MainFrame::TheMainFrame->m_Updating) return;
-
-    long ConfigWord;
-    if (aConfigWordHexEdit2->GetValue().ToLong(&ConfigWord,16))
-        aConfigWordHexEdit2->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
-    else
-    {
-        aConfigWordHexEdit2->SetBackgroundColour(wxColour(0xFF,0x80,0x80));
-        return;
-    }
-
-    // Immediately 'decode' the new configuration word..
-    ++(MainFrame::TheMainFrame->m_Updating);
-    PicBuf_SetConfigWord( 1/*!*/, ConfigWord ) ;
-    UpdateDeviceConfigTab( false );
-    if (MainFrame::TheMainFrame->m_Updating>0)
-        --(MainFrame::TheMainFrame->m_Updating);
-
+    editConfigWord(1, aConfigWordHexEdit2);
 }
 //---------------------------------------------------------------------------
 
@@ -629,7 +652,6 @@ void TDeviceCfgPanel::onDevCfgGridCellChange(wxGridEvent& event)
     //     and update the display accordingly .
 
     --(MainFrame::TheMainFrame->m_Updating);
-
 }
 //---------------------------------------------------------------------------
 

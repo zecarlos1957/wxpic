@@ -84,16 +84,7 @@
 						</object>
 						<object class="spacer">
 							<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
-							<size>0,5</size>
-						</object>
-						<object class="sizeritem">
-							<object class="wxButton" name="ID_APPLY_ID_LOCS_BUTTON" variable="aApplyIdLocsButton" member="yes">
-								<label>Apply edits</label>
-								<enabled>0</enabled>
-								<handler function="onApplyIdLocsButtonClick" entry="EVT_BUTTON" />
-							</object>
-							<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
-							<border>3</border>
+							<size>0,15</size>
 						</object>
 						<object class="sizeritem">
 							<object class="wxButton" name="ID_BUTTON6" variable="aHelpOnIdButton" member="yes">

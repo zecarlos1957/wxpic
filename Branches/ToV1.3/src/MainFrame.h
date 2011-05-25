@@ -312,22 +312,21 @@ class MainFrame: public wxFrame
         bool ReadPicAndDumpToFile(const wxChar *fn);
         bool LoadFileAndProgramPic(const wxChar *fn, bool program_too);
 
-        bool RunHexOpenDialog (void);
-        void initAuto         (void);
-        void initMore         (void);
-        void addLines         (wxString &pText, void (wxAboutDialogInfo::*pAdder)(const wxString&));
-        void updateMRFMenu    (const wxArrayString &pMRFTable);
-        void updateSessionList(void);
-        void updateAllConfig  (void);
+        bool RunHexOpenDialog   (void);
+        void initAuto           (void);
+        void initMore           (void);
+        void addLines           (wxString &pText, void (wxAboutDialogInfo::*pAdder)(const wxString&));
+        void updateMRFMenu      (const wxArrayString &pMRFTable);
+        void updateSessionList  (void);
+        void updateAllConfig    (void);
+        void applyMemoryEdits   (void);
+        void discardMemoryEdits (void);
 
  	public:
        void UpdateCodeMemRange( int iWhichMemory, long i32NLocations, int iUCMoptions );
               #define UCM_SHOW_USED_LOCATIONS_ONLY 0x0000
               #define UCM_SHOW_ALL_LOCATIONS       0x0001
         void UpdateConfigBitCombo(void);
-        bool EnableHexEditors(void);
-        bool ApplyCodeMemoryEdits(void);
-        bool ApplyDataMemoryEdits(void);
         bool QueryAndApplyHexEditIfRequired(void);
 
 //        void UpdateToolWindow(void);

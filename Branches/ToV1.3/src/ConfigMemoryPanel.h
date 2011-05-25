@@ -1,6 +1,8 @@
 #ifndef CONFIGMEMORYPANEL_H
 #define CONFIGMEMORYPANEL_H
 
+#include "MemAddrGetter.h"
+
 //(*Headers(TConfigMemoryPanel)
 #include <wx/sizer.h>
 #include <wx/stattext.h>
@@ -27,14 +29,22 @@ class TConfigMemoryPanel: public wxPanel
 		wxStaticText* aDevIdTitle;
 		wxButton* aHelpOnIdButton;
 		wxPanel* Panel6;
-		wxButton* aApplyIdLocsButton;
 		wxStaticText* aDevIdDecoded;
 		wxRadioBox* aIdBinHexRadio;
 		//*)
         char     m_sz80DetectedPicDevName[82];
 
-        void ApplyIdLocationDisplay(void);
-        void UpdateIdAndConfMemDisplay(void);
+        TMemAddrGetter aCfgMemAddrGetter;
+        TMemAddrGetter aIdMemAddrGetter;
+        bool           isIdSeparated;     //-- Indicates that IDs are not in the config Memory and that aIdMemAddrGetter is used
+        int            aFirstId;           //-- When ID are separated indicated the first row containing an ID
+
+        void LoadConfigBuffer         (void);
+        //-- Refresh the list, if pRebuild is true, it is first destroyed (in case the number of rows would have changed)
+        void UpdateIdAndConfMemDisplay(bool pRebuild);
+        void ApplyConfigEdit          (void);
+
+        uint32_t *GetConfigWord (int pWordNum) { return aCfgBufferBase + (aConfigWordIndex + pWordNum); }
 
 	protected:
 
@@ -47,7 +57,6 @@ class TConfigMemoryPanel: public wxPanel
 		static const long ID_DEV_ID_TITLE;
 		static const long ID_DEV_ID;
 		static const long ID_DEV_ID_DECODED;
-		static const long ID_APPLY_ID_LOCS_BUTTON;
 		static const long ID_BUTTON6;
 		static const long ID_PANEL6;
 		//*)
@@ -58,9 +67,12 @@ class TConfigMemoryPanel: public wxPanel
 		void onCfgMemGridCellChange(wxGridEvent& event);
 		void onIdBinHexRadioSelect(wxCommandEvent& event);
 		void onShowAllCfgCellsChkClick(wxCommandEvent& event);
-		void onApplyIdLocsButtonClick(wxCommandEvent& event);
 		void onHelpOnIdButtonClick(wxCommandEvent& event);
 		//*)
+
+		uint32_t  *aCfgBufferBase;
+		uint32_t  *aIdBufferBase;
+		uint32_t   aConfigWordIndex;
 
 		DECLARE_EVENT_TABLE()
 };

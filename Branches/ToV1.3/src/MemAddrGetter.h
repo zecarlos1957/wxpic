@@ -23,6 +23,7 @@ public:
     void      ApplyChange (void);
     void      Invalidate  (void) { aBufferLength = 0; }
     bool      IsModified  (void);
+    uint32_t  AddressToTargetArrayIndex (uint32_t pAddress);
 
 private:
     class T_PicBufferInfo *aBufferInfo;

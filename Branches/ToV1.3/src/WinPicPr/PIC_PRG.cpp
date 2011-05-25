@@ -280,7 +280,6 @@ bool PIC_PRG_SetDeviceType(T_PicDeviceInfo *pDeviceInfo )
         // here for PIC12Fxxx, PIC16Fxxx :
         PicBuf[PIC_BUF_CODE].dwAddressOffset = 0;
         PicBuf[PIC_BUF_CODE].dwAddressFactor = 1;   // here ONE address step per code word, ummmm
-        PicBuf[PIC_BUF_DATA].dwAddressFactor = 1;    // 8-bit wide DATA memory, only pseudo-address range for HEX file (not mapped to CPU adress range)
         PicBuf[PIC_BUF_CONFIG].dwAddressFactor = 1;  // address increments BY ONE for every 14-bit "register" !
         PicBuf[PIC_BUF_ID_LOCATIONS].dwAddressFactor = 1;
         PicBuf[PIC_BUF_DEVICE_ID].dwAddressFactor = 1;
@@ -3232,7 +3231,7 @@ bool PIC_PRG_ReadAll(
                             {
                                 dwTargetAddress = PIC_DeviceInfo.lDataMemBase + i32;
 //                                PHWInfo.iCurrProgAddress = dwTargetAddress; // added 2008-05 for the plugin-DLL
-                                PicBuf_SetBufferByte( dwTargetAddress, pdwTempBuffer[i32] );
+                                PicBuf_SetBufferWord( dwTargetAddress, pdwTempBuffer[i32] );
                                 if ( pdwTempBuffer[i32] != 0x00FF)
                                 {
                                     wFlags = PIC_BUFFER_FLAG_USED;

@@ -56,15 +56,14 @@ class TDeviceCfgPanel: public wxPanel
 		wxGrid* aDevCfgGrid;
 		//*)
 
-        unsigned short      m_displayed_config_word[2];  // TWO cfg words since 2003-12 !!
-        char                m_sz40DisplayedDeviceName[44];
         T_PicConfigBitInfo *m_pConfigBitGridRowNumber_to_ConfigBitInfoPtr[PICDEV_MAX_CONFIG_BIT_INFOS];
 
-        void UpdateDeviceConfigTab(bool fUpdateHexWord);
-        void UpdateConfigBitGrid(void);
-        void ApplyConfigBitGrid(void);
+        void UpdateDeviceConfigTab (bool fUpdateHexWord);
+        void UpdateConfigBitGrid   (bool pRebuild);
+        void ApplyConfigBitGrid    (void);
+        void UpdateCfgWordValue    (void);
 
-        static bool UpdateDevice(void);
+        static bool UpdateDevice (void);
 
 	protected:
 
@@ -98,6 +97,11 @@ class TDeviceCfgPanel: public wxPanel
 		void onHasFlashMemoryChkClick(wxCommandEvent& event);
 		void onDevCfgGridCellChange(wxGridEvent& event);
 		//*)
+
+		void      updateCfgWords (void);
+		uint32_t *getConfigWord  (int pConfigWordIndex);
+		void      editConfigWord (int pCfgWordIndex, wxTextCtrl* pEditCtrl);
+
 
 		DECLARE_EVENT_TABLE()
 };

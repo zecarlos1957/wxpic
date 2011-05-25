@@ -26,6 +26,8 @@
  *
  */
 
+#ifndef PIC_HEX_H
+#define PIC_HEX_H
 
 #define PIC_HEX_WORDS_PER_HEX_DUMP 8 /* dump this many words per hex record */
 
@@ -98,32 +100,39 @@
 class T_PicBufferInfo
 {
 public:
-  uint32_t  *pdwData;  // points to buffer (somewhere in memory, max 32 bit per location)
-  uint32_t  *pdwCopy;  // points to buffer that is the copy of pdwData for editing
-  uint16_t   *pwFlags;  // points to "flags" (combination of PIC_BUFFER_FLAG_xxx)
-  uint16_t   *pwFlagCopy; // points to copy of pwFlags for editing
-  uint32_t  dwMaxSize; // allocated size of this buffer
-  long   i32LastUsedArrayIndex;  // last used array index (-1 = "nothing in it")
-  long   i32LastUsedIndexCopy;   // Copy of last used array index for editing
-  // ( Notice the difference between "last used array index" and
-  //   "count of used locations".
-  //   The latter is pretty useless, because the "used locations"
-  //   may be spread all over the available space.
-  //   We assume the "first used array index" is zero, in fact it usually is,
-  //   and it has got absolutely nothing to do with an "address" . )
-  uint32_t  dwAddressOffset; // device-dependent address of first buffer location
-  uint32_t  dwAddressFactor; // device-dependent relationship between buffer index and display address
+    uint32_t  *pdwData;  // points to buffer (somewhere in memory, max 32 bit per location)
+    uint32_t  *pdwCopy;  // points to buffer that is the copy of pdwData for editing
+    uint16_t  *pwFlags;  // points to "flags" (combination of PIC_BUFFER_FLAG_xxx)
+    uint16_t  *pwFlagCopy; // points to copy of pwFlags for editing
+    uint32_t  dwMaxSize; // allocated size of this buffer
+    long   i32LastUsedArrayIndex;  // last used array index (-1 = "nothing in it")
+    long   i32LastUsedIndexCopy;   // Copy of last used array index for editing
+    // ( Notice the difference between "last used array index" and
+    //   "count of used locations".
+    //   The latter is pretty useless, because the "used locations"
+    //   may be spread all over the available space.
+    //   We assume the "first used array index" is zero, in fact it usually is,
+    //   and it has got absolutely nothing to do with an "address" . )
+    uint32_t  dwAddressOffset; // device-dependent address of first buffer location
+    uint32_t  dwAddressFactor; // device-dependent relationship between buffer index and display address
      // displayed_device_address := dwAddressOffset + buffer_index * dwAddressFactor
      // Examples: PIC16F628, code memory : dwAddressOffset=0, dwAddressFactor=1
      //           dsPIC30F , code memory : dwAddressOffset=0, dwAddressFactor=2
      // ( dsPIC30F is bizarre!! TWO address steps per instruction, despite THREE bytes per instruction ! )
 
-  int    iBitsPerElement; // how many meaningful bits in one pdwData[]-array element ?
+    int    iBitsPerElement; // how many meaningful bits in one pdwData[]-array element ?
      // Examples: 8 = one BYTE per array element (used for DATA EEPROM)
      //          16 = one WORD per array element (used for most others, except..)
      //          24 = one 24-BIT "instruction word" for a dsPIC30F
 
-  uint32_t ArrayIndexToTargetAddress( uint32_t dwArrayIndex ) { return dwAddressOffset + dwAddressFactor * dwArrayIndex; }
+    uint32_t ArrayIndexToTargetAddress( uint32_t pArrayIndex ) { return dwAddressOffset + dwAddressFactor * pArrayIndex; }
+    uint32_t AddressToTargetArrayIndex( uint32_t pAddress )
+    {
+        uint32_t Result = pAddress - dwAddressOffset;
+        if (dwAddressFactor > 1)
+            Result /= dwAddressFactor;
+        return Result;
+    }
 
 };
 
@@ -195,8 +204,6 @@ int PIC_HEX_DumpHexFile( const wxChar *fname ); // Dumps buffers in Microchip HE
 T_PicBufferInfo * PicBuf_TargetAddressToBufPtr( long i32TargetAddress, long * pi32ArrayIndex );
 int PicBuf_GetBufferWord(long i32TargetAddress, uint32_t *pdwDest); // may be 8..24 bit !
 int PicBuf_SetBufferWord(long i32TargetAddress, uint32_t dwData);
-int PicBuf_GetBufferByte(long i32TargetAddress, uint8_t *pbDest); // always 8 bit, odd address allowed
-int PicBuf_SetBufferByte(long i32TargetAddress, uint8_t bSource);
 
 
 /***************************************************************************/
@@ -211,7 +218,6 @@ uint16_t  PicBuf_GetConfigWord(int iCfgWordIndex );
 uint32_t PicBuf_ArrayIndexToTargetAddress( int iBufMemType, uint32_t dwArrayIndex );
 
 
-/* EOF <pic_hex.h> */
-
+#endif // PIC_HEX_H
 
 

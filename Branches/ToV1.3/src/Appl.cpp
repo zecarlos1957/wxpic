@@ -6,6 +6,7 @@
 #include <wx/msgdlg.h>
 #include <wx/datetime.h>
 #include <wx/strconv.h>
+#include <wx/arrstr.h>
 #include "MainFrame.h"
 
 // Options and parameters from the command line .
@@ -146,6 +147,26 @@ long HexStringToLongint(int nMaxDigits, const wxChar *pszSource)
   return lResult;
 } // end HexStringToLongint()
 
+
+wxString StringJoin (const wxArrayString &pArray, const wxString &pSep)
+{
+    wxString Result;
+    int Count = pArray.Count();
+    if (Count)
+    {
+        int Size = (Count-1) * pSep.Len();
+        for (int i = 0; i < Count; ++i)
+            Size += pArray[i].Length();
+        Result.Alloc(Size);
+        for (int i = 0; i < Count; ++i)
+        {
+            if (i > 0)
+                Result += pSep;
+            Result += pArray[i];
+        }
+    }
+    return Result;
+}
 
 
 wxString &Iso8859_1_TChar (const char* psz, wxString &Dst)

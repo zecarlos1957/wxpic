@@ -323,9 +323,7 @@ T_PicBufferInfo * PicBuf_TargetAddressToBufPtr(
         pBuf = &PicBuf[iBufNr];
         // TargetAddress := AddressOffset + ArrayIndex * AddressFactor
         // ArrayIndex = (TargetAddress - AddressOffset) / AddressFactor
-        i32ArrayIndex = i32TargetAddress - pBuf->dwAddressOffset;
-        if( pBuf->dwAddressFactor != 0 )
-            i32ArrayIndex /= pBuf->dwAddressFactor;  // divide by 1, 2, or 4; no ROUNDING but TRUNCATING
+        i32ArrayIndex = pBuf->AddressToTargetArrayIndex(i32TargetAddress);
         if( (i32ArrayIndex>=0) && (i32ArrayIndex < (long)pBuf->dwMaxSize)
                 && pBuf->dwAddressOffset != (uint32_t)0xFFFFFFFFL  )
         {
@@ -338,7 +336,8 @@ T_PicBufferInfo * PicBuf_TargetAddressToBufPtr(
             else
             {
                 // bingo, found the buffer
-                if( pi32ArrayIndex ) *pi32ArrayIndex = i32ArrayIndex;
+                if( pi32ArrayIndex )
+                    *pi32ArrayIndex = i32ArrayIndex;
                 return pBuf;
             }
         }
@@ -397,16 +396,16 @@ int PicBuf_GetBufferWord(
     {
         // Ok, found the buffer for this target address,
         // and the array index is ok too ...
+        *pdwDest = pBuf->pdwData[i32ArrayIndex];
+
         if( (i32TargetAddress & 1)!=0   &&  pBuf->dwAddressFactor>1 )
         {
             // 2 address-steps per 16-bit array element,
             // but ODD addresses can be used to access the higher byte ONLY:
-            *pdwDest = pBuf->pdwData[i32ArrayIndex] >> 8;
+            wxString ErrorMsg = wxString::Format(_T("Unexpected call to PicBuf_GetBufferWord: TargetAddress %ld."), i32TargetAddress);
+            APPL_ShowMsg( 127/*important error*/, ErrorMsg.c_str());
         }
-        else // no odd address, or BYTE array:
-        {
-            *pdwDest = pBuf->pdwData[i32ArrayIndex];
-        }
+
         return 1;
     }
 
@@ -424,15 +423,14 @@ int  PicBuf_SetBufferWord(long i32TargetAddress, uint32_t dwData)
     if( pBuf )
     {
         // Ok, buffer for the target address has been found, and array index is valid
+        pBuf->pdwData[i32ArrayIndex] = dwData;
+
         if( (i32TargetAddress & 1)!=0   &&  pBuf->dwAddressFactor>1 )
         {
             // 2 address steps per 16-bit array element,
             // but ODD addresses can be used to access the higher byte ONLY:
-            pBuf->pdwData[i32ArrayIndex] = (pBuf->pdwData[i32ArrayIndex] & 0x00FF) | (dwData << 8);
-        }
-        else  // no odd address, or BYTE array:
-        {
-            pBuf->pdwData[i32ArrayIndex] = dwData;
+            wxString ErrorMsg = wxString::Format(_T("Unexpected call to PicBuf_SetBufferWord: TargetAddress %ld."), i32TargetAddress);
+            APPL_ShowMsg( 127/*important error*/, ErrorMsg.c_str());
         }
         return 1;
     }
@@ -441,76 +439,6 @@ int  PicBuf_SetBufferWord(long i32TargetAddress, uint32_t dwData)
 
 } // end PicBuf_SetBufferWord()
 
-/***************************************************************************/
-int PicBuf_GetBufferByte(long i32TargetAddress, uint8_t *pbDest)
-// Similar like PicBuf_GetBufferWord() ,
-// but the result is always 8 bit, odd addresses are always allowed .
-// Return value :  true = ok, successfully read the byte from a buffer
-//                 false= error, most likely an invalid source address
-//                        for the currently selected device .
-{
-    long i32ArrayIndex;
-    T_PicBufferInfo *pBuf = PicBuf_TargetAddressToBufPtr( i32TargetAddress, &i32ArrayIndex );
-
-    if( pBuf )
-    {
-        // Ok, the right buffer for the target-address has been found,
-        // and the array index is also ok ...
-        *pbDest = pBuf->pdwData[i32ArrayIndex];
-        return 1;
-    }
-
-    return 0;  // invalid target address ?!
-} // end PicBuf_GetBufferByte()
-
-/***************************************************************************/
-int PicBuf_SetBufferByte(long i32TargetAddress, uint8_t bSource)
-// Similar like PicBuf_GetBufferWord() ,
-// but here only setting a single BYTE, regardless of the target memory type.
-// Return value :  1    = ok, successfully read the byte from a buffer
-//                 <=0  = error, most likely an invalid source address
-//                        for the currently selected device .
-{
-    long i32ArrayIndex;
-    uint32_t dwTemp;
-    uint32_t dwAddressFactor;
-    uint32_t dwNBitShifts; // number of bit shifts =  8 * "address modulo X" (X depends on "bits per instruction" )
-    uint32_t dwDataMask;
-
-    T_PicBufferInfo *pBuf = PicBuf_TargetAddressToBufPtr( i32TargetAddress, &i32ArrayIndex );
-
-    if( pBuf && (i32ArrayIndex>=0) )
-    {
-        // Ok, the right buffer for the target-address has been found,
-        // the array index is also ok ... now the "WIDTH" must be observed,
-        // to access a "HALF WORD" properly (etc) .
-        dwAddressFactor = pBuf->dwAddressFactor;
-        if(dwAddressFactor<1) dwAddressFactor=1;
-        if( pBuf->iBitsPerElement <= 8 )
-        {
-            // 1..8 bit per entry in pdwData[i32ArrayIndex], easy...
-            pBuf->pdwData[i32ArrayIndex] = bSource;
-            return 1;
-        }
-        if( pBuf->iBitsPerElement <= 16 )
-        {
-            // 9..16 bit per entry in pdwData[i32ArrayIndex], fair...
-            dwNBitShifts = 8 * (i32TargetAddress & 0x0001);
-        }
-        else
-        {
-            // 17..24 bit per entry in pdwData[i32ArrayIndex], sometimes impossible (!)
-            dwNBitShifts = 8 * (i32TargetAddress & 0x0003);
-        }
-        dwDataMask   = 0x000000FF << dwNBitShifts;  //
-        dwTemp =  (   pBuf->pdwData[i32ArrayIndex]  & (~dwDataMask) )
-                  | ( ((uint32_t)bSource << dwNBitShifts)&  dwDataMask   );
-        pBuf->pdwData[i32ArrayIndex] = dwTemp;
-        return 1;
-    }
-
-    return 0x0000;  // invalid target address ?!
-} // end PicBuf_GetBufferByte()
 
 
 /***************************************************************************/

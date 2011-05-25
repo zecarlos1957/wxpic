@@ -62,8 +62,6 @@
         TSessionConfig::ClearCommandLineMode();
     }
 
-    PIC_HEX_ClearBuffers(); // contents of some memory buffers depends on PIC_DeviceInfo !
-
     if ( TSessionConfig::GetOverrideConfigWord() >= 0)
         // override config word if specified in command line:
         PicBuf_SetConfigWord(0, TSessionConfig::GetOverrideConfigWord() ) ;
@@ -1231,8 +1229,7 @@ void MainFrame::UpdateAllSheets(void)
 {
     aCodeMemTab->UpdateCodeMemDisplay();     // show CODE in the hex display
     aDataMemTab->UpdateDataMemDisplay();     // show EEPROM DATA  "  "  "
-    aConfigMemoryTab->UpdateIdAndConfMemDisplay();  // show ID and CONFIG MEMORY as hex- or bin- dump
-    aDeviceCfgTab->UpdateDeviceConfigTab(true/*fUpdateHexWord*/ );
+    aConfigMemoryTab->LoadConfigBuffer();    // show ID and CONFIG MEMORY as hex- or bin- dump
     aInterfaceTab->UpdateInterfaceTestDisplay(); // show current state of control lines
     aOptionTab->UpdateOptionsDisplay();
     Update();  // make the changes visible on the screen

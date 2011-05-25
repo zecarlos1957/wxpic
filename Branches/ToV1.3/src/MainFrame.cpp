@@ -339,8 +339,6 @@ void MainFrame::initMore (void)
     aCodeMemTab->aCodeMemGrid->SetHexFormat(16);
     aDataMemTab->aDataMemGrid->SetHexFormat(8);
 
-    m_update_code_mem_display = true;
-    m_update_data_mem_display = true;
 //   m_progress_visible        = false;
     m_Updating                = 0;
 
@@ -659,39 +657,9 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
 
         aInterfaceTab->UpdateInterfaceInputSignalDisplay();
 
-        if ( m_update_code_mem_display )
-        {
-            m_update_code_mem_display = false;
-            aCodeMemTab->UpdateCodeMemDisplay();
-        }
-
-        if ( m_update_data_mem_display )
-        {
-            m_update_data_mem_display = false;
-            aDataMemTab->UpdateDataMemDisplay();
-        }
 
         if ( m_update_id_and_config_display && (aNotebook->GetSelection()==TS_CfgMemTab) )
-        {
-            m_update_id_and_config_display = false;
-            aConfigMemoryTab->UpdateIdAndConfMemDisplay();
-        }
-
-        /* if code protection, watchdog, oscillator configuration has changed: */
-        if (   ( aDeviceCfgTab->m_displayed_config_word[0]  != PicBuf_GetConfigWord(0) )
-                ||( aDeviceCfgTab->m_displayed_config_word[1]  != PicBuf_GetConfigWord(1) )
-                ||( strncmp(aDeviceCfgTab->m_sz40DisplayedDeviceName, PIC_DeviceInfo.sz40DeviceName,40)!=0 )
-           )
-        {
-            strncpy(aDeviceCfgTab->m_sz40DisplayedDeviceName, PIC_DeviceInfo.sz40DeviceName, 40);
-            aDeviceCfgTab->m_displayed_config_word[0] = PicBuf_GetConfigWord(0);
-            aDeviceCfgTab->m_displayed_config_word[1] = PicBuf_GetConfigWord(1);
-            aDeviceCfgTab->UpdateDeviceConfigTab( true/*update HEX display also*/ );   // << here in TIMER METHOD !
-            aInterfaceTab->UpdateInterfaceTestDisplay();
-        }
-
-//        // If used, let the DLL-based hardware-interface-plugin update its own GUI:
-//        PicHw_LetInterfaceDLLDoGraphicStuff();
+            aConfigMemoryTab->UpdateIdAndConfMemDisplay(/*Rebuild*/false);
 
         // State machine for BATCH PROGRAMMING...
         switch ( PIC_PRG_iBatchProgState )
@@ -1034,8 +1002,6 @@ void MainFrame::onReadMenuItemSelected(wxCommandEvent& event)
         DisconnectTarget();  // since 2002-09-26 . Suggested by Johan Bodin.
 
     UpdateAllSheets();  // incl  UpdateInterfaceTestDisplay()
-    aConfigMemoryTab->aApplyIdLocsButton->Disable();
-//  Btn_ApplyIdLocs->Enabled = false;
 
     if ( !ok )
     {
@@ -1111,8 +1077,6 @@ void MainFrame::onClearBufferMenuItemSelected(wxCommandEvent& event)
 //  REd_CodeMem->Modified = false;
 //  REd_DataMem->Modified = false;
     UpdateAllSheets(); // make the changes visible on the screen
-    aConfigMemoryTab->aApplyIdLocsButton->Disable();
-//  Btn_ApplyIdLocs->Enabled = false;
 }
 //---------------------------------------------------------------------------
 
@@ -1136,8 +1100,6 @@ void MainFrame::onClearFuseMenuItemSelected(wxCommandEvent& event)
                               |  PIC_DeviceInfo.wCfgmask_lvp     //  Low Voltage Prog. Enabled
                               |  PIC_DeviceInfo.wCfgmask_boden); //  Brown-out Detect & Reset Enabled
     UpdateAllSheets(); // make the changes visible on the screen
-    aConfigMemoryTab->aApplyIdLocsButton->Disable();
-//  Btn_ApplyIdLocs->Enabled = false;
 }
 //---------------------------------------------------------------------------
 
@@ -1324,60 +1286,52 @@ void MainFrame::onBatchPrgMenuItemSelected(wxCommandEvent& event)
 
 
 //---------------------------------------------------------------------------
-bool MainFrame::ApplyCodeMemoryEdits(void)
+void MainFrame::applyMemoryEdits(void)
 {
     aCodeMemTab->aCodeMemAddrGetter1.ApplyChange();
     aCodeMemTab->aCodeMemAddrGetter2.ApplyChange();
-    return true;
-}
-
-
-//---------------------------------------------------------------------------
-bool MainFrame::ApplyDataMemoryEdits(void)
-{
     aDataMemTab->aDataMemAddrGetter.ApplyChange();
-    return true;
+    aConfigMemoryTab->ApplyConfigEdit();
 }
-//---------------------------------------------------------------------------
 
-
-
-//---------------------------------------------------------------------------
-bool MainFrame::EnableHexEditors(void)
+void MainFrame::discardMemoryEdits(void)
 {
-    aCodeMemTab->aCodeMemGrid->EnableEditing(true);
-    aDataMemTab->aDataMemGrid->EnableEditing(true);
-//     REd_CodeMem->ReadOnly = false;
-//     REd_CodeMem->Enabled  = true;
-//     REd_DataMem->ReadOnly = false;
-//     REd_DataMem->Enabled  = true;
+    aCodeMemTab->UpdateCodeMemDisplay();
+    aDataMemTab->UpdateDataMemDisplay();
+    aConfigMemoryTab->LoadConfigBuffer();
+}
 
-    return true;
-} // end MainFrame::EnableHexEditors()
 
 
 //---------------------------------------------------------------------------
 bool MainFrame::QueryAndApplyHexEditIfRequired(void)
 {
-    if (aCodeMemTab->aCodeMemGrid->IsEditable()
-            &&  (aCodeMemTab->aCodeMemAddrGetter1.IsModified()
-                 || aCodeMemTab->aCodeMemAddrGetter2.IsModified()
-                 || aDataMemTab->aDataMemAddrGetter.IsModified()))
-//  if(  !REd_CodeMem->ReadOnly
-//    && (REd_CodeMem->Modified || REd_DataMem->Modified )  )
+    if (aCodeMemTab->aCodeMemGrid->IsEditable())
     {
-        int Answer = wxMessageBox(
-                         _( "Apply changes in the HEX EDITOR ?" ) ,
-                         _T("WxPic"),
-                         wxICON_QUESTION | wxYES_NO | wxCANCEL );
-        if (Answer == wxYES )
+        wxArrayString BufferTab;
+        if (aCodeMemTab->aCodeMemAddrGetter1.IsModified())
+            BufferTab.Add(_("Code"));
+        if (aCodeMemTab->aCodeMemAddrGetter2.IsModified())
+            BufferTab.Add(_("Executive Code"));
+        if (aDataMemTab->aDataMemAddrGetter.IsModified())
+            BufferTab.Add(_("Data"));
+        if (aConfigMemoryTab->aCfgMemAddrGetter.IsModified())
+            BufferTab.Add(_("Configuration"));
+
+        if (BufferTab.Count() > 0)
         {
-            ApplyCodeMemoryEdits();
-            ApplyDataMemoryEdits();
-        }
-        else if (Answer == wxCANCEL )
-        {
-            return false;
+            int Answer = wxMessageBox(
+                             _( "Apply changes in the following editors?\n" )
+                                      + StringJoin(BufferTab, _(", ")),
+                             _T("Apply or Discard Buffer Edition"),
+                             wxICON_QUESTION | wxYES_NO | wxCANCEL );
+
+            if (Answer == wxYES )
+                applyMemoryEdits();
+            else if (Answer == wxCANCEL )
+                return false;
+            else
+                discardMemoryEdits();
         }
     }
     return true;
@@ -1388,52 +1342,18 @@ bool MainFrame::QueryAndApplyHexEditIfRequired(void)
 void MainFrame::onEnabHexEditMenuItemSelected(wxCommandEvent& event)
 //void MainFrame::Menu_EnableEditClick(TObject *Sender)
 {
-    // see help on TRichEdit !
-    if (aCodeMemTab->aCodeMemGrid->IsEditable() && (aCodeMemTab->aCodeMemAddrGetter1.IsModified() || aCodeMemTab->aCodeMemAddrGetter2.IsModified()))
-//  if( !REd_CodeMem->ReadOnly  &&  REd_CodeMem->Modified )
-    {
-        int Answer = wxMessageBox(
-                         _( "Do you want to APPLY the edits\n in the code memory buffer ?" ),
-                         _( "WxPic: turning CODE MEMORY editor off.." ),
-                         wxICON_QUESTION | wxYES_NO | wxCANCEL );
-        if ( Answer == wxYES )
-        {
-            ApplyCodeMemoryEdits();
-        }
-        else if (Answer == wxCANCEL)
-            return;
-    }
+    bool NewState = !aCodeMemTab->aCodeMemGrid->IsEditable();
+    if (!NewState && !QueryAndApplyHexEditIfRequired())
+        return;
 
-    if (aDataMemTab->aDataMemGrid->IsEditable() && aDataMemTab->aDataMemAddrGetter.IsModified())
-//  if( !REd_DataMem->ReadOnly  &&  REd_DataMem->Modified )
-    {
-        int Answer = wxMessageBox(
-                         _( "Do you want to APPLY the edits\n in the data memory buffer ?" ),
-                         _( "WxPic: turning DATA MEMORY editor off.." ),
-                         wxICON_QUESTION | wxYES_NO | wxCANCEL );
-        if (Answer == wxYES )
-        {
-            ApplyDataMemoryEdits();
-        }
-        else if (Answer == wxCANCEL )
-            return;
-    }
 
-    // Toggle the "edit mode" for both hex dumps (which are in fact TRichEdits)
-    if (!aCodeMemTab->aCodeMemGrid->IsEditable())
-//  if(REd_CodeMem->ReadOnly)
-    {
-        EnableHexEditors();
-    }
-    else
-    {
-        aCodeMemTab->aCodeMemGrid->EnableEditing(false);
-//       REd_CodeMem->ReadOnly = true;
-        // REd_CodeMem->Enabled  = false;    // shit, also disables the SCROLLER(!)
-        aDataMemTab->aDataMemGrid->EnableEditing(false);
-//     REd_DataMem->ReadOnly = true;
-        // REd_DataMem->Enabled  = false;   // shit, also disables the SCROLLER(!)
-    }
+    // Toggle the "edit mode"
+    aCodeMemTab->aCodeMemGrid->EnableEditing(NewState);
+    aDataMemTab->aDataMemGrid->EnableEditing(NewState);
+    aConfigMemoryTab->aCfgMemGrid->EnableEditing(NewState);
+    aDeviceCfgTab->aDevCfgGrid->EnableEditing(NewState);
+    aDeviceCfgTab->aConfigWordHexEdit2->SetEditable(NewState);
+    aDeviceCfgTab->aConfigWordHexEdit->SetEditable(NewState);
 }
 //---------------------------------------------------------------------------
 
@@ -1441,7 +1361,7 @@ void MainFrame::onEnabHexEditMenuItemSelected(wxCommandEvent& event)
 void MainFrame::onDiscardEditMenuItemSelected(wxCommandEvent& event)
 //void MainFrame::Menu_DiscardHexEditsClick(TObject *Sender)
 {
-    m_update_code_mem_display = m_update_data_mem_display = true;
+    discardMemoryEdits();
 }
 //---------------------------------------------------------------------------
 
@@ -1449,8 +1369,7 @@ void MainFrame::onDiscardEditMenuItemSelected(wxCommandEvent& event)
 void MainFrame::onApplyEditMenuItemSelected(wxCommandEvent& event)
 //void MainFrame::Menu_ApplyHexEditsClick(TObject *Sender)
 {
-    ApplyCodeMemoryEdits();
-    ApplyDataMemoryEdits();
+    applyMemoryEdits();
 }
 //---------------------------------------------------------------------------
 

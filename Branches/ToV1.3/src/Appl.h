@@ -67,6 +67,10 @@ wxString    &Iso8859_1_TChar     (const char* psz, wxString &Dst);
 void         CopyIso8859_1_TChar (wxChar *Dst, const char* psz, int Length);
 wxChar       *DupIso8859_1_TChar  (const char* psz);
 
+class wxArrayString;
+wxString StringJoin (const wxArrayString &pArray, const wxString &pSep);
+
+
 #ifndef __WXMSW__ //Posix Port emulation layer by E.U.A ;)
 #ifndef _TCHAR_to_WXCHAR_
 #define _TCHAR_to_WXCHAR_ 1 //definition protector

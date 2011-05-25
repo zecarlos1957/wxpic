@@ -21,7 +21,6 @@ const long TConfigMemoryPanel::ID_STATICTEXT11 = wxNewId();
 const long TConfigMemoryPanel::ID_DEV_ID_TITLE = wxNewId();
 const long TConfigMemoryPanel::ID_DEV_ID = wxNewId();
 const long TConfigMemoryPanel::ID_DEV_ID_DECODED = wxNewId();
-const long TConfigMemoryPanel::ID_APPLY_ID_LOCS_BUTTON = wxNewId();
 const long TConfigMemoryPanel::ID_BUTTON6 = wxNewId();
 const long TConfigMemoryPanel::ID_PANEL6 = wxNewId();
 //*)
@@ -57,6 +56,10 @@ TConfigMemoryPanel::TConfigMemoryPanel(wxWindow* parent,wxWindowID id,const wxPo
 	aCfgMemGrid = new wxGrid(this, ID_CFG_MEM_GRID, wxDefaultPosition, wxSize(-1,0), 0, _T("ID_CFG_MEM_GRID"));
 	aCfgMemGrid->CreateGrid(0,3);
 	aCfgMemGrid->SetMinSize(wxSize(0,0));
+	aCfgMemGrid->EnableEditing(true);
+	aCfgMemGrid->EnableGridLines(true);
+	aCfgMemGrid->SetDefaultCellFont( aCfgMemGrid->GetFont() );
+	aCfgMemGrid->SetDefaultCellTextColour( aCfgMemGrid->GetForegroundColour() );
 	BoxSizer12->Add(aCfgMemGrid, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 7);
 	Panel6 = new wxPanel(this, ID_PANEL6, wxDefaultPosition, wxDefaultSize, wxRAISED_BORDER|wxTAB_TRAVERSAL, _T("ID_PANEL6"));
 	BoxSizer13 = new wxBoxSizer(wxVERTICAL);
@@ -81,10 +84,7 @@ TConfigMemoryPanel::TConfigMemoryPanel(wxWindow* parent,wxWindowID id,const wxPo
 	BoxSizer13->Add(aDevId, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 1);
 	aDevIdDecoded = new wxStaticText(Panel6, ID_DEV_ID_DECODED, _("= <unknown ID>"), wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE, _T("ID_DEV_ID_DECODED"));
 	BoxSizer13->Add(aDevIdDecoded, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 1);
-	BoxSizer13->Add(0,5,0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
-	aApplyIdLocsButton = new wxButton(Panel6, ID_APPLY_ID_LOCS_BUTTON, _("Apply edits"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_APPLY_ID_LOCS_BUTTON"));
-	aApplyIdLocsButton->Disable();
-	BoxSizer13->Add(aApplyIdLocsButton, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 3);
+	BoxSizer13->Add(0,15,0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
 	aHelpOnIdButton = new wxButton(Panel6, ID_BUTTON6, _("Help"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON6"));
 	BoxSizer13->Add(aHelpOnIdButton, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 3);
 	Panel6->SetSizer(BoxSizer13);
@@ -98,7 +98,6 @@ TConfigMemoryPanel::TConfigMemoryPanel(wxWindow* parent,wxWindowID id,const wxPo
 	Connect(ID_CFG_MEM_GRID,wxEVT_GRID_CELL_CHANGE,(wxObjectEventFunction)&TConfigMemoryPanel::onCfgMemGridCellChange);
 	Connect(ID_ID_BIN_HEX_RADIO,wxEVT_COMMAND_RADIOBOX_SELECTED,(wxObjectEventFunction)&TConfigMemoryPanel::onIdBinHexRadioSelect);
 	Connect(ID_SHOW_ALL_CFG_CELLS_CHK,wxEVT_COMMAND_CHECKBOX_CLICKED,(wxObjectEventFunction)&TConfigMemoryPanel::onShowAllCfgCellsChkClick);
-	Connect(ID_APPLY_ID_LOCS_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TConfigMemoryPanel::onApplyIdLocsButtonClick);
 	Connect(ID_BUTTON6,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TConfigMemoryPanel::onHelpOnIdButtonClick);
 	//*)
 
@@ -141,203 +140,110 @@ static wxChar *WordToSeparatedBinary(uint16_t w, int iNrBits)
     return sz80Result;
 }
 
-//---------------------------------------------------------------------------
-void TConfigMemoryPanel::ApplyIdLocationDisplay(void)
+
+
+void TConfigMemoryPanel::LoadConfigBuffer (void)
 {
-    int i,j;
-    wxChar sz80Temp[82];
-    wxChar *cp;
-    uint16_t w;
-    uint32_t dwAddress;
-    bool ok;
-    uint16_t wBitsPerIdLocation = PicDev_GetNrOfBitsPerIdLocation();  // 14 or 16 ?
+    //-- Load the MemAddressGetter for the configuration
+    aCfgBufferBase = aCfgMemAddrGetter.SetMemory(PIC_BUF_CONFIG, PicDev_GetConfMemSize());
 
+    //-- Compute Index of the First Config Word
+    if (PIC_DeviceInfo.lConfWordAdr >= 0)
+        aConfigWordIndex = PicBuf[PIC_BUF_CONFIG].AddressToTargetArrayIndex(PIC_DeviceInfo.lConfWordAdr);
 
-    int RowCount = aCfgMemGrid->GetNumberRows();
-    for (i=0; i<RowCount; ++i)
-    {
-        _tcsncpy(sz80Temp, aCfgMemGrid->GetRowLabelValue(i).c_str(), 80);
-        dwAddress = HexStringToLongint(6,sz80Temp);
-        _tcsncpy(sz80Temp, aCfgMemGrid->GetCellValue(i,configMemVALUE).c_str(), 80);
-        w=0;
-        ok=true;
-        cp=sz80Temp;
-        if ( (cp[0]==_T('$')) || (cp[0]==_T('0') && cp[1]==_T('x')) )
-        {
-            w = HexStringToLongint(6,cp);
-        }
-        else // not HEX but BIN:
-        {
-            for (j=0;j<wBitsPerIdLocation;++j)
-            {
-                while (*cp==_T(' ')) ++cp; // skip spaces, they are no syntax element here
-                if (*cp==_T('1'))
-                {
-                    w |= (1<<(wBitsPerIdLocation-1-j));
-                    ++cp;
-                }
-                else if (*cp==_T('0'))
-                {
-                    ++cp;
-                }
-                else ok=false;
-            }
-        }
-        uint32_t Old;
-        PicBuf_GetBufferWord(dwAddress, &Old);
-        if (ok && (w != Old))
-        {
-            PicBuf_SetBufferWord (dwAddress, w);
-            PicBuf_SetMemoryFlags(dwAddress, (PicBuf_GetMemoryFlags(dwAddress) | PIC_BUFFER_FLAG_USED)
-                                                & ~(PIC_BUFFER_FLAG_PRG_ERROR|PIC_BUFFER_FLAG_VFY_ERROR));
-        }
-    } // end for < all GRID LINES >
+    // Since 2005-05, for PIC10F20x: Here the USER ID LOCATIONS are located
+    //  in a totally different memory area, which *MAY* be appended to the config bits:
+    isIdSeparated = (  (PIC_DeviceInfo.lIdMemBase > (PIC_DeviceInfo.lConfMemBase+PIC_BUF_CONFIG_SIZE) )
+                      || (PIC_DeviceInfo.lIdMemBase <  PIC_DeviceInfo.lConfMemBase )  );
+    if (isIdSeparated)
+        aIdBufferBase = aIdMemAddrGetter.SetMemory(PIC_BUF_ID_LOCATIONS, PIC_DeviceInfo.lIdMemSize);
 
-} // end ApplyIdLocationDisplay()
-//---------------------------------------------------------------------------
+    UpdateIdAndConfMemDisplay(/*Rebuild*/true);
+    // After loading the configuration Buffer, the Config word must be updated
+    MainFrame::TheMainFrame->aDeviceCfgTab->UpdateDeviceConfigTab(true/*fUpdateHexWord*/ );
+}
 
 
 static const wxString Star (_T("*"));
 
 //---------------------------------------------------------------------------
-void TConfigMemoryPanel::UpdateIdAndConfMemDisplay(void)
+void TConfigMemoryPanel::UpdateIdAndConfMemDisplay (bool pRebuild)
 {
-    int i;
-// int j,k;
-    int iGridLine;
-// char sz80Temp[82];
-    uint32_t dw, dwAddress;
-    uint16_t wBitsPerIdLocation = PicDev_GetNrOfBitsPerIdLocation();
-    wxString old_msg;
+    uint16_t BitsPerIdLocation = PicDev_GetNrOfBitsPerIdLocation();
 
     ++(MainFrame::TheMainFrame->m_Updating);
 
 
-    old_msg = MainFrame::TheMainFrame->aStatusBar->GetStatusText();
-    MainFrame::TheMainFrame->aStatusBar->SetStatusText(_("Updating config-MEMORY-grid")) ;
-    MainFrame::TheMainFrame->Update();
-
-
-    // Update the CONFIG MEMORY TABLE (binary or hexadecimal dump, NO BIT-DECODERS)
-//  SG_CfgMem->RowCount = 1+PIC_BUF_CONFIG_SIZE; // usually 1 + 64
-
-//  SG_CfgMem->ColCount = 3;
-//  // 2005-06-30: Why was this routine so UTTERLY slow - just because it's VCL stuff ? ?
-//  //  ( took 3 seconds to fill this ridiculously small TStringGrid ! )
-//  SG_CfgMem->Cols[0]->BeginUpdate();    // does this help to speed things up ?
-//  SG_CfgMem->Cols[1]->BeginUpdate();
-//  SG_CfgMem->Cols[2]->BeginUpdate();
     aCfgMemGrid->BeginBatch();
-    int RowCount = aCfgMemGrid->GetNumberRows();
-    if (RowCount > 0)
-        aCfgMemGrid->DeleteRows(0, RowCount);
 
-//  SG_CfgMem->Cells[0][0] = _("Address");   //  [ACol][ARow] ..
-//  SG_CfgMem->Cells[1][0] = _("Info");
-//  SG_CfgMem->Cells[2][0] = _("Value");
-
-    for ( i=0,iGridLine=0 ; i<PIC_BUF_CONFIG_SIZE; ++i)
+    if (pRebuild)
     {
-        if ( PIC_DeviceInfo.iBitsPerInstruction == 24 )
+        //-- Remove existing rows from the grid before recreating them
+        int RowCount = aCfgMemGrid->GetNumberRows();
+        if (RowCount > 0)
+            aCfgMemGrid->DeleteRows(0, RowCount);
+    }
+
+    int iGridLine = 0;
+    //-- For each word
+    for ( int i=0; i<PIC_BUF_CONFIG_SIZE; ++i)
+    {
+        uint32_t dwAddress = aCfgMemAddrGetter(i).address;
+        bool Valid = PicDev_IsConfigMemLocationValid(dwAddress);
+        if (Valid || aShowAllCfgCellsChk->IsChecked())
         {
-            // 24 bit per instruction in code memory .. looks like a dsPIC : only EVEN addresses useable
-            dwAddress = PIC_DeviceInfo.lConfMemBase + 2*i;
-        }
-        else if ( PIC_DeviceInfo.iBitsPerInstruction == 16 )
-        {
-            // 16 bit per instruction in code memory .. may be 18Fxxxx, supported "one fine day" ?
-            dwAddress = PIC_DeviceInfo.lConfMemBase + 2*i;
-        }
-        else // everything else is either PIC12F... or PIC16F... ?
-        {
-            dwAddress = PIC_DeviceInfo.lConfMemBase + i;
-        }
-        if ( (aShowAllCfgCellsChk->IsChecked()) || (PicDev_IsConfigMemLocationValid(dwAddress)) )
-        {
-            if ( PicBuf_GetBufferWord( dwAddress, &dw ) > 0 )
+            uint32_t WordValue = aCfgBufferBase[i];
+            if (pRebuild)
             {
+                //-- Recreate and fill all the columns
                 aCfgMemGrid->AppendRows();
                 aCfgMemGrid->SetRowLabelValue(iGridLine, wxString::Format(_T("0x%4.4X"), dwAddress)); // sprintf is smart enough to use 6 digits if necessary !
-                aCfgMemGrid->SetCellValue(iGridLine, configMemSTAR, ( !PicDev_IsConfigMemLocationValid(dwAddress) ) ? Star : wxString(wxEmptyString));
-//      if( !PicDev_IsConfigMemLocationValid(dwAddress) )
-//        strcat( sz80Temp, _T(" *") );
-//      SG_CfgMem->Cells[0][iGridLine] = sz80Temp;
+                aCfgMemGrid->SetCellValue(iGridLine, configMemSTAR, ( !Valid ) ? Star : wxString(wxEmptyString));
                 aCfgMemGrid->SetCellValue(iGridLine, configMemINFO, PicDev_GetInfoOnConfigMemory( dwAddress ));
-//      SG_CfgMem->Cells[1][iGridLine] = PicDev_GetInfoOnConfigMemory( dwAddress );
-                aCfgMemGrid->SetCellValue(iGridLine, configMemVALUE,
-                                          (aIdBinHexRadio->GetSelection()==radioDevIdBIN)
-                                          ? wxString(WordToSeparatedBinary(dw, wBitsPerIdLocation))
-                                          : wxString::Format(_T("0x%4.4X"), dw));
-//
-//        memset(sz80Temp,0,80);
-//        if(RB_IdBin->Checked)
-//          SG_CfgMem->Cells[2][iGridLine] = WordToSeparatedBinary(dw, wBitsPerIdLocation);
-//        else
-//         {
-//          sprintf(sz80Temp, _T("0x%4.4X"), dw );
-//          SG_CfgMem->Cells[2][iGridLine] = sz80Temp;
-//         }
-                iGridLine++;
-            } // end if < successfully retrieved data from a buffer for this location >
+            }
+            //-- Only the value column is updated when not rebuilding all
+            aCfgMemGrid->SetCellValue(iGridLine, configMemVALUE,
+                                      (aIdBinHexRadio->GetSelection()==radioDevIdBIN)
+                                      ? wxString(WordToSeparatedBinary(WordValue, BitsPerIdLocation))
+                                      : wxString::Format(_T("0x%4.4X"), WordValue));
+            iGridLine++;
         }
     } // end for
 
-    // Since 2005-05, for PIC10F20x: Here the USER ID LOCATIONS are located
-    //  in a totally different memory area, which *MAY* be appended to the config bits:
-    if (  (PIC_DeviceInfo.lIdMemBase > (PIC_DeviceInfo.lConfMemBase+PIC_BUF_CONFIG_SIZE) )
-            ||(PIC_DeviceInfo.lIdMemBase < PIC_DeviceInfo.lConfMemBase )
-       )
+    if (isIdSeparated)
     {
-        for ( i=0; i<PIC_DeviceInfo.lIdMemSize; ++i)
+        aFirstId = iGridLine;
+        for ( int i=0; i<PIC_DeviceInfo.lIdMemSize; ++i)
         {
-            dwAddress = PIC_DeviceInfo.lIdMemBase + i;
-            if ( PicBuf_GetBufferWord( dwAddress, &dw ) > 0 )
+            uint32_t dwAddress = aIdMemAddrGetter(i).address;
+            uint32_t WordValue = aIdBufferBase[i];
+
+            if (pRebuild)
             {
                 aCfgMemGrid->AppendRows();
-                aCfgMemGrid->SetColLabelValue(iGridLine, wxString::Format(_T("0x%4.4X"), dwAddress)); // sprintf is smart enough to use 6 digits if necessary !
-//        sprintf(sz80Temp, _T("0x%4.4X"), dwAddress); // sprintf is smart enough to use 6 digits if necessary !
-//        SG_CfgMem->Cells[0][iGridLine] = sz80Temp;
+                aCfgMemGrid->SetRowLabelValue(iGridLine, wxString::Format(_T("0x%4.4X"), dwAddress)); // sprintf is smart enough to use 6 digits if necessary !
                 aCfgMemGrid->SetCellValue(iGridLine, configMemINFO, PicDev_GetInfoOnConfigMemory( dwAddress ));
-//        SG_CfgMem->Cells[1][iGridLine] = PicDev_GetInfoOnConfigMemory( dwAddress );
-                aCfgMemGrid->SetCellValue(iGridLine, configMemVALUE,
-                                          (aIdBinHexRadio->GetSelection()==radioDevIdBIN)
-                                          ? wxString(WordToSeparatedBinary(dw, wBitsPerIdLocation))
-                                          : wxString::Format(_T("0x%4.4X"), dw));
-//            memset(sz80Temp,0,80);
-//           if(RB_IdBin->Checked)
-//              SG_CfgMem->Cells[2][iGridLine] = WordToSeparatedBinary(dw, wBitsPerIdLocation);
-//           else
-//            { sprintf(sz80Temp, _T("0x%4.4X"), dw );
-//              SG_CfgMem->Cells[2][iGridLine] = sz80Temp;
-//            }
-                iGridLine++;
-            } // end if < successfully retrieved data from a buffer for this location >
+            }
+            aCfgMemGrid->SetCellValue(iGridLine, configMemVALUE,
+                                      (aIdBinHexRadio->GetSelection()==radioDevIdBIN)
+                                      ? wxString(WordToSeparatedBinary(WordValue, BitsPerIdLocation))
+                                      : wxString::Format(_T("0x%4.4X"), WordValue));
+            iGridLine++;
         }
     } // end if < "ID memory" separated from "Config memory" >
 
-//  if(iGridLine>1)
-//        SG_CfgMem->RowCount = iGridLine;
-//  else
-//        SG_CfgMem->RowCount = 2;
     aCfgMemGrid->EndBatch();
-//  SG_CfgMem->Cols[0]->EndUpdate();    // does this help to speed things up ?
-//  SG_CfgMem->Cols[1]->EndUpdate();
-//  SG_CfgMem->Cols[2]->EndUpdate();
 
-    if ( PicBuf_GetBufferWord( PIC_DeviceInfo.lDeviceIdAddr, &dw ) > 0 )
+    uint32_t WordValue = 0;
+    if ( PicBuf_GetBufferWord( PIC_DeviceInfo.lDeviceIdAddr, &WordValue ) > 0 )
     {
         if (aIdBinHexRadio->GetSelection()==radioDevIdBIN)
-            aDevId->SetLabel(WordToSeparatedBinary(dw, wBitsPerIdLocation));
+            aDevId->SetLabel(WordToSeparatedBinary(WordValue, BitsPerIdLocation));
         else
-        {
-            aDevId->SetLabel(wxString::Format(_T("0x%4.4X"),(int)dw));
-        }
+            aDevId->SetLabel(wxString::Format(_T("0x%4.4X"),(int)WordValue));
     }
     else
-    {
-        dw=0;
         aDevId->SetLabel(_("<error>"));
-    }
 
     // Note 1: PicDev_GetDeviceNameByIdWord() can be TERRIBLY SLOW
     //         when called for the first time, due to the sluggish reading
@@ -345,30 +251,26 @@ void TConfigMemoryPanel::UpdateIdAndConfMemDisplay(void)
     // Note 2: Because of a device ID collosion between certain PIC16F's and PIC18F's
     //         (like PIC16F630 and PIC18F4220), PicDev_GetDeviceNameByIdWord()
     //         needs to know the number of bits per instruction word"; 14,16,24,..
-    strcpy( m_sz80DetectedPicDevName, PicDev_GetDeviceNameByIdWord(dw, PIC_DeviceInfo.iBitsPerInstruction) );
+    strcpy( m_sz80DetectedPicDevName, PicDev_GetDeviceNameByIdWord(WordValue, PIC_DeviceInfo.iBitsPerInstruction) );
 
     MainFrame::TheMainFrame->m_fPicDeviceConflict = false;
     if ( m_sz80DetectedPicDevName[0]!=0 )
     {
         // successfully ''decoded' the Device ID Word. Selected the right device ?
-        if ( strcmp(m_sz80DetectedPicDevName,PIC_DeviceInfo.sz40DeviceName) != 0)
-        {
-            if (dw!=0 && dw!=0xFFFF)
-                MainFrame::TheMainFrame->m_fPicDeviceConflict = true;
-        }
+        if ((WordValue!=0) && (WordValue!=0xFFFF) && (strcmp(m_sz80DetectedPicDevName,PIC_DeviceInfo.sz40DeviceName) != 0))
+            MainFrame::TheMainFrame->m_fPicDeviceConflict = true;
     }
     else // unknown Device ID Word.  Not an error, because some PICs don't support this.
-    {
         strcpy(m_sz80DetectedPicDevName, "---------");
-    }
+
     aDevIdDecoded->SetLabel(wxString::Format(_T(" = %hs"), m_sz80DetectedPicDevName));
     if ( MainFrame::TheMainFrame->m_fPicDeviceConflict )
     {
         aDevIdTitle  ->SetForegroundColour(*wxRED);
         aDevId       ->SetForegroundColour(*wxRED);
         aDevIdDecoded->SetForegroundColour(*wxRED);
-        MainFrame::TheMainFrame->aNotebook->SetSelection(MainFrame::TS_CfgMemTab);
-//     PageControl1->ActivePage = TS_CfgMemTab;
+        if (pRebuild)
+            MainFrame::TheMainFrame->aNotebook->SetSelection(MainFrame::TS_CfgMemTab);
     }
     else
     {
@@ -380,13 +282,20 @@ void TConfigMemoryPanel::UpdateIdAndConfMemDisplay(void)
 
     MainFrame::TheMainFrame->m_update_id_and_config_display = false;  // "done"
 
-
-    MainFrame::TheMainFrame->aStatusBar->SetStatusText(old_msg);
     MainFrame::TheMainFrame->Update();
 
     --(MainFrame::TheMainFrame->m_Updating);
 
 } // end UpdateIdAndConfMemDisplay()
+
+
+void TConfigMemoryPanel::ApplyConfigEdit (void)
+{
+    aCfgMemAddrGetter.ApplyChange();
+    if (isIdSeparated)
+        aIdMemAddrGetter.ApplyChange();
+}
+
 
 
 //---------------------------------------------------------------------------
@@ -395,7 +304,71 @@ void TConfigMemoryPanel::onCfgMemGridCellChange(wxGridEvent& event)
 //      int ARow, const wxString Value)
 {
     if (!MainFrame::TheMainFrame->m_Updating)
-        aApplyIdLocsButton->Enable();
+    {
+        int EventRow = event.GetRow();
+        uint16_t BitsPerIdLocation = PicDev_GetNrOfBitsPerIdLocation();
+
+        uint32_t EnteredValue = 0;
+        bool     Error        = false;
+
+        const wxChar *CurChar = aCfgMemGrid->GetCellValue(EventRow,configMemVALUE).c_str();
+        while (*CurChar==_T(' '))
+            ++CurChar; // skip spaces, they are no syntax element here
+
+        if ( (CurChar[0] == _T('$')) || ((CurChar[0] == _T('0')) && (CurChar[1] == _T('x'))) )
+            EnteredValue = HexStringToLongint(6, CurChar);
+
+        // not HEX but BIN:
+        else
+        {
+            int BitCount = 0;
+            for (BitCount = 0; (BitCount < BitsPerIdLocation) && (*CurChar != _T('\0')); ++BitCount, ++CurChar)
+            {
+                if (*CurChar == _T(' '))
+                    --BitCount; //-- Don't count Space as a bit
+
+                else
+                {
+                    EnteredValue <<= 1;
+                    if (*CurChar == _T('1'))
+                        EnteredValue |= 1;
+
+                    else if (*CurChar != _T('0'))
+                        Error = true;
+                }
+            }
+            if (BitCount != BitsPerIdLocation)
+                Error = true;
+            else
+            {
+                //-- Verify that there is no garbage at the end (space allowed)
+                while (*CurChar==_T(' '))
+                    ++CurChar;
+                Error =  (*CurChar != _T('\0'));
+            }
+        }
+        if (!Error)
+        {
+            bool UseIdBuffer = isIdSeparated && (EventRow >= aFirstId);
+            TMemAddrGetter *AddrGetter = (UseIdBuffer) ? &aIdMemAddrGetter : &aCfgMemAddrGetter;
+            uint32_t       *Buffer     = (UseIdBuffer) ? aIdBufferBase     : aCfgBufferBase;
+            //-- Get the row address by reading the label
+            uint32_t dwAddress = HexStringToLongint(6, aCfgMemGrid->GetRowLabelValue(EventRow).c_str());
+            uint32_t Index     = AddrGetter->AddressToTargetArrayIndex(dwAddress);
+
+            //-- Get old value to verify it has already changed
+            if (EnteredValue != Buffer[Index])
+            {
+                Buffer[Index] = EnteredValue;
+                AddrGetter->SetModified(Index);
+
+                if ((Index == aConfigWordIndex) || ((PIC_DeviceInfo.wCfgmask2_used != 0x0000) && (Index == aConfigWordIndex+1)))
+                    MainFrame::TheMainFrame->aDeviceCfgTab->UpdateCfgWordValue();
+            }
+        }
+        else
+            wxBell();
+    }
 }
 //---------------------------------------------------------------------------
 
@@ -405,8 +378,7 @@ void TConfigMemoryPanel::onCfgMemGridCellChange(wxGridEvent& event)
 void TConfigMemoryPanel::onIdBinHexRadioSelect(wxCommandEvent& event)
 //void ::RB_IdBinClick(TObject *Sender)
 {
-    ApplyIdLocationDisplay();
-    UpdateIdAndConfMemDisplay();  // ... in "normalized" form
+    UpdateIdAndConfMemDisplay(/*Rebuild*/false);  // ... in "normalized" form
 }
 //---------------------------------------------------------------------------
 
@@ -416,22 +388,10 @@ void TConfigMemoryPanel::onIdBinHexRadioSelect(wxCommandEvent& event)
 void TConfigMemoryPanel::onShowAllCfgCellsChkClick(wxCommandEvent& event)
 //void ::Chk_ShowAllCfgCellsClick(TObject *Sender)
 {
-// ApplyIdLocationDisplay();
-    UpdateIdAndConfMemDisplay();  // ... with the new settings
+    UpdateIdAndConfMemDisplay(/*Rebuild*/true);  // ... with the new settings
 }
 //---------------------------------------------------------------------------
 
-
-
-//---------------------------------------------------------------------------
-void TConfigMemoryPanel::onApplyIdLocsButtonClick(wxCommandEvent& event)
-//void ::Btn_ApplyIdLocsClick(TObject *Sender)
-{
-    ApplyIdLocationDisplay();
-    UpdateIdAndConfMemDisplay();  // ... in "normalized" form
-    aApplyIdLocsButton->Enable(false);
-}
-//---------------------------------------------------------------------------
 
 
 //---------------------------------------------------------------------------
