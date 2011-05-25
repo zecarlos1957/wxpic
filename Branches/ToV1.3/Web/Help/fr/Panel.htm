@@ -72,7 +72,8 @@
 <a class="return" href="#Top">Haut</a>
 <h2><a name="CodePanel" id="CodePanel"></a>La page du Code</h2>
 <p><img src="../Code.png" width="421" height="222" /></p>
-<p>Affiche le contenu de la mémoire code avec les éventuelles éditions effectuées. Les éditions sont possibles si elles ont été autorisées grâce au menu <a href="Menu.htm#AllowEditMenu">Autoriser l'édition mémoire</a>.</p>
+
+<p>Affiche le contenu de la mémoire code avec les éventuelles éditions effectuées. Les éditions sont possibles si elles ont été autorisées grâce au menu <a href="Menu.htm#AllowEditMenu">Autoriser l'édition mémoire</a>. Pour être effective les modifications doivent être <a href="Menu.htm#ValidEditMenu">appliquées</a>.</p>
 <p>La colonne de gauche indique l'adresse du premier mot de la rangée. La ligne du haut le décalage d'adresse par rapport au début de ligne. Les cellules du centre affichent chacune la représentation hexadécimale de la valeur d'un mot de la mémoire code. La colonne de droite affiche la représentation ASCII US des octets des mots de chaque rangée. Les octets d'un mot sont ordonnés en commençant par le plus faible poids. Les octets qui ne sont pas dans l'intervalle 20-7F (hexa) sont représentés par  des rectangles.</p>
 <p>Les mots peuvent être édités soit par leur représentation hexadécimale, soit par leur représentation ASCII. Quand la représentation ASCII est éditée, l'entrée est rejetée dans les cas où l'une des erreurs suivantes est présente dans la valeur validée&nbsp;:</p>
 <ul>
@@ -96,25 +97,27 @@
 <a class="return" href="#Top">Haut</a>
 <h2><a name="DataPanel" id="DataPanel"></a>La page des Données</h2>
 <p><img src="../Data.png" width="261" height="222" /></p>
-<p>Affiche le contenu de la mémoire de données avec les éventuelles éditions effectuées. Les éditions sont possibles si elles ont été autorisées grâce au menu <a href="Menu.htm#AllowEditMenu">Autoriser l'édition mémoire</a>. Le principe pour l'édition est identique à celui de la <a href="#CodePanel">Page de Code</a>.</p>
+<p>Affiche le contenu de la mémoire de données avec les éventuelles éditions effectuées. Les éditions sont possibles si elles ont été autorisées grâce au menu <a href="Menu.htm#AllowEditMenu">Autoriser l'édition mémoire</a>. Pour être effectives, les modifications doivent être <a href="Menu.htm#ValidEditMenu">Appliquées</a>.</p>
+<p>La colonne de gauche indique l'adresse de début de la ligne. La ligne du haut le décalage d'adresse par rapport au début de ligne. Les autres cellules représentent en hexadécimal ou en ASCII le contenu des données. L'édition se fait de la même manière que pour la <a href="#CodePanel">Page du Code</a>.</p>
 <a class="return" href="#Top">Haut</a>
 <h2><a name="PICConfig" id="PICConfig"></a>La page de la Config PIC</h2>
-<p><img src="ConfigPic.png" width="638" height="230" /></p>
+<p><img src="ConfigPic.png" width="620" height="293" /></p>
 <p><a name="DeviceSelect" id="DeviceSelect"></a>Permet le choix du composant à programmer grâce à la liste déroulante. Il est possible d'ajouter de nouveaux composants en éditant le fichier <a href="../devlist_format.htm" class="quote">Device.ini</a></p>
 <p>Suivant le composant choisi, les tailles des mémoires code et données du composant sont affichées dans le cadre des caractéristiques du composant. La case à cocher désactivée indique lorsqu'elle est cochée, que la mémoire du composant est de type flash.</p>
-<p>La valeur hexadécimale du ou des mots de configuration du PIC est affichée et modifiable. La signification de cette configuration est donnée par la table. Chacune de ses lignes représente un paramètre de configuration du composant. Les colonnes indiquent respectivement&nbsp;:</p>
+<p>La valeur hexadécimale du ou des mots de configuration du composant est affichée (un ou deux mots selon le modèle sélectionné).</p>
+<p> La signification de cette configuration est donnée par la table. Chacune de ses lignes représente un paramètre de configuration du composant. Les colonnes indiquent respectivement&nbsp;:</p>
 <ol>
   <li> Le nom de ce paramètre, </li>
   <li>L'adresse du mot de configuration qui contient ce paramètre, </li>
   <li>Le masque hexadécimal correspondant aux bits du mot de configuration qui codent les valeurs de ce paramètre,</li>
-  <li>La signification de la valeur actuelle de ces bits. Cette valeur est modifiable par sélection dans la liste des significations possibles du paramètre. Cette liste déroulante s'obtient par double clic sur la case à modifier. La modification de la signification du paramètre est immédiatement validée et reportée dans la valeur du mot de configuration correspondant.</li>
+  <li>La signification de la valeur actuelle de ces bits.</li>
 </ol>
 <p>La liste des paramètres est dépendante du composant sélectionné.</p>
-<p>La modification de la valeur hexadécimale d'un mot de configuration est immédiatement validée et reportée dans la table des paramètres par les changements correspondants de signification.</p>
+<p> L'édition du ou des mots de configuration, soit par sa représentation hexadécimale soit par la signification de ses parametres, est possible si elles ont été autorisées grâce au menu <a href="Menu.htm#AllowEditMenu">Autoriser l'édition mémoire</a>. Pour être effectives, les modifications doivent être <a href="Menu.htm#ValidEditMenu">Appliquées</a>. Cette valeur est modifiable par sélection dans la liste des significations possibles du paramètre. Cette liste déroulante s'obtient par double clic sur la case à modifier (si l'édition est autorisée).</p>
 <p>Les informations sauvegardées avant effacements sont des valeurs de calibration programmée en usine mais qui ne sont pas épargnées par l'opération d'effacement. WxPic sauvegarde donc ces valeurs pour pouvoir les reprogrammer par la suite. En outre elles sont affichées ici.</p>
 <a class="return" href="#Top">Haut</a>
 <h2><a name="MemConfig" id="MemConfig"></a>La page de la Mémoire de config</h2>
-<p><img src="ConfigMem.png" width="548" height="225" /></p>
+<p><img src="ConfigMem.png" width="545" height="204" /></p>
 <p>Affiche dans une table, les mots de la mémoire de configuration. On y retrouve entre autres, le ou les mots de configuration traités en détail par <a href="#PICConfig">la page de la Config Pic</a>. Chaque ligne de la table présente un mot de la mémoire de configuration du composant.  Les colonnes indiquent respectivement&nbsp;:</p>
 <ol>
   <li> L'adresse du mot, </li>
@@ -124,9 +127,9 @@
 </ol>
 <p>Plus de détails sont donnés sur ces mots de configuration <a href="#ConfigNId">ci-dessous</a>.</p>
 <p>Dans le panneau de droite, les boutons radio permettent de choisir entre les représentations hexadécimale ou binaire. Celle-ci est utilisée pour les valeurs de tous les mots de la mémoire de configuration de cette page.</p>
-<p>La case à cocher permet d'afficher, quand elle est cochée, tous les mots de la mémoire de configuration, même ceux qui sont réservés (non modifiable et éventuellement non utilisé). Lorsqu'ils sont affichés ces mots sont marqués par une astérisque dans la deuxième colonne.</p>
+<p>La case à cocher permet d'afficher, quand elle est cochée, tous les mots de la mémoire de configuration, même ceux qui sont réservés (non inscriptibles et souvent non utilisés). Lorsqu'ils sont affichés ces mots sont marqués par une astérisque dans la deuxième colonne.</p>
 <p>L'identification du composant fournit la valeur du mot indiquant le type du composant pour ceux qui supportent cette information. La traduction de cette valeur en un nom de composant est affichée. Elle devrait correspondre au <a href="#DeviceSelect">composant sélectionné</a>. Le mot d'identification du composant permet de vérifier l'identité du composant après l'avoir lu. Ce mot de 14 bits se trouve à l'adresse x2006, mais tous les composants ne semblent pas en être pourvu (un test sur un vieux 16F84 retourne toujours 3FFF comme ID composant). Les 4 ou 5 bits de poids faible peuvent contenir un indice de révision sur certains composants. WxPic essaye de décoder le mot d'identification du composant et montre le résultat sous ident composant dans le panneau de droite. S'il y a un conflit entre le composant sélectionné et l'identification lue, l'identification devient rouge. Si WxPic ne peut pas trouver une correspondance entre un composant connu et le numéro lu, vous pouvez ajouter une nouvelle entrée dans la base des composants comme <a href="../devlist_format.htm#device_id_value">expliqué ici</a> (n'oubliez pas de mettre à jour le paramètre <span class="quote">DeviceIdValue</span> avec le nouveau numéro).</p>
-<p>Le bouton <span class="quote">Valider</span> permet d'appliquer les modifications effectuées sur les valeurs des mots de la mémoire de configuration.</p>
+<p>Les éditions des valeurs sont possibles si elles ont été autorisées grâce au menu <a href="Menu.htm#AllowEditMenu">Autoriser l'édition mémoire</a>. Pour être effectives, les modifications doivent être <a href="Menu.htm#ValidEditMenu">Appliquées</a>.</p>
 <a class="return" href="#Top">Haut</a>
 <h3><a name="ConfigNId" id="ConfigNId"></a>Données d'identification</h3>
 <p>La plupart des adresses de la mémoire de configuration est utilisée pour stocker des données d'identification. Ces adresses contiennent le plus souvent seulement 4 ou 7 bits par mot. Par exemple dans les composant 14 bits, ces adresses se trouvent de 0x2000 à 0x2003. Contrairement à la mémoire code, les adresse d'ID sont lisibles même si le PIC est protégé.</p>

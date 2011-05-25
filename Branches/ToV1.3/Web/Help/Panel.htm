@@ -73,7 +73,7 @@
 <a class="return" href="#Top">Top</a>
 <h2><a name="CodePanel" id="CodePanel"></a>The Code Page</h2>
 <p><img src="Code.png" width="421" height="222" /></p>
-<p>This page displays the code buffer content modified by the user editing if any. Editing is possible when enabled through the  <a href="Menu.htm#AllowEditMenu">Enable HEX editor menu</a>. </p>
+<p>This page displays the code buffer content modified by the user editing if any. Editing is possible when enabled through the  <a href="Menu.htm#AllowEditMenu">Enable HEX editor menu</a> (this is the default). To be effective the changes must be <a href="Menu.htm#ValidEditMenu">applied</a>.</p>
 <p>The left column indicates the address at the beginning of the row. The top row indicates the address offset of the column from the beginning of the row. The cells in the center display the hexadecimal  representation of the code memory word values. The right column displays the US ASCII representation of the word bytes. The word bytes are ordered Less Significant first. The bytes not in the range 20 to 7F (hexa) are displayed as a rectangle.</p>
 <p>The word values can be edited through either the Hexadecimal representation or the ASCII representation. When editing the ASCII representation, the input is rejected if one of the following error is detected:</p>
 <ul>
@@ -97,25 +97,27 @@
 <a class="return" href="#Top">Top</a>
 <h2><a name="DataPanel" id="DataPanel"></a>The Data Page</h2>
 <p><img src="Data.png" width="261" height="222" /></p>
-<p>This page displays the data buffer content modified by the user editing if any. Editing is possible when enabled through the <a href="Menu.htm#AllowEditMenu">Enable HEX editor menu</a>. Editing principle is identical to the <a href="#CodePanel">Code Page</a> edition</p>
+<p>This page displays the data buffer content modified by the user editing if any. Editing is possible when enabled through the <a href="Menu.htm#AllowEditMenu">Enable HEX editor menu</a>. To be effective the changes must be <a href="Menu.htm#ValidEditMenu">applied</a>.</p>
+<p>The left column indicates the address at the beginning of the row. The top row indicates the address offset of the column from the beginning of the row. The other cells contains the hexadecimal or ASCII representation of the data. Editing is performed in the same way as in the <a href="#CodePanel">Code Page</a>.</p>
 <p><a class="return" href="#Top">Top</a></p>
 <h2><a name="PICConfig" id="PICConfig"></a>The Device Configuration Page</h2>
-<p><img src="ConfigPic.png" width="631" height="293" /></p>
+<p><img src="ConfigPic.png" width="620" height="292" /></p>
 <p><a name="DeviceSelect" id="DeviceSelect"></a>This page allows to select the device to program in a dropdown list. It is possible to declare new devices by editing the  <a href="devlist_format.htm" class="quote">Device.ini</a> file.</p>
 <p>Depending on the selected device, the code and data memory sizes are displayed in the device properties frame. The disabled checkbox indicates, when checked, that the device memory is flash memory. </p>
-<p>The hexadecimal value of the device configuration word(s) are displayed and editable. The meaning of this configuration is provided by the table below. Each line represents a device configuration parameter. The columns indicate:</p>
+<p>The hexadecimal value of the device configuration words are displayed (one or two words depending on the selected device).</p>
+<p>The meaning of this configuration is provided by the table below. Each line represents a device configuration parameter. The columns indicate:</p>
 <ol>
   <li>The parameter name,</li>
   <li>The address of the configuration word that contains this parameter,</li>
   <li>The hexadecimal mask that corresponds to the bits of the configuration word that code the values of this parameter,</li>
-  <li>The meaning of the current values of these bits. This value is modifiable by selection in a dropdown list that contains the possible values of the parameter. This list is displayed upon a double clic on the cell to modify. The modification is immediatly applied and reflected in the value of the configuration word.</li>
+  <li>The meaning of the current values of these bits.</li>
 </ol>
 <p>The list of parameters depends on the selected device.</p>
-<p>The modification of the configuration word hexadecimal value is immediatly validated and reported in the parameter table.</p>
+<p>Editing of the configuration words either from the hexadecimal field or from the <span class="quote">Setting</span> column of the table, is possible when enabled through the <a href="Menu.htm#AllowEditMenu">Enable HEX editor menu</a>. To be effective the changes must be <a href="Menu.htm#ValidEditMenu">applied</a>. The edition of the setting  in the table is modifiable by selecting a new value in a dropdown list that contains the possible values of the parameter. This list is displayed upon a double clic on the cell to modify (when editing is enabled).</p>
 <p>The saved before erase information is the values of calibration data that are factory programmed but that are erased by the erase operation. WxPic saves this information to be able to reprogram them and avoid loosing the calibration values. In addition this information is displayed in this page.</p>
 <a class="return" href="#Top">Top</a>
 <h2><a name="MemConfig" id="MemConfig"></a>The Config Memory</h2>
-<p><img src="ConfigMem.png" width="525" height="232" /></p>
+<p><img src="ConfigMem.png" width="525" height="205" /></p>
 <p>This page displays in a table the value of configuration buffer words. It contains among others the configuration words managed by the <a href="#PICConfig">Device Config Page</a>. Each row of the table displays a device configuration buffer word. The columns indicates respectively:</p>
 <ol>
   <li> The word address, </li>
@@ -124,9 +126,9 @@
   <li>The current value of this word in a hexadecimal or binary representation.</li>
 </ol>
 <p>In the right panel, the radio buttons allow to select between the hexadecimal and binary representation of the config words. </p>
-<p>The checkbox allows to display, when checked, all the words of the configuration buffer even those that are reserved. The reserved words are not modifiable and often not used. When reserved words are displayed they are marked with an star in the left column.</p>
+<p>The checkbox allows to display, when checked, all the words of the configuration buffer even those that are reserved. The reserved words are not writable and often not used. When reserved words are displayed they are marked with an star in the left column.</p>
 <p>The device ID provides the value of the words that indicates device model (for those that supports this feature). The translation of this value in device name is provided. It should correspond to the <a href="#DeviceSelect">selected device</a>.</p>
-<p>The <span class="quote">Apply Edits</span> button allows to apply the changes made to the hexadecimal or binary representation of the configuration buffer content.</p>
+<p>Editing is possible when enabled through the <a href="Menu.htm#AllowEditMenu">Enable HEX editor menu</a>. The config words values may be edited in Binary or in Hexa decimal. To be effective the changes must be <a href="Menu.htm#ValidEditMenu">applied</a>.</p>
 <h3><a class="return" href="#Top">Top</a> </h3>
 <h3><a name="ConfigNId" id="ConfigNId"></a>Configuration memory and ID Locations </h3>
 <p>Most of the configuration memory addresses store identification information (ID). These locations most often contain four or seven bits per location. For example in &quot;14-bit&quot; devices these locations are mapped to addresses 0x2000 to 0x2003. In contrast to the code memory, the ID locations can be read unscrambled even if the PIC is protected. </p>
