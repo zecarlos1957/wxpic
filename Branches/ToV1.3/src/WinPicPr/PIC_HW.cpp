@@ -1126,29 +1126,28 @@ bool LPT_OpenPicPort(void)
     int LptPortNr = TSessionConfig::GetLptPortNr();
     if((LptPortNr >= 1) && (LptPortNr<=2))
     {
-        Port = wxString::Format( wxT("/dev/parport"), LptPortNr-1 );
+        Port = wxString::Format( wxT("/dev/parport%d"), LptPortNr-1 );
 
         if (TSessionConfig::GetVerboseMessages())
         {
             wxString Log;
-            Log.Printf(_("Open %hs port"), Port.c_str());
+            Log.Printf(_("Open %s port"), Port.c_str());
             APPL_ShowMsg( 0, Log.c_str() );
         }
         LPT_pfileLptPort = fopen( Port.mb_str(), "w" );
         if(LPT_pfileLptPort==NULL)
         {
-            _stprintf(PicHw_sz255LastError, _("Cannot occupy LPT port %d"), errno);
-//  fResult = false;  // no... try to use the port anyway !
-            if (TSessionConfig::GetVerboseMessages())
-                APPL_ShowMsg( 0, PicHw_sz255LastError );
+            _stprintf(PicHw_sz255LastError, (errno == 13) ? _("Missing privilege to access parallel port (use sudo)")
+                                                          : _("Cannot occupy LPT port (errno=%d)"), errno);
+            APPL_ShowMsg( 0, PicHw_sz255LastError );
+            fResult = false;
         }
-        else if (!PrivilegeRequested)
+        else
         {
             //if (iopl(3)) {// is ultimate root access required?
             if (ioperm(LPT_io_address,5,1))
             {
-                APPL_ShowMsg( 0, _("The user does not have the Load Driver Privilege.\n"));
-                PrivilegeRequested = true;
+                APPL_ShowMsg( 0, _("Missing privilege to access parallel port (use sudo)"));
                 fResult = false;
             }
         }
