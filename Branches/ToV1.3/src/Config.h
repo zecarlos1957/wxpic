@@ -23,6 +23,7 @@
 
 #include "SessionList.h"
 #include <WinPicPr/PIC_HW.h>
+#include <Appl.h>
 
 class wxApp;
 class wxWindow;
