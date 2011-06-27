@@ -1598,7 +1598,7 @@ msgstr "Configuration"
 # P1
 #: src\MainFrame.cpp:1324
 msgid "Apply changes in the following editors?\n"
-msgstr "Appliquer les modifications faites dans les éditeurs suivants ?"
+msgstr "Appliquer les modifications faites dans les éditeurs suivants ?\n"
 
 # P1
 #: src\MainFrame.cpp:1325
