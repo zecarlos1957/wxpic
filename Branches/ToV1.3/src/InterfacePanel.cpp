@@ -266,7 +266,8 @@ static bool IsWeirdLptPortAddr (int pPortAddress)
         && (pPortAddress != 0x0378)
         && (pPortAddress != 0x02BC)
         && (pPortAddress != 0x03BC)
-        && (pPortAddress != 0xB800);
+        && (pPortAddress != 0xB800)
+        && (pPortAddress != 0xF8FC);
 }
 
 TInterfacePanel::EIoAddressUsage TInterfacePanel::setLptPortAddress (void)
