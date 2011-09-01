@@ -984,24 +984,40 @@ bool LPT_OpenPicPort(void)
     //  unfortunately in certain situations Windoze just doesn't care
     //  and changes some output bits.
     // Windows XP does not seem to recognize the "LPT1" as a device name at all.
-    int LptPortNr = TSessionConfig::GetLptPortNr();
-    if ((LptPortNr >= 1) && (LptPortNr <= 2))
+    if (fResult)
     {
-        sprintf( szPort, "LPT%d", LptPortNr );
-        szPort[4]='\0';
-        if (TSessionConfig::GetVerboseMessages())
+        int LptPortNr = TSessionConfig::GetLptPortNr();
+        if (LptPortNr != 0)
         {
-            wxString Log;
-            Log.Printf(_("Open %hs port"), szPort);
-            APPL_ShowMsg( 0, Log.c_str() );
-        }
-        LPT_pfileLptPort = fopen( szPort, "w" );
-        if(LPT_pfileLptPort==NULL)
-        {
-            _stprintf(PicHw_sz255LastError, _("Cannot occupy LPT port %d"), errno);
-            //  fResult = false;  // no... try to use the port anyway !
+            sprintf( szPort, "LPT%1d", LptPortNr );
             if (TSessionConfig::GetVerboseMessages())
-                APPL_ShowMsg( 0, PicHw_sz255LastError );
+            {
+                //-- <looks like a valid LPT-port *NUMBER* to try to occupy it>
+                //-- NB: .. unfortunately this does not stop windoze from fooling around with the port !
+                wxString Log;
+                Log.Printf(_("Open %hs port"), szPort);
+                APPL_ShowMsg( 0, Log.c_str() );
+            }
+
+            LPT_pfileLptPort = fopen( szPort, "w" );
+
+            if(LPT_pfileLptPort==NULL)
+            {
+                _stprintf(PicHw_sz255LastError, _("Cannot occupy %hs: Error=%d"), szPort, errno);
+                //  fResult = false;  // no... try to use the port anyway !
+                if (TSessionConfig::GetVerboseMessages())
+                    APPL_ShowMsg( 0, PicHw_sz255LastError );
+            }
+
+        }
+        else
+        {
+            if (TSessionConfig::GetVerboseMessages())
+            {
+                wxString Log;
+                Log.Printf(_("Start to use LPT@%04X port"), LPT_io_address);
+                APPL_ShowMsg( 0, Log.c_str() );
+            }
         }
 
         HANDLE TokenHandle;
@@ -1054,8 +1070,7 @@ bool LPT_OpenPicPort(void)
         else if (TSessionConfig::GetVerboseMessages())
             APPL_ShowMsg( 0, _("WinRing0 initialized") );
 
-    } // end if <looks like a valid LPT-port *NUMBER* to try to occupy it>
-    // NB: .. unfortunately this does not stop windoze from fooling around with the port !
+    }
     else
         fResult = false;
 
