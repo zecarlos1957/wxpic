@@ -45,10 +45,6 @@ TCodeMemPanel::~TCodeMemPanel()
 //---------------------------------------------------------------------------
 void TCodeMemPanel::UpdateCodeMemDisplay(void)
 {
-    wxString old_msg;
-    old_msg = MainFrame::TheMainFrame->aStatusBar->GetStatusText();
-    MainFrame::TheMainFrame->aStatusBar->SetStatusText(_("Updating CODE display..")) ;
-    MainFrame::TheMainFrame->Update();
     MainFrame::TheMainFrame->m_update_code_mem_display = false;
 
 
@@ -79,7 +75,6 @@ void TCodeMemPanel::UpdateCodeMemDisplay(void)
         aCodeMemAddrGetter2.Invalidate();
     }
 
-    MainFrame::TheMainFrame->aStatusBar->SetStatusText(old_msg);
     MainFrame::TheMainFrame->Update();
 
 } // end UpdateCodeMemDisplay()
