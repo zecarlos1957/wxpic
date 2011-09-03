@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WxPic V1.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-25 13:21+0200\n"
+"POT-Creation-Date: 2011-09-03 14:00+0200\n"
 "PO-Revision-Date: 2009-05-31 20:00+0200\n"
 "Last-Translator: pch @ laposte.net\n"
 "Language-Team: French\n"
@@ -266,8 +266,8 @@ msgid " - unknown PIC type !"
 msgstr ""
 
 # P2
-#: src\DeviceCfgPanel.cpp:261 src\DeviceCfgPanel.cpp:278
-#: src\InterfacePanel.cpp:550
+#: src\DeviceCfgPanel.cpp:239 src\DeviceCfgPanel.cpp:256
+#: src\InterfacePanel.cpp:554
 msgid "n/a"
 msgstr ""
 
@@ -574,17 +574,17 @@ msgid "slow mode (to check for timing problems)"
 msgstr "Mode Lent (débogage problème de temps)"
 
 # P1
-#: src\InterfacePanel.cpp:321
+#: src\InterfacePanel.cpp:323
 msgid "Interface Type ok."
 msgstr "L'interface est valide."
 
 # P1
-#: src\InterfacePanel.cpp:322
+#: src\InterfacePanel.cpp:324
 msgid "Interface error: "
 msgstr "Interface en erreur: "
 
 # P1
-#: src\InterfacePanel.cpp:353 src\OptionPanel.cpp:146
+#: src\InterfacePanel.cpp:353 src\OptionPanel.cpp:130
 msgid "None"
 msgstr "Aucun"
 
@@ -594,114 +594,114 @@ msgid "(at address)"
 msgstr "(A l'adresse)"
 
 # P1
-#: src\InterfacePanel.cpp:579
+#: src\InterfacePanel.cpp:583
 msgid "button up"
 msgstr ""
 
 # P1
-#: src\InterfacePanel.cpp:580
+#: src\InterfacePanel.cpp:584
 msgid "button DOWN"
 msgstr ""
 
 # P1
-#: src\InterfacePanel.cpp:585
+#: src\InterfacePanel.cpp:589
 msgid "(no button)"
 msgstr ""
 
 # P2
-#: src\InterfacePanel.cpp:600
+#: src\InterfacePanel.cpp:604
 msgid ""
 "Caution: Entering the wrong I/O-address here CAN KILL YOUR PC !\n"
 "Do you really want to continue ?"
 msgstr ""
 
 # P2
-#: src\InterfacePanel.cpp:601 src\InterfacePanel.cpp:605
+#: src\InterfacePanel.cpp:605 src\InterfacePanel.cpp:609
 msgid "WxPic WARNING"
 msgstr ""
 
 # P2
-#: src\InterfacePanel.cpp:604
+#: src\InterfacePanel.cpp:608
 msgid "Ok, but don't say we didn't warn you !"
 msgstr ""
 
 # P2
-#: src\InterfacePanel.cpp:634
+#: src\InterfacePanel.cpp:637
 msgid "Could not switch off Vpp !"
 msgstr ""
 
 # P2
-#: src\InterfacePanel.cpp:648 src\InterfacePanel.cpp:662
+#: src\InterfacePanel.cpp:651 src\InterfacePanel.cpp:665
 msgid "Could not switch Clock or Data !"
 msgstr ""
 
 # P2
-#: src\InterfacePanel.cpp:656
+#: src\InterfacePanel.cpp:659
 msgid "Failed read back of DATA line (LOW) !"
 msgstr ""
 
 # P2
-#: src\InterfacePanel.cpp:672
+#: src\InterfacePanel.cpp:675
 msgid "Failed read back of DATA line (HIGH) !"
 msgstr ""
 
 # P1
-#: src\InterfacePanel.cpp:680
+#: src\InterfacePanel.cpp:683
 msgid "Initialising PIC-Programmer: Success."
 msgstr "Initialisation du Programmateur PIC réussie."
 
 # P1
-#: src\InterfacePanel.cpp:681
+#: src\InterfacePanel.cpp:684
 msgid "Interface tested, OK."
 msgstr "Interface testée: OK"
 
-# P2
-#: src\InterfacePanel.cpp:686
+# P1
+#: src\InterfacePanel.cpp:689
 msgid "WARNING: Could not initialize programmer !"
-msgstr ""
+msgstr "ATTENTION: Le programmateur n'a pas pu être initialisé"
 
-# P2
-#: src\InterfacePanel.cpp:687
+# P1
+#: src\InterfacePanel.cpp:690
 msgid "Error testing the Interface"
-msgstr ""
+msgstr "Erreur détectée lors du test de l'interface"
 
 # P2
-#: src\InterfacePanel.cpp:751
+#: src\InterfacePanel.cpp:754
 msgid "PIC- Clock/Data failed"
 msgstr ""
 
 # P2
-#: src\InterfacePanel.cpp:755
+#: src\InterfacePanel.cpp:758
 msgid "PIC- Vpp failed"
 msgstr ""
 
 # P2
-#: src\InterfacePanel.cpp:769
+#: src\InterfacePanel.cpp:772
 msgid "PIC- Vdd failed"
 msgstr ""
 
 # P2
-#: src\InterfacePanel.cpp:783
+#: src\InterfacePanel.cpp:786
 msgid "PIC- ClockEnable failed"
 msgstr ""
 
 # P2
-#: src\InterfacePanel.cpp:797
+#: src\InterfacePanel.cpp:800
 msgid "PIC- DataEnable failed"
 msgstr ""
 
 # P2
-#: src\InterfacePanel.cpp:835
+#: src\InterfacePanel.cpp:838
 msgid "PIC- Select Vdd failed"
 msgstr ""
 
 # P1
-#: src\InterfacePanel.cpp:929
+#: src\InterfacePanel.cpp:942
 msgid "Load custom interface definition file"
 msgstr "Fichier de définition de l'interface"
 
 # P1
-#: src\InterfacePanel.cpp:942
+#: src\InterfacePanel.cpp:955
 msgid "Xml files (*.xml)|*.xml"
 msgstr "Fichiers XML (*.xml)|*.xml"
 
@@ -2843,106 +2843,112 @@ msgid "Cannot update COM port bits"
 msgstr ""
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:978 src\WinPicPr\PIC_HW.cpp:1122
+#: src\WinPicPr\PIC_HW.cpp:965
 msgid "Illegal LPT port address"
 msgstr ""
 
 # P1
-#: src\WinPicPr\PIC_HW.cpp:995 src\WinPicPr\PIC_HW.cpp:1134
+#: src\WinPicPr\PIC_HW.cpp:989
 #, c-format
 msgid "Open %hs port"
 msgstr "Ouvre le port %hs"
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:1001 src\WinPicPr\PIC_HW.cpp:1140
+#: src\WinPicPr\PIC_HW.cpp:997
 #, c-format
-msgid "Cannot occupy LPT port %d"
+msgid "Cannot occupy %hs: Error=%d"
 msgstr ""
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:1012
+#: src\WinPicPr\PIC_HW.cpp:1009
+#, c-format
+msgid "Start to use LPT@%04X port"
+msgstr ""
+
+# P2
+#: src\WinPicPr\PIC_HW.cpp:1020 src\WinPicPr\PIC_HW.cpp:1076
 msgid "Failed to get the security token"
 msgstr ""
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:1021
+#: src\WinPicPr\PIC_HW.cpp:1031
 msgid "Failed to find Load Driver privilege ID!!!"
 msgstr ""
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:1034
+#: src\WinPicPr\PIC_HW.cpp:1044
 msgid "Failed to get the Load Driver Privilege"
 msgstr ""
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:1042 src\WinPicPr\PIC_HW.cpp:1150
+#: src\WinPicPr\PIC_HW.cpp:1052
 msgid "The user does not have the Load Driver Privilege.\n"
 msgstr ""
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:1049
+#: src\WinPicPr\PIC_HW.cpp:1061
 msgid "Error Initialize WinRing0\n"
 msgstr ""
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:1055
+#: src\WinPicPr\PIC_HW.cpp:1071
 msgid "WinRing0 initialized"
 msgstr "WinRing0 initialisé"
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:1080
+#: src\WinPicPr\PIC_HW.cpp:1093
 msgid "LPT port released"
 msgstr ""
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:1084
+#: src\WinPicPr\PIC_HW.cpp:1098
 msgid "WinRing0 de-initialized"
 msgstr ""
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:1501 src\WinPicPr\PIC_HW.cpp:1534
+#: src\WinPicPr\PIC_HW.cpp:1439 src\WinPicPr\PIC_HW.cpp:1472
 msgid "LPT port failed"
 msgstr ""
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:2018
+#: src\WinPicPr\PIC_HW.cpp:1956
 msgid "Invalid 'DataIn' def."
 msgstr ""
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:2023
+#: src\WinPicPr\PIC_HW.cpp:1961
 msgid "Invalid 'ClockOut' def."
 msgstr ""
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:2028
+#: src\WinPicPr\PIC_HW.cpp:1966
 msgid "Invalid 'DataOut' def."
 msgstr ""
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:2205
+#: src\WinPicPr\PIC_HW.cpp:2143
 #, c-format
 msgid "Error in PicHwFuncs[%d], missing initializer ?"
 msgstr ""
 
 # P1
-#: src\WinPicPr\PIC_HW.cpp:2231
+#: src\WinPicPr\PIC_HW.cpp:2169
 #, c-format
 msgid "Cannot read definition file \"%s\"."
 msgstr "Fichier de définition de l'interface"
 
 # P1
-#: src\WinPicPr\PIC_HW.cpp:2362
+#: src\WinPicPr\PIC_HW.cpp:2300
 msgid "Interface not supported"
 msgstr "Test de l'interface"
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:2513
+#: src\WinPicPr\PIC_HW.cpp:2451
 msgid "WARNING: \"PERFORMANCE COUNTER\" does not work !!"
 msgstr ""
 
 # P2
-#: src\WinPicPr\PIC_HW.cpp:2527
+#: src\WinPicPr\PIC_HW.cpp:2465
 msgid "WARNING: PROGRAMMING TIMER RUNNING WILD !"
 msgstr ""
 

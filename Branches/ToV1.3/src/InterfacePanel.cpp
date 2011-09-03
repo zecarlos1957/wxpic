@@ -257,8 +257,6 @@ TInterfacePanel::~TInterfacePanel()
 
 //---------------------------------------------------------------------------
 
-static bool WinPic_fAcceptAllIoAddresses = false;
-
 static bool IsWeirdLptPortAddr (int pPortAddress)
 {
     return (pPortAddress != 0)
@@ -288,10 +286,7 @@ TInterfacePanel::EIoAddressUsage TInterfacePanel::setLptPortAddress (void)
                 TSessionConfig::SetLptIoAddress(0x0378);
             Result = usageINPUT;
             if (IsWeirdLptPortAddr(TSessionConfig::GetLptIoAddress()))
-            {
-                aAcceptAllIoAddresses = true;
                 Result = usageINPUT_WARN;
-            }
     }
     return Result;
 }
@@ -459,7 +454,7 @@ void TInterfacePanel::changeIoPortAddress (void)
         if (IsWeirdLptPortAddr(PortAddr))
         {
             // VERY unusual address for an LPT port..
-            if ( WinPic_fAcceptAllIoAddresses )
+            if ( aAcceptAllIoAddresses )
             {
                 // Accept the address "under protest"
                 IoAddressUsage = usageINPUT_WARN;
@@ -478,6 +473,8 @@ void TInterfacePanel::changeIoPortAddress (void)
 
     //-- Render the IO Address status
     updateIoAddressDisplay(IoAddressUsage);
+    //-- Take the change into account for interface access
+    UpdateInterfaceType();
 }
 
 //---------------------------------------------------------------------------
@@ -606,12 +603,11 @@ bool TInterfacePanel::UnlockEditFieldForIOPortAddress(void)
                 _( "WxPic WARNING" ),
                 wxICON_EXCLAMATION | wxOK | wxCANCEL ) != wxOK ))
     {
-        WinPic_fAcceptAllIoAddresses = false;
         UpdateInterfaceType();
         aInterfacePortChoice->SetFocus();
         return false;
     }
-    WinPic_fAcceptAllIoAddresses = true;
+    aAcceptAllIoAddresses = true;
     return true;
 
 } // end UnlockEditFieldForIOPortAddress()
@@ -1009,7 +1005,7 @@ void TInterfacePanel::onIoPortAddressGetFocus(wxFocusEvent &pEvent)
         // about the potentially disastrous effect
         // of entering the wrong I/O-address in this field !
         ++(MainFrame::TheMainFrame->m_Updating);
-        if ( ! WinPic_fAcceptAllIoAddresses )
+        if ( ! aAcceptAllIoAddresses )
             UnlockEditFieldForIOPortAddress();
         --(MainFrame::TheMainFrame->m_Updating);
     }
