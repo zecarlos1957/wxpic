@@ -937,39 +937,26 @@ uint16_t PicHw_wLptDataBits;
 uint16_t PicHw_wLptCtrlBits;  // .. and to the CENTRONICS CONTROL PORT
 
 
-#ifdef __WXMSW__
 bool LPT_OpenPicPort(void)
 {
     bool fResult = true;
     char szPort[16];
 
     if(PicHw_fLptPortOpened)
-    {
         // if a LPT-port has already been opened; close it (may be different now)
         LPT_ClosePicPort();
-    }
-    PicHw_fLptPortOpened = false;
 
-    if(fResult==true)
+    switch(Config.iLptPortNr)
     {
-        switch(Config.iLptPortNr)
-        {
-        case 1:
-            LPT_io_address = 0x0378;
-            break;
-        case 2:
-            LPT_io_address = 0x0278;
-            break;
-        default:
-            LPT_io_address = 0x0000;
-            break;
-        }
-    }
-
-    if(Config.iLptIoAddress != 0)
-    {
-        // use the "unusual" I/O address if there is something specified.
+    case 1:
+        LPT_io_address = 0x0378;
+        break;
+    case 2:
+        LPT_io_address = 0x0278;
+        break;
+    default:
         LPT_io_address = Config.iLptIoAddress;
+        break;
     }
 
     if(LPT_io_address == 0)
@@ -984,25 +971,47 @@ bool LPT_OpenPicPort(void)
     //  unfortunately in certain situations Windoze just doesn't care
     //  and changes some output bits.
     // Windows XP does not seem to recognize the "LPT1" as a device name at all.
-    if(Config.iLptPortNr>=1 && Config.iLptPortNr<=4)
+    if (fResult)
     {
-        sprintf( szPort, "LPT%d", Config.iLptPortNr );
-        szPort[4]='\0';
-        if (Config.iVerboseMessages)
+        int LptPortNr = Config.iLptPortNr;
+        if (LptPortNr != 0)
         {
-            wxString Log;
-            Log.Printf(_("Open %hs port"), szPort);
-            APPL_ShowMsg( 0, Log.c_str() );
-        }
-        LPT_pfileLptPort = fopen( szPort, "w" );
-        if(LPT_pfileLptPort==NULL)
-        {
-            _stprintf(PicHw_sz255LastError, _("Cannot occupy LPT port %d"), errno);
-            //  fResult = false;  // no... try to use the port anyway !
+#ifdef __WXMSW__
+            sprintf( szPort, "LPT%1d", LptPortNr );
+#else
+            sprintf( szPort, "/dev/parport%1d", LptPortNr-1 );
+#endif
             if (Config.iVerboseMessages)
-                APPL_ShowMsg( 0, PicHw_sz255LastError );
+            {
+                //-- <looks like a valid LPT-port *NUMBER* to try to occupy it>
+                //-- NB: .. unfortunately this does not stop windoze from fooling around with the port !
+                wxString Log;
+                Log.Printf(_("Open %hs port"), szPort);
+                APPL_ShowMsg( 0, Log.c_str() );
+            }
+
+            LPT_pfileLptPort = fopen( szPort, "w" );
+
+            if(LPT_pfileLptPort==NULL)
+            {
+                _stprintf(PicHw_sz255LastError, _("Cannot occupy %hs: Error=%d"), szPort, errno);
+                //  fResult = false;  // no... try to use the port anyway !
+                if (Config.iVerboseMessages)
+                    APPL_ShowMsg( 0, PicHw_sz255LastError );
+            }
+
+        }
+        else
+        {
+            if (Config.iVerboseMessages)
+            {
+                wxString Log;
+                Log.Printf(_("Start to use LPT@%04X port"), LPT_io_address);
+                APPL_ShowMsg( 0, Log.c_str() );
+            }
         }
 
+#ifdef __WXMSW__
         HANDLE TokenHandle;
         if (!PrivilegeRequested)
         {
@@ -1010,8 +1019,10 @@ bool LPT_OpenPicPort(void)
             {
                 APPL_ShowMsg( 0, _("Failed to get the security token"));
                 PrivilegeRequested = true;
+                fResult = false;
             }
         }
+
         LUID Luid;
         if (!PrivilegeRequested)
         {
@@ -1039,38 +1050,41 @@ bool LPT_OpenPicPort(void)
             if (GetLastError() == ERROR_NOT_ALL_ASSIGNED)
             {
                 APPL_ShowMsg( 0, _("The user does not have the Load Driver Privilege.\n"));
-                return false;
+                fResult = false;
             }
         }
 
-        if(! InitOpenLibSys(&m_hOpenLibSys))
+        if (fResult)
         {
-            _tcscpy(PicHw_sz255LastError, _("Error Initialize WinRing0\n"));
-            fResult = false;
-            if (Config.iVerboseMessages)
-                APPL_ShowMsg( 0, PicHw_sz255LastError );
+            if (! InitOpenLibSys(&m_hOpenLibSys))
+            {
+                _tcscpy(PicHw_sz255LastError, _("Error Initialize WinRing0\n"));
+                fResult = false;
+                if (Config.iVerboseMessages)
+                    APPL_ShowMsg( 0, PicHw_sz255LastError );
+            }
+            else
+                PicHw_fLptPortOpened = true;
         }
-        else if (Config.iVerboseMessages)
+
+        if (fResult && Config.iVerboseMessages)
             APPL_ShowMsg( 0, _("WinRing0 initialized") );
+#else
+        fResult = !ioperm(LPT_io_address,5,1);
+        PicHw_fLptPortOpened = fResult;
+        if (!fResult)
+            APPL_ShowMsg( 0, _("Failed to get the security token"));
+#endif
+    }
 
-    } // end if <looks like a valid LPT-port *NUMBER* to try to occupy it>
-    // NB: .. unfortunately this does not stop windoze from fooling around with the port !
-    else
-        fResult = false;
 
-
-    PicHw_fLptPortOpened = fResult;
 
     return fResult;
 } // end LPT_OpenPicPort()
 
+
 void LPT_ClosePicPort(void)
 {
-// if(LPT_iLptPortHandle>0)
-//  {
-//    FileClose(LPT_iLptPortHandle);
-//    LPT_iLptPortHandle = 0;
-//  }
     if(LPT_pfileLptPort != NULL)
     {
         fclose(LPT_pfileLptPort);
@@ -1078,89 +1092,15 @@ void LPT_ClosePicPort(void)
         if (Config.iVerboseMessages)
             APPL_ShowMsg( 0, _("LPT port released") );
     }
+#ifdef __WXMSW__
     DeinitOpenLibSys(&m_hOpenLibSys);
     if (Config.iVerboseMessages)
         APPL_ShowMsg( 0, _("WinRing0 de-initialized") );
-
+#endif
     PicHw_fLptPortOpened = false;
 } // end LPT_ClosePicPort()
-#else
-bool LPT_OpenPicPort(void)
-{
-    bool fResult = true;
-    wxString Port;
 
-    if(PicHw_fLptPortOpened)
-    {
-// if a LPT-port has already been opened; close it (may be different now)
-        LPT_ClosePicPort();
-    }
-    PicHw_fLptPortOpened = false;
-    switch(Config.iLptPortNr)
-    {
-    case 1:
-        LPT_io_address = 0x0378;
-        break;
-    case 2:
-        LPT_io_address = 0x0278;
-        break;
-    default:
-        LPT_io_address = 0x0000;
-        break;
-    }
 
-    if(Config.iLptIoAddress != 0)
-    {
-// use the "unusual" I/O address if there is something specified.
-        LPT_io_address = Config.iLptIoAddress;
-    }
-
-    if(LPT_io_address == 0)
-    {
-        fResult = false;
-        _tcscpy(PicHw_sz255LastError, _("Illegal LPT port address"));
-    }
-
-// Open the LPT port to prevent other applications to fool around with it,
-    if(Config.iLptPortNr>=1 && Config.iLptPortNr<=4)
-    {
-        Port = wxString::Format( wxT("/dev/parport"), Config.iLptPortNr-1 );
-
-        if (Config.iVerboseMessages)
-        {
-            wxString Log;
-            Log.Printf(_("Open %hs port"), Port.c_str());
-            APPL_ShowMsg( 0, Log.c_str() );
-        }
-        LPT_pfileLptPort = fopen( Port.mb_str(), "w" );
-        if(LPT_pfileLptPort==NULL)
-        {
-            _stprintf(PicHw_sz255LastError, _("Cannot occupy LPT port %d"), errno);
-//  fResult = false;  // no... try to use the port anyway !
-            if (Config.iVerboseMessages)
-                APPL_ShowMsg( 0, PicHw_sz255LastError );
-        }
-        else if (!PrivilegeRequested)
-        {
-            //if (iopl(3)) {// is ultimate root access required?
-            if (ioperm(LPT_io_address,5,1))
-            {
-                APPL_ShowMsg( 0, _("The user does not have the Load Driver Privilege.\n"));
-                PrivilegeRequested = true;
-                fResult = false;
-            }
-        }
-    }
-    PicHw_fLptPortOpened = fResult;
-    return fResult;
-} // end LPT_OpenPicPort()
-
-void LPT_ClosePicPort(void)
-{
-    if(LPT_pfileLptPort!=NULL)
-        fclose(LPT_pfileLptPort);
-}
-#endif
 
 bool PicHw_dummy(void)
 {
