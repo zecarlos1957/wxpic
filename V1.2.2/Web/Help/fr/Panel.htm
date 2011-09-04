@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>wxPIC: les pages de l'interface utilisateur</title>
+<link href="../WxPic.css" rel="stylesheet" type="text/css" />
+<link href="../WxPic.ico" rel="shortcut icon"/>
+</head>
+
+<body>
+<a name="Top" id="Top"></a>
+<div class="left-col">
+ <a href="http://wxpic.free.fr/"><img src="../LargeLogo.png" name="Logo" width="160" height="96" id="Logo" /></a>
+<div class="toc">
+  <div>Sommaire</div>
+    <ul>
+      <li><a href="#CodePanel">La page du Code</a></li>
+      <li><a href="#DataPanel">La page des Données</a></li>
+      <li><a href="#PICConfig">La page de la Config PIC</a></li>
+      <li><a href="#MemConfig">La page de la Mémoire de config</a>
+        <ul>
+          <li><a href="#ConfigNId">Données d'identification</a></li>
+          <li><a href="#DisplayTable">Autres Données</a></li>
+        </ul>
+      </li>
+      <li><a href="#OptionPanel">La page des Options</a></li>
+      <li><a href="#InterfacePanel">La page de l'Interface</a></li>
+      <li><a href="#MessagePanel">La page des Messages</a></li>
+    </ul>
+    
+   
+</div>
+<div class="toc">
+  <div>Informations complémentaires</div>
+  <ul>
+    <li><a href="devlist_format.htm">Définition de composant</a></li>
+    <li><a href="Adapter.htm">Définition d'interface</a></li>
+  </ul>
+</div>
+</div>
+<ul class="top-menu">
+  <li><a href="index.htm">Index de l'Aide</a></li>
+  <li><a href="Menu.htm">Menus et Boutons</a></li>
+  <li class="local">Pages</li>
+  <li><a href="Faq.htm">FAQ</a></li>
+</ul>
+<div class="content">
+<h1>Les pages à onglet de WxPic</h1>
+<p>Les pages à onglet regroupent les données gérées par WxPic ainsi que les contrôles permettant de configurer WxPic. Les éléments sont réparties dans les pages suivantes:</p>
+<dl>
+  <dt><a href="#CodePanel">Code</a></dt>
+  <dd>Affiche/Édite la Mémoire du code programme.</dd>
+  <dt><a href="#DataPanel">Données</a></dt>
+  <dd>Affiche/Édite la Mémoire de données si le composant sélectionné en possède une.</dd>
+  <dt><a href="#PICConfig">Config PIC</a></dt>
+  <dd>Permet le choix du composant et Affiche/Édite la configuration de manière symbolique.</dd>
+  <dt><a href="#MemConfig">Mémoire Config</a></dt>
+  <dd>Affiche/Édite la Mémoire de configuration en hexadécimal ou en binaire (y compris le(s) mot(s) de configuration traité(s) par la page Config PIC).</dd>
+  <dt><a href="#OptionPanel">Options</a></dt>
+  <dd>Configure le fonctionnement de WxPic.</dd>
+  <dt><a href="#InterfacePanel">Interface</a></dt>
+  <dd>Sélectionne l'interface du programmateur et fournit des outil de débogage de cette interface.</dd>
+  <dt><a href="#MessagePanel">Messages</a></dt>
+  <dd>Affiche les messages d'erreur et de debogage.</dd>
+</dl>
+<a class="return" href="#Top">Haut</a>
+<h2><a name="CodePanel" id="CodePanel"></a>La page du Code</h2>
+<p><img src="../Code.png" width="285" height="212" /></p>
+<p>Affiche le contenu de la mémoire code avec les éventuelles éditions effectuées. Les éditions sont possibles si elles ont été autorisées grâce au menu <a href="Menu.htm#AllowEditMenu">Autoriser l'édition mémoire</a>.</p>
+<p>La colonne de gauche indique l'adresse de début de la ligne. La ligne du haut le décalage d'adresse par rapport au début de ligne.</p>
+<p>La couleur indique l'un des quatre états suivant pour chacun des mots:</p>
+<dl>
+  <dt>Mot utilisé</dt>
+  <dd>Couleur contrastée modifiable dans la <a href="#ColourChange">page des options</a>.</dd>
+  <dt>Mot inutilisé (valeur identique à celle d'un mot effacé)</dt>
+  <dd>Couleur atténuée</dd>
+  <dt>Mot en erreur (différence entre la mémoire de WxPic et celle du composant)</dt>
+  <dd>Rouge</dd>
+  <dt>Mot spécial (calibration)</dt>
+  <dd>Violet</dd>
+</dl>
+<a class="return" href="#Top">Haut</a>
+<h2><a name="DataPanel" id="DataPanel"></a>La page des Données</h2>
+<p><img src="../Data.png" width="189" height="265" /></p>
+<p>Affiche le contenu de la mémoire de données avec les éventuelles éditions effectuées. Les éditions sont possibles si elles ont été autorisées grâce au menu <a href="Menu.htm#AllowEditMenu">Autoriser l'édition mémoire</a>.</p>
+<a class="return" href="#Top">Haut</a>
+<h2><a name="PICConfig" id="PICConfig"></a>La page de la Config PIC</h2>
+<p><img src="ConfigPic.png" width="638" height="230" /></p>
+<p><a name="DeviceSelect" id="DeviceSelect"></a>Permet le choix du composant à programmer grâce à la liste déroulante. Il est possible d'ajouter de nouveaux composants en éditant le fichier <a href="../devlist_format.htm" class="quote">Device.ini</a></p>
+<p>Suivant le composant choisi, les tailles des mémoires code et données du composant sont affichées dans le cadre des caractéristiques du composant. La case à cocher désactivée indique lorsqu'elle est cochée, que la mémoire du composant est de type flash.</p>
+<p>La valeur hexadécimale du ou des mots de configuration du PIC est affichée et modifiable. La signification de cette configuration est donnée par la table. Chacune de ses lignes représente un paramètre de configuration du composant. Les colonnes indiquent respectivement&nbsp;:</p>
+<ol>
+  <li> Le nom de ce paramètre, </li>
+  <li>L'adresse du mot de configuration qui contient ce paramètre, </li>
+  <li>Le masque hexadécimal correspondant aux bits du mot de configuration qui codent les valeurs de ce paramètre,</li>
+  <li>La signification de la valeur actuelle de ces bits. Cette valeur est modifiable par sélection dans la liste des significations possibles du paramètre. Cette liste déroulante s'obtient par double clic sur la case à modifier. La modification de la signification du paramètre est immédiatement validée et reportée dans la valeur du mot de configuration correspondant.</li>
+</ol>
+<p>La liste des paramètres est dépendante du composant sélectionné.</p>
+<p>La modification de la valeur hexadécimale d'un mot de configuration est immédiatement validée et reportée dans la table des paramètres par les changements correspondants de signification.</p>
+<p>Les informations sauvegardées avant effacements sont des valeurs de calibration programmée en usine mais qui ne sont pas épargnées par l'opération d'effacement. WxPic sauvegarde donc ces valeurs pour pouvoir les reprogrammer par la suite. En outre elles sont affichées ici.</p>
+<a class="return" href="#Top">Haut</a>
+<h2><a name="MemConfig" id="MemConfig"></a>La page de la Mémoire de config</h2>
+<p><img src="ConfigMem.png" width="548" height="225" /></p>
+<p>Affiche dans une table, les mots de la mémoire de configuration. On y retrouve entre autres, le ou les mots de configuration traités en détail par <a href="#PICConfig">la page de la Config Pic</a>. Chaque ligne de la table présente un mot de la mémoire de configuration du composant.  Les colonnes indiquent respectivement&nbsp;:</p>
+<ol>
+  <li> L'adresse du mot, </li>
+  <li>Un mot réservé marqué par une astérisque, </li>
+  <li>L'utilisation de ce mot,</li>
+  <li>La valeur actuelle représentée en hexadécimal ou en binaire du mot dans la mémoire de configuration.</li>
+</ol>
+<p>Plus de détails sont donnés sur ces mots de configuration <a href="#ConfigNId">ci-dessous</a>.</p>
+<p>Dans le panneau de droite, les boutons radio permettent de choisir entre les représentations hexadécimale ou binaire. Celle-ci est utilisée pour les valeurs de tous les mots de la mémoire de configuration de cette page.</p>
+<p>La case à cocher permet d'afficher, quand elle est cochée, tous les mots de la mémoire de configuration, même ceux qui sont réservés (non modifiable et éventuellement non utilisé). Lorsqu'ils sont affichés ces mots sont marqués par une astérisque dans la deuxième colonne.</p>
+<p>L'identification du composant fournit la valeur du mot indiquant le type du composant pour ceux qui supportent cette information. La traduction de cette valeur en un nom de composant est affichée. Elle devrait correspondre au <a href="#DeviceSelect">composant sélectionné</a>. Le mot d'identification du composant permet de vérifier l'identité du composant après l'avoir lu. Ce mot de 14 bits se trouve à l'adresse x2006, mais tous les composants ne semblent pas en être pourvu (un test sur un vieux 16F84 retourne toujours 3FFF comme ID composant). Les 4 ou 5 bits de poids faible peuvent contenir un indice de révision sur certains composants. WxPic essaye de décoder le mot d'identification du composant et montre le résultat sous ident composant dans le panneau de droite. S'il y a un conflit entre le composant sélectionné et l'identificateur lu, l'identificateur devient rouge. Si WxPic ne peut pas trouver une correspondance entre un composant connu et le numéro lu, vous pouvez ajouter une nouvelle entrée dans la base des composants comme <a href="../devlist_format.htm#device_id_value">expliqué ici</a> (n'oubliez pas de mettre à jour le paramètre <span class="quote">DeviceIdValue</span> avec le nouveau numéro).</p>
+<p>Le bouton <span class="quote">Valider</span> permet d'appliquer les modifications effectuées sur les valeurs des mots de la mémoire de configuration.</p>
+<a class="return" href="#Top">Haut</a>
+<h3><a name="ConfigNId" id="ConfigNId"></a>Données d'identification</h3>
+<p>La plupart des adresses de la mémoire de configuration est utilisée pour stocker des données d'identification. Ces adresses contiennent le plus souvent seulement 4 ou 7 bits par mot. Par exemple dans les composant 14 bits, ces adresses se trouvent de 0x2000 à 0x2003. Contrairement à la mémoire code, les adresse d'ID sont lisibles même si le PIC est protégé.</p>
+<p>MPASM (l'assembleur de Microchip) possède la directive __idlocs (avec 2 soulignés) pour définir ces bits, mais uniquement les 4 bits de poids faible de chaque adresse. Cette directive concatène 4 x 4 bits dans une unique valeur de 32 bits, probablement car les anciens PIC n'avaient que 4 bits utilisable par adresse. Mais le PIC12F675 par exemple a 7 bits par adresse&nbsp;!</p>
+<p>Avec WxPic vous pouvez lire / modifier / écrire tous les bits des adresses d'identification. Si des données sont contenues dans un fichier HEX pour ces adresses, elles seront chargées et affichées. WxPic n'affiche pas la donnée au format 4 x 4 bits, il utilise un tableau où chaque bit est affiché en binaire. Le tableau est éditable. Appuyer sur le bouton <span class="quote">Valider</span> en bas à droite permet de mettre à jour la mémoire de WxPic avec les modifications effectuées. Cela ne programme par pour autant immédiatement le PIC. Cela se fait en demandant une opération de programmation.</p>
+<h3><a class="return" href="#Top">Haut</a> <a name="DisplayTable" id="DisplayTable"></a>Autres Données</h3>
+<p>Le mot d'identification du composant permet de vérifier l'identiter du composant après l'avoir lu. Ce mot de 14 bits se trouve à l'adresse x2006, mais tous les composants ne semblent pas en être pourvu (un test sur un vieux 16F84 retourne toujours 3FFF comme ID composant). Les 4 ou 5 bits de poids faible peuvent contenir un indice de révision sur certains composants. WxPic essaye de décoder le mot d'identification du composant et montre le résultat sous ident composant dans le panneau de droite. S'il y a un conflit entre le composant sélectionné et l'identificateur lu, l'identificateur devient rouge. Si WxPic ne peut pas trouver une correspondance entre un composant connu et le numéro lu, vous pouvez ajouter une nouvelle entrée dans la base des composants comme <a href="../devlist_format.htm#device_id_value">expliqué ici</a> (n'oubliez pas de mettre à jour le paramètre <span class="quote">DeviceIdValue</span> avec le nouveau numéro).</p>
+<p>La mémoire de configuration peut aussi parfois contenir d'autres registes spéciaux qui ne rentre pas dans les mots de configuration. Par exemple le mot de Backup OSCCAL du PIC10F20x est dans cette table.</p>
+<p>Comme il est impossible de savoir combien et quelles adresses seront utilisées dans les futurs composants, la table des composants de WxPic contient une indication des adresses effectivement implémentées. Vous trouverez plus d'information à ce sujet dans le <a href="../devlist_format.htm">chapitre sur le fichier <span class="quote">DEVICE.INI</span></a>, qui décrit comment ajouter un support pour les futurs composants.</p>
+<a class="return" href="#Top">Haut</a>
+<h2></h2>
+<h2><a name="OptionPanel" id="OptionPanel"></a>La page des Options</h2>
+<p><img src="Options.png" width="529" height="199" /></p>
+<p>Cette page regroupe des choix permetant de modifier le mode de fonctionnement de WxPic</p>
+<p>Les cases Programmer la mémoire CODE, les DONNEES et la CONFIGURATION, permettent, en ne les cochant pas, de restreindre la programmation du PIC aux mémoires restant cochées.</p>
+<p>Vider la Mémoire avant de charger un fichier HEX permet de garantir que les mots non-spécifiés par le fichier seront inutilisés. A l'inverse, ne pas cocher la case permet de combiner le contenu de plusieurs fichiers HEX.</p>
+<p>Etablir Vdd avant Vpp change l'ordonnancement des alimentations du PIC. Choisir la valeur qui convient pour le composant et le programmateur.</p>
+<p>La listes des langues permet de sélectionner une traduction de l'interface de WxPic. Celle-ci ne sera active qu'après le prochain démarrage de WxPic. Attention si WxPic est arrété avec l'option <a href="Menu.htm#QuitMenu">Quitter sans sauver les paramètres</a> le changement de langue ne sera pas sauvegardé et donc pas appliqué au démarage suivant.</p>
+<p><a name="ColourChange" id="ColourChange"></a>Les boutons Couleur du code et Couleur des données permettent de changer la couleur d'affichage des <a href="#CodePanel" class="glossary">pages Code</a> et <a href="#DataPanel" class="glossary">Données</a>. Ils affichent le dialogue de choix des couleurs deux fois. La première fois sélectionner la couleur du texte, la seconde fois sélectionner la couleur du fond. Les couleurs proches du rouge sont déconseillées car elles sont déjà utilisées pour afficher les erreurs et les mots spéciaux.</p>
+<p>Le champ <span class="quote">Répertoire des fichiers Dev de MPLAB</span> doit pointer le sous-répertoire Device du répertoire d'installation de <a href="http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&amp;nodeId=1406&amp;dDocName=en019469&amp;part=SW007002" target="_blank">MPLAB</a> où sont rangé les fichiers de définition des composant PIC produits par <a href="http://www.microchip.com/" target="_blank">Microchip</a>. Généralement ce répertoire est: <span class="quote">C:\Program Files\Microchip\MPLAB IDE\Device</span>.  Si ce répertoire est incorrecte et que le fichier de description du composant courrant ne peut y être trouvé, le titre du champ passe en rouge. Il redeviendra noir uniquement lorsque l'erreur sera corrigée (c'est à dire lorsque la description du composant pourra être trouvée à l'endroit indiqué).</p>
+<p>Si ce champ est vide WxPic cherche les fichiers de description des composants dans le répertoire <span class="quote">Devices</span> sous le répertoire d'installation de WxPic. Copier ces fichiers à cet endroit pourrait être un bon choix au cas où une future version de <a href="http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&amp;nodeId=1406&amp;dDocName=en019469&amp;part=SW007002" target="_blank">MPLAB</a> n'utiliserait plus ces fichiers Dev ou utiliserait un autre format incompatible.</p>
+<a class="return" href="#Top">Haut</a>
+<h2><a name="InterfacePanel" id="InterfacePanel"></a>La page de l'Interface</h2>
+<p><img src="Interface.png" width="549" height="233" /></p>
+<p>Cette page regroupe la sélection, la configuration et le test de l'interface du programmateur.</p>
+<p>La liste en haut à droite permet de choisir le type de programmateur utilisé. Ce choix conditionne le type de port sélectionnable. Le champ adresse permet de sélectionner une adresse différente de l'adresse par défaut. C'est généralement une erreur grave de changer cette valeur, cela pouvant aller jusqu'au plantage du PC.</p>
+<p>Pour les interfaces de type custom il faut sélectionner le fichier qui décrit le fonctionnement du programmateur grâce au bouton Sélectionner du Fichier de définition de l'interface. Il est aussi possible de saisir directement le chemin du répertoire dans le champ texte. <a href="../Adapter.htm">Le fichier de définition de l'interface</a> contient des règles permettant de la commander.</p>
+<p>Les autres champs en dessous permettent de modifier les durées dans les cycles d'accès au programmateur. Il ne faut généralement pas y toucher.</p>
+<p>Les cases à cocher à gauche permettent de modifier manuellement l'état des sorties de commande du programmateur. Il indique aussi l'état de l'entrée, et si le programmateur en possède, l'état des LEDs et du bouton. Cela ne devrait être utile que pour la mise au point d'un nouveau programmateur. En effet WxPic effectue automatiquement des vérifications de bon fonctionnement du programmateur. Le résultat est affiché dans le cadre du panel de droite. Le bouton Initialiser en haut à gauche permet de relancer cet auto-test.</p>
+<p><a name="Priv" id="Priv"></a>ATTENTION: Pour pouvoir utiliser un adaptateur sur port parallèle, il faut installer et exécuter WxPix dans un compte administrateur. Pour les utilisateurs de VISTA, il faudra en outre enregistrer WxPic comme un programme privilégié. Pour cela cliquer avec le bouton droit sur le racourci utilisé pour lancer WxPic et choisissez Propriété. Dans l'onglet <span class="quote">Compatibilité</span> cocher la case du bas.</p>
+<p><a name="Fool" id="Fool"></a>Lors de l'utilisation du port parallèle, il arrive souvent d'obtenir l'erreur&nbsp;: <span class="quote">WARNING ! Windows fooled around with the LPT port bits !</span></p>
+<p>Cette erreur est causée par Windows qui accède au port parallèle sans vérifier qu'une application l'a ouvert. Cela sert probablement à détecter le branchement d'un périphérique (imprimante) plug-and-play. La méthode pour désactiver cet accès c'est de modifier la base de registre&nbsp;:</p>
+<p class="quote">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Parport\Parameters] &quot;DisableWarmPoll&quot;=dword:00000001</p>
+<p>Cette méthode n'est pas documentée par MS. Si bien qu'il n'est pas sûr que cela fonctionne toujours. Cependant cela a été testé avec succès avec XP SP2 et VISTA. Vous pouvez double-cliquer sur le fichier <span class="quote">DisablePolling.reg</span> dans le répertoire d'installation de WxPic pour effectuer la modification de la base de registre. Au cas vous avez besoin de ré-activer le polling du port, utilisez le fichier <span class="quote">EnablePollingBack.reg</span><a class="return" href="#Top">Haut</a></p>
+<h2><a name="MessagePanel" id="MessagePanel"></a>La page des Messages</h2>
+<p><img src="Messages.png" width="548" height="255" /></p>
+<p>Dans cette page sont affichés les messages d'erreur et de déboggage. Il ne sera utile de s'y reporter que pour analyser les détails d'une erreur. Il y a cependant un exception: La programmation par lot. L'entrée doit être sur la fenêtre de messages pour presser Entrer lors de la confirmation du démarrage de la programmation du prochain composant du lot.</p>
+<p>Le bouton Effacer permet de vider la zone des messages. C'est nécessaire de le faire lorsque le nombre de messages devient trop important.</p>
+<a class="return" href="#Top">Retour</a>
+</div>
+</body>
+</html>
