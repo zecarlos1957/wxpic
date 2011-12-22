@@ -843,8 +843,8 @@ int             TSessionConfig::the200msTimeToQuit    = 0;
 
         if (Parser.Found(theConfigOptionName, &OptionValue))
         {
-            long NewConfig = HexStringToLongint(4, OptionValue.c_str());
-            if (NewConfig >= 0)
+            uint32_t NewConfig;
+            if (HexStringToLongint(4, OptionValue.c_str(), &NewConfig) >= 0)
                 theOverrideConfigWord = NewConfig;
             else
             {

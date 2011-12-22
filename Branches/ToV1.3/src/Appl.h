@@ -61,7 +61,7 @@ int Appl_CheckUserBreak(void);
 
 void APPL_LogEvent( const wxChar * pszFormat, ... );  // logs an "event" with current timestamp
 
-long HexStringToLongint(int nMaxDigits, const wxChar *pszSource);
+bool HexStringToLongint(int nMaxDigits, const wxChar *pszSource, uint32_t *pValue);
 
 wxString    &Iso8859_1_TChar     (const char* psz, wxString &Dst);
 void         CopyIso8859_1_TChar (wxChar *Dst, const char* psz, int Length);

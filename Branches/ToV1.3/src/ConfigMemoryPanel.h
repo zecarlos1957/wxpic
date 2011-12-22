@@ -70,6 +70,9 @@ class TConfigMemoryPanel: public wxPanel
 		void onHelpOnIdButtonClick(wxCommandEvent& event);
 		//*)
 
+        wxString  getWordValueImage      (int pWordValue);
+		void      setWordValueAtGridLine (int pGridLine, int pWordValue);
+
 		uint32_t  *aCfgBufferBase;
 		uint32_t  *aIdBufferBase;
 		uint32_t   aConfigWordIndex;

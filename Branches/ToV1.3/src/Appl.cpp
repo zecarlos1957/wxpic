@@ -116,21 +116,37 @@ int Appl_CheckUserBreak(void)
 
 
 
-long HexStringToLongint(int nMaxDigits, const wxChar *pszSource)
+bool HexStringToLongint(int nMaxDigits, const wxChar *pszSource, uint32_t *pValue)
 {
- long lResult = 0;
+ uint32_t lResult = 0;
  wxChar c;
  int i;
-  if(pszSource[0]==_T('0') && pszSource[1]==_T('x'))
+  if(pszSource[0]==_T('0') && ((pszSource[1]==_T('x')) || (pszSource[1]==_T('X'))))
      pszSource += 2;
-  else if(pszSource[0]==_T('$'))
+  else if ((pszSource[0]==_T('$'))
+        || (pszSource[0]==_T('H'))
+        || (pszSource[0]==_T('h')))
      pszSource += 1;
 
-  for(i=0; i<nMaxDigits; ++i)
+  for(i=0; ; ++i, ++pszSource)
    {
-     c=pszSource[i];
-     if(c==_T('\0') || c==_T(' ') || c==_T(',') )  // "early" end of the HEX string
-        return lResult;
+     c=*pszSource;
+     if ( c==_T(' ') || c==_T(',') || c==_T('h') || c==_T('H') )  // "early" end of the HEX string
+     {
+        while (*++pszSource == _T(' '))
+            ;
+        c = *pszSource;
+        if (c != _T('\0'))
+            return false;
+     }
+     if (c==_T('\0'))
+     {
+        *pValue = lResult;
+        return true;
+     }
+
+     if (i > nMaxDigits)
+        return false;
 
      lResult <<= 4;  // shift "older, upper digits" 4 bits left
      if(c>=_T('0') && c<=_T('9'))
@@ -142,9 +158,8 @@ long HexStringToLongint(int nMaxDigits, const wxChar *pszSource)
      if(c>=_T('A') && c<=_T('F'))
         lResult += (c-_T('A')+10);
      else
-        return -1;  // not a valid HEX digit
+        return false;  // not a valid HEX digit
    }
-  return lResult;
 } // end HexStringToLongint()
 
 

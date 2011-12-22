@@ -169,10 +169,7 @@ static const wxString Star (_T("*"));
 //---------------------------------------------------------------------------
 void TConfigMemoryPanel::UpdateIdAndConfMemDisplay (bool pRebuild)
 {
-    uint16_t BitsPerIdLocation = PicDev_GetNrOfBitsPerIdLocation();
-
     ++(MainFrame::TheMainFrame->m_Updating);
-
 
     aCfgMemGrid->BeginBatch();
 
@@ -202,10 +199,7 @@ void TConfigMemoryPanel::UpdateIdAndConfMemDisplay (bool pRebuild)
                 aCfgMemGrid->SetCellValue(iGridLine, configMemINFO, PicDev_GetInfoOnConfigMemory( dwAddress ));
             }
             //-- Only the value column is updated when not rebuilding all
-            aCfgMemGrid->SetCellValue(iGridLine, configMemVALUE,
-                                      (aIdBinHexRadio->GetSelection()==radioDevIdBIN)
-                                      ? wxString(WordToSeparatedBinary(WordValue, BitsPerIdLocation))
-                                      : wxString::Format(_T("0x%4.4X"), WordValue));
+            setWordValueAtGridLine (iGridLine, WordValue);
             iGridLine++;
         }
     } // end for
@@ -224,26 +218,18 @@ void TConfigMemoryPanel::UpdateIdAndConfMemDisplay (bool pRebuild)
                 aCfgMemGrid->SetRowLabelValue(iGridLine, wxString::Format(_T("0x%4.4X"), dwAddress)); // sprintf is smart enough to use 6 digits if necessary !
                 aCfgMemGrid->SetCellValue(iGridLine, configMemINFO, PicDev_GetInfoOnConfigMemory( dwAddress ));
             }
-            aCfgMemGrid->SetCellValue(iGridLine, configMemVALUE,
-                                      (aIdBinHexRadio->GetSelection()==radioDevIdBIN)
-                                      ? wxString(WordToSeparatedBinary(WordValue, BitsPerIdLocation))
-                                      : wxString::Format(_T("0x%4.4X"), WordValue));
+            setWordValueAtGridLine (iGridLine, WordValue);
             iGridLine++;
         }
     } // end if < "ID memory" separated from "Config memory" >
 
     aCfgMemGrid->EndBatch();
 
+    //-- Display the device ID word
     uint32_t WordValue = 0;
-    if ( PicBuf_GetBufferWord( PIC_DeviceInfo.lDeviceIdAddr, &WordValue ) > 0 )
-    {
-        if (aIdBinHexRadio->GetSelection()==radioDevIdBIN)
-            aDevId->SetLabel(WordToSeparatedBinary(WordValue, BitsPerIdLocation));
-        else
-            aDevId->SetLabel(wxString::Format(_T("0x%4.4X"),(int)WordValue));
-    }
-    else
-        aDevId->SetLabel(_("<error>"));
+    aDevId->SetLabel( (PicBuf_GetBufferWord(PIC_DeviceInfo.lDeviceIdAddr, &WordValue) > 0)
+                     ? getWordValueImage (WordValue)
+                     : wxString(_("<error>")) );
 
     // Note 1: PicDev_GetDeviceNameByIdWord() can be TERRIBLY SLOW
     //         when called for the first time, due to the sluggish reading
@@ -297,6 +283,19 @@ void TConfigMemoryPanel::ApplyConfigEdit (void)
 }
 
 
+wxString  TConfigMemoryPanel::getWordValueImage (int pWordValue)
+{
+    return (aIdBinHexRadio->GetSelection()==radioDevIdBIN)
+              ? wxString(WordToSeparatedBinary(pWordValue, PicDev_GetNrOfBitsPerIdLocation()))
+              : wxString::Format(_T("0x%4.4X"), pWordValue);
+}
+
+void TConfigMemoryPanel::setWordValueAtGridLine (int pGridLine, int pWordValue)
+{
+    aCfgMemGrid->SetCellValue(pGridLine, configMemVALUE, getWordValueImage(pWordValue));
+}
+
+
 
 //---------------------------------------------------------------------------
 void TConfigMemoryPanel::onCfgMemGridCellChange(wxGridEvent& event)
@@ -306,7 +305,6 @@ void TConfigMemoryPanel::onCfgMemGridCellChange(wxGridEvent& event)
     if (!MainFrame::TheMainFrame->m_Updating)
     {
         int EventRow = event.GetRow();
-        uint16_t BitsPerIdLocation = PicDev_GetNrOfBitsPerIdLocation();
 
         uint32_t EnteredValue = 0;
         bool     Error        = false;
@@ -315,46 +313,39 @@ void TConfigMemoryPanel::onCfgMemGridCellChange(wxGridEvent& event)
         while (*CurChar==_T(' '))
             ++CurChar; // skip spaces, they are no syntax element here
 
-        if ( (CurChar[0] == _T('$')) || ((CurChar[0] == _T('0')) && (CurChar[1] == _T('x'))) )
-            EnteredValue = HexStringToLongint(6, CurChar);
-
-        // not HEX but BIN:
-        else
+        const wxChar *ValueString = CurChar;
+        int BitCount = 0;
+        for (BitCount = 0; *CurChar != _T('\0'); ++BitCount, ++CurChar)
         {
-            int BitCount = 0;
-            for (BitCount = 0; (BitCount < BitsPerIdLocation) && (*CurChar != _T('\0')); ++BitCount, ++CurChar)
-            {
-                if (*CurChar == _T(' '))
-                    --BitCount; //-- Don't count Space as a bit
+            if (*CurChar == _T(' '))
+                --BitCount; //-- Don't count Space as a bit
 
-                else
-                {
-                    EnteredValue <<= 1;
-                    if (*CurChar == _T('1'))
-                        EnteredValue |= 1;
-
-                    else if (*CurChar != _T('0'))
-                        Error = true;
-                }
-            }
-            if (BitCount != BitsPerIdLocation)
-                Error = true;
             else
             {
-                //-- Verify that there is no garbage at the end (space allowed)
-                while (*CurChar==_T(' '))
-                    ++CurChar;
-                Error =  (*CurChar != _T('\0'));
+                EnteredValue <<= 1;
+                if (*CurChar == _T('1'))
+                    EnteredValue |= 1;
+
+                else if (*CurChar != _T('0'))
+                    Error = true;
             }
         }
+        if (BitCount != PicDev_GetNrOfBitsPerIdLocation())
+            Error = true;
+        if (Error)
+            // not BIN but HEX may be:
+            Error = !HexStringToLongint(6, ValueString, &EnteredValue);
+
         if (!Error)
         {
             bool UseIdBuffer = isIdSeparated && (EventRow >= aFirstId);
             TMemAddrGetter *AddrGetter = (UseIdBuffer) ? &aIdMemAddrGetter : &aCfgMemAddrGetter;
             uint32_t       *Buffer     = (UseIdBuffer) ? aIdBufferBase     : aCfgBufferBase;
             //-- Get the row address by reading the label
-            uint32_t dwAddress = HexStringToLongint(6, aCfgMemGrid->GetRowLabelValue(EventRow).c_str());
-            uint32_t Index     = AddrGetter->AddressToTargetArrayIndex(dwAddress);
+            uint32_t        dwAddress;
+            HexStringToLongint(6, aCfgMemGrid->GetRowLabelValue(EventRow).c_str(), &dwAddress);
+
+            uint32_t        Index      = AddrGetter->AddressToTargetArrayIndex(dwAddress);
 
             //-- Get old value to verify it has already changed
             if (EnteredValue != Buffer[Index])
@@ -365,6 +356,7 @@ void TConfigMemoryPanel::onCfgMemGridCellChange(wxGridEvent& event)
                 if ((Index == aConfigWordIndex) || ((PIC_DeviceInfo.wCfgmask2_used != 0x0000) && (Index == aConfigWordIndex+1)))
                     MainFrame::TheMainFrame->aDeviceCfgTab->UpdateCfgWordValue();
             }
+            setWordValueAtGridLine (EventRow, EnteredValue);
         }
         else
             wxBell();
