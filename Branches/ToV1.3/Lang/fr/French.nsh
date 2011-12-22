@@ -13,3 +13,5 @@ LangString ShortCutSectionName /LANG=${LANG_FRENCH} "Raccourci dans le menu Déma
 LangString DeviceFilesExist /LANG=${LANG_FRENCH} "Voulez-vous conserver les fichiers du répertoire Devices ?"
 LangString CantDeleteExe /LANG=${LANG_FRENCH} "${EXE_NAME} ne peut pas être supprimé. Il est peut-être en cours d'exécution. Arrêtez-le et ré-essayez."
 LangString UninstallWarning /LANG=${LANG_FRENCH} "Ceci va désinstaller ${EXE_NAME}. Cliquez Désinstaller pour continuer."
+LangString WinRingSectionName32 /LANG=${LANG_ENGLISH} "Driver WingRing0 32 bits"
+LangString WinRingSectionName64 /LANG=${LANG_ENGLISH} "Driver WingRing0 64 bits"
