@@ -7,9 +7,12 @@
 
 XPStyle on
 
+!include x64.nsh
+
 !define PRODUCT_NAME "WxPic"
 !define EXE_NAME "${PRODUCT_NAME}.exe"
 !define UNINSTALL "uninstall-${EXE_NAME}"
+
 
 Name "${PRODUCT_NAME}"
 
@@ -122,8 +125,14 @@ Win9x:
 ContextDone:
 !macroend
 
-
 Function .onInit
+	Var /GLOBAL WinRingSectionName
+    ${If} ${RunningX64}
+	   StrCpy $WinRingSectionName $(WinRingSectionName64)
+	${Else}
+	   StrCpy $WinRingSectionName $(WinRingSectionName32)
+    ${EndIf}
+
 	!insertmacro INIT_CONTEXT
 	
 	Push ""
@@ -173,10 +182,6 @@ Section "${PRODUCT_NAME}"
 	File "Install\EnablePollingBack.reg"
 	File "Install\SampleInterfaceOnSerialPort.xml"
 	File "Install\SampleInterfaceOnLptPort.xml"
-	File "Install\WinRing0.vxd"
-	File "Install\WinRing0.sys"
-	File "Install\WinRing0.dll"
-	File "Install\WinRing0.COPYRIGHT.txt"
 
 	CreateDirectory "$INSTDIR\Devices"
 	
@@ -187,6 +192,23 @@ Section "${PRODUCT_NAME}"
 	WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "NoRepair" 1
 	WriteUninstaller "uninstall-${PRODUCT_NAME}.exe"
   
+SectionEnd
+
+Section "$WinRingSectionName"
+  
+	; Set output path to the installation directory.
+	SetOutPath $INSTDIR
+
+    ${If} ${RunningX64}
+	File "Install64Bit\WinRing0x64.sys"
+	File "Install64Bit\WinRing0.dll"
+	${Else}
+	File "Install32Bit\WinRing0.vxd"
+	File "Install32Bit\WinRing0.sys"
+	File "Install32Bit\WinRing0.dll"
+	${EndIf}
+	File "Install\WinRing0.COPYRIGHT.txt"
+
 SectionEnd
 
 Section "$(ShortCutSectionName)"
