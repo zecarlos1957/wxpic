@@ -489,6 +489,24 @@ void TOptionPanel::updateMPLabDevDir (const wxString &pDirPath)
 }
 
 
+void TOptionPanel::UpdateMplabDevColour (bool pMplabDirIsOK)
+{
+    wxColour Colour = (pMplabDirIsOK) ? wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT) : *wxRED;
+
+    if (!pMplabDirIsOK)
+    {
+        MainFrame::TheMainFrame->aNotebook->SetSelection(MainFrame::TS_Options);
+        aMPLabDevDirButton->SetFocus();
+    }
+
+    if (Colour != aMplabDirLabel->GetForegroundColour())
+    {
+        aMplabDirLabel->SetForegroundColour(Colour);
+
+        aMplabDirLabel->Refresh();
+    }
+}
+
 //---------------------------------------------------------------------------
 void TOptionPanel::onStartTestButtonClick(wxCommandEvent& event)
 {

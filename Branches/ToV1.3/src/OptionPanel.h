@@ -54,7 +54,8 @@ class TOptionPanel: public wxPanel
             radioDriverALREADY_GRANTED,
         };
 
-        void UpdateOptionsDisplay(void);
+        void UpdateOptionsDisplay (void);
+        void UpdateMplabDevColour  (bool pMplabDirIsOK);
 
 	protected:
 

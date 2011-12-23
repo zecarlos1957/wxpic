@@ -470,26 +470,54 @@ void TDeviceCfgPanel::editConfigWord(int pCfgWordIndex, wxTextCtrl* pEditCtrl)
 /**static*/ bool TDeviceCfgPanel::UpdateDevice(void)
 {
     T_PicDeviceInfo MyDeviceInfo;
-    wxColour Colour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT);
 
-    wxCharBuffer DeviceName = wxString(TSessionConfig::GetDeviceName()).mb_str(wxConvISO8859_1);
-    bool Result = ( PicDev_GetDeviceInfoByName(DeviceName, &MyDeviceInfo) >= 0 );
+#ifdef __WXMSW__
+    wxString MplabDevDir = TSessionConfig::GetMplabDevDir();
+    if (MplabDevDir.IsEmpty())
+    {
+
+        static struct TKeyDef
+        {
+            HKEY          Root;
+            const wxChar *Path;
+            const wxChar *Name;
+        }
+        KeyDefTab[] =
+        {
+            { HKEY_CURRENT_USER,  _T("Software\\Microchip\\MPLAB IDE\\ProcAbout\\MasterDB"), _T("ModulePath")  },
+            { HKEY_LOCAL_MACHINE, _T("Software\\Microchip\\MPLAB IDE"),                      _T("DeviceDBDir") },
+        };
+        enum
+        {
+             KEY_COUNT = sizeof(KeyDefTab)/sizeof(struct TKeyDef),
+        };
+        for (int i = 0; (i < KEY_COUNT) && MplabDevDir.IsEmpty(); ++i)
+        {
+            HKEY  Key;
+            DWORD Length = 256;
+            bool  Result = false;
+
+            if (RegOpenKeyEx(KeyDefTab[i].Root, KeyDefTab[i].Path, 0, KEY_READ, &Key) == ERROR_SUCCESS)
+            {
+                Result = (RegQueryValueEx (Key, KeyDefTab[i].Name, NULL, NULL, (LPBYTE)MplabDevDir.GetWriteBuf(Length), &Length) == ERROR_SUCCESS);
+                MplabDevDir.UngetWriteBuf( (Result) ? Length : 0 );
+            }
+        }
+        TSessionConfig::SetMplabDevDir(MplabDevDir);
+    }
+#endif
+
+    wxCharBuffer DeviceName   = wxString(TSessionConfig::GetDeviceName()).mb_str(wxConvISO8859_1);
+    bool         Result       = ( PicDev_GetDeviceInfoByName(DeviceName, &MyDeviceInfo) >= 0 );
+    bool         MplabDirIsOK = true;
+
     if ( ! Result )
         PIC_PRG_SetDeviceType( PIC_DEV_TYPE_UNKNOWN );
     else
-    {
-        if (!PIC_PRG_SetDeviceType(&MyDeviceInfo))
-        {
-            MainFrame::TheMainFrame->aNotebook->SetSelection(MainFrame::TS_Options);
-            MainFrame::TheMainFrame->aOptionTab->aMPLabDevDirButton->SetFocus();
-            Colour = *wxRED;
-        }
-    }
-    if (Colour != MainFrame::TheMainFrame->aOptionTab->aMplabDirLabel->GetForegroundColour())
-    {
-        MainFrame::TheMainFrame->aOptionTab->aMplabDirLabel->SetForegroundColour(Colour);
-        MainFrame::TheMainFrame->aOptionTab->aMplabDirLabel->Refresh();
-    }
+        MplabDirIsOK = PIC_PRG_SetDeviceType(&MyDeviceInfo);
+
+    MainFrame::TheMainFrame->aOptionTab->UpdateMplabDevColour(MplabDirIsOK);
+
     static bool Initialized = false;
     if (!Initialized)
     {
