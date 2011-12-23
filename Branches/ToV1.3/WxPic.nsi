@@ -166,10 +166,17 @@ FunctionEnd
 Section "${PRODUCT_NAME}"
 
 	SectionIn RO
-  
+    
+	; Set output path to the installation directory.
+	SetOutPath $INSTDIR\Devices
+	
+	FileOpen $0 Readme.txt w
+	FileWrite $0 "$(DeviceDirReadme)"
+	FileClose $0
+
 	; Set output path to the installation directory.
 	SetOutPath $INSTDIR
-  
+
 	; Open the lang list file
 	FileOpen $0 "$INSTDIR\Lang.lst" w
   

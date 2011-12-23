@@ -15,3 +15,4 @@ LangString CantDeleteExe /LANG=${LANG_ENGLISH} "${EXE_NAME} cannot be deleted. I
 LangString UninstallWarning /LANG=${LANG_ENGLISH} "This will uninstall ${EXE_NAME}. Hit next to continue."
 LangString WinRingSectionName32 /LANG=${LANG_ENGLISH} "WingRing0 32-bit driver"
 LangString WinRingSectionName64 /LANG=${LANG_ENGLISH} "WingRing0 64-bit driver"
+LangString DeviceDirReadme /LANG=${LANG_ENGLISH} "This directory is searched for the device definition files (*.dev). You can copy the MPLAB device definition files here."
