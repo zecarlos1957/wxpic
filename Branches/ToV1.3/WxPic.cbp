@@ -69,6 +69,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-Xlinker -Map=mapfile.log" />
 					<Add library="wxmsw28u_adv" />
 					<Add library="wxmsw28u_core" />
 					<Add library="wxbase28u_xml" />
