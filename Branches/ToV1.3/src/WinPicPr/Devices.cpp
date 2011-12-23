@@ -3743,6 +3743,46 @@ bool PicDev_LoadMcDevFile( const wxChar *pszDevFileName )
 } // end PicDev_LoadMcDevFile()
 
 
+class TDevFileLoader
+{
+public:
+    /**/ TDevFileLoader (T_PicDeviceInfo *pPicDeviceInfo)
+    : aPicDeviceInfo (pPicDeviceInfo)
+    {
+        if ( pPicDeviceInfo->sz80ConfigRegisterInfoFile[0] > 32 )
+        {
+            wxChar *cp = _tcsrchr(pPicDeviceInfo->sz80ConfigRegisterInfoFile, _T('.'));
+            aIsValidDevFile = (cp != NULL) && (_tcsicmp(cp, _T(".dev")) == 0);
+        }
+    }
+
+    bool IsValid (void) const { return aIsValidDevFile; }
+    bool LoadDevFile (bool pDefault)
+    {
+        wxFileName DevFilename;
+        if (pDefault)
+        {
+            DevFilename.Assign(wxStandardPaths::Get().GetDataDir(), wxEmptyString);
+            DevFilename.AppendDir(_T("Devices"));
+        }
+        else
+        {
+            const wxChar *DevDir = TSessionConfig::GetMplabDevDir();
+            if (*DevDir == _T('\0'))
+                return false;  ///<<-- RETURN
+            DevFilename.AssignDir(DevDir);
+        }
+
+        DevFilename.SetFullName(aPicDeviceInfo->sz80ConfigRegisterInfoFile);
+        wxString DevFilenameText = DevFilename.GetFullPath();
+        return PicDev_LoadMcDevFile(DevFilenameText.c_str());
+    }
+
+private:
+    T_PicDeviceInfo *aPicDeviceInfo;
+    bool             aIsValidDevFile;
+};
+
 /***************************************************************************/
 bool PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo )
 // Results are placed in PicDev_ConfigBitInfo[] .
@@ -3750,10 +3790,6 @@ bool PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo )
 //               1=ok, found the specified info file and loaded it.
 {
     int i, iFunction;
-    bool table_loaded = false;
-//    wxChar sz355DevFileName[356];
-    wxFileName DevFilename;
-    wxChar *cp;
 
 
     // First clear the old "config bit info table" :
@@ -3770,32 +3806,10 @@ bool PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo )
     // If one of Microchip's device-definition files (*.DEV) exists,
     //  use the config bit definitions from that file (instead of "our own").
     // First look at the file extension to find out how it can be loaded..
-    if ( psrcPicDeviceInfo->sz80ConfigRegisterInfoFile[0] > 32 )
-    {
-        cp = _tcsrchr(psrcPicDeviceInfo->sz80ConfigRegisterInfoFile,'.');
-        if ( cp )
-        {
-            if (_tcsicmp(cp, _T(".dev")) == 0)
-            {
-                // it MAY be one of Microchip's "dev"-files...
-                // WinPic once expected these files IN ITS OWN SUB-FOLDER "DEVICES",
-                //   but since 2005-10 it is possible to specify the path into
-                //   Microchip's MPLAB DEVICE folder (so the dev-files don't necessarily
-                //   have to be copied, though I recommend copying them because who knows
-                //   if they don't change the file formats in future ! )
-                if ( TSessionConfig::GetMplabDevDir()[0] != 0 )
-                    DevFilename.AssignDir(TSessionConfig::GetMplabDevDir());
-                else
-                {
-                    DevFilename.Assign(wxStandardPaths::Get().GetDataDir(), wxEmptyString);
-                    DevFilename.AppendDir(_T("Devices"));
-                }
-                DevFilename.SetFullName(psrcPicDeviceInfo->sz80ConfigRegisterInfoFile);
-                wxString DevFilenameText = DevFilename.GetFullPath();
-                table_loaded = PicDev_LoadMcDevFile(DevFilenameText.c_str());
-            }
-        }
-    } // end if < Config-Register info file specified in DEVICE-TABLE >
+    TDevFileLoader DevFileLoader(psrcPicDeviceInfo);
+    bool table_loaded = DevFileLoader.IsValid()
+                    && (DevFileLoader.LoadDevFile(/*Default*/false)  //-- try to load from specified directory
+                     || DevFileLoader.LoadDevFile(/*Default*/true)); //-- else try from default directory
 
     // If no *.DEV-file could be loaded for this PIC device,
     //  use one of the "built-in" info tables
