@@ -138,13 +138,17 @@ class TInterfacePanel: public wxPanel
 		void onCustomInterfSelectButtonClick(wxCommandEvent& event);
 		void onIoPortAddressEditTextEnter(wxCommandEvent& event);
 		void onSlowInterfaceChkClick(wxCommandEvent& event);
+		void onCustomDefFileTextEnter(wxCommandEvent& event);
 		//*)
         void onIoPortAddressGetFocus (wxFocusEvent &pEvent);
         void onIoPortAddressKillFocus(wxFocusEvent &pEvent);
+        void onIoCustomDefFileKillFocus(wxFocusEvent &pEvent);
         //-- Update IO Port address display
         void updateIoAddressDisplay(EIoAddressUsage pUsage);
         void copyPortSelectionToConfig (void);
-        void changeIoPortAddress (void);
+        void changeIoPortAddress  (void);
+        void updateCustomDefFile  (void);
+        bool getCustInterfDefFile (void);
         EIoAddressUsage setLptPortAddress (void);
 		DECLARE_EVENT_TABLE()
 };

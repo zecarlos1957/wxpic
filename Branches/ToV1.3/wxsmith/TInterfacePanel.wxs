@@ -278,7 +278,9 @@
 										<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 									</object>
 									<object class="sizeritem">
-										<object class="wxTextCtrl" name="ID_TEXTCTRL10" variable="aCustomDefFileText" member="yes" />
+										<object class="wxTextCtrl" name="ID_TEXTCTRL10" variable="aCustomDefFileText" member="yes">
+											<handler function="onCustomDefFileTextEnter" entry="EVT_TEXT_ENTER" />
+										</object>
 										<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 										<border>1</border>
 									</object>

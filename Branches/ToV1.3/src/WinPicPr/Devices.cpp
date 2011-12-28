@@ -3748,6 +3748,7 @@ class TDevFileLoader
 public:
     /**/ TDevFileLoader (T_PicDeviceInfo *pPicDeviceInfo)
     : aPicDeviceInfo (pPicDeviceInfo)
+    , aIsValidDevFile(false)
     {
         if ( pPicDeviceInfo->sz80ConfigRegisterInfoFile[0] > 32 )
         {
@@ -3807,7 +3808,8 @@ bool PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo )
     //  use the config bit definitions from that file (instead of "our own").
     // First look at the file extension to find out how it can be loaded..
     TDevFileLoader DevFileLoader(psrcPicDeviceInfo);
-    bool table_loaded = DevFileLoader.IsValid()
+    bool ValidDevice  = DevFileLoader.IsValid();
+    bool table_loaded = ValidDevice
                     && (DevFileLoader.LoadDevFile(/*Default*/false)  //-- try to load from specified directory
                      || DevFileLoader.LoadDevFile(/*Default*/true)); //-- else try from default directory
 
@@ -3935,7 +3937,7 @@ bool PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo )
         } // end if( psrcPicDeviceInfo->lConfWordAdr == 0x002007 )  ~~~ for PIC16F family only !
     } // end else < no *.DEV-file loaded >
 
-    return table_loaded;
+    return table_loaded || !ValidDevice;
 } // end PicDev_FillConfigBitInfoTable()
 
 /***************************************************************************/

@@ -234,12 +234,14 @@ TInterfacePanel::TInterfacePanel(wxWindow* parent,wxWindowID id,const wxPoint& p
 	Connect(ID_INTERFACE_PORT_CHOICE,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&TInterfacePanel::onInterfacePortChoiceSelect);
 	Connect(ID_IO_PORT_ADDRESS_EDIT,wxEVT_COMMAND_TEXT_ENTER,(wxObjectEventFunction)&TInterfacePanel::onIoPortAddressEditTextEnter);
 	Connect(ID_BUTTON10,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&TInterfacePanel::onCustomInterfSelectButtonClick);
+	Connect(ID_TEXTCTRL10,wxEVT_COMMAND_TEXT_ENTER,(wxObjectEventFunction)&TInterfacePanel::onCustomDefFileTextEnter);
 	Connect(ID_TEXTCTRL11,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&TInterfacePanel::onSlowInterfaceChkClick);
 	Connect(ID_TEXTCTRL12,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&TInterfacePanel::onSlowInterfaceChkClick);
 	Connect(ID_CHECKBOX23,wxEVT_COMMAND_CHECKBOX_CLICKED,(wxObjectEventFunction)&TInterfacePanel::onSlowInterfaceChkClick);
 	//*)
     aIoPortAddressEdit->Connect(wxID_ANY, wxEVT_SET_FOCUS,  (wxObjectEventFunction)&TInterfacePanel::onIoPortAddressGetFocus,  NULL, GetEventHandler());
     aIoPortAddressEdit->Connect(wxID_ANY, wxEVT_KILL_FOCUS, (wxObjectEventFunction)&TInterfacePanel::onIoPortAddressKillFocus, NULL, GetEventHandler());
+    aCustomDefFileText->Connect(wxID_ANY, wxEVT_KILL_FOCUS, (wxObjectEventFunction)&TInterfacePanel::onIoCustomDefFileKillFocus, NULL, GetEventHandler());
 
     for (int i = 0; i < PIC_INTF_TYPE_MAX; ++i)
     {
@@ -308,6 +310,8 @@ static uint32_t IsSerialInterface =
     (false << PIC_INTF_TYPE_CUSTOM_LPT) +
     (true  << PIC_INTF_TYPE_CUSTOM_COM);
 
+static bool isCustomInterface (EInterfaceType pType) { return (pType==PIC_INTF_TYPE_CUSTOM_LPT) || (pType==PIC_INTF_TYPE_CUSTOM_COM); }
+
 //---------------------------------------------------------------------------
 void TInterfacePanel::UpdateInterfaceType(void)
 {
@@ -373,8 +377,9 @@ void TInterfacePanel::UpdateInterfaceType(void)
     aInterfaceTypeChoice->SetSelection(InterfaceType2PortSelection[TSessionConfig::GetInterfaceType()]);
 
     aCustomDefFileText->SetValue(TSessionConfig::GetInterfaceFile());
-    aCustomDefFileText->Enable((TSessionConfig::GetInterfaceType()==PIC_INTF_TYPE_CUSTOM_LPT)
-            ||(TSessionConfig::GetInterfaceType()==PIC_INTF_TYPE_CUSTOM_COM));
+    bool IsCustom = isCustomInterface(TSessionConfig::GetInterfaceType());
+    aCustomDefFileText->Enable(IsCustom);
+    aCustomInterfSelectButton->Enable(IsCustom);
 
     updateIoAddressDisplay((aPortType == portSERIAL) ? usageNONE : setLptPortAddress());
 
@@ -474,6 +479,7 @@ void TInterfacePanel::changeIoPortAddress (void)
     //-- Render the IO Address status
     updateIoAddressDisplay(IoAddressUsage);
     //-- Take the change into account for interface access
+    TestTheInterface();
     UpdateInterfaceType();
 }
 
@@ -588,6 +594,7 @@ void TInterfacePanel::UpdateInterfaceInputSignalDisplay(void)
     if (MainFrame::TheMainFrame->m_Updating>0)
         --(MainFrame::TheMainFrame->m_Updating);
 }
+
 
 //---------------------------------------------------------------------------
 bool TInterfacePanel::UnlockEditFieldForIOPortAddress(void)
@@ -713,12 +720,68 @@ bool TInterfacePanel::TestTheInterface(void)
 
 
 
+void TInterfacePanel::updateCustomDefFile (void)
+{
+    if (MainFrame::TheMainFrame->m_Updating)
+        return;
+    TSessionConfig::SetInterfaceFile(aCustomDefFileText->GetValue());
+    TestTheInterface();
+    UpdateInterfaceType();
+}
+
+
+bool TInterfacePanel::getCustInterfDefFile (void)
+{
+    MainFrame::TheMainFrame->aFileDialog->SetMessage(_( "Load custom interface definition file" ));
+    MainFrame::TheMainFrame->aFileDialog->SetWindowStyle(wxFD_FILE_MUST_EXIST | wxFD_OPEN);
+    wxFileName Filename (wxStandardPaths::Get().GetDataDir(), wxEmptyString);
+//    if ( interface_type == PIC_INTF_TYPE_PLUGIN_DLL )
+//    {
+//        aFileDialog->SetWildcard(_("Plugin DLLs (*.dll)|*.dll"));
+//        Filename.AppendDir(_T("interface_dlls"));
+////       OpenDialog->DefaultExt = "dll";
+////     OpenDialog->InitialDir = ExtractFilePath(Application->ExeName) + "interface_dlls";
+////     OpenDialog->Filter = "Plugin DLLs (*.dll)|*.dll";
+//    }
+//    else
+    {
+        MainFrame::TheMainFrame->aFileDialog->SetWildcard(_("Xml files (*.xml)|*.xml"));
+    }
+    MainFrame::TheMainFrame->aFileDialog->SetDirectory(Filename.GetFullPath());
+    MainFrame::TheMainFrame->aFileDialog->SetFilename(aCustomDefFileText->GetValue());
+//      if( interface_type == PIC_INTF_TYPE_PLUGIN_DLL )
+//          OpenDialog->FileName = OpenDialog->InitialDir + "\\*.dll";
+//      else
+//          OpenDialog->FileName = OpenDialog->InitialDir + "\\*.ini";  // dig this, TOpenDialog ?!
+//    }
+//  OpenDialog->HelpContext = HELPID_CUSTOM_INTERFACES;
+//  OpenDialog->Options.Clear();
+//  OpenDialog->Options << ofFileMustExist << ofHideReadOnly << ofNoChangeDir << ofShowHelp;
+    bool Result = (MainFrame::TheMainFrame->aFileDialog->ShowModal() == wxID_OK);
+
+    if (Result)
+    {
+        Filename.Assign(MainFrame::TheMainFrame->aFileDialog->GetPath());
+        TSessionConfig::SetInterfaceFile(Filename.GetFullPath());
+//        _tcsncpy(
+//            (interface_type == PIC_INTF_TYPE_PLUGIN_DLL)?Config.sz80InterfacePluginDLL:
+//            Config.sz255InterfaceSupportFile, , 256);
+//    if( interface_type == PIC_INTF_TYPE_PLUGIN_DLL )
+//         strncpy( Config.sz80InterfacePluginDLL,   Ed_CustomInterfaceDefFile->Text.c_str(), 80 );
+//    else strncpy( Config.sz255InterfaceSupportFile, Ed_CustomInterfaceDefFile->Text.c_str(), 256 );
+
+    }
+
+    return Result;
+}
+
+
 //---------------------------------------------------------------------------
 void TInterfacePanel::onInitInterfButtonClick(wxCommandEvent& event)
 //void ::Btn_InitInterfaceClick(TObject *Sender)
 {
-    UpdateInterfaceType();
     TestTheInterface();
+    UpdateInterfaceType();
     MainFrame::TheMainFrame->aOptionTab->UpdateOptionsDisplay();
 }
 //---------------------------------------------------------------------------
@@ -864,11 +927,15 @@ void TInterfacePanel::onInterfaceTypeChoiceSelect(wxCommandEvent& event)
 
     EInterfaceType InterfaceType = InterfaceTab[iInterfaceIndex].InterfaceType;
 
-    TSessionConfig::SetInterfaceFile(aCustomDefFileText->GetValue());
 //  if( iInterfaceType == PIC_INTF_TYPE_PLUGIN_DLL )
 //       strncpy( Config.sz80InterfacePluginDLL,   Ed_CustomInterfaceDefFile->Text.c_str(), 80 );
 //  else strncpy( Config.sz255InterfaceSupportFile, Ed_CustomInterfaceDefFile->Text.c_str(), 256 );
     TSessionConfig::SetInterfaceType(InterfaceType);
+
+    if (isCustomInterface(InterfaceType) && (TSessionConfig::GetInterfaceFile()[0]==_T('\0')))
+        getCustInterfDefFile();
+
+    TestTheInterface();
     UpdateInterfaceType();
 //    MainFrame::TheMainFrame->aOptionTab->UpdateOptionsDisplay();
 }
@@ -884,6 +951,7 @@ void TInterfacePanel::onInterfacePortChoiceSelect(wxCommandEvent& event)
         return;
 
     copyPortSelectionToConfig();
+    TestTheInterface();
     UpdateInterfaceType();
 }
 //---------------------------------------------------------------------------
@@ -923,42 +991,9 @@ void TInterfacePanel::onCustomInterfSelectButtonClick(wxCommandEvent& event)
     ++(MainFrame::TheMainFrame->m_Updating);
 
 
-    MainFrame::TheMainFrame->aFileDialog->SetMessage(_( "Load custom interface definition file" ));
-    MainFrame::TheMainFrame->aFileDialog->SetWindowStyle(wxFD_FILE_MUST_EXIST | wxFD_OPEN);
-    wxFileName Filename (wxStandardPaths::Get().GetDataDir(), wxEmptyString);
-//    if ( interface_type == PIC_INTF_TYPE_PLUGIN_DLL )
-//    {
-//        aFileDialog->SetWildcard(_("Plugin DLLs (*.dll)|*.dll"));
-//        Filename.AppendDir(_T("interface_dlls"));
-////       OpenDialog->DefaultExt = "dll";
-////     OpenDialog->InitialDir = ExtractFilePath(Application->ExeName) + "interface_dlls";
-////     OpenDialog->Filter = "Plugin DLLs (*.dll)|*.dll";
-//    }
-//    else
+    if (getCustInterfDefFile())
     {
-        MainFrame::TheMainFrame->aFileDialog->SetWildcard(_("Xml files (*.xml)|*.xml"));
-    }
-    MainFrame::TheMainFrame->aFileDialog->SetDirectory(Filename.GetFullPath());
-    MainFrame::TheMainFrame->aFileDialog->SetFilename(aCustomDefFileText->GetValue());
-//      if( interface_type == PIC_INTF_TYPE_PLUGIN_DLL )
-//          OpenDialog->FileName = OpenDialog->InitialDir + "\\*.dll";
-//      else
-//          OpenDialog->FileName = OpenDialog->InitialDir + "\\*.ini";  // dig this, TOpenDialog ?!
-//    }
-//  OpenDialog->HelpContext = HELPID_CUSTOM_INTERFACES;
-//  OpenDialog->Options.Clear();
-//  OpenDialog->Options << ofFileMustExist << ofHideReadOnly << ofNoChangeDir << ofShowHelp;
-    if (MainFrame::TheMainFrame->aFileDialog->ShowModal() == wxID_OK)
-    {
-        Filename.Assign(MainFrame::TheMainFrame->aFileDialog->GetPath());
-        TSessionConfig::SetInterfaceFile(Filename.GetFullPath());
-//        _tcsncpy(
-//            (interface_type == PIC_INTF_TYPE_PLUGIN_DLL)?Config.sz80InterfacePluginDLL:
-//            Config.sz255InterfaceSupportFile, , 256);
-//    if( interface_type == PIC_INTF_TYPE_PLUGIN_DLL )
-//         strncpy( Config.sz80InterfacePluginDLL,   Ed_CustomInterfaceDefFile->Text.c_str(), 80 );
-//    else strncpy( Config.sz255InterfaceSupportFile, Ed_CustomInterfaceDefFile->Text.c_str(), 256 );
-
+        TestTheInterface();
         UpdateInterfaceType();
     }
 
@@ -1011,3 +1046,14 @@ void TInterfacePanel::onIoPortAddressGetFocus(wxFocusEvent &pEvent)
     }
 }
 //---------------------------------------------------------------------------
+
+void TInterfacePanel::onCustomDefFileTextEnter(wxCommandEvent& event)
+{
+    updateCustomDefFile();
+}
+
+void TInterfacePanel::onIoCustomDefFileKillFocus(wxFocusEvent &pEvent)
+{
+    updateCustomDefFile();
+}
+
