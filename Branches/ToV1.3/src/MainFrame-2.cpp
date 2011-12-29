@@ -75,6 +75,7 @@ void MainFrame::ShowProgressGauge(bool visible)
 {
     if (aProgressGauge->IsShown() != visible)
     {
+//        APPL_LogEvent(_T("ShowProgressGauge(%d)"), visible);
         aProgressGauge->Show(visible);
         Layout();
         wxYieldIfNeeded(); //Will draw changes to main screen
@@ -113,6 +114,7 @@ void MainFrame::doAddTextLog (const wxChar *szText)
 /*static*/
 void MainFrame::ShowProgress (int pPercentage)
 {
+    TheMainFrame->m_progress_activity_timer = 2;
     TheMainFrame->ShowProgressGauge(true);
     TheMainFrame->aProgressGauge->SetValue(pPercentage);
     TheMainFrame->Update();

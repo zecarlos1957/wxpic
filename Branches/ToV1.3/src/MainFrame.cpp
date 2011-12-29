@@ -126,6 +126,7 @@ END_EVENT_TABLE()
 MainFrame::MainFrame(void)
         : aLogCount(0)
         , m_fMaySaveSettings(true)
+        , m_progress_activity_timer(0)
         , m_fReloadAndProgClicked(false)
 {
     initAuto();
@@ -634,13 +635,14 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
         // (ugly but easy, don't have to care for turning it off elsewhere !)
         if (aProgressGauge->IsShown())
         {
+//            APPL_LogEvent(_T("Progress Gauge Is Shown. Activity=%d"), m_progress_activity_timer);
             if (m_progress_activity_timer>0)
                 --m_progress_activity_timer;
-            if (m_progress_activity_timer<=0)
-            {
+            else
                 ShowProgressGauge(false);
-            }
         }
+//        else if (m_progress_activity_timer != 0)
+//            APPL_LogEvent(_T("Progress Gauge Is Hidden. Bug!. Activity=%d"), m_progress_activity_timer--);
 
         aInterfaceTab->UpdateInterfaceInputSignalDisplay();
 
