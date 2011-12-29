@@ -4154,7 +4154,11 @@ void WriteValue (wxFile &File, const char *Key, const char *Value)
     File.Write (Key, strlen(Key));
     File.Write ("=", 1);
     File.Write (Value, strlen(Value));
+#ifdef __WXMSW__
+    File.Write ("\r\n", 2);
+#else
     File.Write ("\n", 1);
+#endif
 }
 void WriteIntValue (wxFile &File, const char *Key, int Value)
 {

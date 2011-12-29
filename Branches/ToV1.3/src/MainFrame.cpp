@@ -1129,7 +1129,13 @@ void MainFrame::onFaqMenuItemSelected(wxCommandEvent& event)
 void MainFrame::onDevDumpMenuItemSelected(wxCommandEvent& event)
 //void MainFrame::M_DumpDevListClick(TObject *Sender)
 {
-    PicDev_DumpDeviceListToFile(_T("DevListDump.txt"));
+    aFileDialog->SetWindowStyle(wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+    aFileDialog->SetMessage(_("Save Device List"));
+    aFileDialog->SetWildcard(_("txt files (TXT, *.txt)|*.txt"));
+    aFileDialog->SetPath(wxEmptyString);
+    aFileDialog->SetFilename(_T("DevListDump.txt"));
+    if (aFileDialog->ShowModal() == wxID_OK)
+        PicDev_DumpDeviceListToFile(aFileDialog->GetFilename().c_str());
 }
 //---------------------------------------------------------------------------
 
