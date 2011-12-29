@@ -96,7 +96,6 @@ const long MainFrame::ID_READ_MENU_ITEM = wxNewId();
 const long MainFrame::ID_RESET_MENU_ITEM = wxNewId();
 const long MainFrame::ID_BATCH_PRG_MENU_ITEM = wxNewId();
 const long MainFrame::ID_DEV_DUMP_MENU_ITEM = wxNewId();
-const long MainFrame::ID_DUMP_TRANS_MENU_ITEM = wxNewId();
 const long MainFrame::ID_DSPIC_READ_MENU_ITEM = wxNewId();
 const long MainFrame::ID_DSPIC_PROG_MENU_ITEM = wxNewId();
 const long MainFrame::ID_SPECIAL_SUB_MENU = wxNewId();
@@ -225,8 +224,6 @@ void MainFrame::initAuto (void)
     aSpecialMenuItem = new wxMenu();
     aDevDumpMenuItem = new wxMenuItem(aSpecialMenuItem, ID_DEV_DUMP_MENU_ITEM, _("Dump &Built-in device list to file..."), wxEmptyString, wxITEM_NORMAL);
     aSpecialMenuItem->Append(aDevDumpMenuItem);
-    aDumpTransMenuItem = new wxMenuItem(aSpecialMenuItem, ID_DUMP_TRANS_MENU_ITEM, _("Dump &Translation table to file..."), wxEmptyString, wxITEM_NORMAL);
-    aSpecialMenuItem->Append(aDumpTransMenuItem);
     aSpecialMenuItem->AppendSeparator();
     aDsPicReadMenuItem = new wxMenuItem(aSpecialMenuItem, ID_DSPIC_READ_MENU_ITEM, _("&Read dsPIC executive code memory"), wxEmptyString, wxITEM_NORMAL);
     aSpecialMenuItem->Append(aDsPicReadMenuItem);

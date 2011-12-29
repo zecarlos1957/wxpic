@@ -180,9 +180,6 @@
 						<label>Dump &amp;Built-in device list to file...</label>
 						<handler function="onDevDumpMenuItemSelected" entry="EVT_MENU" />
 					</object>
-					<object class="wxMenuItem" name="ID_DUMP_TRANS_MENU_ITEM" variable="aDumpTransMenuItem" member="yes">
-						<label>Dump &amp;Translation table to file...</label>
-					</object>
 					<object class="separator" />
 					<object class="wxMenuItem" name="ID_DSPIC_READ_MENU_ITEM" variable="aDsPicReadMenuItem" member="yes">
 						<label>&amp;Read dsPIC executive code memory</label>

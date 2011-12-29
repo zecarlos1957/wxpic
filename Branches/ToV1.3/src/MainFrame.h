@@ -114,7 +114,6 @@ class MainFrame: public wxFrame
 		TOptionPanel* aOptionTab;
 		wxMenuItem* aDsPicReadMenuItem;
 		wxMenuItem* aEraseMenuItem;
-		wxMenuItem* aDumpTransMenuItem;
 		wxMenu* aHelpMenu;
 		wxMenuItem* aResetMenuItem;
 		wxMenuItem* aBlankCheckMenuItem;
@@ -193,7 +192,6 @@ class MainFrame: public wxFrame
 		static const long ID_RESET_MENU_ITEM;
 		static const long ID_BATCH_PRG_MENU_ITEM;
 		static const long ID_DEV_DUMP_MENU_ITEM;
-		static const long ID_DUMP_TRANS_MENU_ITEM;
 		static const long ID_DSPIC_READ_MENU_ITEM;
 		static const long ID_DSPIC_PROG_MENU_ITEM;
 		static const long ID_SPECIAL_SUB_MENU;
