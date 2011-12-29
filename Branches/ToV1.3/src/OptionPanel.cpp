@@ -330,10 +330,6 @@ void TOptionPanel::UpdateOptionsDisplay(void)
     aDisconnectAfterProgChk->SetValue(TSessionConfig::GetDisconnectAfterProg());
     aVerifyDiffVddsChk->SetValue(TSessionConfig::GetUseDifferentVoltages());
     aVerifyDiffVddsChk->Enable(PIC_HW_CanSelectVdd());
-//   if(PIC_HW_CanSelectVdd() )  // don't DISABLE this checkmark but..
-//        Chk_VerifyDiffVdds->Font->Color = clBlack;
-//    else // .. make it gray if it has no meaningfull function
-//        Chk_VerifyDiffVdds->Font->Color = clGray;
 
     aDontCareForOsccalChk->SetValue(TSessionConfig::GetDontCareForOsccal());
     aDontCareForBGCalibChk->SetValue(TSessionConfig::GetDontCareForBGCalib());

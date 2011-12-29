@@ -327,7 +327,6 @@ class MainFrame: public wxFrame
         void UpdateConfigBitCombo(void);
         bool QueryAndApplyHexEditIfRequired(void);
 
-//        void UpdateToolWindow(void);
         void UpdateAllSheets(void);
 
         void ShowProgressGauge(bool visible);
@@ -335,7 +334,6 @@ class MainFrame: public wxFrame
         void LoadAndProgramCommand(void);
         void ReloadAndProgClick(void);
 
-//        bool AppHelp(Word Command, int Data, bool &CallHelp);
         static void ChangeDefaultGridForegroundColour(wxGrid *Grid, const wxColour &NewForegroundColour);
         static void ChangeDefaultGridBackgroundColour(wxGrid *Grid, const wxColour &NewBackgroundColour);
 

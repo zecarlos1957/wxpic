@@ -1,3 +1,18 @@
+/*-------------------------------------------------------------------------*/
+/*  Filename: OptionPanel.h                                                */
+/*                                                                         */
+/*  Purpose:                                                               */
+/*     Manage the WxPic Options Panel                                      */
+/*                                                                         */
+/*  Author:                                                                */
+/*     Copyright 2009-2011 Philippe Chevrier pch @ laposte.net             */
+/*     from software originally written by Wolfgang Buescher (DL4YHF)      */
+/*                                                                         */
+/*  License:                                                               */
+/*     Licensed under GPLV3 conditions                                     */
+/*                                                                         */
+/*-------------------------------------------------------------------------*/
+
 #ifndef OPTIONPANEL_H
 #define OPTIONPANEL_H
 

@@ -1,3 +1,18 @@
+/*-------------------------------------------------------------------------*/
+/*  Filename: MessagePanel.cpp                                             */
+/*                                                                         */
+/*  Purpose:                                                               */
+/*    Display and manage the panel that displays the message log           */
+/*                                                                         */
+/*  Author:                                                                */
+/*     Copyright 2009-2011 Philippe Chevrier pch @ laposte.net             */
+/*     from software originally written by Wolfgang Buescher (DL4YHF)      */
+/*                                                                         */
+/*  License:                                                               */
+/*     Licensed under GPLV3 conditions                                     */
+/*                                                                         */
+/*-------------------------------------------------------------------------*/
+
 #include "MessagePanel.h"
 #include "MainFrame.h"
 
@@ -44,7 +59,6 @@ TMessagePanel::~TMessagePanel()
 
 //---------------------------------------------------------------------------
 void TMessagePanel::onClearMsgButtonClick(wxCommandEvent& event)
-//void ::Btn_ClearMessagesClick(TObject *Sender)
 {
     aMessageLog->Clear();
     MainFrame::TheMainFrame->aStatusBar->SetStatusText(_T(""));

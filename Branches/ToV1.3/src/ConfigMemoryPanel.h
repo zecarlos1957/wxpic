@@ -1,3 +1,19 @@
+/*-------------------------------------------------------------------------*/
+/*  Filename: ConfigMemoryPanel.h                                          */
+/*                                                                         */
+/*  Purpose:                                                               */
+/*    Display and manage the panel that displays the config memory as      */
+/*    binary or hexadecimal words                                          */
+/*                                                                         */
+/*  Author:                                                                */
+/*     Copyright 2009-2011 Philippe Chevrier pch @ laposte.net             */
+/*     from software originally written by Wolfgang Buescher (DL4YHF)      */
+/*                                                                         */
+/*  License:                                                               */
+/*     Licensed under GPLV3 conditions                                     */
+/*                                                                         */
+/*-------------------------------------------------------------------------*/
+
 #ifndef CONFIGMEMORYPANEL_H
 #define CONFIGMEMORYPANEL_H
 

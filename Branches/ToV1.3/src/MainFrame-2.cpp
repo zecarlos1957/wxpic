@@ -397,8 +397,6 @@ bool MainFrame::ProgramPic(void)
                     // However, there is the option NOT TO ERASE before programming, so :
                     pszMsg = _("Erasing CODE");
                     APPL_ShowMsg( 0, pszMsg );
-//            if(ToolForm)
-//                ToolForm->ShowMsg( pszMsg, TWMSG_NO_ERROR );
                     Update();
                     if ( ! PIC_PRG_Erase( PIC_ERASE_CODE | PIC_SAVE_CALIBRATION ) ) // here in ProgramPic(), "CODE" only
                     {

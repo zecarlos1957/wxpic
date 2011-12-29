@@ -1,3 +1,17 @@
+/*-------------------------------------------------------------------------*/
+/*  Filename: CodeMemPanel.cpp                                             */
+/*                                                                         */
+/*  Purpose:                                                               */
+/*     Display and manage the Code Memory Panel                            */
+/*                                                                         */
+/*  Author:                                                                */
+/*     Copyright 2009-2011 Philippe Chevrier pch @ laposte.net             */
+/*                                                                         */
+/*  License:                                                               */
+/*     Licensed under GPLV3 conditions                                     */
+/*                                                                         */
+/*-------------------------------------------------------------------------*/
+
 #include "CodeMemPanel.h"
 #include "MainFrame.h"
 
@@ -21,12 +35,16 @@ TCodeMemPanel::TCodeMemPanel(wxWindow* parent,wxWindowID id,const wxPoint& pos,c
 {
 	//(*Initialize(TCodeMemPanel)
 	wxBoxSizer* BoxSizer5;
-
+	
 	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("id"));
 	BoxSizer5 = new wxBoxSizer(wxHORIZONTAL);
 	aCodeMemGrid = new THexGrid(this, ID_CODE_MEM_GRID, wxDefaultPosition, wxDefaultSize, 0, _T("ID_CODE_MEM_GRID"));
 	aCodeMemGrid->CreateGrid(0,8);
 	aCodeMemGrid->SetMinSize(wxSize(0,0));
+	aCodeMemGrid->EnableEditing(true);
+	aCodeMemGrid->EnableGridLines(true);
+	aCodeMemGrid->SetDefaultCellFont( aCodeMemGrid->GetFont() );
+	aCodeMemGrid->SetDefaultCellTextColour( aCodeMemGrid->GetForegroundColour() );
 	BoxSizer5->Add(aCodeMemGrid, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
 	SetSizer(BoxSizer5);
 	BoxSizer5->Fit(this);

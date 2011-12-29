@@ -1,3 +1,17 @@
+/*-------------------------------------------------------------------------*/
+/*  Filename: CodeMemPanel.h                                               */
+/*                                                                         */
+/*  Purpose:                                                               */
+/*     Display and manage the Code Memory Panel                            */
+/*                                                                         */
+/*  Author:                                                                */
+/*     Copyright 2009-2011 Philippe Chevrier pch @ laposte.net             */
+/*                                                                         */
+/*  License:                                                               */
+/*     Licensed under GPLV3 conditions                                     */
+/*                                                                         */
+/*-------------------------------------------------------------------------*/
+
 #ifndef TCODEMEMPANEL_H
 #define TCODEMEMPANEL_H
 
@@ -36,8 +50,6 @@ class TCodeMemPanel: public wxPanel
 
 		//(*Handlers(TCodeMemPanel)
 		//*)
-
-//        wxColour            aWeakCodeColour;
 
 		DECLARE_EVENT_TABLE()
 };

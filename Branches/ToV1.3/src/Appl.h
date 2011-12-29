@@ -1,8 +1,19 @@
 /*-------------------------------------------------------------------------*/
-/* APPL.h                                                                  */
-/*     Part of Wolfgang Buescher's  simple PIC-Programmer for Windows.     */
-/*     Ported to wxWidget by Philippe Chevrier                             */
+/*  Filename: Appl.h                                                       */
+/*                                                                         */
+/*  Purpose:                                                               */
+/*     Miscelaneous general usage function created for adaptation of       */
+/*     the originalm WinPic to the WxPic new structure and framework       */
+/*     and for adaptation to LINUX                                         */
+/*                                                                         */
+/*  Author:                                                                */
+/*     Copyright 2009-2011 Philippe Chevrier pch @ laposte.net             */
+/*     from software originally written by Wolfgang Buescher (DL4YHF)      */
 /*     Ported to Linux by Erdem U. Altinyurt                               */
+/*                                                                         */
+/*  License:                                                               */
+/*     Licensed under GPLV3 conditions                                     */
+/*                                                                         */
 /*-------------------------------------------------------------------------*/
 
 #ifndef APPL_H

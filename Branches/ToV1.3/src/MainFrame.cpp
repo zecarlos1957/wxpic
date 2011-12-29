@@ -336,10 +336,8 @@ void MainFrame::initMore (void)
     aCodeMemTab->aCodeMemGrid->SetHexFormat(16);
     aDataMemTab->aDataMemGrid->SetHexFormat(8);
 
-//   m_progress_visible        = false;
     m_Updating                = 0;
 
-//    PageControl1->ActivePage = TS_ProgramMemory;
     aNotebook->ChangeSelection(TS_ProgramMemory);
 
     wxString Errors;
@@ -407,7 +405,6 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
     if (TheMainFrame == NULL)
         return;
 
-//  wxChar sz255Temp[256];
     wxChar sz255Msg[256];
     wxString s;
     T_PicDeviceInfo MyDeviceInfo;
@@ -417,11 +414,6 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
 
     if (siAlreadyHere)
         return;
-
-//  if( WinPic_fCloseImmediately )
-//   { Close();
-//     return;
-//   }
 
     ++siAlreadyHere;
 
@@ -622,9 +614,7 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
             {
                 PIC_HW_ProgMode();        // first(?) Vdd on, then(?) Vpp on
                 PIC_HW_SerialOut_Command6(PIC_DeviceInfo.iCmd_LoadConfig, false);  // internal address to 0x2000
-//                PHWInfo.iCurrProgAddress = PIC_DeviceInfo.lConfMemBase; // added 2008-05 for the plugin-DLL
                 PIC_HW_SerialOut_14Bit(0x2AAA);
-//                PicHw_FlushCommand( PIC_DeviceInfo.iCmd_LoadConfig, 6, 0x2AAA, 14 );
                 PIC_HW_SerialOut_Command6(PIC_DeviceInfo.iCmd_BeginProg, true);  // clock LOW, data HIGH after this
                 PIC_HW_Delay_us(PIC_DeviceInfo.lTi_Prog_us);  // program delay (usually 10ms)
                 PIC_HW_SetClockAndData(false, false);
@@ -791,7 +781,6 @@ void MainFrame::onMRFMenuItemSelected(wxCommandEvent& pEvent)
 
 //---------------------------------------------------------------------------
 void MainFrame::OnClearRecentMenuItemSelected(wxCommandEvent& event)
-//void MainFrame::MI_ClearMRFsClick(TObject *Sender)
 {
     TSessionConfig::ClearMostRecentFiles();
     aMRFTable.Clear();
@@ -802,7 +791,6 @@ void MainFrame::OnClearRecentMenuItemSelected(wxCommandEvent& event)
 //---------------------------------------------------------------------------
 
 void MainFrame::OnExitMenuItemSelected(wxCommandEvent& event)
-//void MainFrame::Exit1Click(TObject *Sender)
 {
     Close();
 }
@@ -810,7 +798,6 @@ void MainFrame::OnExitMenuItemSelected(wxCommandEvent& event)
 
 
 void MainFrame::OnExitNoSaveMenuItemSelected(wxCommandEvent& event)
-//void MainFrame::MI_ExitDontSaveClick(TObject *Sender)
 {
     m_fMaySaveSettings = false;
     Close();
@@ -821,7 +808,6 @@ void MainFrame::OnExitNoSaveMenuItemSelected(wxCommandEvent& event)
 
 //---------------------------------------------------------------------------
 void MainFrame::onProgramMenuItemSelected(wxCommandEvent& event)
-//void MainFrame::Menu_ProgramDeviceClick(TObject *Sender)
 {
     PIC_PRG_iBatchProgState = BATCH_PROG_OFF;
     if (QueryAndApplyHexEditIfRequired())
@@ -835,7 +821,6 @@ void MainFrame::onProgramMenuItemSelected(wxCommandEvent& event)
 
 //---------------------------------------------------------------------------
 void MainFrame::onProgramCfgMenuItemSelected(wxCommandEvent& event)
-//void MainFrame::MI_ProgCfgWordClick(TObject *Sender)
 {
     uint32_t dwTemp4[4];
 
@@ -901,7 +886,6 @@ void MainFrame::onProgramCfgMenuItemSelected(wxCommandEvent& event)
 //---------------------------------------------------------------------------
 
 void MainFrame::onProgramIdMenuItemSelected(wxCommandEvent& event)
-//void MainFrame::MI_ProgIDlocsClick(TObject *Sender)
 {
     APPL_ShowMsg( 0, _("Programming ID-locations") );
     if (PIC_PRG_Program(PicBuf[PIC_BUF_CONFIG].pdwData,
@@ -928,7 +912,6 @@ void MainFrame::onProgramIdMenuItemSelected(wxCommandEvent& event)
 
 
 void MainFrame::onEraseMenuItemSelected(wxCommandEvent& event)
-//void MainFrame::Erase1Click(TObject *Sender)
 {
     const wxChar *pszMsg;
 
@@ -945,12 +928,10 @@ void MainFrame::onEraseMenuItemSelected(wxCommandEvent& event)
         } // end if(! TSessionConfig::GetUseCompleteChipErase() )
         pszMsg = _("Erasing ...");
         aStatusBar->SetStatusText(pszMsg);
-//    if(ToolForm) ToolForm->ShowMsg(pszMsg,TWMSG_NO_ERROR);
         Update();
         if ( PIC_PRG_Erase( PIC_ERASE_ALL | PIC_SAVE_CALIBRATION) ) // here in 'manual erase' mode
         {
             pszMsg = _("Device has been erased."); // translation used more than once !
-//        if(ToolForm) ToolForm->ShowMsg( pszMsg, TWMSG_SUCCESS );
             if ( PIC_iHaveErasedCalibration
                     && ((PIC_DeviceInfo.wCfgmask_bandgap != 0) || (PIC_DeviceInfo.lAddressOscCal >= 0)) )
             {
@@ -967,7 +948,6 @@ void MainFrame::onEraseMenuItemSelected(wxCommandEvent& event)
         {
             pszMsg = _( "Erasing FAILED !" );
             APPL_ShowMsg( 0, pszMsg );
-//        if(ToolForm) ToolForm->ShowMsg( pszMsg, TWMSG_ERROR );
         }
     }
     else
@@ -1071,8 +1051,6 @@ void MainFrame::onClearBufferMenuItemSelected(wxCommandEvent& event)
 {
     /* Initialize buffers to imitate the erased state. */
     PIC_HEX_ClearBuffers();
-//  REd_CodeMem->Modified = false;
-//  REd_DataMem->Modified = false;
     UpdateAllSheets(); // make the changes visible on the screen
 }
 //---------------------------------------------------------------------------
@@ -1133,7 +1111,6 @@ void MainFrame::onHelpIndexMenuItemSelected(wxCommandEvent& event)
     wxHelpControllerBase *Help = TLanguage::GetHelpController();
     if (Help != NULL)
         Help->DisplaySection(TResource::HELPID_MAIN_INDEX);
-//  Application->HelpContext( HELPID_MAIN_INDEX );
 }
 //---------------------------------------------------------------------------
 
@@ -1143,7 +1120,6 @@ void MainFrame::onFaqMenuItemSelected(wxCommandEvent& event)
     wxHelpControllerBase *Help = TLanguage::GetHelpController();
     if (Help != NULL)
         Help->DisplaySection(TResource::HELPID_FAQ_LISTS);
-//  Application->HelpContext( HELPID_FAQ_LISTS );
 }
 //---------------------------------------------------------------------------
 
@@ -1162,17 +1138,8 @@ void MainFrame::onShowPrgOptMenuItemSelected(wxCommandEvent& event)
 //void MainFrame::MI_ProgOpsClick(TObject *Sender)
 {
     aNotebook->SetSelection(TS_Options);
-//  PageControl1->ActivePage = TS_Options;
 }
 //---------------------------------------------------------------------------
-
-//void MainFrame::Ed_MessageClick(TObject *Sender)
-//{
-//    aNotebook->SetSelection(TS_Messages);
-////  PageControl1->ActivePage = TS_Messages;
-//}
-////---------------------------------------------------------------------------
-
 
 
 
@@ -1181,25 +1148,10 @@ void MainFrame::onSelectDevMenuItemSelected(wxCommandEvent& event)
 {
     PIC_PRG_iBatchProgState = BATCH_PROG_OFF;
     aNotebook->SetSelection(TS_DeviceConfig);
-//   PageControl1->ActivePage = TS_DeviceConfig;
     aDeviceCfgTab->aPartNameChoice->SetFocus();
-//   Combo_PartName->DroppedDown = true;  // TComboBox
 }
 //---------------------------------------------------------------------------
 
-
-//void MainFrame::Pnl_MessageClick(TObject *Sender)
-//{
-//  PageControl1->ActivePage = TS_Messages;
-//  m_iMessagePanelUsage = MP_USAGE_NOTHING;  // may overwrite this msg now
-//}
-////---------------------------------------------------------------------------
-
-//void MainFrame::FormCloseQuery(TObject *Sender, bool/*not bool!*/&CanClose)
-//{
-//  CanClose = WinPic_OkToCloseDueToErasedCalibration();
-//}
-////---------------------------------------------------------------------------
 
 
 //---------------------------------------------------------------------------
@@ -1230,7 +1182,6 @@ wxString MainFrame::ProgramWhatInfoString(void)
 
 //---------------------------------------------------------------------------
 void MainFrame::onMenuOpen(wxMenuEvent &pEvent)
-//void MainFrame::File1Click(TObject *Sender)
 {
     PIC_PRG_iBatchProgState = BATCH_PROG_OFF;
     // Rename some menu items according to programmer options
@@ -1262,21 +1213,16 @@ void MainFrame::onMenuOpen(wxMenuEvent &pEvent)
 
 
 void MainFrame::onBatchPrgMenuItemSelected(wxCommandEvent& event)
-//void MainFrame::Menu_StartBatchProgrammingClick(TObject *Sender)
 {
     aNotebook->SetSelection(TS_Messages);
-//  PageControl1->ActivePage = TS_Messages;
     if (PIC_PRG_iBatchProgState == BATCH_PROG_OFF)
     {
         aMessageTab->EnterBatchMode();
-//       Mem_Messages->Clear();
         aStatusBar->SetStatusText(wxEmptyString);
         PIC_PRG_iBatchProgState = BATCH_PROG_PREP_START;
     }
     else
-    {
         PIC_PRG_iBatchProgState = BATCH_PROG_TERMINATE;
-    }
 }
 //---------------------------------------------------------------------------
 
@@ -1337,7 +1283,6 @@ bool MainFrame::QueryAndApplyHexEditIfRequired(void)
 
 //---------------------------------------------------------------------------
 void MainFrame::onEnabHexEditMenuItemSelected(wxCommandEvent& event)
-//void MainFrame::Menu_EnableEditClick(TObject *Sender)
 {
     bool NewState = !aCodeMemTab->aCodeMemGrid->IsEditable();
     if (!NewState && !QueryAndApplyHexEditIfRequired())
@@ -1356,7 +1301,6 @@ void MainFrame::onEnabHexEditMenuItemSelected(wxCommandEvent& event)
 
 
 void MainFrame::onDiscardEditMenuItemSelected(wxCommandEvent& event)
-//void MainFrame::Menu_DiscardHexEditsClick(TObject *Sender)
 {
     discardMemoryEdits();
 }
@@ -1364,7 +1308,6 @@ void MainFrame::onDiscardEditMenuItemSelected(wxCommandEvent& event)
 
 
 void MainFrame::onApplyEditMenuItemSelected(wxCommandEvent& event)
-//void MainFrame::Menu_ApplyHexEditsClick(TObject *Sender)
 {
     applyMemoryEdits();
 }
@@ -1372,7 +1315,6 @@ void MainFrame::onApplyEditMenuItemSelected(wxCommandEvent& event)
 
 
 void MainFrame::onResetMenuItemSelected(wxCommandEvent& event)
-//void MainFrame::ResetGo1Click(TObject *Sender)
 {
     PIC_PRG_iBatchProgState = BATCH_PROG_OFF;
     PIC_HW_ResetAndGo();
@@ -1381,8 +1323,6 @@ void MainFrame::onResetMenuItemSelected(wxCommandEvent& event)
 //---------------------------------------------------------------------------
 
 void MainFrame::onChar(wxKeyEvent& event)
-//void MainFrame::FormKeyDown(TObject *Sender, uint16_t &Key,
-//      TShiftState Shift)
 {
     int Key = event.GetKeyCode();
     bool Handled = false;
@@ -1420,7 +1360,6 @@ void MainFrame::onChar(wxKeyEvent& event)
 
 
 void MainFrame::onDumpBufferMenuItemSelected(wxCommandEvent& event)
-//void MainFrame::Menu_SaveBuffersClick(TObject *Sender)
 {
     aFileDialog->SetWindowStyle(wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
     aFileDialog->SetMessage(_("Save Hex File"));
@@ -1428,66 +1367,14 @@ void MainFrame::onDumpBufferMenuItemSelected(wxCommandEvent& event)
     aFileDialog->SetFilename(_T("dumped.hex"));
     aFileDialog->SetPath(wxEmptyString);
     /* beware: Win XP saves a history in the registry (grrrrrr) */
-//  SaveDialog->Title      = TE( "Save Hex File" );
-//  SaveDialog->DefaultExt = "hex";
-//  SaveDialog->Filter     = "HEX files (INHX8M, *.hex)|*.hex";
-//  SaveDialog->FileName   = "dumped.hex";
-//  SaveDialog->InitialDir = "";
-//  SaveDialog->HistoryList->Clear();
     if (aFileDialog->ShowModal() == wxID_OK)
-//  if( SaveDialog->Execute() )
-    {
         DumpEverythingToHexFile( aFileDialog->GetFilename().c_str() );
-    }
 }
 //---------------------------------------------------------------------------
 
-////---------------------------------------------------------------------------
-//void MainFrame::HexEditKeyDown(TObject *Sender, uint16_t &Key,
-//      TShiftState Shift)
-//{
-//  if( (!Shift.Contains(ssAlt)) && (!Shift.Contains(ssAlt)) )   // whats a Set ? grumble..
-//   {
-//    if( (Key>='0' && Key<='9') || (Key>='a' && Key<='f') || (Key>='a' && Key<='f')
-//     || (Key==' ') )
-//    {
-//     if(REd_CodeMem->ReadOnly)
-//      {
-//        if(MessageBox(  Handle, // handle of owner window
-//         TE( "Turn HEX-EDITOR on ?" ),
-//         "WinPic",
-//         MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON1 ) == IDYES )
-//          {
-//            EnableHexEditors();
-//          }
-//       }
-//     }
-//   }
-//}
-////---------------------------------------------------------------------------
-
-////---------------------------------------------------------------------------
-//void MainFrame::MI_ShowToolWinClick(TObject *Sender)
-//{
-//  if(ToolForm)
-//   { ToolForm->Show();
-//     UpdateToolWindow();
-//   }
-//}
-////---------------------------------------------------------------------------
-
-
-//void MainFrame::MI_SelLanguageClick(TObject *Sender)
-//{
-//  PageControl1->ActivePage = TS_Options;
-//  CB_Language->DroppedDown = true;
-//}
-//---------------------------------------------------------------------------
 
 
 void MainFrame::onDsPicReadMenuItemSelected(wxCommandEvent& event)
-//void MainFrame::MI_dsPIC_ReadExecutiveCodeMemClick(
-//      TObject *Sender)
 {
     bool ok;
 
@@ -1520,60 +1407,12 @@ void MainFrame::onDsPicReadMenuItemSelected(wxCommandEvent& event)
 
 
 void MainFrame::onDsPicProgMenuItemSelected(wxCommandEvent& event)
-//void MainFrame::MI_dsPIC_WriteExecutiveCodeMemClick(
-//      TObject *Sender)
 {
     if ( PIC_DeviceInfo.iBitsPerInstruction==24 )
     {
     } // end if < 24 bit per instruction, most likely dsPIC30Fxxxx >
 }
 
-
-//---------------------------------------------------------------------------
-//  "Speed Buttons" - unnecessary gimmicks for some folks,
-//                    may be turned off through the good old main menu .
-//---------------------------------------------------------------------------
-
-//void MainFrame::Btn_CloseToolbarClick(TObject *Sender)
-//{
-//   Pnl_Tools->Visible = false;
-//}
-////---------------------------------------------------------------------------
-//void MainFrame::MI_ShowToolbarClick(TObject *Sender)
-//{
-//   Pnl_Tools->Visible = !Pnl_Tools->Visible;
-//}
-////---------------------------------------------------------------------------
-//void MainFrame::Btn_FileOpenClick(TObject *Sender)
-//{
-//   Load1Click(Sender);
-//}
-////---------------------------------------------------------------------------
-//void MainFrame::Btn_ProgramClick(TObject *Sender)
-//{
-//   Menu_ProgramDeviceClick(Sender);
-//}
-////---------------------------------------------------------------------------
-//void MainFrame::Btn_SaveClick(TObject *Sender)
-//{
-//   Menu_SaveBuffersClick( Sender );
-//}
-////---------------------------------------------------------------------------
-//void MainFrame::Btn_VerifyClick(TObject *Sender)
-//{
-//   Verify1Click( Sender );
-//}
-////---------------------------------------------------------------------------
-//void MainFrame::Btn_ReadPICClick(TObject *Sender)
-//{
-//   Read1Click( Sender );
-//}
-////---------------------------------------------------------------------------
-//void MainFrame::Btn_HelpIndexClick(TObject *Sender)
-//{
-//   Index1Click( Sender );
-//}
-//---------------------------------------------------------------------------
 
 
 //---------------------------------------------------------------

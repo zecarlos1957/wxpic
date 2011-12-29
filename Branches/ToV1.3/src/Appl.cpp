@@ -1,6 +1,18 @@
-// Copyright (C) 2009 Philippe Chevrier <pch@laposte.net>
-// Permission is granted to use, modify, or redistribute this software
-// so long as it is not sold or exploited for profit.
+/*-------------------------------------------------------------------------*/
+/*  Filename: Appl.cpp                                                     */
+/*                                                                         */
+/*  Purpose:                                                               */
+/*     Miscelaneous general usage function created for adaptation of       */
+/*     the originalm WinPic to the WxPic new structure and framework       */
+/*                                                                         */
+/*  Author:                                                                */
+/*     Copyright 2009-2011 Philippe Chevrier pch @ laposte.net             */
+/*     from software originally written by Wolfgang Buescher (DL4YHF)      */
+/*                                                                         */
+/*  License:                                                               */
+/*     Licensed under GPLV3 conditions                                     */
+/*                                                                         */
+/*-------------------------------------------------------------------------*/
 
 #include "Appl.h"
 #include <wx/msgdlg.h>
@@ -74,20 +86,6 @@ void APPL_ShowProgress( int percent )
     {
         APPL_iPreviousProgressPercentage = percent;
         MainFrame::ShowProgress(percent);
-//        if (!PicMain->m_progress_visible)
-//      {
-//        PicMain->m_progress_visible    = true;
-//        PicMain->ProgressBar1->Visible = true;
-//        if(ToolForm)
-//           ToolForm->ProgressBar1->Visible = true;
-//      }
-//     PicMain->m_progress_activity_timer = 2;
-//     Appl_CheckUserBreak(); // -> APPL_iUserBreakFlag , here updated in APPL_ShowProgress()
-//     PicMain->ProgressBar1->Position = percent;
-//     if(ToolForm)
-//        ToolForm->ProgressBar1->Position = percent;
-//     PicHw_LetInterfaceDLLDoGraphicStuff();  // keep the plugin's GUI alive
-//     PicMain->Update();
    }
 } // end APPL_ShowProgress()
 
