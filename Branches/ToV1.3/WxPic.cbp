@@ -214,6 +214,8 @@
 		<Unit filename="src\DataMemPanel.h" />
 		<Unit filename="src\DeviceCfgPanel.cpp" />
 		<Unit filename="src\DeviceCfgPanel.h" />
+		<Unit filename="src\FitInDisplay.cpp" />
+		<Unit filename="src\FitInDisplay.h" />
 		<Unit filename="src\HelpCtrl.cpp" />
 		<Unit filename="src\HelpCtrl.h" />
 		<Unit filename="src\HexGrid.cpp" />

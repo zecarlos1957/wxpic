@@ -30,6 +30,7 @@
 #include "Config.h"
 #include "Language.h"
 #include "SessionDialog.h"
+#include "FitInDisplay.h"
 
 
 #include <wx/app.h>
@@ -223,6 +224,8 @@ void TSessionConfig::GetRectAndColour (wxRect &pRect, wxColour &pCodeFgCol, wxCo
         pRect.SetWidth(Width);
     if (ConfigIO.Read(_T("Height"), &Height))
         pRect.SetHeight(Height);
+
+    MoveToFitInDisplay(pRect);
 
     wxString EmptyString;
     pCodeBgCol.Set(ConfigIO.Read(_T("CodeMemBgColor"), EmptyString));
