@@ -44,10 +44,9 @@
 #include <WinPicPr/PIC_PRG.h>
 
 //-- Some constant definitions
-static const wxChar *theApplicationName = _T("WxPic");
-static const wxChar *theSessionNamePath = _T("/SessionName");
-static const wxChar *theMRFPath         = _T("/MostRecentFiles");
-static const wxChar *theMRFileIndexKey  = _T("LastIndex");
+static const wxChar * const theSessionNamePath = _T("/SessionName");
+static const wxChar * const theMRFPath         = _T("/MostRecentFiles");
+static const wxChar * const theMRFileIndexKey  = _T("LastIndex");
 
 enum
 {
@@ -62,12 +61,10 @@ wxString        TSessionConfig::theLanguageName;
 int             TSessionConfig::TheTestMode = 0;
 
 
-
-class TConfigIO : public wxConfig
+static wxConfigBase &getTheConfigIO (void)
 {
-public:
-    /**/ TConfigIO (void) : wxConfig(theApplicationName) {}
-};
+    return *wxConfig::Get();
+}
 
 //----------------------------------------------------------------------
 //--   Local functions converting the session number in session name
@@ -105,7 +102,7 @@ static wxString getMRFKey (int pIndex)
 
 /**static*/bool TSessionConfig::Init (const wxApp *pApp)
 {
-    TConfigIO   ConfigIO;
+    wxConfigBase  &ConfigIO = getTheConfigIO();
 
     //-- Read the language in parameters
     TLanguage::Init();
@@ -126,11 +123,11 @@ static wxString getMRFKey (int pIndex)
     bool Result;
 
     if (theCommandLineMode | theLoadOption | theSessionIsGiven)
-        Result = loadCmdLineSession(ConfigIO);
+        Result = loadCmdLineSession();
     else
     {
         //-- Select the configuration using Dialog if necessary
-        theConfig = new TSessionConfig(ConfigIO);
+        theConfig = new TSessionConfig();
         Result = (theConfig->aSession != sessionNONE);
         if (!Result)
             //-- No session has been selected
@@ -151,13 +148,12 @@ static wxString getMRFKey (int pIndex)
 /**static*/ bool TSessionConfig::QuickSelect (int pSession)
 {
     wxASSERT(pSession>=0);
-    TConfigIO   ConfigIO;
-    return theConfig->doSetSession(ConfigIO, pSession, /*QuickSave*/true);
+    return theConfig->doSetSession(pSession, /*QuickSave*/true);
 }
 
 /**static*/void TSessionConfig::ChangeLanguage (const wxString &pLang)
 {
-    TConfigIO   ConfigIO;
+    wxConfigBase  &ConfigIO = getTheConfigIO();
 
     ConfigIO.SetPath(_T("/LANGUAGE"));
     ConfigIO.Write(_T("Name"), pLang);
@@ -166,19 +162,17 @@ static wxString getMRFKey (int pIndex)
 
 /**static*/wxArrayString TSessionConfig::GetMostRecentFiles (void)
 {
-    TConfigIO       ConfigIO;
     wxArrayString   FileTable;
 
-    getMostRecentFiles(ConfigIO, FileTable);
+    getMostRecentFiles(FileTable);
     return FileTable;
 }
 
 /**static*/wxArrayString TSessionConfig::AddMostRecentFile(const wxString &pName)
 {
-    TConfigIO       ConfigIO;
-    wxArrayString   FileTable;
+    wxArrayString  FileTable;
 
-    int LastIndex = getMostRecentFiles(ConfigIO, FileTable);
+    int LastIndex = getMostRecentFiles(FileTable);
     int FileCount = FileTable.GetCount();
     int i;
     for (i = 0; i < FileCount; ++i)
@@ -196,6 +190,7 @@ static wxString getMRFKey (int pIndex)
         if (LastIndex == mostRecentMAX)
             LastIndex = 0;
         wxString LastIndexImage = getMRFKey(LastIndex);
+        wxConfigBase  &ConfigIO = getTheConfigIO();
         ConfigIO.Write(theMRFileIndexKey, LastIndexImage);
         ConfigIO.Write(LastIndexImage, pName);
     }
@@ -204,14 +199,12 @@ static wxString getMRFKey (int pIndex)
 
 /**static*/ void TSessionConfig::ClearMostRecentFiles (void)
 {
-    TConfigIO       ConfigIO;
-
-    ConfigIO.DeleteGroup(theMRFPath);
+    getTheConfigIO().DeleteGroup(theMRFPath);
 }
 
 void TSessionConfig::GetRectAndColour (wxRect &pRect, wxColour &pCodeFgCol, wxColour &pCodeBgCol, wxColour &pDataFgCol, wxColour &pDataBgCol)
 {
-    TConfigIO   ConfigIO;
+    wxConfigBase  &ConfigIO = getTheConfigIO();
 
     ConfigIO.SetPath(_T("/Layout"));
 
@@ -236,7 +229,7 @@ void TSessionConfig::GetRectAndColour (wxRect &pRect, wxColour &pCodeFgCol, wxCo
 
 void TSessionConfig::SaveRectAndCloseSession (const wxRect &pRect, const wxColour &pCodeFgCol, const wxColour &pCodeBgCol, const wxColour &pDataFgCol, const wxColour &pDataBgCol)
 {
-    TConfigIO   ConfigIO;
+    wxConfigBase  &ConfigIO = getTheConfigIO();
 
     ConfigIO.SetPath(_T("/Layout"));
     ConfigIO.Write(_T("Left"),   pRect.x);
@@ -250,17 +243,17 @@ void TSessionConfig::SaveRectAndCloseSession (const wxRect &pRect, const wxColou
 }
 
 //----------------------------------------------------------------------
-/**/ TSessionConfig::TSessionConfig (int pSession, const wxString &pSessionName, wxConfigBase &pConfigIO, wxSingleInstanceChecker *pLock)
+/**/ TSessionConfig::TSessionConfig (int pSession, const wxString &pSessionName, wxSingleInstanceChecker *pLock)
 : aSession (pSession)
 , aLock    (pLock)
 , aName    (pSessionName)
 , aIsSaved (true)
 {
     setDefault(); //-- In case some parameters would fail reading
-    loadConfig(pConfigIO, NULL);
+    loadConfig(NULL);
 }
 
-/**/ TSessionConfig::TSessionConfig (wxConfigBase &pConfigIO)
+/**/ TSessionConfig::TSessionConfig (void)
 : aSession (sessionDEFAULT)
 , aLock    (NULL)
 , aIsSaved (false)
@@ -268,17 +261,19 @@ void TSessionConfig::SaveRectAndCloseSession (const wxRect &pRect, const wxColou
     //-- Define default configuration parameter values
     setDefault();
 
-    pConfigIO.SetPath(theSessionNamePath);
-    switch (pConfigIO.GetNumberOfEntries())
+    wxConfigBase  &ConfigIO = getTheConfigIO();
+
+    ConfigIO.SetPath(theSessionNamePath);
+    switch (ConfigIO.GetNumberOfEntries())
     {
     case 0:
         //-- Run for the first time, create default session
         RenameConfig(getSessionDefaultName(sessionDEFAULT));
-        pConfigIO.SetPath(_T("/"));
-        if (!pConfigIO.HasGroup(getSessionPath(sessionDEFAULT)))
+        ConfigIO.SetPath(_T("/"));
+        if (!ConfigIO.HasGroup(getSessionPath(sessionDEFAULT)))
             //-- Normal case: the session does not exist and the configuration doesn't either
             //-- Default config will be saved
-            saveConfig(pConfigIO);
+            saveConfig();
         //-- Else The configuration already exists
         //-- This should mean that a previous version of WxPic was installed before
         //-- We will try to read the configuration of this previous version
@@ -288,14 +283,14 @@ void TSessionConfig::SaveRectAndCloseSession (const wxRect &pRect, const wxColou
     case 1:
         //-- If there is only one session this must be the default one
         {
-            pConfigIO.SetPath(theSessionNamePath);
-            wxSingleInstanceChecker *Lock = getLockAndName(pConfigIO, sessionDEFAULT, aName);
+            ConfigIO.SetPath(theSessionNamePath);
+            wxSingleInstanceChecker *Lock = getLockAndName(sessionDEFAULT, aName);
             wxASSERT(Lock != NULL);
             if (!Lock->IsAnotherRunning())
             {
                 //-- This unique session is available don't need to show the session dialog
                 //-- Just load its configuration
-                loadConfig(pConfigIO, Lock);
+                loadConfig(Lock);
                 break;
             }
             //-- The default session is already used, free the lock on this session
@@ -316,7 +311,7 @@ void TSessionConfig::SaveRectAndCloseSession (const wxRect &pRect, const wxColou
 
 TSessionManager::TSessionInfo *TSessionConfig::GetSessionTab (void) const
 {
-    TConfigIO   ConfigIO;
+    wxConfigBase  &ConfigIO = getTheConfigIO();
 
     ConfigIO.SetPath(theSessionNamePath);
 
@@ -351,18 +346,16 @@ TSessionManager::TSessionInfo *TSessionConfig::GetSessionTab (void) const
 
 int TSessionConfig::SetSession (int pSession)
 {
-    TConfigIO   ConfigIO;
-
     if (pSession < 0)
     {
         //-- A new session has been requested, search one free
-        ConfigIO.SetPath(theSessionNamePath);
+        getTheConfigIO().SetPath(theSessionNamePath);
         wxString SessionName;
         int Session;
         wxSingleInstanceChecker *Lock;
         for (Session = 1; Session < sessionMAX; ++Session)
         {
-            Lock = getLockAndName(ConfigIO, Session, SessionName);
+            Lock = getLockAndName(Session, SessionName);
 
             if ((Lock != NULL) && (!Lock->IsAnotherRunning()))
                 break; //-- Found
@@ -390,9 +383,9 @@ int TSessionConfig::SetSession (int pSession)
             Number += 100;
         }
         //-- Save current parameters as the new session config
-        saveConfig(ConfigIO);
+        saveConfig();
     }
-    else if (!doSetSession (ConfigIO, pSession, /*QuickSave*/false))
+    else if (!doSetSession (pSession, /*QuickSave*/false))
         return -1;
 
     return aSession;
@@ -406,7 +399,7 @@ TSessionManager::TSessionState TSessionConfig::DeleteSession (int pSession)
                                             : TSessionManager::sessionStateNONE;
     if (Result == TSessionManager::sessionStateNONE)
     {
-        TConfigIO   ConfigIO;
+        wxConfigBase &ConfigIO = getTheConfigIO();
         ConfigIO.SetPath(theSessionNamePath);
         wxString SessionKey = getSessionNumber(pSession);
         if (ConfigIO.Exists(SessionKey))
@@ -422,24 +415,18 @@ TSessionManager::TSessionState TSessionConfig::DeleteSession (int pSession)
 void TSessionConfig::SaveConfig (void)
 {
     if (!aIsSaved)
-    {
-        TConfigIO   ConfigIO;
-        saveConfig(ConfigIO);
-    }
+        saveConfig();
 }
 
 void TSessionConfig::RevertConfig (void)
 {
     if (!aIsSaved)
-    {
-        TConfigIO   ConfigIO;
-        loadConfig(ConfigIO, /*Lock*/NULL);
-    }
+        loadConfig(/*Lock*/NULL);
 }
 
 bool TSessionConfig::RenameConfig (const wxString &pNewName)
 {
-    TConfigIO   ConfigIO;
+    wxConfigBase &ConfigIO = getTheConfigIO();
 
     ConfigIO.SetPath(theSessionNamePath);
     bool     MustContinue;
@@ -466,17 +453,18 @@ bool TSessionConfig::RenameConfig (const wxString &pNewName)
 }
 
 
-/**static*/int TSessionConfig::getMostRecentFiles(wxConfigBase &pConfigIO, wxArrayString &pFileTable)
+/**static*/int TSessionConfig::getMostRecentFiles(wxArrayString &pFileTable)
 {
     //-- Legacy flag indicates that we have not found the new format of Most Recent File
     //-- This is the first time the program runs (or the operator has cleared the MRF list)
     //-- Though it may exist old data from an old version using slightly different format
     bool Legacy = true;
     int  Result = mostRecentMAX-1;
+    wxConfigBase &ConfigIO = getTheConfigIO();
 
-    pConfigIO.SetPath(theMRFPath);
+    ConfigIO.SetPath(theMRFPath);
     wxString LastIndexImage;
-    if (pConfigIO.Read(theMRFileIndexKey, &LastIndexImage, wxEmptyString))
+    if (ConfigIO.Read(theMRFileIndexKey, &LastIndexImage, wxEmptyString))
     {
         Legacy = false;
         //-- Index number in last character
@@ -491,7 +479,7 @@ bool TSessionConfig::RenameConfig (const wxString &pNewName)
         if (CurIndex == mostRecentMAX)
             CurIndex = 0;
 
-        if (pConfigIO.Read (getMRFKey(CurIndex), &MRFile, wxEmptyString)
+        if (ConfigIO.Read (getMRFKey(CurIndex), &MRFile, wxEmptyString)
         &&  (MRFile[0] != _T('*'))) //-- In old versions, unused entries were marked by a name starting with *
         {
             pFileTable.Add(MRFile);
@@ -500,21 +488,21 @@ bool TSessionConfig::RenameConfig (const wxString &pNewName)
     }
     while (CurIndex != Result);
     if (Legacy)
-        pConfigIO.Write(theMRFileIndexKey, getMRFKey(LastFound));
+        ConfigIO.Write(theMRFileIndexKey, getMRFKey(LastFound));
 
     return Result;
 }
 
 
-bool TSessionConfig::doSetSession (wxConfigBase &pConfigIO, int pSession, bool pQuickSave)
+bool TSessionConfig::doSetSession (int pSession, bool pQuickSave)
 {
     if (pSession == aSession)
         return true;  //-- Already done: exit with succes
 
-    pConfigIO.SetPath(theSessionNamePath);
+    getTheConfigIO().SetPath(theSessionNamePath);
 
     wxString SessionName;
-    wxSingleInstanceChecker *Lock = getLockAndName(pConfigIO, pSession, SessionName);
+    wxSingleInstanceChecker *Lock = getLockAndName(pSession, SessionName);
 
     if (Lock == NULL)
         return false;
@@ -526,19 +514,19 @@ bool TSessionConfig::doSetSession (wxConfigBase &pConfigIO, int pSession, bool p
     }
 
     if (pQuickSave && !aIsSaved)
-        saveConfig(pConfigIO);
+        saveConfig();
 
     aName = SessionName;
     aSession = pSession;
-    loadConfig(pConfigIO, Lock);
+    loadConfig(Lock);
     return true;
 }
 
 
-void TSessionConfig::setConfigPath(wxConfigBase &pConfigIO, const wxChar *pHeading)
+void TSessionConfig::setConfigPath(const wxChar *pHeading)
 {
     wxString SessionPath = getSessionPath (aSession);
-    pConfigIO.SetPath(wxString::Format(_T("/%s/%s"), SessionPath.c_str(), pHeading));
+    getTheConfigIO().SetPath(wxString::Format(_T("/%s/%s"), SessionPath.c_str(), pHeading));
 }
 
 
@@ -564,54 +552,56 @@ void TSessionConfig::setDefault (void)
     a.UnknownDataMemorySize = 256;   // ..for a trial to program exotic types
 }
 
-void TSessionConfig::saveConfig (wxConfigBase &pConfigIO)
+void TSessionConfig::saveConfig (void)
 {
-    setConfigPath(pConfigIO, _T("INTERFACE"));
-    pConfigIO.Write(_T("InterfaceType"),           a.InterfaceType);
-    pConfigIO.Write(_T("SupportFile"),             a.InterfaceFile);
-//  pConfigIO.Write(_T("PluginDLL"),        Config.sz80InterfacePluginDLL );
-    pConfigIO.Write(_T("ExtraRdDelay_us"),         a.ExtraRdDelay_us);
-    pConfigIO.Write(_T("ExtraClkDelay_us"),        a.ExtraClkDelay_us);
-    pConfigIO.Write(_T("SlowClockPulses"),         a.SlowInterface);
-    pConfigIO.Write(_T("IdleSupplyVoltage"),       a.IdleSupplyVoltage);
+    wxConfigBase &ConfigIO = getTheConfigIO();
 
-//  pConfigIO.Write(_T("PortAccessDriver"), Config.iWhichPortAccessDriver );
+    setConfigPath(_T("INTERFACE"));
+    ConfigIO.Write(_T("InterfaceType"),           a.InterfaceType);
+    ConfigIO.Write(_T("SupportFile"),             a.InterfaceFile);
+//  ConfigIO.Write(_T("PluginDLL"),        Config.sz80InterfacePluginDLL );
+    ConfigIO.Write(_T("ExtraRdDelay_us"),         a.ExtraRdDelay_us);
+    ConfigIO.Write(_T("ExtraClkDelay_us"),        a.ExtraClkDelay_us);
+    ConfigIO.Write(_T("SlowClockPulses"),         a.SlowInterface);
+    ConfigIO.Write(_T("IdleSupplyVoltage"),       a.IdleSupplyVoltage);
 
-//  pConfigIO.SetPath(_T("/PROGRAMMING_ALGORITHM"));
-  // pConfigIO.Write(_T("ProgModeSequence"), PIC_dev_param.iProgModeSequence );
+//  ConfigIO.Write(_T("PortAccessDriver"), Config.iWhichPortAccessDriver );
 
-    setConfigPath(pConfigIO, _T("COM84_INTERFACE"));
-    pConfigIO.Write(_T("ComPortName"),             a.ComPortName);
+//  ConfigIO.SetPath(_T("/PROGRAMMING_ALGORITHM"));
+  // ConfigIO.Write(_T("ProgModeSequence"), PIC_dev_param.iProgModeSequence );
 
-    setConfigPath(pConfigIO, _T("LPT_INTERFACE"));
-    pConfigIO.Write(_T("LptPortNumber"),           a.LptPortNr);
-    pConfigIO.Write(_T("UnusualIoAddress"),        a.LptIoAddress);
+    setConfigPath(_T("COM84_INTERFACE"));
+    ConfigIO.Write(_T("ComPortName"),             a.ComPortName);
 
-    setConfigPath(pConfigIO, _T("SESSION"));
-    pConfigIO.Write(_T("HexFileName"),             a.HexFileName);
+    setConfigPath(_T("LPT_INTERFACE"));
+    ConfigIO.Write(_T("LptPortNumber"),           a.LptPortNr);
+    ConfigIO.Write(_T("UnusualIoAddress"),        a.LptIoAddress);
 
-    setConfigPath(pConfigIO, _T("PROGRAMMER"));
-    pConfigIO.Write(_T("ProgramWhat"),             a.ProgramWhat);
-    pConfigIO.Write(_T("UseBulkErase"),            a.UseCompleteChipErase);
-    pConfigIO.Write(_T("Disconnect"),              a.DisconnectAfterProg);
-    pConfigIO.Write(_T("VerifyDifferentVoltages"), a.UseDifferentVoltages);
-    pConfigIO.Write(_T("DontCareForOsccal"),       a.DontCareForOsccal);
-    pConfigIO.Write(_T("DontCareForBGCalib"),      a.DontCareForBGCalib);
-    pConfigIO.Write(_T("ClearBufferBeforeLoading"),a.ClearBufBeforeLoad);
-    pConfigIO.Write(_T("NeedVddBeforeRaisingMCLR"),a.NeedPowerBeforeMCLR );
-    pConfigIO.Write(_T("VerboseMessages"),         a.VerboseMessages);
+    setConfigPath(_T("SESSION"));
+    ConfigIO.Write(_T("HexFileName"),             a.HexFileName);
 
-    setConfigPath(pConfigIO, _T("PIC")); // PIC-specific stuff ...
-    pConfigIO.Write(_T("PathToDevFiles"),          a.MplabDevDir);
-    pConfigIO.Write(_T("DeviceType"),              a.DeviceName);
-    pConfigIO.Write(_T("HasFlashMemory"),          a.HasFlashMemory);
-    pConfigIO.Write(_T("UnknownCodeSize"),   (long)a.UnknownCodeMemorySize);
-    pConfigIO.Write(_T("UnknownDataSize"),   (long)a.UnknownDataMemorySize);
+    setConfigPath(_T("PROGRAMMER"));
+    ConfigIO.Write(_T("ProgramWhat"),             a.ProgramWhat);
+    ConfigIO.Write(_T("UseBulkErase"),            a.UseCompleteChipErase);
+    ConfigIO.Write(_T("Disconnect"),              a.DisconnectAfterProg);
+    ConfigIO.Write(_T("VerifyDifferentVoltages"), a.UseDifferentVoltages);
+    ConfigIO.Write(_T("DontCareForOsccal"),       a.DontCareForOsccal);
+    ConfigIO.Write(_T("DontCareForBGCalib"),      a.DontCareForBGCalib);
+    ConfigIO.Write(_T("ClearBufferBeforeLoading"),a.ClearBufBeforeLoad);
+    ConfigIO.Write(_T("NeedVddBeforeRaisingMCLR"),a.NeedPowerBeforeMCLR );
+    ConfigIO.Write(_T("VerboseMessages"),         a.VerboseMessages);
+
+    setConfigPath(_T("PIC")); // PIC-specific stuff ...
+    ConfigIO.Write(_T("PathToDevFiles"),          a.MplabDevDir);
+    ConfigIO.Write(_T("DeviceType"),              a.DeviceName);
+    ConfigIO.Write(_T("HasFlashMemory"),          a.HasFlashMemory);
+    ConfigIO.Write(_T("UnknownCodeSize"),   (long)a.UnknownCodeMemorySize);
+    ConfigIO.Write(_T("UnknownDataSize"),   (long)a.UnknownDataMemorySize);
 
     aIsSaved = true;
 }
 
-void TSessionConfig::loadConfig(wxConfigBase &pConfigIO, wxSingleInstanceChecker *pLock)
+void TSessionConfig::loadConfig(wxSingleInstanceChecker *pLock)
 {
     if (pLock != NULL)
     {
@@ -622,82 +612,83 @@ void TSessionConfig::loadConfig(wxConfigBase &pConfigIO, wxSingleInstanceChecker
         aLock = pLock;
     }
 
-    wxString s;
+    wxString      s;
+    wxConfigBase &ConfigIO = getTheConfigIO();
 
     //-- Read Interface parameters
-    setConfigPath(pConfigIO, _T("INTERFACE"));
-    pConfigIO.Read(_T("InterfaceType"),      (int*)&a.InterfaceType, a.InterfaceType);
+    setConfigPath(_T("INTERFACE"));
+    ConfigIO.Read(_T("InterfaceType"),      (int*)&a.InterfaceType, a.InterfaceType);
     if ((a.InterfaceType >= PIC_INTF_TYPE_MAX) || (a.InterfaceType < PIC_INTF_TYPE_UNKNOWN))
         SetInterfaceType(PIC_INTF_TYPE_UNKNOWN);
     s.Empty();
-    pConfigIO.Read(_T("SupportFile"),              &s);
+    ConfigIO.Read(_T("SupportFile"),              &s);
     setStr((TCharDataPtr)&TData::InterfaceFile, s.c_str(), 256);
-    pConfigIO.Read(_T("ExtraRdDelay_us"),          &a.ExtraRdDelay_us, a.ExtraRdDelay_us);
-    pConfigIO.Read(_T("ExtraClkDelay_us"),         &a.ExtraClkDelay_us, a.ExtraClkDelay_us);
-    pConfigIO.Read(_T("SlowClockPulses"),          &a.SlowInterface, 0 );
-    pConfigIO.Read(_T("IdleSupplyVoltage"),        &a.IdleSupplyVoltage, 1/*norm*/ );
+    ConfigIO.Read(_T("ExtraRdDelay_us"),          &a.ExtraRdDelay_us, a.ExtraRdDelay_us);
+    ConfigIO.Read(_T("ExtraClkDelay_us"),         &a.ExtraClkDelay_us, a.ExtraClkDelay_us);
+    ConfigIO.Read(_T("SlowClockPulses"),          &a.SlowInterface, 0 );
+    ConfigIO.Read(_T("IdleSupplyVoltage"),        &a.IdleSupplyVoltage, 1/*norm*/ );
 
-//  pConfigIO.Read(_T("PluginDLL"),   &s, wxEmptyString);
+//  ConfigIO.Read(_T("PluginDLL"),   &s, wxEmptyString);
 //  _tcsncpy(Config.sz80InterfacePluginDLL  , s.c_str(), 80);
-//  pConfigIO.Read(_T("PortAccessDriver"), &Config.iWhichPortAccessDriver, CFG_PORTACCESS_SMPORT );
+//  ConfigIO.Read(_T("PortAccessDriver"), &Config.iWhichPortAccessDriver, CFG_PORTACCESS_SMPORT );
 
-//  pConfigIO.SetPath(_T("/PROGRAMMING_ALGORITHM"));
-//  pConfigIO.Read("ProgModeSequence", &PIC_dev_param.iProgModeSequence, 0); // 0=PROGMODE_VDD_THEN_VPP (usually except for DS41173b)
+//  ConfigIO.SetPath(_T("/PROGRAMMING_ALGORITHM"));
+//  ConfigIO.Read("ProgModeSequence", &PIC_dev_param.iProgModeSequence, 0); // 0=PROGMODE_VDD_THEN_VPP (usually except for DS41173b)
 
     //-- Read serial Interface parameters
-    setConfigPath(pConfigIO, _T("COM84_INTERFACE"));
-    pConfigIO.Read(_T("ComPortName"),              &s, a.ComPortName );
+    setConfigPath(_T("COM84_INTERFACE"));
+    ConfigIO.Read(_T("ComPortName"),              &s, a.ComPortName );
     setStr((TCharDataPtr)&TData::ComPortName, s.c_str(), 40) ;
 
     //-- Read parallel Interface parameters
-    setConfigPath(pConfigIO, _T("LPT_INTERFACE"));
-    pConfigIO.Read(_T("LptPortNumber"),            &a.LptPortNr, 1 );
-    pConfigIO.Read(_T("UnusualIoAddress"),         &a.LptIoAddress, 0 );
+    setConfigPath(_T("LPT_INTERFACE"));
+    ConfigIO.Read(_T("LptPortNumber"),            &a.LptPortNr, 1 );
+    ConfigIO.Read(_T("UnusualIoAddress"),         &a.LptIoAddress, 0 );
 
     //-- Read Current Hex filename
-    setConfigPath(pConfigIO, _T("SESSION"));
+    setConfigPath(_T("SESSION"));
     s.Empty();
-    pConfigIO.Read(_T("HexFileName"),              &s, a.HexFileName);
+    ConfigIO.Read(_T("HexFileName"),              &s, a.HexFileName);
     setStr((TCharDataPtr)&TData::HexFileName, s.c_str(), 255 ) ;
 
     //-- Read Programmer parameters
-    setConfigPath(pConfigIO, _T("PROGRAMMER"));
-    pConfigIO.Read(_T("ProgramWhat"),              &a.ProgramWhat, PIC_PROGRAM_ALL );
-    pConfigIO.Read(_T("UseBulkErase"),             &a.UseCompleteChipErase, 1 );
-    pConfigIO.Read(_T("Disconnect"),               &a.DisconnectAfterProg, 1 );
-    pConfigIO.Read(_T("VerifyDifferentVoltages"),  &a.UseDifferentVoltages, 1 );
-    pConfigIO.Read(_T("DontCareForOsccal"),        &a.DontCareForOsccal, 0 );
-    pConfigIO.Read(_T("DontCareForBGCalib"),       &a.DontCareForBGCalib, 0 );
-    pConfigIO.Read(_T("ClearBufferBeforeLoading"), &a.ClearBufBeforeLoad, 0 );
-    pConfigIO.Read(_T("NeedVddBeforeRaisingMCLR"), &a.NeedPowerBeforeMCLR, 1 );
+    setConfigPath(_T("PROGRAMMER"));
+    ConfigIO.Read(_T("ProgramWhat"),              &a.ProgramWhat, PIC_PROGRAM_ALL );
+    ConfigIO.Read(_T("UseBulkErase"),             &a.UseCompleteChipErase, 1 );
+    ConfigIO.Read(_T("Disconnect"),               &a.DisconnectAfterProg, 1 );
+    ConfigIO.Read(_T("VerifyDifferentVoltages"),  &a.UseDifferentVoltages, 1 );
+    ConfigIO.Read(_T("DontCareForOsccal"),        &a.DontCareForOsccal, 0 );
+    ConfigIO.Read(_T("DontCareForBGCalib"),       &a.DontCareForBGCalib, 0 );
+    ConfigIO.Read(_T("ClearBufferBeforeLoading"), &a.ClearBufBeforeLoad, 0 );
+    ConfigIO.Read(_T("NeedVddBeforeRaisingMCLR"), &a.NeedPowerBeforeMCLR, 1 );
 
-    pConfigIO.Read(_T("VerboseMessages"),          &a.VerboseMessages, 0 );
+    ConfigIO.Read(_T("VerboseMessages"),          &a.VerboseMessages, 0 );
 
     //-- Read Device parameters
-    setConfigPath(pConfigIO, _T("PIC")); // PIC-specific stuff ...
+    setConfigPath(_T("PIC")); // PIC-specific stuff ...
     s.Empty();
-    pConfigIO.Read(_T("PathToDevFiles"),           &s );
+    ConfigIO.Read(_T("PathToDevFiles"),           &s );
     setStr((TCharDataPtr)&TData::MplabDevDir, s.c_str(), 255); // path to MPLAB's 'DEVICE'-folder
 
-    // old:  Config.pic_device_type = pConfigIO.ReadInteger(section, "DeviceType",Config.pic_device_type );
+    // old:  Config.pic_device_type = ConfigIO.ReadInteger(section, "DeviceType",Config.pic_device_type );
     // Since the device TYPE NUMBERS keep changing and never had a useful meaning,
     //       a full PIC DEVICE NAME is saved as a STRING in the ini file since Nov. 2002 .
     s.Empty();
-    pConfigIO.Read(_T("DeviceType"),               &s );
+    ConfigIO.Read(_T("DeviceType"),               &s );
     setStr((TCharDataPtr)&TData::DeviceName, s.c_str(), 40);
-    pConfigIO.Read(_T("HasFlashMemory"),           &a.HasFlashMemory, a.HasFlashMemory);
+    ConfigIO.Read(_T("HasFlashMemory"),           &a.HasFlashMemory, a.HasFlashMemory);
 
-    pConfigIO.Read(_T("UnknownCodeSize"),   (long*)&a.UnknownCodeMemorySize, a.UnknownCodeMemorySize );
-    pConfigIO.Read(_T("UnknownDataSize"),   (long*)&a.UnknownDataMemorySize, a.UnknownDataMemorySize );
+    ConfigIO.Read(_T("UnknownCodeSize"),   (long*)&a.UnknownCodeMemorySize, a.UnknownCodeMemorySize );
+    ConfigIO.Read(_T("UnknownDataSize"),   (long*)&a.UnknownDataMemorySize, a.UnknownDataMemorySize );
 
     aIsSaved = true;
 }
 
 
-/**static*/ wxSingleInstanceChecker *TSessionConfig::getLockAndName (wxConfigBase &pConfigIO, int pSession, wxString &pSessionName)
+/**static*/ wxSingleInstanceChecker *TSessionConfig::getLockAndName (int pSession, wxString &pSessionName)
 {
     wxSingleInstanceChecker *Result = new wxSingleInstanceChecker(getExternSessionName(pSession));
-    if (! pConfigIO.Read(getSessionNumber(pSession), &pSessionName))
+    if (! getTheConfigIO().Read(getSessionNumber(pSession), &pSessionName))
     {
         delete Result;
         Result = NULL;
@@ -706,25 +697,25 @@ void TSessionConfig::loadConfig(wxConfigBase &pConfigIO, wxSingleInstanceChecker
 }
 
 
-/**static*/ bool TSessionConfig::loadCmdLineSession (wxConfigBase &pConfigIO)
+/**static*/ bool TSessionConfig::loadCmdLineSession (void)
 {
     int Session;
     wxString SessionName;
     wxSingleInstanceChecker *Lock;
 
-    pConfigIO.SetPath(theSessionNamePath);
+    getTheConfigIO().SetPath(theSessionNamePath);
 
     if (theSessionName.IsEmpty())
     {
         Session = 0;
-        Lock = getLockAndName(pConfigIO, 0, SessionName);
+        Lock = getLockAndName(0, SessionName);
     }
     else
     {
         //-- Try to find a session that matches the given name
         for (Session = sessionDEFAULT; Session < sessionMAX; ++Session)
         {
-            Lock = getLockAndName(pConfigIO, Session, SessionName);
+            Lock = getLockAndName(Session, SessionName);
 
             if (Lock != NULL)
             {
@@ -750,7 +741,7 @@ void TSessionConfig::loadConfig(wxConfigBase &pConfigIO, wxSingleInstanceChecker
         return false;  /// <<-- Anticipated return
     }
     //-- The config has been found load it in a Config Object
-    theConfig = new TSessionConfig(Session, SessionName, pConfigIO, Lock);
+    theConfig = new TSessionConfig(Session, SessionName, Lock);
 
     //-- Adjust the Device and/or Session name if they have been defined by command line parameters
     if (theDeviceNameIsGiven)

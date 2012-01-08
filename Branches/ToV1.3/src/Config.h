@@ -247,29 +247,29 @@ private:
 
 
     //-- The constructors are private because they are called only by Init
-    /**/ TSessionConfig (int pSession, const wxString &pSessionName, wxConfigBase &pConfigIO, wxSingleInstanceChecker *pLock);
-    /**/ TSessionConfig (wxConfigBase &pConfigIO);  //-- Ask operator which config to load (unless only one)
+    /**/ TSessionConfig (int pSession, const wxString &pSessionName, wxSingleInstanceChecker *pLock);
+    /**/ TSessionConfig (void);  //-- Ask operator which config to load (unless it exists only one)
 
     //-- Set the session and if pQuickSave save config of previous session (that must exist)
-    bool doSetSession      (wxConfigBase &pConfigIO, int pSession, bool pQuickSave);
+    bool doSetSession      (int pSession, bool pQuickSave);
     //-- Save the configuration of current session
-    void saveConfig        (wxConfigBase &pConfigIO);
+    void saveConfig        (void);
     //-- Load the current configuration
     //-- pLock is the session Lock that must have been acquired (or NULL if session is already current)
-    void loadConfig        (wxConfigBase &pConfigIO, wxSingleInstanceChecker *pLock);
+    void loadConfig        (wxSingleInstanceChecker *pLock);
     //-- Set config default values
     void setDefault        (void);
     //-- Set the configuration path on given heading of current session
-    void setConfigPath     (wxConfigBase &pConfigIO, const wxChar *pHeading);
+    void setConfigPath     (const wxChar *pHeading);
 
     //-- Return the Lock and the Name of the given session
     //-- If the session does not exist, the return Lock is NULL
     //-- the pConfigIO must be set on the Session Name Path before calling
-    static wxSingleInstanceChecker *getLockAndName (wxConfigBase &pConfigIO, int pSession, wxString &pSessionName);
+    static wxSingleInstanceChecker *getLockAndName (int pSession, wxString &pSessionName);
 
-    static int  getMostRecentFiles    (wxConfigBase &pConfigIO, wxArrayString &pFileTable);
+    static int  getMostRecentFiles    (wxArrayString &pFileTable);
     static bool loadCmdLineParameters (const wxApp *pApp);
-    static bool loadCmdLineSession    (wxConfigBase &pConfigIO);
+    static bool loadCmdLineSession    (void);
     static void printSessionNameError (const wxChar *pError);
 
 
