@@ -37,7 +37,7 @@
 #include "Config.h"    // permanently saved Config-structure
 #include <Appl.h>      // call the APPLication to display message strings
 //#include "YHF_MultiLang.h" // helper routines for multi-language support ( TE(str) )
-#include "YHF_tools/QFile.h"     // W.B.'s "Quick-File" module to access text files
+#include "QFile.h"     // W.B.'s "Quick-File" module to access text files
 
 #include "PIC_HEX.h"   // HEX-file import, export  and buffers
 #include "PIC_HW.h"   // Routines to drive the programmer hardware interface
