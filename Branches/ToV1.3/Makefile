@@ -146,7 +146,8 @@ ifeq ($(CODEBLOCKS),NO)
 WXCONFIG   =wx-config
 CXX        =`$(WXCONFIG) --cxx`
 MKDIR      =mkdir -p 
-BUILD      =$(CXX) `$(WXCONFIG) --libs` -static-libgcc
+BUILD      =$(CXX)
+LIBS       =`$(WXCONFIG) --libs` -shared-libgcc
 else
 BUILD      =codeblocks --build --target="Release Linux"
 endif
@@ -177,7 +178,7 @@ $(OBJ_DIR)/%.o: %.cpp $(SRC_VERSION) $(OBJ_DIR)
 
 $(PRJEXEC): $(OBJECTS)
 	$(MKDIR) $(PRJXEDIR)
-	$(BUILD) $(OBJECTS) -o $@
+	$(BUILD) $(OBJECTS) -o $@ $(LIBS)
 	
 .SECONDARY: $(OBJECTS)
 
