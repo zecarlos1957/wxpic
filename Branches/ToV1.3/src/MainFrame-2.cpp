@@ -1112,10 +1112,8 @@ bool MainFrame::LoadFileAndProgramPic(const wxChar *fn, bool program_too)
         wxFile ReadTest(fn);
         if (!ReadTest.IsOpened())
         {
-            _stprintf(sz255Temp, _("Can't open hexfile \"%s\"") , fn);
+            _stprintf(sz255Temp, _("Can't open hexfile \"%s\""), fn);
             APPL_ShowMsg( 0, sz255Temp );
-            //       if(ToolForm)
-            //        ToolForm->ShowMsg( sz255Temp, TWMSG_ERROR );
             return false;
         }
     }
@@ -1125,9 +1123,7 @@ bool MainFrame::LoadFileAndProgramPic(const wxChar *fn, bool program_too)
 
     /* Initialize buffers to remove old junk from program & data eeprom ? */
     if (TSessionConfig::GetClearBufBeforeLoad())
-    {
         PIC_HEX_ClearBuffers();
-    }
 
     ok  = ( PIC_HEX_LoadFile(fn)==0);  // 0 here means "NO error"
 
@@ -1292,6 +1288,7 @@ void MainFrame::updateSessionList(void)
         ++Session;
         ++SessionInfo;
     }
+    aSessionChoice->SetSize(aSessionChoice->GetBestSize());;
 }
 
 
