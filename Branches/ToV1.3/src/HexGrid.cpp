@@ -256,7 +256,6 @@ public:
                         {
                             RowData[i] = aBuffer[i];
                             (*(aGetAddress[Second])).SetModified(MemAddr+i);
-                            wxRect CellRect = aOwner->CellToRect(row, i);
                             Changed = true;
                         }
                     if (Changed)
