@@ -267,6 +267,9 @@ private:
     //-- the pConfigIO must be set on the Session Name Path before calling
     static wxSingleInstanceChecker *getLockAndName (int pSession, wxString &pSessionName);
 
+    //-- Return the lock of for the session if it's a new session (not yet used)
+    static wxSingleInstanceChecker *getLockIfNew   (int pSession);
+
     static int  getMostRecentFiles    (wxArrayString &pFileTable);
     static bool loadCmdLineParameters (const wxApp *pApp);
     static bool loadCmdLineSession    (void);

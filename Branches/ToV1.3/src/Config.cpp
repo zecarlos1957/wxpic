@@ -350,12 +350,11 @@ int TSessionConfig::SetSession (int pSession)
     {
         //-- A new session has been requested, search one free
         getTheConfigIO().SetPath(theSessionNamePath);
-        wxString SessionName;
         int Session;
         wxSingleInstanceChecker *Lock;
         for (Session = 1; Session < sessionMAX; ++Session)
         {
-            Lock = getLockAndName(Session, SessionName);
+            Lock = getLockIfNew(Session);
 
             if ((Lock != NULL) && (!Lock->IsAnotherRunning()))
                 break; //-- Found
@@ -697,6 +696,19 @@ void TSessionConfig::loadConfig(wxSingleInstanceChecker *pLock)
 }
 
 
+/**static*/ wxSingleInstanceChecker *TSessionConfig::getLockIfNew (int pSession)
+{
+    wxSingleInstanceChecker *Result = new wxSingleInstanceChecker(getExternSessionName(pSession));
+    wxString Unused;
+    if (getTheConfigIO().Read(getSessionNumber(pSession), &Unused))
+    {
+        delete Result;
+        Result = NULL;
+    }
+    return Result;
+}
+
+
 /**static*/ bool TSessionConfig::loadCmdLineSession (void)
 {
     int Session;
@@ -730,7 +742,7 @@ void TSessionConfig::loadConfig(wxSingleInstanceChecker *pLock)
     //-- If no session is locked this means that the requested session does not exist
     if (Lock == NULL)
     {
-        printSessionNameError(_("The session '%s' does exist"));
+        printSessionNameError(_("The session '%s' does not exist"));
         return false;  /// <<-- Anticipated return
     }
     //-- Can't work with a session already used by another instance
