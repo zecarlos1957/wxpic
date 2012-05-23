@@ -250,6 +250,8 @@ private:
     /**/ TSessionConfig (int pSession, const wxString &pSessionName, wxSingleInstanceChecker *pLock);
     /**/ TSessionConfig (void);  //-- Ask operator which config to load (unless it exists only one)
 
+    /**/ ~TSessionConfig();
+
     //-- Set the session and if pQuickSave save config of previous session (that must exist)
     bool doSetSession      (int pSession, bool pQuickSave);
     //-- Save the configuration of current session

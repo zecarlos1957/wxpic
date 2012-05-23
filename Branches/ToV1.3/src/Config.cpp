@@ -240,6 +240,9 @@ void TSessionConfig::SaveRectAndCloseSession (const wxRect &pRect, const wxColou
     ConfigIO.Write(_T("CodeMemFgColor"), pCodeFgCol.GetAsString(wxC2S_HTML_SYNTAX));
     ConfigIO.Write(_T("DataMemBgColor"), pDataBgCol.GetAsString(wxC2S_HTML_SYNTAX));
     ConfigIO.Write(_T("DataMemFgColor"), pDataFgCol.GetAsString(wxC2S_HTML_SYNTAX));
+
+    delete theConfig;
+    theConfig = NULL;
 }
 
 //----------------------------------------------------------------------
@@ -308,6 +311,14 @@ void TSessionConfig::SaveRectAndCloseSession (const wxRect &pRect, const wxColou
         break;
     }
 }
+
+
+/**/ TSessionConfig::~TSessionConfig()
+{
+    delete aLock;
+    aLock = NULL;
+}
+
 
 TSessionManager::TSessionInfo *TSessionConfig::GetSessionTab (void) const
 {

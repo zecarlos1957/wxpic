@@ -1449,6 +1449,8 @@ void MainFrame::OnClose(wxCloseEvent& event)
     if ( m_fMaySaveSettings )
         TSessionConfig::SaveCurConfig();
 
+    aTimer.Stop();  //-- Nothing may cause config access after SaveRectAndCloseSession so avoid the timer to run again
+
     TSessionConfig::SaveRectAndCloseSession(GetRect(),
                                             aCodeMemTab->aCodeMemGrid->GetDefaultCellTextColour(),
                                             aCodeMemTab->aCodeMemGrid->GetDefaultCellBackgroundColour(),
