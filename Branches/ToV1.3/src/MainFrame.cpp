@@ -531,7 +531,7 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
                         }
                     }
                     else
-                        APPL_ShowMsg( 0, _("Erasing FAILED !") );
+                        APPL_ShowMsg( 0, _("Erasing FAILED!") );
 
                     TSessionConfig::ClearEraseOption(); // done.
                 } // end if( WinPic_fCommandLineOption_Erase )
@@ -948,7 +948,7 @@ void MainFrame::onEraseMenuItemSelected(wxCommandEvent& event)
         }
         else
         {
-            pszMsg = _( "Erasing FAILED !" );
+            pszMsg = _( "Erasing FAILED!" );
             APPL_ShowMsg( 0, pszMsg );
         }
     }

@@ -617,11 +617,11 @@ bool TInterfacePanel::UnlockEditFieldForIOPortAddress(void)
     // Inform the user about the potentially disastrous effects
     // of entering the wrong I/O-address in the "I/O-port address" field !
     if ((wxMessageBox(
-                _( "Caution: Entering the wrong I/O-address here CAN KILL YOUR PC !\nDo you really want to continue ?" ) ,
+                _( "Caution: Entering the wrong I/O-address here CAN KILL YOUR PC !\nDo you really want to continue?" ) ,
                 _( "WxPic WARNING" ),
                 wxICON_EXCLAMATION | wxYES_NO | wxCANCEL ) != wxYES)
     || (wxMessageBox(
-                _( "Ok, but don't say we didn't warn you !" ) ,
+                _( "Ok, but don't say we didn't warn you!" ) ,
                 _( "WxPic WARNING" ),
                 wxICON_EXCLAMATION | wxOK | wxCANCEL ) != wxOK ))
     {
@@ -650,7 +650,7 @@ bool TInterfacePanel::TestTheInterface(void)
     // A little test to find out if an interface MAY be present:
     if (!PIC_HW_SetVpp(false) )
     {
-        MainFrame::AddTextToLog(_("Could not switch off Vpp !"));
+        MainFrame::AddTextToLog(_("Could not switch off Vpp!"));
         ++n_errors;
     }
 
@@ -664,7 +664,7 @@ bool TInterfacePanel::TestTheInterface(void)
 
     if (!PIC_HW_SetClockAndData( false/*clock_high*/, false/*data_high*/ ) )
     {
-        MainFrame::AddTextToLog( _("Could not switch Clock or Data !") );
+        MainFrame::AddTextToLog( _("Could not switch Clock or Data!") );
         ++n_errors;
     }
     UpdateInterfaceTestDisplay();
@@ -672,13 +672,13 @@ bool TInterfacePanel::TestTheInterface(void)
     PIC_HW_Delay_us(500);
     if ( PIC_HW_GetDataBit() != 0 )
     {
-        MainFrame::AddTextToLog(_("Failed read back of DATA line (LOW) !") );
+        MainFrame::AddTextToLog(_("Failed read back of DATA line (LOW)!") );
         ++n_errors;
     }
 
     if (!PIC_HW_SetClockAndData( false/*clock_high*/, true/*data_high*/ ) )
     {
-        MainFrame::AddTextToLog( _("Could not switch Clock or Data !") );
+        MainFrame::AddTextToLog( _("Could not switch Clock or Data!") );
         ++n_errors;
     }
 
@@ -688,7 +688,7 @@ bool TInterfacePanel::TestTheInterface(void)
     PIC_HW_Delay_us(20000);  // 10uF-cap may be discharged !
     if ( PIC_HW_GetDataBit() != 1 )
     {
-        MainFrame::AddTextToLog( _("Failed read back of DATA line (HIGH) !") );
+        MainFrame::AddTextToLog( _("Failed read back of DATA line (HIGH)!") );
         ++n_errors;
     }
 
@@ -702,7 +702,7 @@ bool TInterfacePanel::TestTheInterface(void)
     }
     else
     {
-        APPL_ShowMsg( 0, _("WARNING: Could not initialize programmer !") );
+        APPL_ShowMsg( 0, _("WARNING: Could not initialize programmer!") );
         aInterfaceTypeText->SetLabel(_("Error testing the Interface") );
         fResult = false;
     }

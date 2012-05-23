@@ -338,7 +338,7 @@ bool MainFrame::ProgramPic(void)
         }
         else
         {
-            pszMsg = _("Erasing FAILED !");
+            pszMsg = _("Erasing FAILED!");
             APPL_ShowMsg( 0, pszMsg );
         }
         Update();
@@ -402,7 +402,7 @@ bool MainFrame::ProgramPic(void)
                     Update();
                     if ( ! PIC_PRG_Erase( PIC_ERASE_CODE | PIC_SAVE_CALIBRATION ) ) // here in ProgramPic(), "CODE" only
                     {
-                        APPL_ShowMsg( 0, _("Erasing FAILED !") );
+                        APPL_ShowMsg( 0, _("Erasing FAILED!") );
                         ++error_count;
                     }
                 } // end if < not "program all" >
@@ -598,7 +598,7 @@ bool MainFrame::ProgramPic(void)
                 Update();
                 if ( PIC_PRG_Erase( PIC_ERASE_DATA ) ) // here in ProgramPic(), "DATA" only
                 {
-                    APPL_ShowMsg( 0, _("Erasing FAILED !") );
+                    APPL_ShowMsg( 0, _("Erasing FAILED!") );
                     ++error_count;
                 }
             } // end if < not "program all" >
