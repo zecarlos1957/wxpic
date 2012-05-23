@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WxPic V1.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-03 14:00+0200\n"
+"POT-Creation-Date: 2012-05-23 18:06+0200\n"
 "PO-Revision-Date: 2009-05-31 20:00+0200\n"
 "Last-Translator: pch @ laposte.net\n"
 "Language-Team: French\n"
@@ -22,166 +22,171 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 # P2
-#: src\Appl.cpp:55
+#: src\Appl.cpp:67
 #, c-format
 msgid "%02d:%02d:%02d.%02d %s"
 msgstr ""
 
 # P2
-#: src\Config.cpp:739
+#: src\Config.cpp:756
 #, c-format
-msgid "The session '%s' does exist"
+msgid "The session '%s' does not exist"
 msgstr "La session '%s' n'existe pas"
 
 # P2
-#: src\Config.cpp:746
+#: src\Config.cpp:763
 #, c-format
 msgid "The session %s is already used"
 msgstr "La session %s est déjà utilisée"
 
 # P1
-#: src\Config.cpp:816
+#: src\Config.cpp:833
 msgid "input or output HEX file"
 msgstr "Fichier HEX à lire ou écrire"
 
 # P1
-#: src\Config.cpp:817
+#: src\Config.cpp:834
 msgid "Program the device with content of the HEX file"
 msgstr "Programme le composant avec le contenu de la mémoire"
 
 # P1
-#: src\Config.cpp:818
+#: src\Config.cpp:835
 msgid "Erase the device"
 msgstr "Efface le composant"
 
 # P1
-#: src\Config.cpp:819
+#: src\Config.cpp:836
 msgid "Read the device and write the result to the HEX file"
 msgstr "Lit le device et écrit le résultat dans le fichier Hex"
 
 # P1
-#: src\Config.cpp:820
+#: src\Config.cpp:837
 msgid "Verify the device is programmed as defined in the HEX file"
 msgstr "Vérifie que le composant est programmé conformément au fichier HEX"
 
 # P1
-#: src\Config.cpp:821
+#: src\Config.cpp:838
 msgid ""
 "Quit WxPic at the end of the operations waiting specified delay in second"
 msgstr "Quitte WxPic à la fin des opérations après le délai indiqué en seconde"
 
 # P1
-#: src\Config.cpp:822
+#: src\Config.cpp:839
 msgid "Do not wait before starting the operations"
 msgstr "Ne pas attendre avant de démarrer les opérations"
 
 # P1
-#: src\Config.cpp:823
+#: src\Config.cpp:840
 msgid "Do not ask before writing the HEX file when it already exists"
 msgstr "Ecrase le fichier HEX sans demander de confirmation"
 
 # P1
-#: src\Config.cpp:824
+#: src\Config.cpp:841
 msgid "Define the model of the device (default=last used)"
 msgstr "Définit le type du composant (par défaut = dernier utilisé)"
 
 # P1
-#: src\Config.cpp:825
+#: src\Config.cpp:842
 msgid "Overrides the config word value read in the HEX file (4 Hexa digits)"
 msgstr ""
 "Ecrase le mot de configuration lu dans le fichier HEX (4 caractères Hexa)"
 
 # P1
-#: src\Config.cpp:826
+#: src\Config.cpp:843
 msgid "Defines the name of the session to use instead of the default session"
-msgstr "Définit le nom de la session à utiliser à la place de la session par défaut"
+msgstr ""
+"Définit le nom de la session à utiliser à la place de la session par défaut"
 
 # P2
-#: src\Config.cpp:851
+#: src\Config.cpp:868
 #, c-format
 msgid "Error: Invalid Config Word value = %s"
 msgstr "Erreur: Valeur du mot de config invalide = %s"
 
-#: src\Config.cpp:880
+# P1
+#: src\Config.cpp:897
 #, c-format
 msgid "Error: Invalid quit duration value = %ld (must be positive or 0)"
 msgstr ""
 "Erreur: Durée de terminaison invalide = %ld (doit être positive ou nulle)"
 
-#: src\Config.cpp:894
+# P1
+#: src\Config.cpp:911
 msgid "Info: Overwrite option ignored (no read option)"
-msgstr ""
+msgstr "Info: L'option Overwrite est ignorée en l'absence d'option Read"
 
-#: src\Config.cpp:902
+# P1
+#: src\Config.cpp:919
 msgid "Error: File name too long (max length=255)"
 msgstr "Erreur: Nom du fichier trop long (longeur max 255)"
 
-#: src\Config.cpp:913
+# P1
+#: src\Config.cpp:930
 msgid "Error: Missing HEX file name parameter"
 msgstr "Erreur: Le paramètre définissant le fichier HEX est manquant"
 
 # P1
-#: src\ConfigMemoryPanel.cpp:66
+#: src\ConfigMemoryPanel.cpp:82
 msgid "ID and Config Memory"
 msgstr "Ident. et Config."
 
 # P1
-#: src\ConfigMemoryPanel.cpp:70
+#: src\ConfigMemoryPanel.cpp:86
 msgid "Binary"
 msgstr "Binaire"
 
 # P1
-#: src\ConfigMemoryPanel.cpp:71
+#: src\ConfigMemoryPanel.cpp:87
 msgid "Hexadecimal"
 msgstr "Hexadécimal"
 
 # P1
-#: src\ConfigMemoryPanel.cpp:75
+#: src\ConfigMemoryPanel.cpp:91
 msgid "Show ALL locations"
 msgstr "Afficher Tout"
 
 # P1
-#: src\ConfigMemoryPanel.cpp:78
+#: src\ConfigMemoryPanel.cpp:94
 msgid "(* = reserved)"
 msgstr "(* = réservé)"
 
 # P1
-#: src\ConfigMemoryPanel.cpp:81
+#: src\ConfigMemoryPanel.cpp:97
 msgid "Device ID WORD:"
 msgstr "Ident Composant"
 
 # P9
-#: src\ConfigMemoryPanel.cpp:83
+#: src\ConfigMemoryPanel.cpp:99
 msgid "11 1111 1111 1111"
 msgstr ""
 
 # P2
-#: src\ConfigMemoryPanel.cpp:85
+#: src\ConfigMemoryPanel.cpp:101
 msgid "= <unknown ID>"
 msgstr ""
 
 # P1
-#: src\ConfigMemoryPanel.cpp:88 src\SessionDialog.cpp:99
+#: src\ConfigMemoryPanel.cpp:104 src\SessionDialog.cpp:99
 msgid "Help"
 msgstr "Aide"
 
 # P1
-#: src\ConfigMemoryPanel.cpp:107
+#: src\ConfigMemoryPanel.cpp:123
 msgid "Info"
 msgstr "Info"
 
 # P1
-#: src\ConfigMemoryPanel.cpp:108
+#: src\ConfigMemoryPanel.cpp:124
 msgid "Value"
 msgstr "Valeur"
 
 # P2
-#: src\ConfigMemoryPanel.cpp:246
+#: src\ConfigMemoryPanel.cpp:248
 msgid "<error>"
 msgstr ""
 
 # P3
-#: src\DataMemPanel.cpp:73
+#: src\DataMemPanel.cpp:75
 msgid "Updating DATA display.."
 msgstr ""
 
@@ -266,8 +271,8 @@ msgid " - unknown PIC type !"
 msgstr ""
 
 # P2
-#: src\DeviceCfgPanel.cpp:239 src\DeviceCfgPanel.cpp:256
-#: src\InterfacePanel.cpp:554
+#: src\DeviceCfgPanel.cpp:261 src\DeviceCfgPanel.cpp:278
+#: src\InterfacePanel.cpp:569
 msgid "n/a"
 msgstr ""
 
@@ -284,14 +289,14 @@ msgid "  oscillator_cal:%s"
 msgstr ""
 
 # P2
-#: src\DeviceCfgPanel.cpp:527
+#: src\DeviceCfgPanel.cpp:555
 msgid ""
 "Conflicting Vpp/Vdd switching sequence on the Options tab.\n"
 " Change the sequence to match the new device info ?"
 msgstr ""
 
 # P2
-#: src\DeviceCfgPanel.cpp:528
+#: src\DeviceCfgPanel.cpp:556
 msgid "Vpp/Vdd switching sequence possibly wrong"
 msgstr ""
 
@@ -364,346 +369,348 @@ msgid "Entries found"
 msgstr "Entrées trouvées"
 
 # P1
-#: src\InterfacePanel.cpp:59
+#: src\InterfacePanel.cpp:74
 msgid "(unknown)"
 msgstr "(inconnu)"
 
 # P3
-#: src\InterfacePanel.cpp:60
+#: src\InterfacePanel.cpp:75
 msgid "COM84 programmer for serial port"
 msgstr ""
 
 # P3
-#: src\InterfacePanel.cpp:61
+#: src\InterfacePanel.cpp:76
 msgid "JDM (2) for serial port"
 msgstr ""
 
 # P3
-#: src\InterfacePanel.cpp:62
+#: src\InterfacePanel.cpp:77
 msgid "PIP84 by SM6LKM, Data->PAPER (Pin12)"
 msgstr ""
 
 # P3
-#: src\InterfacePanel.cpp:63
+#: src\InterfacePanel.cpp:78
 msgid "PIP84 by SM6LKM, Data->ACK (Pin10)"
 msgstr ""
 
 # P3
-#: src\InterfacePanel.cpp:64
+#: src\InterfacePanel.cpp:79
 msgid "PIC Flash prog by SM6LKM (2002-10)"
 msgstr ""
 
 # P3
-#: src\InterfacePanel.cpp:65
+#: src\InterfacePanel.cpp:80
 msgid "Tait, 7406(inverter)+4066(switch)"
 msgstr ""
 
 # P3
-#: src\InterfacePanel.cpp:66
+#: src\InterfacePanel.cpp:81
 msgid "Tait, 7407(driver) + 4066(switch)"
 msgstr ""
 
 # P3
-#: src\InterfacePanel.cpp:67
+#: src\InterfacePanel.cpp:82
 msgid "Tait, 7406(inverter)+PNP transistor"
 msgstr ""
 
 # P3
-#: src\InterfacePanel.cpp:68
+#: src\InterfacePanel.cpp:83
 msgid "Tait, 7407(driver) + PNP transistor"
 msgstr ""
 
 # P3
-#: src\InterfacePanel.cpp:69
+#: src\InterfacePanel.cpp:84
 msgid "Microchip AN589"
 msgstr ""
 
 # P3
-#: src\InterfacePanel.cpp:70
+#: src\InterfacePanel.cpp:85
 msgid "NOPPP"
 msgstr ""
 
 # P1
-#: src\InterfacePanel.cpp:71
+#: src\InterfacePanel.cpp:86
 msgid "Custom, on LPT port, defined by FILE"
 msgstr "Port parallèle défini par fichier"
 
 # P1
-#: src\InterfacePanel.cpp:72
+#: src\InterfacePanel.cpp:87
 msgid "Custom, on COM port, defined by FILE"
 msgstr "Port série défini par fichier"
 
 # P1
-#: src\InterfacePanel.cpp:108
+#: src\InterfacePanel.cpp:123
 msgid "Initialize!"
 msgstr "Initialiser"
 
 # P1
-#: src\InterfacePanel.cpp:110
+#: src\InterfacePanel.cpp:125
 msgid "Help on LPT interfaces"
 msgstr "Aide sur interface LPT"
 
 # P1
-#: src\InterfacePanel.cpp:114
+#: src\InterfacePanel.cpp:129
 msgid "Interface Test"
 msgstr "Test de l'interface"
 
 # P1
-#: src\InterfacePanel.cpp:116
+#: src\InterfacePanel.cpp:131
 msgid "Vpp (+13V)"
 msgstr "Vpp (+13V)"
 
 # P1
-#: src\InterfacePanel.cpp:119
+#: src\InterfacePanel.cpp:134
 msgid "Vdd on/off"
 msgstr "Vdd (+5V)"
 
 # P1
-#: src\InterfacePanel.cpp:122
+#: src\InterfacePanel.cpp:137
 msgid "Clock"
 msgstr "Horloge"
 
 # P1
-#: src\InterfacePanel.cpp:125
+#: src\InterfacePanel.cpp:140
 msgid "Data to PIC"
 msgstr "Donnée envoyée"
 
 # P1
-#: src\InterfacePanel.cpp:129
+#: src\InterfacePanel.cpp:144
 msgid "Data In ="
 msgstr "Donnée lue ="
 
 # P9
-#: src\InterfacePanel.cpp:131 src\InterfacePanel.cpp:168
+#: src\InterfacePanel.cpp:146 src\InterfacePanel.cpp:183
 msgid "---"
 msgstr ""
 
 # P1
-#: src\InterfacePanel.cpp:134
+#: src\InterfacePanel.cpp:149
 msgid "Clock Enable"
 msgstr "Activation horloge"
 
 # P1
-#: src\InterfacePanel.cpp:137
+#: src\InterfacePanel.cpp:152
 msgid "Data Enable"
 msgstr "Activation donnée"
 
 # P1
-#: src\InterfacePanel.cpp:140
+#: src\InterfacePanel.cpp:155
 msgid "Pull MCLR low"
 msgstr "MCLR à Zéro"
 
 # P1
-#: src\InterfacePanel.cpp:143
+#: src\InterfacePanel.cpp:158
 msgid "Connect target"
 msgstr "Connection à la cible"
 
 # P1
-#: src\InterfacePanel.cpp:150
+#: src\InterfacePanel.cpp:165
 msgid "low"
 msgstr "Faible"
 
 # P1
-#: src\InterfacePanel.cpp:151
+#: src\InterfacePanel.cpp:166
 msgid "norm (5V)"
 msgstr "Normale"
 
 # P1
-#: src\InterfacePanel.cpp:152
+#: src\InterfacePanel.cpp:167
 msgid "high"
 msgstr "Elevée"
 
 # P1
-#: src\InterfacePanel.cpp:154
+#: src\InterfacePanel.cpp:169
 msgid "Vdd Select"
 msgstr "Sélection Vdd"
 
 # P1
-#: src\InterfacePanel.cpp:160
+#: src\InterfacePanel.cpp:175
 msgid "Red Led"
 msgstr "LED rouge"
 
 # P1
-#: src\InterfacePanel.cpp:165
+#: src\InterfacePanel.cpp:180
 msgid "Green Led"
 msgstr "LED verte"
 
 # P1
-#: src\InterfacePanel.cpp:172
+#: src\InterfacePanel.cpp:187
 msgid "Interface Type"
 msgstr "Type de l'interface"
 
 # P1
-#: src\InterfacePanel.cpp:176
+#: src\InterfacePanel.cpp:191
 msgid "on port"
 msgstr "Sur port"
 
 # P1
-#: src\InterfacePanel.cpp:181
+#: src\InterfacePanel.cpp:196
 msgid "Address:"
 msgstr "Adresse:"
 
 # P9
-#: src\InterfacePanel.cpp:184
+#: src\InterfacePanel.cpp:199
 msgid "03F8"
 msgstr ""
 
 # P1
-#: src\InterfacePanel.cpp:189
+#: src\InterfacePanel.cpp:204
 msgid "Custom interface definition file"
 msgstr "Fichier de définition de l'interface"
 
 # P1
-#: src\InterfacePanel.cpp:191
+#: src\InterfacePanel.cpp:206
 msgid "Select"
 msgstr "Sélectionner"
 
 # P1
-#: src\InterfacePanel.cpp:199
+#: src\InterfacePanel.cpp:214
 msgid "Extra delay before reading data line [us]"
 msgstr "Délai supplémentaire avant de lire la donnée [µs]"
 
 # P1
-#: src\InterfacePanel.cpp:205
+#: src\InterfacePanel.cpp:220
 msgid "Extra lengthening for clock pulses [us]"
 msgstr "Allongement supplémentaire de l'horloge [µs]"
 
 # P1
-#: src\InterfacePanel.cpp:210
+#: src\InterfacePanel.cpp:225
 msgid "slow mode (to check for timing problems)"
 msgstr "Mode Lent (débogage problème de temps)"
 
 # P1
-#: src\InterfacePanel.cpp:323
+#: src\InterfacePanel.cpp:336
 msgid "Interface Type ok."
 msgstr "L'interface est valide."
 
 # P1
-#: src\InterfacePanel.cpp:324
+#: src\InterfacePanel.cpp:337
 msgid "Interface error: "
 msgstr "Interface en erreur: "
 
 # P1
-#: src\InterfacePanel.cpp:353 src\OptionPanel.cpp:130
+#: src\InterfacePanel.cpp:368 src\OptionPanel.cpp:146
 msgid "None"
 msgstr "Aucun"
 
 # P1
-#: src\InterfacePanel.cpp:366
+#: src\InterfacePanel.cpp:381
 msgid "(at address)"
 msgstr "(A l'adresse)"
 
 # P1
-#: src\InterfacePanel.cpp:583
+#: src\InterfacePanel.cpp:598
 msgid "button up"
-msgstr ""
+msgstr "bouton haut"
 
 # P1
-#: src\InterfacePanel.cpp:584
+#: src\InterfacePanel.cpp:599
 msgid "button DOWN"
-msgstr ""
+msgstr "bouton BAS"
 
 # P1
-#: src\InterfacePanel.cpp:589
+#: src\InterfacePanel.cpp:604
 msgid "(no button)"
-msgstr ""
+msgstr "(pas de bouton)"
 
 # P2
-#: src\InterfacePanel.cpp:604
+#: src\InterfacePanel.cpp:620
 msgid ""
 "Caution: Entering the wrong I/O-address here CAN KILL YOUR PC !\n"
-"Do you really want to continue ?"
+"Do you really want to continue?"
 msgstr ""
+"ATTENTION: Entrer une mauvaise adresse de port peut PLANTER VOTRE PC !\n"
+"Voulez-vous vraiment continuer ?"
 
 # P2
-#: src\InterfacePanel.cpp:605 src\InterfacePanel.cpp:609
+#: src\InterfacePanel.cpp:621 src\InterfacePanel.cpp:625
 msgid "WxPic WARNING"
 msgstr ""
 
 # P2
-#: src\InterfacePanel.cpp:608
-msgid "Ok, but don't say we didn't warn you !"
-msgstr ""
+#: src\InterfacePanel.cpp:624
+msgid "Ok, but don't say we didn't warn you!"
+msgstr "OK, mais ne dites pas que vous n'étiez pas prévenu !"
 
 # P2
-#: src\InterfacePanel.cpp:637
-msgid "Could not switch off Vpp !"
-msgstr ""
+#: src\InterfacePanel.cpp:653
+msgid "Could not switch off Vpp!"
+msgstr "Impossible de commuter Vpp !"
 
 # P2
-#: src\InterfacePanel.cpp:651 src\InterfacePanel.cpp:665
-msgid "Could not switch Clock or Data !"
-msgstr ""
-
-# P2
-#: src\InterfacePanel.cpp:659
-msgid "Failed read back of DATA line (LOW) !"
-msgstr ""
+#: src\InterfacePanel.cpp:667 src\InterfacePanel.cpp:681
+msgid "Could not switch Clock or Data!"
+msgstr "Impossible de commuter l'horloge ou la donnée !"
 
 # P2
 #: src\InterfacePanel.cpp:675
-msgid "Failed read back of DATA line (HIGH) !"
-msgstr ""
+msgid "Failed read back of DATA line (LOW)!"
+msgstr "Ne parvient pas à lire une donnée 0"
+
+# P2
+#: src\InterfacePanel.cpp:691
+msgid "Failed read back of DATA line (HIGH)!"
+msgstr "Ne parvient pas à lire une donnée 1"
 
 # P1
-#: src\InterfacePanel.cpp:683
+#: src\InterfacePanel.cpp:699
 msgid "Initialising PIC-Programmer: Success."
 msgstr "Initialisation du Programmateur PIC réussie."
 
 # P1
-#: src\InterfacePanel.cpp:684
+#: src\InterfacePanel.cpp:700
 msgid "Interface tested, OK."
 msgstr "Interface testée: OK"
 
 # P1
-#: src\InterfacePanel.cpp:689
-msgid "WARNING: Could not initialize programmer !"
+#: src\InterfacePanel.cpp:705
+msgid "WARNING: Could not initialize programmer!"
 msgstr "ATTENTION: Le programmateur n'a pas pu être initialisé"
 
 # P1
-#: src\InterfacePanel.cpp:690
+#: src\InterfacePanel.cpp:706
 msgid "Error testing the Interface"
 msgstr "Erreur détectée lors du test de l'interface"
 
-# P2
-#: src\InterfacePanel.cpp:754
-msgid "PIC- Clock/Data failed"
-msgstr ""
-
-# P2
-#: src\InterfacePanel.cpp:758
-msgid "PIC- Vpp failed"
-msgstr ""
-
-# P2
-#: src\InterfacePanel.cpp:772
-msgid "PIC- Vdd failed"
-msgstr ""
-
-# P2
-#: src\InterfacePanel.cpp:786
-msgid "PIC- ClockEnable failed"
-msgstr ""
-
-# P2
-#: src\InterfacePanel.cpp:800
-msgid "PIC- DataEnable failed"
-msgstr ""
-
-# P2
-#: src\InterfacePanel.cpp:838
-msgid "PIC- Select Vdd failed"
-msgstr ""
-
 # P1
-#: src\InterfacePanel.cpp:942
+#: src\InterfacePanel.cpp:750
 msgid "Load custom interface definition file"
 msgstr "Fichier de définition de l'interface"
 
 # P1
-#: src\InterfacePanel.cpp:955
+#: src\InterfacePanel.cpp:763
 msgid "Xml files (*.xml)|*.xml"
 msgstr "Fichiers XML (*.xml)|*.xml"
+
+# P2
+#: src\InterfacePanel.cpp:826
+msgid "PIC- Clock/Data failed"
+msgstr ""
+
+# P2
+#: src\InterfacePanel.cpp:830
+msgid "PIC- Vpp failed"
+msgstr ""
+
+# P2
+#: src\InterfacePanel.cpp:844
+msgid "PIC- Vdd failed"
+msgstr ""
+
+# P2
+#: src\InterfacePanel.cpp:858
+msgid "PIC- ClockEnable failed"
+msgstr ""
+
+# P2
+#: src\InterfacePanel.cpp:872
+msgid "PIC- DataEnable failed"
+msgstr ""
+
+# P2
+#: src\InterfacePanel.cpp:910
+msgid "PIC- Select Vdd failed"
+msgstr ""
 
 # P2
 #: src\MainFrame-2.cpp:61
@@ -718,39 +725,39 @@ msgid "Wrong Device Name"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:100
+#: src\MainFrame-2.cpp:101
 msgid "< Too many messages in list, click \"CLEAR\" >"
 msgstr "< Trop de messages dans cette fenêtre, cliquez sur \"Effacer\" >"
 
 # P2
-#: src\MainFrame-2.cpp:172
+#: src\MainFrame-2.cpp:174
 #, c-format
 msgid "Testing: delay(500ms) took %.2f seconds, timer_freq=%.4f MHz ..."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:177
+#: src\MainFrame-2.cpp:179
 msgid " ok"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:182
+#: src\MainFrame-2.cpp:184
 msgid " ERROR !"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:222 src\MainFrame.cpp:1009 src\MainFrame.cpp:1061
+#: src\MainFrame-2.cpp:224 src\MainFrame.cpp:988 src\MainFrame.cpp:1040
 #: src\WinPicPr\PIC_PRG.cpp:3298
 msgid "Action aborted"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:232
+#: src\MainFrame-2.cpp:234
 msgid "PIC is erased - nothing to dump"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:261
+#: src\MainFrame-2.cpp:263
 #, c-format
 msgid ""
 "Problem: Buffer contains more CONFIG MEMORY WORDS (%d) than exist in device "
@@ -758,50 +765,50 @@ msgid ""
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:288
+#: src\MainFrame-2.cpp:290
 msgid "Programming..."
 msgstr "Programmation..."
 
 # P1
-#: src\MainFrame-2.cpp:327
+#: src\MainFrame-2.cpp:329
 msgid "Erasing (\"bulk\" or \"chip\") ..."
 msgstr "Effacement..."
 
 # P1
-#: src\MainFrame-2.cpp:332
+#: src\MainFrame-2.cpp:334
 msgid "Erased"
 msgstr "Effacement terminé"
 
 # P2
-#: src\MainFrame-2.cpp:339 src\MainFrame-2.cpp:405 src\MainFrame-2.cpp:601
-#: src\MainFrame.cpp:544 src\MainFrame.cpp:971
-msgid "Erasing FAILED !"
-msgstr ""
+#: src\MainFrame-2.cpp:341 src\MainFrame-2.cpp:405 src\MainFrame-2.cpp:601
+#: src\MainFrame.cpp:534 src\MainFrame.cpp:951
+msgid "Erasing FAILED!"
+msgstr "L'effacement a échoué !"
 
 # P2
-#: src\MainFrame-2.cpp:368
+#: src\MainFrame-2.cpp:370
 #, c-format
 msgid ""
 "Warning: Last program addr (0x%06lX) exceeds device memory size (0x%06lX) !"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:373
+#: src\MainFrame-2.cpp:375
 msgid "Select YES to ignore this problem and truncate the buffer contents."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:374
+#: src\MainFrame-2.cpp:376
 msgid "Problem encountered before CODE MEMORY programming"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:382
+#: src\MainFrame-2.cpp:384
 msgid "Skipped CODE MEMORY programming."
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:398
+#: src\MainFrame-2.cpp:400
 msgid "Erasing CODE"
 msgstr "Effacement du Code"
 
@@ -903,7 +910,7 @@ msgid "Suspicious: Buffer contains no data for the CONFIGURATION BITS."
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:764 src\MainFrame.cpp:880
+#: src\MainFrame-2.cpp:764 src\MainFrame.cpp:864
 msgid "Programming CONFIG-WORD"
 msgstr "Programmation du ou des mots de configuration"
 
@@ -970,12 +977,12 @@ msgid "ERROR: Verifying FAILED !"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:1074 src\MainFrame.cpp:310
+#: src\MainFrame-2.cpp:1074 src\MainFrame.cpp:308
 msgid "Load HEX File"
 msgstr "Charger un fichier HEX"
 
 # P1
-#: src\MainFrame-2.cpp:1079 src\MainFrame.cpp:1430
+#: src\MainFrame-2.cpp:1079 src\MainFrame.cpp:1374
 msgid "HEX files (INHX8M, *.hex)|*.hex"
 msgstr "Fichiers HEX (INHX8M, *.hex)|*.hex"
 
@@ -991,68 +998,68 @@ msgid "Can't open hexfile \"%s\""
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1137
+#: src\MainFrame-2.cpp:1133
 msgid "Results from LoadHex: "
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1139
+#: src\MainFrame-2.cpp:1135
 msgid "No Code "
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1141
+#: src\MainFrame-2.cpp:1137
 #, c-format
 msgid "LastProgAdr=0x%06lX "
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1144
+#: src\MainFrame-2.cpp:1140
 msgid "No Data"
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1146
+#: src\MainFrame-2.cpp:1142
 #, c-format
 msgid "LastDataAdr=0x%06lX"
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1148
+#: src\MainFrame-2.cpp:1144
 #, c-format
 msgid " (%s)"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1156
+#: src\MainFrame-2.cpp:1152
 #, c-format
 msgid "Info: Config word set to 0x%06lX from command line ."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1168
+#: src\MainFrame-2.cpp:1164
 msgid "Aborting LoadAndProgram because of error(s)"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1194
+#: src\MainFrame-2.cpp:1190
 msgid ""
 "Dump would overwrite existing file.\n"
 "  Erase old file ?"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1195
+#: src\MainFrame-2.cpp:1191
 msgid "Confirm overwrite"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1206
+#: src\MainFrame-2.cpp:1202
 msgid "Can't create hexfile"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1222
+#: src\MainFrame-2.cpp:1218
 msgid ".. stopped executing cmd-line"
 msgstr ""
 
@@ -1067,12 +1074,12 @@ msgid "WxPic Programmer"
 msgstr "WxPic"
 
 # P1
-#: src\MainFrame.cpp:153 src\MainFrame.cpp:1313
+#: src\MainFrame.cpp:153 src\MainFrame.cpp:1264
 msgid "Code"
 msgstr "Code"
 
 # P1
-#: src\MainFrame.cpp:154 src\MainFrame.cpp:1317
+#: src\MainFrame.cpp:154 src\MainFrame.cpp:1268
 msgid "Data"
 msgstr "Données"
 
@@ -1112,7 +1119,7 @@ msgid "Load && &Program Device..."
 msgstr "Charger et &Programmer..."
 
 # P1
-#: src\MainFrame.cpp:171 src\MainFrame.cpp:1245
+#: src\MainFrame.cpp:171 src\MainFrame.cpp:1201
 msgid "&Reload && Program"
 msgstr "&Recharger et Programmer"
 
@@ -1241,139 +1248,134 @@ msgstr "Démarrer Programmation d'un &Lot"
 msgid "Dump &Built-in device list to file..."
 msgstr "Sauvegarder la liste des composants prédéfinis..."
 
-# P2
-#: src\MainFrame.cpp:228
-msgid "Dump &Translation table to file..."
-msgstr ""
-
 # P1
-#: src\MainFrame.cpp:231
+#: src\MainFrame.cpp:229
 msgid "&Read dsPIC executive code memory"
 msgstr "Li&re le code exécutif du dsPIC"
 
 # P1
-#: src\MainFrame.cpp:233
+#: src\MainFrame.cpp:231
 msgid "&Program dsPIC executive code memory"
 msgstr "&Programmer le code exécutif du dsPIC"
 
 # P1
-#: src\MainFrame.cpp:235
+#: src\MainFrame.cpp:233
 msgid "S&pecial"
 msgstr "S&pécial"
 
 # P1
-#: src\MainFrame.cpp:236
+#: src\MainFrame.cpp:234
 msgid "Show Programmer &Options"
 msgstr "Afficher les &Options du programmateur"
 
 # P1
-#: src\MainFrame.cpp:238
+#: src\MainFrame.cpp:236
 msgid "&Tools"
 msgstr "Ou&Tils"
 
 # P1
-#: src\MainFrame.cpp:240
+#: src\MainFrame.cpp:238
 msgid "&Index\tCTRL-H"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:242
+#: src\MainFrame.cpp:240
 msgid "&Frequently Ask Questions"
 msgstr "Questions &Fréquentes"
 
 # P1
-#: src\MainFrame.cpp:245
+#: src\MainFrame.cpp:243
 msgid "&About..."
 msgstr "&A propos..."
 
 # P1
-#: src\MainFrame.cpp:247
+#: src\MainFrame.cpp:245
 msgid "&Help"
 msgstr "&Aide"
 
 # P1
-#: src\MainFrame.cpp:255
+#: src\MainFrame.cpp:253
 msgid "Select file"
 msgstr "Sélection de fichier"
 
 # P1
-#: src\MainFrame.cpp:310
+#: src\MainFrame.cpp:308
 msgid "Load HEX file"
 msgstr "Charger un fichier HEX"
 
 # P1
-#: src\MainFrame.cpp:310
+#: src\MainFrame.cpp:308
 msgid "Load an Hex file in the buffer and Program"
 msgstr "Charge un fichier Hex dans la mémoire et Programme le composant"
 
 # P1
-#: src\MainFrame.cpp:311
+#: src\MainFrame.cpp:309
 msgid "Dump buffer to HEX file"
 msgstr "Ecrire la mémoire dans un fichier HEX"
 
 # P1
-#: src\MainFrame.cpp:311
+#: src\MainFrame.cpp:309
 msgid "Save the Buffer to an Hex file"
 msgstr "Sauvegarde la mémoire en fichier HEX"
 
 # P1
-#: src\MainFrame.cpp:313
+#: src\MainFrame.cpp:311
 msgid "Reload and Program Device"
 msgstr "Recharger et Programmer le composant"
 
 # P1
-#: src\MainFrame.cpp:313
+#: src\MainFrame.cpp:311
 msgid "Reload the Buffer from the last used Hex file and Program the Device"
 msgstr "Recharge le dernier fichier HEX et programme le composant"
 
 # P1
-#: src\MainFrame.cpp:314
+#: src\MainFrame.cpp:312
 msgid "Program Device"
 msgstr "Programmer le composant"
 
 # P1
-#: src\MainFrame.cpp:314
+#: src\MainFrame.cpp:312
 msgid "Program Device with the Buffer Content"
 msgstr "Programme le composant avec le contenu de la mémoire"
 
 # P1
-#: src\MainFrame.cpp:315
+#: src\MainFrame.cpp:313
 msgid "Verify Program"
 msgstr "Vérifier la programmation"
 
 # P1
-#: src\MainFrame.cpp:315
+#: src\MainFrame.cpp:313
 msgid "Verify that the device program is conform to the loaded buffers"
 msgstr ""
 "Vérifie que le programme du composant est identique au contenu de la mémoire"
 
 # P1
-#: src\MainFrame.cpp:316
+#: src\MainFrame.cpp:314
 msgid "Read Program"
 msgstr "Lire le Programme"
 
 # P1
-#: src\MainFrame.cpp:316
+#: src\MainFrame.cpp:314
 msgid "Store in the buffers the program read in the device"
 msgstr "Lit le programme du composant et le charge dans la mémoire"
 
 # P2
-#: src\MainFrame.cpp:364
+#: src\MainFrame.cpp:360
 msgid "Please re-install the Program"
 msgstr "Merci de ré-installer le programme"
 
 # P2
-#: src\MainFrame.cpp:365
+#: src\MainFrame.cpp:361
 msgid "Installation Error"
 msgstr "Erreur d'installation"
 
 # P1
-#: src\MainFrame.cpp:377
+#: src\MainFrame.cpp:373
 msgid "WxPic is PIC Microcontroller Programmer"
 msgstr "WxPic est in Programateur de micro-controlleur PIC"
 
 # P2
-#: src\MainFrame.cpp:383
+#: src\MainFrame.cpp:379
 #, c-format
 msgid ""
 "Unknown Version\n"
@@ -1383,57 +1385,57 @@ msgstr ""
 "Compilée le %s"
 
 # P2
-#: src\MainFrame.cpp:450
+#: src\MainFrame.cpp:440
 msgid "Error in PIC_HW_Init: "
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:456
+#: src\MainFrame.cpp:446
 msgid "Warning in PIC_HW_Init: "
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:504
+#: src\MainFrame.cpp:494
 #, c-format
 msgid "Command execution (%s) continues in %d seconds ... ESC to stop"
 msgstr ""
 "L'exécution des commandes continue dans %d seconds ... ESC pour interrompre"
 
 # P1
-#: src\MainFrame.cpp:527 src\MainFrame.cpp:949
+#: src\MainFrame.cpp:517 src\MainFrame.cpp:931
 msgid "Erasing ..."
 msgstr "Effacement..."
 
 # P1
-#: src\MainFrame.cpp:534 src\MainFrame.cpp:960
+#: src\MainFrame.cpp:524 src\MainFrame.cpp:940
 msgid "Device has been erased. PROGRAM TO RESTORE CALIB BITS !!"
 msgstr ""
 "The composant a été effacé. PROGRAMMEZ POUR RE-ECRIRE LES MOTS DE CALIBRATION"
 
 # P1
-#: src\MainFrame.cpp:539 src\MainFrame.cpp:955
+#: src\MainFrame.cpp:529 src\MainFrame.cpp:936
 msgid "Device has been erased."
 msgstr "Le composant a été effacé"
 
 # P2
-#: src\MainFrame.cpp:557
+#: src\MainFrame.cpp:547
 #, c-format
 msgid "Loaded file \"%s\" through command line ."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:587
+#: src\MainFrame.cpp:577
 #, c-format
 msgid "Quitting in %d seconds ... ESC to stop"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:610
+#: src\MainFrame.cpp:600
 msgid "Command line finished"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:678
+#: src\MainFrame.cpp:667
 msgid ""
 "BATCH PROG: Insert device or connect ICSP, then press adapter button or "
 "press Enter or OK in this log Window"
@@ -1442,22 +1444,22 @@ msgstr ""
 "l'adaptateur ou sur Entrée dans cette fenêtre journal"
 
 # P1
-#: src\MainFrame.cpp:701
+#: src\MainFrame.cpp:690
 msgid "BATCH PROG: please wait.."
 msgstr "LOT : En cours..."
 
 # P1
-#: src\MainFrame.cpp:709
+#: src\MainFrame.cpp:698
 msgid "BATCH PROG: terminated batch mode."
 msgstr "LOT : Lot terminé."
 
 # P2
-#: src\MainFrame.cpp:733
+#: src\MainFrame.cpp:722
 msgid "WARNING ! Windows fooled around with the LPT port bits !"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:857
+#: src\MainFrame.cpp:841
 #, c-format
 msgid ""
 "The Bandgap calibration bits in config register (0x%04X) do not match the "
@@ -1471,48 +1473,48 @@ msgstr ""
 "sinon la calibration sera écrasée par la valeur définie en mémoire (Non)"
 
 # P2
-#: src\MainFrame.cpp:860
+#: src\MainFrame.cpp:844
 msgid "Overwrite Bandgap calibration "
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:864
+#: src\MainFrame.cpp:848
 msgid "Programming CONFIG-WORD cancelled."
 msgstr "Programmation du mot de configuration annulée."
 
 # P2
-#: src\MainFrame.cpp:874
+#: src\MainFrame.cpp:858
 #, c-format
 msgid "Old Bandgap 0x%04X will be overwritten with 0x%04X"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:892
+#: src\MainFrame.cpp:876
 msgid "Programming CONFIG-WORD done."
 msgstr "Programmation du mot de configuration effectuée."
 
 # P2
-#: src\MainFrame.cpp:896
+#: src\MainFrame.cpp:880
 msgid "Programming CONFIG-WORD FAILED."
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:909
+#: src\MainFrame.cpp:892
 msgid "Programming ID-locations"
 msgstr "Programmation de l'identification"
 
 # P1
-#: src\MainFrame.cpp:918
+#: src\MainFrame.cpp:901
 msgid "Programming ID-LOCATIONS done."
 msgstr "Programmation de l'identification effectuée."
 
 # P2
-#: src\MainFrame.cpp:922
+#: src\MainFrame.cpp:905
 msgid "Programming ID-LOCATIONS FAILED."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:944
+#: src\MainFrame.cpp:926
 msgid ""
 "The BULK ERASE option is disabled\n"
 "   in the programmer options.\n"
@@ -1520,118 +1522,128 @@ msgid ""
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:945
+#: src\MainFrame.cpp:927
 msgid "Confirm ERASE ALL"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:978
+#: src\MainFrame.cpp:957
 msgid "Must not erase non-FLASH device, check \"Device, Config\" !"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1016
+#: src\MainFrame.cpp:995
 msgid "Reading PIC FAILED (maybe blank)."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1023
+#: src\MainFrame.cpp:1002
 #, c-format
 msgid "Reading done, Conflict: selected device = %hs,  read = %hs"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1028
+#: src\MainFrame.cpp:1007
 msgid "Reading PIC ok."
 msgstr "Lecture du Composant effectuée."
 
 # P2
-#: src\MainFrame.cpp:1041
+#: src\MainFrame.cpp:1020
 msgid "Blank Checking ..."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1052
+#: src\MainFrame.cpp:1031
 msgid "Device is NOT blank."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1056
+#: src\MainFrame.cpp:1035
 msgid "Device is blank."
 msgstr ""
 
+# P1
+#: src\MainFrame.cpp:1133
+msgid "Save Device List"
+msgstr "Sauver la liste des Composants"
+
+# P1
+#: src\MainFrame.cpp:1134
+msgid "txt files (TXT, *.txt)|*.txt"
+msgstr "Fichiers texte (TXT, *.txt)|*.txt"
+
 # P2
-#: src\MainFrame.cpp:1215
+#: src\MainFrame.cpp:1172
 msgid "CODE"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1221
+#: src\MainFrame.cpp:1178
 msgid "DATA"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1227
+#: src\MainFrame.cpp:1184
 msgid "CONFIG"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1241
+#: src\MainFrame.cpp:1197
 msgid "Load && &Program Device"
 msgstr "Charger et &Programmer"
 
 # P1
-#: src\MainFrame.cpp:1252
+#: src\MainFrame.cpp:1208
 msgid "Program"
 msgstr "Programmer"
 
 # P1
-#: src\MainFrame.cpp:1315
+#: src\MainFrame.cpp:1266
 msgid "Executive Code"
 msgstr "Code Exécutif"
 
 # P1
-#: src\MainFrame.cpp:1319
+#: src\MainFrame.cpp:1270
 msgid "Configuration"
 msgstr "Configuration"
 
 # P1
-#: src\MainFrame.cpp:1324
+#: src\MainFrame.cpp:1275
 msgid "Apply changes in the following editors?\n"
 msgstr "Appliquer les modifications faites dans les éditeurs suivants ?\n"
 
 # P1
-#: src\MainFrame.cpp:1325
+#: src\MainFrame.cpp:1276
 msgid ", "
 msgstr ", "
 
 # P2
-#: src\MainFrame.cpp:1408
+#: src\MainFrame.cpp:1353
 msgid "ESC: Command-line driven operation cancelled !"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1429
+#: src\MainFrame.cpp:1373
 msgid "Save Hex File"
 msgstr "Sauvegarder en fichier Hex"
 
 # P2
-#: src\MainFrame.cpp:1500
+#: src\MainFrame.cpp:1392
 msgid "Reading Executive Code Memory ..."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1510
+#: src\MainFrame.cpp:1402
 msgid "Reading Executive Code Memory ok."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1515
+#: src\MainFrame.cpp:1407
 msgid "Reading Executive Code Memory failed."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1594
+#: src\MainFrame.cpp:1438
 msgid ""
 "Some CALIBRATION BITS have been erased\n"
 "but not written back to the PIC yet.\n"
@@ -1639,12 +1651,12 @@ msgid ""
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1596
+#: src\MainFrame.cpp:1440
 msgid "*** PIC Programmer Warning ***"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1632
+#: src\MainFrame.cpp:1478
 #, c-format
 msgid ""
 "The session %s is not available. Use session manager dialog for more "
@@ -1654,7 +1666,7 @@ msgstr ""
 "pour plus d'information."
 
 # P1
-#: src\MessagePanel.cpp:26
+#: src\MessagePanel.cpp:41
 msgid "Clear"
 msgstr "Effacer"
 
@@ -1764,7 +1776,7 @@ msgid "Test"
 msgstr ""
 
 # P1
-#: src\OptionPanel.cpp:143 src\OptionPanel.cpp:528
+#: src\OptionPanel.cpp:143 src\OptionPanel.cpp:542
 msgid "Start test"
 msgstr "Démarrer le test"
 
@@ -1827,42 +1839,42 @@ msgid " %lgns"
 msgstr ""
 
 # P3 -- This message is displayed in the old language so translating it is not very useful
-#: src\OptionPanel.cpp:404
+#: src\OptionPanel.cpp:400
 msgid "WxPic must be restarted to take into account the new language selection"
 msgstr ""
 
 # P3 -- This message is displayed in the old language so translating it is not very useful
-#: src\OptionPanel.cpp:404
+#: src\OptionPanel.cpp:400
 msgid "WxPic restart needed to apply language"
 msgstr ""
 
 # P2
-#: src\OptionPanel.cpp:415
+#: src\OptionPanel.cpp:411
 msgid "Code Memory Text"
 msgstr ""
 
 # P2
-#: src\OptionPanel.cpp:420
+#: src\OptionPanel.cpp:416
 msgid "Code Memory Background"
 msgstr ""
 
 # P2
-#: src\OptionPanel.cpp:435
+#: src\OptionPanel.cpp:431
 msgid "Data Memory Text"
 msgstr ""
 
 # P2
-#: src\OptionPanel.cpp:441
+#: src\OptionPanel.cpp:437
 msgid "Data Memory Background"
 msgstr ""
 
 # P2
-#: src\OptionPanel.cpp:457
+#: src\OptionPanel.cpp:453
 msgid "Select MPLAB 'Device' folder"
 msgstr ""
 
 # P2
-#: src\OptionPanel.cpp:508
+#: src\OptionPanel.cpp:522
 msgid ""
 "Remove the PIC from the socket,\n"
 " connect interface and power supply.\n"
@@ -1870,12 +1882,12 @@ msgid ""
 msgstr ""
 
 # P2
-#: src\OptionPanel.cpp:509
+#: src\OptionPanel.cpp:523
 msgid "Interface Speed Test"
 msgstr ""
 
 # P2
-#: src\OptionPanel.cpp:524
+#: src\OptionPanel.cpp:538
 msgid "Stop test"
 msgstr ""
 
@@ -2623,19 +2635,19 @@ msgid "Couldn't find \"%s\", please borrow/copy from MPLAB !"
 msgstr ""
 
 # P2
-#: src\WinPicPr\Devices.cpp:4016
+#: src\WinPicPr\Devices.cpp:4032
 #, c-format
 msgid "Info: Loading definitions for \"%hs\" from %s ."
 msgstr ""
 
 # P2
-#: src\WinPicPr\Devices.cpp:4039
+#: src\WinPicPr\Devices.cpp:4055
 #, c-format
 msgid "Error in built-in PIC device list, \"%hs\"."
 msgstr ""
 
 # P2
-#: src\WinPicPr\Devices.cpp:4173
+#: src\WinPicPr\Devices.cpp:4193
 #, c-format
 msgid "Device list dumped to \"%s\""
 msgstr ""
@@ -3142,4 +3154,3 @@ msgstr ""
 #, c-format
 msgid "  Config memory %lX is not blank."
 msgstr ""
-
