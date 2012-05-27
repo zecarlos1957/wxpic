@@ -131,8 +131,10 @@ TSTMAPS   =$(subst $(HELPDIR),$(PRJDIR)/$(TSTDATA)/$(TGTHELP),$(MAPFILES))
 TGDOCFILES=$(subst $(DOCDIR),$(PREFIX)/$(TGTDATA),$(DOC))
 TSDOCFILES=$(subst $(DOCDIR),$(PRJDIR)/$(TSTDATA),$(DOC))
 # Tar Version
-TAR_DATE=$(shell cat $(TAR_VERSION))
-TAR_FILENAME=$(EXECUTABLE)-$(TAR_DATE)-bin
+KNOWN_OS  =centos Ubuntu
+OS_VERSION=$(shell uname -rv)
+OS_NAME   =$(strip $(foreach OS, $(KNOWN_OS), $(findstring $(OS), $(OS_VERSION))))
+TAR_MAKEFILE=TarMakefile.depend
 
 
 #############################################
@@ -154,8 +156,11 @@ endif
 CPPC       =$(CXX) `$(WXCONFIG) --cxxflags` -O2 -Isrc -DUSE_SVN_VERSION
 RM         =rm -f
 RMDIR      =rm -f -R
-XSLT_MAP   =saxonb-xslt -ext:on -xsl:Map2Redirect.xslt
+SAXON_JAR  =$(firstword $(strip $(wildcard /usr/share/java/saxonb.jar) $(wildcard /usr/share/java/saxon9he.jar)))
+XSLT_PROC  =java -classpath $(SAXON_JAR) net.sf.saxon.Transform  -ext:on
 XSLT_IN    =-s:
+XSLT_SHEET =-xsl:
+XSLT_MAP   =$(XSLT_PROC) $(XSLT_SHEET)Map2Redirect.xslt
 
 
 #############################################
@@ -205,7 +210,7 @@ $(SVN_STATUS): $(SOURCES) $(LANSRC) $(SRCPIXMAP) $(SRCDESKTOP) $(HELPFILES) $(MA
 	svn status --xml -v . > $@
 
 $(ALL_VERSION): $(SVN_STATUS) $(SVN_INFO)
-	saxonb-xslt -ext:on -xsl:SVN2Version.xslt -s:$(SVN_INFO) \
+	$(XSLT_PROC) $(XSLT_SHEET)SVN2Version.xslt $(XSLT_IN)$(SVN_INFO) \
 					STATUS_FILE=$(CURDIR)/$(SVN_STATUS) \
 					MANIFEST_FILE=$(CURDIR)/$(MNF_SOURCE) \
 					MANIFEST_OUTPUT=$(CURDIR)/$(MNF_VERSION) \
@@ -256,15 +261,21 @@ uninstall:
 ## TAR rules
 ##################
 
-tar: $(VERSION_SCRIPT) $(TAR_FILENAME).tar.gz
+include $(TAR_MAKEFILE)
 
-$(TAR_FILENAME).tar.gz: $(PREFIX)/$(BINDIR)/$(TGT_EXECUTABLE) $(TGTFILES) $(TGTHFILES) $(TGTMAPS) $(TGDOCFILES) $(TGLANGFILE) $(TGTPIXMAP) $(TGTDESKTOP) $(TAR_VERSION)
-	tar -cf $(TAR_FILENAME).tar --directory=$(PREFIX) $(BINDIR)/$(TGT_EXECUTABLE) $(TGTDATA) \
-					$(subst $(PREFIX)/,,$(TGLANGFILE)) \
-					$(DATADIR)/pixmaps/$(TGT_EXECUTABLE).png \
-					$(DATADIR)/applications/$(TGT_EXECUTABLE).desktop
-	$(RM) $(TAR_FILENAME).tar.gz
-	gzip $(TAR_FILENAME).tar
+$(TAR_MAKEFILE): $(TAR_VERSION) Makefile
+	@echo "Creating $(TAR_MAKEFILE) with TAR version=`cat $(TAR_VERSION)`"
+	@echo "TAR_DATE=\$$(shell cat $(TAR_VERSION))" > $(TAR_MAKEFILE)
+	@echo "TAR_FILENAME=$(EXECUTABLE)-$(OS_NAME)-\$$(TAR_DATE)-bin" >> $(TAR_MAKEFILE)
+	@echo "tar: \$$(VERSION_SCRIPT) \$$(TAR_FILENAME).tar.gz" >> $(TAR_MAKEFILE)
+	@echo " " >> $(TAR_MAKEFILE)
+	@echo "\$$(TAR_FILENAME).tar.gz: $(TAR_MAKEFILE) \$$(PREFIX)/\$$(BINDIR)/\$$(TGT_EXECUTABLE) \$$(TGTFILES) \$$(TGTHFILES) \$$(TGTMAPS) \$$(TGDOCFILES) \$$(TGLANGFILE) \$$(TGTPIXMAP) \$$(TGTDESKTOP) \$$(TAR_VERSION)" >> $(TAR_MAKEFILE)
+	@printf "\t tar -cf \$$(TAR_FILENAME).tar --directory=$(PREFIX) $(BINDIR)/$(TGT_EXECUTABLE) $(TGTDATA) \\" >> $(TAR_MAKEFILE)
+	@printf "\n\t \$$(subst \$$(PREFIX)/,,\$$(TGLANGFILE)) \\" >> $(TAR_MAKEFILE)
+	@printf "\n\t $(DATADIR)/pixmaps/$(TGT_EXECUTABLE).png \\" >> $(TAR_MAKEFILE)
+	@printf "\n\t $(DATADIR)/applications/$(TGT_EXECUTABLE).desktop" >> $(TAR_MAKEFILE)
+	@printf "\n\t $(RM) \$$(TAR_FILENAME).tar.gz" >> $(TAR_MAKEFILE)
+	@printf "\n\t gzip \$$(TAR_FILENAME).tar\n" >> $(TAR_MAKEFILE)
 
 	
 # TEST rules
