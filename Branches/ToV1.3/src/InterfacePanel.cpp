@@ -494,8 +494,8 @@ void TInterfacePanel::changeIoPortAddress (void)
     //-- Render the IO Address status
     updateIoAddressDisplay(IoAddressUsage);
     //-- Take the change into account for interface access
-    TestTheInterface();
     UpdateInterfaceType();
+    TestTheInterface();
 }
 
 //---------------------------------------------------------------------------
@@ -740,8 +740,8 @@ void TInterfacePanel::updateCustomDefFile (void)
     if (MainFrame::TheMainFrame->m_Updating)
         return;
     TSessionConfig::SetInterfaceFile(aCustomDefFileText->GetValue());
-    TestTheInterface();
     UpdateInterfaceType();
+    TestTheInterface();
 }
 
 
@@ -950,8 +950,8 @@ void TInterfacePanel::onInterfaceTypeChoiceSelect(wxCommandEvent& event)
     if (isCustomInterface(InterfaceType) && (TSessionConfig::GetInterfaceFile()[0]==_T('\0')))
         getCustInterfDefFile();
 
-    TestTheInterface();
     UpdateInterfaceType();
+    TestTheInterface();
 //    MainFrame::TheMainFrame->aOptionTab->UpdateOptionsDisplay();
 }
 //---------------------------------------------------------------------------
@@ -966,8 +966,8 @@ void TInterfacePanel::onInterfacePortChoiceSelect(wxCommandEvent& event)
         return;
 
     copyPortSelectionToConfig();
-    TestTheInterface();
     UpdateInterfaceType();
+    TestTheInterface();
 }
 //---------------------------------------------------------------------------
 
@@ -1008,8 +1008,8 @@ void TInterfacePanel::onCustomInterfSelectButtonClick(wxCommandEvent& event)
 
     if (getCustInterfDefFile())
     {
-        TestTheInterface();
         UpdateInterfaceType();
+        TestTheInterface();
     }
 
     if ( MainFrame::TheMainFrame->m_Updating )
