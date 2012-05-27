@@ -1087,17 +1087,22 @@ void LPT_ClosePicPort(void)
 {
     if(LPT_pfileLptPort != NULL)
     {
+        //-- Release the port reservation
         fclose(LPT_pfileLptPort);
         LPT_pfileLptPort = NULL;
         if (TSessionConfig::GetVerboseMessages())
             APPL_ShowMsg( 0, _("LPT port released") );
     }
+    if (PicHw_fLptPortOpened)
+    {
 #ifdef __WXMSW__
-    DeinitOpenLibSys(&m_hOpenLibSys);
-    if (TSessionConfig::GetVerboseMessages())
-        APPL_ShowMsg( 0, _("WinRing0 de-initialized") );
+        //-- Release the port driver
+        DeinitOpenLibSys(&m_hOpenLibSys);
+        if (TSessionConfig::GetVerboseMessages())
+            APPL_ShowMsg( 0, _("WinRing0 de-initialized") );
 #endif
-    PicHw_fLptPortOpened = false;
+        PicHw_fLptPortOpened = false;
+    }
 } // end LPT_ClosePicPort()
 
 
