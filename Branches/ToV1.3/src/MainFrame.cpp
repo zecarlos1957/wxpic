@@ -719,7 +719,11 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
         {
             if (siLptFooledCount<10)
             {
+#ifdef __WXMSW__
                 APPL_ShowMsg( 0, _("WARNING ! Windows fooled around with the LPT port bits !") );
+#else
+                APPL_ShowMsg( 0, _("WARNING: no adapter seems to exist at selected port.") );
+#endif
                 ++siLptFooledCount;
             }
         }
