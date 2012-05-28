@@ -36,6 +36,10 @@ class wxSingleInstanceChecker;
 class TSessionConfig : public TSessionManager
 {
 public:
+    //-- Must be called once at startup before any attempt to get translatable string
+    //-- and before the call to Init function below
+    static void InitLanguage (void);
+
     //-- Must be called once at startup
     //-- If Init returns false caller must terminate immediatly (don't call SaveRectAndCloseSession)
     static bool Init (const wxApp *pApp);

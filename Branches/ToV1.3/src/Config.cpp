@@ -100,7 +100,7 @@ static wxString getMRFKey (int pIndex)
 //----------------------------------------------------------------------
 //-- Public Static Methods
 
-/**static*/bool TSessionConfig::Init (const wxApp *pApp)
+/**static*/void TSessionConfig::InitLanguage (void)
 {
     wxConfigBase  &ConfigIO = getTheConfigIO();
 
@@ -115,7 +115,10 @@ static wxString getMRFKey (int pIndex)
     if (theLanguageName.IsEmpty())
         theLanguageName = TLanguage::TheDefaultName;
     TLanguage::SetHelp();
+}
 
+/**static*/bool TSessionConfig::Init (const wxApp *pApp)
+{
     //-- Load the command line parameters
     if (!loadCmdLineParameters(pApp))
         return false;
