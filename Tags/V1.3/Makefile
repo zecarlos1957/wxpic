@@ -266,7 +266,7 @@ include $(TAR_MAKEFILE)
 $(TAR_MAKEFILE): $(TAR_VERSION) Makefile
 	@echo "Creating $(TAR_MAKEFILE) with TAR version=`cat $(TAR_VERSION)`"
 	@echo "TAR_DATE=\$$(shell cat $(TAR_VERSION))" > $(TAR_MAKEFILE)
-	@echo "TAR_FILENAME=$(EXECUTABLE)-$(OS_NAME)-\$$(TAR_DATE)-bin" >> $(TAR_MAKEFILE)
+	@echo "TAR_FILENAME=$(EXECUTABLE)-\$$(TAR_DATE)-$(OS_NAME)-bin" >> $(TAR_MAKEFILE)
 	@echo "tar: \$$(VERSION_SCRIPT) \$$(TAR_FILENAME).tar.gz" >> $(TAR_MAKEFILE)
 	@echo " " >> $(TAR_MAKEFILE)
 	@echo "\$$(TAR_FILENAME).tar.gz: $(TAR_MAKEFILE) \$$(PREFIX)/\$$(BINDIR)/\$$(TGT_EXECUTABLE) \$$(TGTFILES) \$$(TGTHFILES) \$$(TGTMAPS) \$$(TGDOCFILES) \$$(TGLANGFILE) \$$(TGTPIXMAP) \$$(TGTDESKTOP) \$$(TAR_VERSION)" >> $(TAR_MAKEFILE)
