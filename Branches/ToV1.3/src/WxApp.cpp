@@ -65,7 +65,7 @@ static bool CheckUserID (void)
                                                 UserName, Uid, HomeDir, UserData->pw_name, HomeStat.st_uid),
                                _("Invalid Execution Environment"),
                                wxYES_NO | wxICON_EXCLAMATION )
-                  == wxYES);
+                  == wxNO);
         delete  UserName;
     }
     return Result;
@@ -90,6 +90,8 @@ bool MyApp::OnInit()
     //*)
 
     TResource::Load();
+
+    TSessionConfig::InitLanguage();
 
 #ifndef __WXMSW__
     if (!CheckUserID())
