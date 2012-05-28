@@ -1074,6 +1074,8 @@ bool LPT_OpenPicPort(void)
         PicHw_fLptPortOpened = fResult;
         if (!fResult)
             APPL_ShowMsg( 0, _("Failed to get the security token"));
+        else if (TSessionConfig::GetVerboseMessages())
+            APPL_ShowMsg( 0, _("Suceeded to unprotect port adressees %x to %x"), LPT_io_address, LPT_io_address+4);
 #endif
     }
 
