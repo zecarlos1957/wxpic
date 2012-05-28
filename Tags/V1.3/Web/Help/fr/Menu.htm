@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>wxPIC: Menus et Boutons</title>
+<link href="../WxPic.css" rel="stylesheet" type="text/css" />
+<link href="../WxPic.ico" rel="shortcut icon"/>
+</head>
+
+<body>
+<a name="Top" id="Top"></a>
+<div class="left-col">
+ <a href="http://wxpic.free.fr/"><img src="../LargeLogo.png" name="Logo" width="160" height="96" id="Logo" /></a>
+  <div class="toc">
+  <div>Sommaire</div>
+    <ul>
+      <li><a href="#ButtonBar">La barre de boutons</a></li>
+      <li><a href="#Menu">Les menus</a></li>
+      <ul>
+      <li><a href="#FileMenu">Le menu Fichier</a></li>
+      <li><a href="#EditMenu">Le menu Édition</a></li>
+      <li><a href="#DeviceMenu">Le menu Composant</a></li>
+      <li><a href="#ToolsMenu">Le menu Outils</a></li>
+      </ul>
+    </ul>
+    </div>
+</div>
+<ul class="top-menu">
+  <li><a href="index.htm">Index de l'Aide</a></li>
+  <li class="local">Menus et Boutons</li>
+  <li><a href="Panel.htm">Pages et Dialogue</a></li>
+  <li><a href="Faq.htm">FAQ</a></li>
+</ul>
+<div class="content">
+<h1>Les Boutons et Menus de WxPic</h1>
+<p>Les boutons et les menus permettent d'entrer les commandes de WxPic. Les boutons permettent d'effectuer les opérations les plus fréquentes. Les menus regroupent la quasi-totalité des fonctions disponibles.</p>
+<h2><a name="ButtonBar" id="ButtonBar"></a>La barre de boutons</h2>
+<p>Les boutons et leurs fonctions sont les suivants&nbsp;:</p>
+<ul class="pix16">
+  <li><a name="OpenFileButton" id="OpenFileButton"></a><img class="bullet" src="../Open.png" width="16" height="16" /> Ouvre  un fichier HEX à choisir et charge son contenu en mémoire.</li>
+  <li><a name="SaveHexButton" id="SaveHexButton"></a><img src="../Save.png" width="16" height="16" class="bullet" /> Écrit au format HEX le contenu de la mémoire dans un fichier à définir.</li>
+  <li><a name="ReloadButton" id="ReloadButton"></a><img src="../ChipReload.png" width="16" height="16" class="bullet" />Recharge la mémoire avec le dernier fichier HEX chargé et programme le composant avec ce contenu.</li>
+  <li><a name="ProgramButton" id="ProgramButton"></a><img src="../ChipWrite.png" width="16" height="16" class="bullet" /> Programme le composant avec le contenu de la mémoire.</li>
+  <li><a name="VerifyButton" id="VerifyButton"></a><img src="../ChipVerify.png" width="16" height="16" class="bullet" /> Vérifie que le contenu de la mémoire du composant est identique à celui de la mémoire de WxPic. En cas de différence les mots de code et de données en erreur sont affichés en rouge dans les pages de code et de données.</li>
+  <li><a name="ReadButton" id="ReadButton"></a><img src="../ChipRead.png" width="16" height="16" class="bullet" /> Lit le contenu de la mémoire du PIC et l'enregistre dans la mémoire de WxPic.</li>
+</ul>
+<p><a name="QuickSession" id="QuickSession"></a><img src="SessionSelect.png" alt="The Session quick selector" width="132" height="23" align="absmiddle" />&nbsp;Le dernier élément de la barre est le commutateur rapide de session. Il permet de passer rapidement d'une session à une autre. La session choisie doit être <a href="Panel.htm#DisponibleDefinition" class="quote">Disponible</a> pour que l'opération réussise sinon une erreur sera diagnostiquée et le changement de session n'aura pas lieu. Avant le changement de session, si la configuration d'origine avait été modifiée, elle est automatiquement sauvegardée. Utiliser le <a href="Panel.htm#SessionDialog">Dialogue de gestion des sessions</a> si vous ne désirez pas sauvegarder les modifications de la configuration.</p>
+<p><a class="return" href="#Top">Haut</a></p>
+<h2><a name="Menu" id="Menu"></a>Les menus</h2>
+<p>WxPic offre les menus suivants:</p>
+<ul>
+  <li><a href="#FileMenu">Fichier</a></li>
+  <li><a href="#EditMenu">Édition</a></li>
+  <li><a href="#DeviceMenu">Composant</a></li>
+  <li><a href="#ToolsMenu">Outils</a></li>
+  <li>Aide</li>
+</ul>
+<h3>Le menu Fichier</h3>
+<p>Le menu Fichier fournit les fonctions liés aux fichiers HEX et à la sortie de WxPic&nbsp;:</p>
+<dl>
+  <dt><a name="LoadMenu" id="LoadMenu"></a><span class="term">Charger un fichier HEX...</span>: </dt>
+  <dd>Ouvre un fichier HEX à choisir et charge son contenu en mémoire.</dd>
+  <dt><a name="LoadProgramMenu" id="LoadProgramMenu"></a><span class="term">Charger et Programmer...&nbsp;</span>: </dt>
+  <dd>Ouvre un fichier HEX à choisir, charge son contenu en mémoire et programme le composant avec.</dd>
+  <dt><a name="ReloadProgramMenu" id="ReloadProgramMenu"></a><span class="term">Recharger et Programmer&nbsp;</span>: </dt>
+  <dd>Relit le fichier HEX précédemment ouvert, met à jour la mémoire avec son contenu et programme le composant avec.</dd>
+  <dt><a name="RecentFileMenu" id="RecentFileMenu"></a><span class="term">Fichiers Récents&nbsp;</span>: </dt>
+  <dd>Affiche les nom des 6 fichiers HEX les plus récemment chargés. Le choix d'un de ces fichiers recharge sont contenu en mémoire.</dd>
+  <dt><a name="DumpMemoryMenu" id="DumpMemoryMenu"></a><span class="term">Écrire la mémoire dans un fichier HEX...&nbsp;</span>: </dt>
+  <dd>Écrit au format HEX le contenu de la mémoire dans un fichier à définir.</dd>
+  <dt><a name="ManageSessionMenu" id="ManageSessionMenu"></a>Gérer les Sessions...</dt>
+  <dd>Ouvre le <a href="Panel.htm#SessionDialog">Dialogue de gestion des sessions</a>.</dd>
+  <dt><a name="QuitMenu" id="QuitMenu"></a><span class="term">Quitter sans sauver les paramètres&nbsp;</span>: </dt>
+  <dd>Ferme WxPic sans enregistrer les modifications de configuration effectuées depuis l'ouverture du programme.</dd>
+  <dt><a name="QuitSaveMenu" id="QuitSaveMenu"></a><span class="term">Quitter&nbsp;</span> : </dt>
+  <dd>Ferme WxPic après avoir enregistré les modifications de paramètres tels que le fichier HEX chargé, le programmateur et le composant utilisé...</dd>
+</dl>
+<a class="return" href="#Top">Haut</a>
+<h3><a name="EditMenu" id="EditMenu"></a>Le menu Édition</h3>
+<p>Le menu Édition fournit les fonctions liées à la modification de la mémoire&nbsp;:</p>
+<dl>
+  <dt><a name="EraseMemoryMenu" id="EraseMemoryMenu"></a><span class="term">Effacer la mémoire</span></dt>
+  <dd>Efface le Code, les Données et la Configuration chargés en mémoire.</dd>
+  <dt><a name="AllowEditMenu" id="AllowEditMenu"></a><span class="term">Autoriser l'édition mémoire</span></dt>
+  <dd>Permet de modifier (lorsque ce choix est coché) la représentation hexadécimale de la mémoire Code, Données ou Configuration. La modification doit être <a href="#ValidEditMenu">Appliquée</a> pour modifier effectivement la mémoire. Par défaut l'édition est autorisée.</dd>
+  <dt><a name="ValidEditMenu" id="ValidEditMenu"></a><span class="term">Appliquer les modifications Mémoire</span></dt>
+  <dd>Applique à la mémoire, les modifications entrées dans les pages affichant la mémoire (Code, Données et Configuration).</dd>
+  <dt><a name="CancelEditMenu" id="CancelEditMenu"></a><span class="term">Annuler les modifications Mémoire</span></dt>
+  <dd>Efface les modifications entrées dans les pages Code Données et Configuration, en réaffichant le contenu originel de celles-ci.</dd>
+</dl>
+<a class="return" href="#Top">Haut</a><h3><a name="DeviceMenu" id="DeviceMenu"></a>Le menu Composant</h3>
+<p>Le menu Composant fournit les opérations sur le composant<a href="index.htm#Memoryglossary" class="glossary"></a>&nbsp;:</p>
+<dl>
+  <dt><a name="SelectPicMenu" id="SelectPicMenu"></a><span class="term">Sélectionner</span></dt>
+  <dd>Affiche l'onglet Config PIC et donne le focus à la liste de choix du type de composant.</dd>
+  <dt><a name="ProgramMenu" id="ProgramMenu"></a><span class="term">Program</span>mer</dt>
+  <dd>Programme le composant avec le contenu de la mémoire.</dd>
+  <dt><a name="ProgramConfigMenu" id="ProgramConfigMenu"></a><span class="term">Programmer la config seulement</span></dt>
+  <dd>Programme uniquement le ou les mots de configuration.</dd>
+  <dt><a name="ProgramIdMenu" id="ProgramIdMenu"></a><span class="term">Programmer l'Identification seulement</span></dt>
+  <dd>Programme les mots contenant l'identification utilisateur</dd>
+  <dt><a name="EraseMenu" id="EraseMenu"></a><span class="term">Effacer</span></dt>
+  <dd>Efface le composant.</dd>
+  <dt><a name="VerifyMenu" id="VerifyMenu"></a><span class="term">Vérifier</span></dt>
+  <dd>Vérifie que le contenu de la mémoire du composant est identique à celui de la mémoire de WxPic. En cas de différence les mots de code et de données en erreur sont affichés en rouge dans les pages de code et de données.</dd>
+  <dt><a name="VerifyEraseMenu" id="VerifyEraseMenu"></a><span class="term">Vérifier l'effacement</span></dt>
+  <dd>Vérifie que le contenu du composant est bien vide comme il devrait l'être après effacement.</dd>
+  <dt><a name="ReadMenu" id="ReadMenu"></a><span class="term">Lire</span></dt>
+  <dd>Lit le contenu de la mémoire du PIC et l'enregistre dans la mémoire de WxPic.</dd>
+  <dt><a name="InitMenu" id="InitMenu"></a><span class="term">Réinitialiser</span></dt>
+  <dd>Réinitialise le programmateur et interrompt une éventuelle programmation par lot en cours.</dd>
+</dl>
+<a class="return" href="#Top">Haut</a>
+<h3><a name="ToolsMenu" id="ToolsMenu"></a>Le menu Outils</h3>
+<p>Le menu Outil fournit des fonctions utilitaires diverses<a href="index.htm#Memoryglossary" class="glossary"></a>&nbsp;:</p>
+<dl>
+  <dt><a name="StartBatchMenu" id="StartBatchMenu"></a><span class="term">Démarrer Programmation d'un lot</span></dt>
+  <dd>Démarre une programmation d'une série de composants. Entre chaque composant WxPic attend une confirmation ou l'appuis sur le bouton du programmateur.</dd>
+  <dt><a name="SaveBuiltinMenu" id="SaveBuiltinMenu"></a><span class="term">Sauvegarder la liste des composants prédéfinis...</span></dt>
+  <dd>Écrit dans un fichier à définir, la liste des composants reconnus par construction par WxPic.</dd>
+  <dt><a name="DisplayOptionMenu" id="DisplayOptionMenu"></a><span class="term">Afficher les Options du programmateur</span></dt>
+  <dd>Affiche l'onglet Options.</dd>
+</dl>
+<a class="return" href="#Top">Haut</a></div>
+</body>
+</html>
