@@ -17,7 +17,13 @@
       <li><a href="#Aim">What is  WxPic made for?</a></li>
       <li><a href="#PicList">List of supported Micro-Controllers</a></li>
       <li><a href="#System">System requirements</a></li>
-      <li><a href="#cmd_line_arguments">Command Line Arguments</a></li>
+      <li><a href="#InstallAndRun">Install and Run WxPic</a>
+        <ul>
+          <li><a href="#WinInstall">Windows</a></li>
+          <li><a href="#LinuxInstall">Linux</a></li>
+          <li><a href="#cmd_line_arguments">Command Line Arguments</a></li>
+        </ul>
+      </li>
       <li><a href="#Interface2">The Human Interface</a></li>
       <li><a href="#Glossaire">Glossaire</a></li>
     </ul>
@@ -111,7 +117,37 @@
 </ul>
 <p>Other programmers based on either the serial interface or parallel interface can be supported by using a text file <a href="CustomInterface.htm">describing its interface</a>. </p>
 <a class="return" href="#Top">Haut</a>
-<h2> <a name="cmd_line_arguments" id="cmd_line_arguments"></a>Command Line Arguments</h2>
+<h2><a name="InstallAndRun" id="InstallAndRun"></a>Install and Run WxPic</h2>
+<h3><a name="WinInstall" id="WinInstall"></a>Windows</h3>
+<p>Before running WxPic for the first time you must install it. This is a simple operation using the provided installer wizard. But this operation should be performed in a priviledged account. Else you won't be allowed to install for all users and you won't be able to use the parallel port.</p>
+<p>To install WxPic, simply execute the downloaded multilanguage installer (WxPic-V#.#.#R###-installer.exe) and follow the instructions:</p>
+<p>Choose your preferred installation language</p>
+<p><img src="InstallLang.png" alt="Installer language selection screen" width="294" height="153" /></p>
+<p>Review and accept the licence terms and then confirm the installed components. You should not need to change any selection except that you can unselect the language support if you need only the English language. Note that the proposed WinRing0 driver depends on your operating system word size (32 or 64 Bits). This is automatically selected by the installer. The WxPic program itself is always 32-bit so it is compatible with both types of operating system.</p>
+<p><img src="Install.png" alt="Slection of components to install" width="426" height="288" /></p>
+<p>Then at next step you will just have to confirm the installation directory by clicking on<span class="quote"> Install</span> button. That's all, and WxPic should complete installation in less than 5 seconds.</p>
+<p><img src="InstallFolder.png" alt="Installation folder selection screen" width="426" height="288" /></p>
+<p>Then you can run WxPic from your Windows <span class="quote">Start</span> &gt; <span class="quote">All Programs</span> &gt; <span class="quote">WxPic</span> &gt; <span class="quote">WxPic</span> menu. Don't forget to run WxPic from an administrator account if you want to use the parallel port. In this case, under Vista or Windows 7, you will have to confirm that you accept to grant WxPic the administrator rights. Serial ports can be used from any user account.</p>
+<h3><a class="return" href="#Top">Haut</a> </h3>
+<h2></h2>
+<h3><a name="LinuxInstall" id="LinuxInstall"></a>Linux</h3>
+<p>On linux, installation is slightly more tricky than on Windows. It depends on the actual Linux version you may have. The binaries are provided only for Ubuntu 12.04 and for CentOS 5.7. They may be compatible with other versions and/or variants. You will have to try to know. If the binaries does not run on your OS you will have to build your own binaries. In this case, refer to the <a href="http://wxpic.free.fr/Building.htm">Build</a> page.</p>
+<p>In the case you are running a compatible OS or you want to install one version to assess if your OS is compatible with one of the binary, follow these instructions:</p>
+<ul>
+  <li>Install the wxWidgets runtime package and its dependance listed in the <a href="http://wxpic.free.fr/Download.htm#PackageList">Linux package table</a> first row using <span class="quote">yum</span> (CentOS) or <span class="quote">apt-get</span> (Ubuntu) or their GUI.</li>
+  <li><a href="http://wxpic.free.fr/Download.htm#LinuxRelease">Download the binary TAR file</a> for your OS, the name of which has the form <span class="quote">WinPic-&lt;OS&gt;-&lt;Release&gt;-bin.tar.gz</span></li>
+  <li>Copy the TAR file to the <span class="quote">/usr</span> directory</li>
+  <li>Uncompress the TAR file: <span class="quote">gunzip WinPic-&lt;OS&gt;-&lt;Release&gt;-bin.tar.gz</span></li>
+  <li>Extract the files from the archive: <span class="quote">tar xvf WinPic-&lt;OS&gt;-&lt;Release&gt;-bin.tar.gz</span></li>
+</ul>
+<p>After installation, WxPic appears in the  <span class="quote">Application</span> &gt; <span class="quote">Programmation</span>  Gnome menu. WxPic can be run with that menu. But this must be done from the root account to allow acces to parallel port. Using only serial ports is possible from any account.</p>
+<p>Under Ubuntu the root account should not be used directly. It is recommended to use  <span class="quote">sudo</span> to run a command with priviledges. The following command should be used to run WxPic under Ubuntu so that it can access to the parallel port:</p>
+<pre>sudo -H wxpic</pre>
+<p class="important">Warning: it is important to not forget the -H sudo option. It allows to move the environment to the root account. This avoids WxPic to create its file with root priviledges in the user account. Those files would no longer be writable by the user. WxPic verifies this condition and warn the user when it is detected. It is not recommended to continue working in this way.</p>
+<h3><a class="return" href="#Top"></a></h3>
+<h3><a class="return" href="#Top">Haut</a> </h3>
+
+<h3> <a name="cmd_line_arguments" id="cmd_line_arguments"></a>Command Line Arguments</h3>
 <p> You may call WxPic from a batch file, or an integrated development environment
   to do an automated job without any user intervention. For example, you can
   tell WxPic to load a program from a hexfile, write it into the target device,

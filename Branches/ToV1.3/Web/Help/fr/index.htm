@@ -17,11 +17,17 @@
       <li><a href="#Aim">A quoi sert WxPic&nbsp;?</a></li>
       <li><a href="#PicList">Liste des Micro-controlleur supportés</a></li>
       <li><a href="#System">Système requis</a></li>
-      <li><a href="#cmd_line_arguments">Arguments de la ligne de commande</a></li>
+      <li><a href="#InstallAndRun">Installer et Excuter WxPic</a>
+        <ul>
+          <li><a href="#WinInstall">Windows</a></li>
+          <li><a href="#LinuxInstall">Linux</a></li>
+          <li><a href="#cmd_line_arguments">Arguments de la ligne de commande</a></li>
+        </ul>
+      </li>
       <li><a href="#Interface2">Interface Utilisateur</a></li>
       <li><a href="#Glossaire">Glossaire</a></li>
     </ul>
-</div>
+  </div>
 </div>
 <ul class="top-menu">
   <li class="local">Index de l'Aide</li>
@@ -101,6 +107,33 @@
 </ul>
 <p>D'autres programmateurs basés soit sur l'interface série, soit sur l'interface parallèle, peuvent être supportés par l'utilisation d'un fichier texte de <a href="../CustomInterface.htm">description de son interface</a>.</p>
 <a class="return" href="#Top">Haut</a>
+<h2><a name="InstallAndRun" id="InstallAndRun"></a>Installer et Excuter WxPic</h2>
+<h3><a name="WinInstall" id="WinInstall"></a>Windows</h3>
+<p> Avant d'éxécuter WxPic pour la première fois, vous devez l'installer. C'est une opération simple grâce à l'assistant d'installation fourni. Mais il est conseillé d'effectuer cette opération dans un compte administrateur. Sinon Wxpic ne s'installera pas pour tous les utilisateurs et surtout sera incapable d'accéder au port parallèle.</p>
+<p>Pour réaliser l'installation, exécutez simplement l'instaleur multi-langue téléchargé  (WxPic-V#.#.#R###-installer.exe) et suivez les instructions:</p>
+<p>Commencez par choisir votre langue d'installation.</p>
+<p><img src="InstallLang.png" alt="Ecran de sélection de la langue d'installation" width="294" height="153" /></p>
+<p>Lisez et acceptez les termes de la licence et ensuite confirmez les composants à installer. Vous ne devriez rien avoir à changer au niveau des composants à installer excepté les langues que vous pouvez désélectionner si vous pensez utiliser l'interface en anglais uniquement. A noter que le driver WinRing0 est proposé soit en version 32 bits soit en version 64 bit suivant la nature de votre système d'exploitation. C'est automatiquement déterminé par l'installeur. Le programme WxPic est quant à lui toujours en 32 bits afin d'être compatible avec les deux types de système (ce qui n'est pas vrai pour un driver).</p>
+<p><img src="Install.png" alt="Slection of components to install" width="426" height="288" /></p>
+<p>Ensuite, vous avez simplement à confirmer le répertoire d'installation et à cliquer sur le bouton<span class="quote"> Installer</span>. C'est tout, et l'installation de WxPic devrait se terminer dans les 5 secondes.</p>
+<p><img src="InstallFolder.png" alt="Installation folder selection screen" width="426" height="288" /></p>
+<p>Enfin vous pouver exécuter WxPic à partir de votre menu Windows <span class="quote">Démarrer</span> &gt; <span class="quote">Tous les Programmes</span> &gt; <span class="quote">WxPic</span> &gt; <span class="quote">WxPic</span>. N'oubliez pas d'exécuter WxPic depuis un compte administrateur si vous avez à utiliser le port parallèle. Dans ce cas, sous Vista ou Windows 7, vous aurez à confirmer que vous accepter d'accorder à WxPic les droit administrateurs. Par contre les ports série peuvent être utilisés depuis n'importe quel compte (utilisateur ou administrateur).</p>
+<h3><a class="return" href="#Top">Haut</a> </h3>
+<h3><a name="LinuxInstall" id="LinuxInstall"></a>Linux</h3>
+<p>Sous Linux, l'installation de WxPic est un peu plus compliquée que sous Windows. Cela dépend de la version sur laquelle il doit être installé. Les binaires ne sont fournis que pour Ubuntu 12.04 et CentOS 5.7. Il peuvent cependant être compatibles avec d'autre variantes et/ou versions de Linux. Il faudra essayer pour savoir. Dans le cas où aucun des 2 binaires fournis n'est compatible il reste la construction de binaires compatibles à partir des sources. Dans ce cas se référer à la page sur la <a href="http://wxpic.free.fr/Building_fr.htm">génération de WxPic</a>. </p>
+<p>Dans le cas d'un OS compatible ou pour tester cette compatibilité, l'installation d'un binaire se fait en suivant ces instructions&nbsp;:</p>
+<ul>
+  <li>Installer les libraries wxWidgets listées dans la première ligne de la <a href="http://wxpic.free.fr/Download_fr.htm#PackageList">table des paquets</a> en utilisant soit <span class="quote">yum</span> (CentOS) soit <span class="quote">apt-get</span> (Ubuntu) ou leur interface graphique.</li>
+  <li><a href="http://wxpic.free.fr/Download_fr.htm#LinuxRelease">Télécharger le fichier TAR des binaires</a> compatible avec l'OS, dont le nom est de la forme <span class="quote">WinPic-&lt;OS&gt;-&lt;Release&gt;-bin.tar.gz</span></li>
+  <li>Copier the fichierTAR dans le répertoire <span class="quote">/usr</span></li>
+  <li>Décomlpresser le fichiez TAR&nbsp;: <span class="quote">gunzip WinPic-&lt;OS&gt;-&lt;Release&gt;-bin.tar.gz</span></li>
+  <li>Extraire les fichiers de l'archive&nbsp;: <span class="quote">tar xvf WinPic-&lt;OS&gt;-&lt;Release&gt;-bin.tar.gz</span></li>
+  </ul>
+<p>Après installation WxPic apparaît dans le menu <span class="quote">Application</span> &gt; <span class="quote">Programmation</span> de Gnome. WxPic peut être lancé grâce à lui. Mais il faut le faire depuis le compte root pour permettre l'accès au port parallèle. La simple utilisation du port série ne requiert pas de privilèges.</p>
+<p>Sous Ubuntu il n'est pas d'usage d'utiliser le compte root. Avec cet OS il est recommandé d'utliser <span class="quote">sudo</span> pour lancer une commande en mode privilégié. La commande suivante sera donc utilisée pour permettre à WxPic d'accéder au port parallèle&nbsp;:</p>
+<pre>sudo -H wxpic</pre>
+<p class="important">Attention&nbsp;: il est très important de ne pas oublier le -H de la commande. Le -H permet de déplacer l'environnement de l'utilisateur dans le compte root. Cela évite ainsi à WxPic de créer ses fichiers dans l'environnement de l'utilisateur. En effet ces fichiers créés avec les droits du compte root ne pourraient plus être remplacés ou modifier par l'utilisateur. WxPic vérifie cette condition et prévient l'utilisateur en cas d'erreur. Il n'est pas conseillé de passer outre l'avertissement.</p>
+<h3><a class="return" href="#Top">Haut</a> </h3>
 <h2><a name="cmd_line_arguments" id="cmd_line_arguments"></a>Arguments de la ligne de commande </h2>
 <p> Il est possible d'appeler WxPic dans un fichier de commande, or dans un environnement de programmation intégré (IDE) pour effectuer automatiquement une opération sans intervention manuelle. Par exemple il est possible de demander à WxPic de charger un programme depuis un fichier HEX, d'écrire son contenu dans un composant cible et de se terminer après celà.</p>
 <p> Les options acceptées sur la ligne de commande sont les suivants&nbsp;:</p>
