@@ -227,7 +227,9 @@ EXTERN T_PicConfigBitInfo PicDev_ConfigBitInfo[PICDEV_MAX_CONFIG_BIT_INFOS];
 
 /*------------- Prototypes ------------------------------------------------*/
 
-
+class wxArrayString;
+const wxArrayString &PicDev_GetDeviceNameList(void);
+wxString PicDev_GetDeviceNameByIndex (int pIndex);
 int   PicDev_GetDeviceInfoByIndex(int iTableIndex, T_PicDeviceInfo *pDstDeviceInfo );
 int   PicDev_GetDeviceInfoByName(const char *pszDeviceName, T_PicDeviceInfo *pDstDeviceInfo );
 bool  PicDev_FillConfigBitInfoTable( T_PicDeviceInfo *psrcPicDeviceInfo );

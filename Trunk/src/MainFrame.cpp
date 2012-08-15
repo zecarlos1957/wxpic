@@ -408,7 +408,6 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
 
     wxChar sz255Msg[256];
     wxString s;
-    T_PicDeviceInfo MyDeviceInfo;
     int i;
 
     ++siCmdTickCount;
@@ -452,12 +451,8 @@ void MainFrame::onTimerTrigger(wxTimerEvent& event)
 
             // Fill the "Part"-combo list.
             aDeviceCfgTab->aPartNameChoice->Clear();
-            for (i=0; PicDev_GetDeviceInfoByIndex( i, &MyDeviceInfo ) >= 0; ++i )
-            {
-                wxString DeviceName;
-                aDeviceCfgTab->aPartNameChoice->Append(Iso8859_1_TChar(MyDeviceInfo.sz40DeviceName, DeviceName));
-            }
-            aDeviceCfgTab->aPartNameChoice->SetSelection(0);
+            aDeviceCfgTab->aPartNameChoice->Append(PicDev_GetDeviceNameList());
+            aDeviceCfgTab->aPartNameChoice->SetStringSelection(PicDev_GetDeviceNameByIndex(0));
 
             // Now update CODE + DATA memory display, and all the rest..
             UpdateAllSheets();

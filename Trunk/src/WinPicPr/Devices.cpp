@@ -4103,6 +4103,40 @@ const char *PicDev_GetDeviceNameByIdWord( uint16_t wDeviceIdWord, int iBitsPerIn
 
 } // end PicDev_GetDeviceNameByIdWord()
 
+
+wxString PicDev_GetDeviceNameByIndex (int pIndex)
+{
+    wxString Result;
+    T_PicDeviceInfo MyDeviceInfo;
+    if (PicDev_GetDeviceInfoByIndex(pIndex, &MyDeviceInfo) >= 0)
+    {
+        Iso8859_1_TChar(MyDeviceInfo.sz40DeviceName, Result);
+        if (Result.IsEmpty())
+            Result.Printf(_T("Invalid device definition #%d with no name"), pIndex);
+    }
+    return Result;
+}
+
+const wxArrayString &PicDev_GetDeviceNameList(void)
+{
+    static wxArrayString DeviceNameList;
+    if (DeviceNameList.Count() == 0)
+    {
+        for (int i = 0; ; ++i)
+        {
+            wxString DeviceName = PicDev_GetDeviceNameByIndex(i);
+            if (DeviceName.IsEmpty())
+                break;
+            DeviceNameList.Add(DeviceName);
+        }
+        DeviceNameList.Sort();
+        for (int i = DeviceNameList.Count()-1; i > 0; --i)
+            if (DeviceNameList[i] == DeviceNameList[i-1])
+                DeviceNameList.RemoveAt(i);
+    }
+    return DeviceNameList;
+}
+
 /***************************************************************************/
 void PicDev_FillDefaultDeviceInfo(T_PicDeviceInfo *pDeviceInfo)
 {
