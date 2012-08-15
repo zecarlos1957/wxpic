@@ -566,6 +566,9 @@ bool MainFrame::ProgramPic(void)
         } // end else < no program in memory >
     } // end if(TSessionConfig::GetProgramWhat()&PIC_PROGRAM_CODE)
 
+    else if (TSessionConfig::GetVerboseMessages())
+        APPL_ShowMsg( 0, _("Skipping CODE programming (option programming CODE not set)"));
+
     if (APPL_iUserBreakFlag)
     {
         APPL_ShowMsg( 0, _("USER BREAK while programming.") );
@@ -633,6 +636,9 @@ bool MainFrame::ProgramPic(void)
 
         }
     } // end   if(  (TSessionConfig::GetProgramWhat() & PIC_PROGRAM_DATA)
+
+    else if (TSessionConfig::GetVerboseMessages())
+        APPL_ShowMsg( 0, _("Skipping DATA programming (option program DATA not set)"));
 
     if (APPL_iUserBreakFlag)
     {
@@ -733,6 +739,9 @@ bool MainFrame::ProgramPic(void)
         }
     } // end if < not PIC10F20x >
 
+
+    if (((TSessionConfig::GetProgramWhat() & PIC_PROGRAM_CONFIG) == 0) && TSessionConfig::GetVerboseMessages())
+        APPL_ShowMsg( 0, _("Skipping CONFIG programming (option program CONFIG not set)"));
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Fifth, VERY optional step, for 14-bit core only(*): program the CLASSIC CONFIG-WORD
