@@ -776,7 +776,7 @@ void MainFrame::ReloadAndProgClick(void)
 
 void MainFrame::onMRFMenuItemSelected(wxCommandEvent& pEvent)
 {
-    wxString &FileName = aMRFTable[pEvent.GetId()-(wxID_HIGHEST+1)];
+    wxString FileName = aMRFTable[pEvent.GetId()-(wxID_HIGHEST+1)];
     if (LoadFileAndProgramPic( FileName.c_str(), false/*load only, don't program*/ ))
         TSessionConfig::SetHexFileName(FileName);
 }
