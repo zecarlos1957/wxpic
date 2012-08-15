@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-28 17:52+0200\n"
+"POT-Creation-Date: 2012-08-15 15:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,97 +27,97 @@ msgid "%02d:%02d:%02d.%02d %s"
 msgstr ""
 
 # P1
-#: src\Config.cpp:759
+#: src\Config.cpp:765
 #, c-format
 msgid "The session '%s' does not exist"
 msgstr ""
 
 # P1
-#: src\Config.cpp:766
+#: src\Config.cpp:772
 #, c-format
 msgid "The session %s is already used"
 msgstr ""
 
 # P1
-#: src\Config.cpp:836
+#: src\Config.cpp:842
 msgid "input or output HEX file"
 msgstr ""
 
 # P1
-#: src\Config.cpp:837
+#: src\Config.cpp:843
 msgid "Program the device with content of the HEX file"
 msgstr ""
 
 # P1
-#: src\Config.cpp:838
+#: src\Config.cpp:844
 msgid "Erase the device"
 msgstr ""
 
 # P1
-#: src\Config.cpp:839
+#: src\Config.cpp:845
 msgid "Read the device and write the result to the HEX file"
 msgstr ""
 
 # P1
-#: src\Config.cpp:840
+#: src\Config.cpp:846
 msgid "Verify the device is programmed as defined in the HEX file"
 msgstr ""
 
 # P1
-#: src\Config.cpp:841
+#: src\Config.cpp:847
 msgid ""
 "Quit WxPic at the end of the operations waiting specified delay in second"
 msgstr ""
 
 # P1
-#: src\Config.cpp:842
+#: src\Config.cpp:848
 msgid "Do not wait before starting the operations"
 msgstr ""
 
 # P1
-#: src\Config.cpp:843
+#: src\Config.cpp:849
 msgid "Do not ask before writing the HEX file when it already exists"
 msgstr ""
 
 # P1
-#: src\Config.cpp:844
+#: src\Config.cpp:850
 msgid "Define the model of the device (default=last used)"
 msgstr ""
 
 # P1
-#: src\Config.cpp:845
+#: src\Config.cpp:851
 msgid "Overrides the config word value read in the HEX file (4 Hexa digits)"
 msgstr ""
 
 # P1
-#: src\Config.cpp:846
+#: src\Config.cpp:852
 msgid "Defines the name of the session to use instead of the default session"
 msgstr ""
 
 # P2
-#: src\Config.cpp:871
+#: src\Config.cpp:877
 #, c-format
 msgid "Error: Invalid Config Word value = %s"
 msgstr ""
 
 # P2
-#: src\Config.cpp:900
+#: src\Config.cpp:906
 #, c-format
 msgid "Error: Invalid quit duration value = %ld (must be positive or 0)"
 msgstr ""
 
 # P2
-#: src\Config.cpp:914
+#: src\Config.cpp:920
 msgid "Info: Overwrite option ignored (no read option)"
 msgstr ""
 
 # P2
-#: src\Config.cpp:922
+#: src\Config.cpp:928
 msgid "Error: File name too long (max length=255)"
 msgstr ""
 
 # P2
-#: src\Config.cpp:933
+#: src\Config.cpp:939
 msgid "Error: Missing HEX file name parameter"
 msgstr ""
 
@@ -731,7 +731,7 @@ msgid " ERROR !"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:224 src\MainFrame.cpp:992 src\MainFrame.cpp:1044
+#: src\MainFrame-2.cpp:224 src\MainFrame.cpp:987 src\MainFrame.cpp:1039
 #: src\WinPicPr\PIC_PRG.cpp:3298
 msgid "Action aborted"
 msgstr ""
@@ -764,8 +764,8 @@ msgstr ""
 msgid "Erased"
 msgstr ""
 
-#: src\MainFrame-2.cpp:341 src\MainFrame-2.cpp:405 src\MainFrame-2.cpp:601
-#: src\MainFrame.cpp:534 src\MainFrame.cpp:955
+#: src\MainFrame-2.cpp:341 src\MainFrame-2.cpp:405 src\MainFrame-2.cpp:604
+#: src\MainFrame.cpp:529 src\MainFrame.cpp:950
 msgid "Erasing FAILED!"
 msgstr ""
 
@@ -827,7 +827,7 @@ msgid "Programming CODE, 0x%06lX..0x%06lX"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:547 src\MainFrame-2.cpp:931
+#: src\MainFrame-2.cpp:547 src\MainFrame-2.cpp:940
 #, c-format
 msgid "Verifying CODE, 0x%06lX..0x%06lX"
 msgstr ""
@@ -838,212 +838,227 @@ msgid "Cannot Program CODE MEMORY, nothing in buffer."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:571 src\MainFrame-2.cpp:639 src\MainFrame-2.cpp:795
+#: src\MainFrame-2.cpp:570
+msgid "Skipping CODE programming (option programming CODE not set)"
+msgstr ""
+
+# P2
+#: src\MainFrame-2.cpp:574 src\MainFrame-2.cpp:645 src\MainFrame-2.cpp:804
 msgid "USER BREAK while programming."
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:595
+#: src\MainFrame-2.cpp:598
 msgid "Erasing: DATA .."
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:606
+#: src\MainFrame-2.cpp:609
 #, c-format
 msgid "Programming DATA, 0x%06lX..0x%06lX"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:620 src\MainFrame-2.cpp:958
+#: src\MainFrame-2.cpp:623 src\MainFrame-2.cpp:967
 #, c-format
 msgid "Verifying DATA, 0x%06lX..0x%06lX"
 msgstr ""
 
+# P2
+#: src\MainFrame-2.cpp:641
+msgid "Skipping DATA programming (option program DATA not set)"
+msgstr ""
+
 # P1
-#: src\MainFrame-2.cpp:654
+#: src\MainFrame-2.cpp:660
 msgid "Restoring BANDGAP calibration bits for CONFIG-WORD"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:657
+#: src\MainFrame-2.cpp:663
 #, c-format
 msgid "Cfg word before restoring BG calib: 0x%06lX"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:666
+#: src\MainFrame-2.cpp:672
 #, c-format
 msgid "Cfg word after restoring BG calib: 0x%06lX"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:690
+#: src\MainFrame-2.cpp:696
 #, c-format
 msgid "Programming CONFIG, 0x%06lX..0x%06lX"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:705 src\MainFrame-2.cpp:983
+#: src\MainFrame-2.cpp:711 src\MainFrame-2.cpp:992
 #, c-format
 msgid "Verifying CONFIG, 0x%06lX..0x%06lX"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:731
+#: src\MainFrame-2.cpp:737
 msgid "Suspicious: Buffer contains no data for the CONFIGURATION BITS."
 msgstr ""
 
+#P2
+#: src\MainFrame-2.cpp:744
+msgid "Skipping CONFIG programming (option program CONFIG not set)"
+msgstr ""
+
 # P1
-#: src\MainFrame-2.cpp:764 src\MainFrame.cpp:868
+#: src\MainFrame-2.cpp:773 src\MainFrame.cpp:863
 msgid "Programming CONFIG-WORD"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:769
+#: src\MainFrame-2.cpp:778
 #, c-format
 msgid "Config word = 0x%06lX; Config mask = 0x%06lX"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:807
+#: src\MainFrame-2.cpp:816
 msgid "Programming finished, no errors."
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:811
+#: src\MainFrame-2.cpp:820
 msgid "Programming finished, nothing to do."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:818
+#: src\MainFrame-2.cpp:827
 msgid "ERROR: Programming FAILED !"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:866
+#: src\MainFrame-2.cpp:875
 msgid "Cannot verify at different voltages with this hardware."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:944
+#: src\MainFrame-2.cpp:953
 msgid "No PROGRAM CODE in buffer to verify."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:968
+#: src\MainFrame-2.cpp:977
 msgid "No DATA MEMORY in buffer to verify."
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:1006
+#: src\MainFrame-2.cpp:1015
 #, c-format
 msgid " Verifying CONFIG-WORD%c"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1038
+#: src\MainFrame-2.cpp:1047
 msgid "USER BREAK while verifying."
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:1048
+#: src\MainFrame-2.cpp:1057
 msgid "Verify finished, no errors."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1050
+#: src\MainFrame-2.cpp:1059
 msgid "Nothing to verify in buffer."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1056
+#: src\MainFrame-2.cpp:1065
 msgid "ERROR: Verifying FAILED !"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:1074 src\MainFrame.cpp:308
+#: src\MainFrame-2.cpp:1083 src\MainFrame.cpp:308
 msgid "Load HEX File"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:1079 src\MainFrame.cpp:1378
+#: src\MainFrame-2.cpp:1088 src\MainFrame.cpp:1373
 msgid "HEX files (INHX8M, *.hex)|*.hex"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:1082
+#: src\MainFrame-2.cpp:1091
 msgid "HEX files (INHX8M, *.hex)|*.hex;*.HEX|*.HEX"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1115
+#: src\MainFrame-2.cpp:1124
 #, c-format
 msgid "Can't open hexfile \"%s\""
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1133
+#: src\MainFrame-2.cpp:1142
 msgid "Results from LoadHex: "
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1135
+#: src\MainFrame-2.cpp:1144
 msgid "No Code "
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1137
+#: src\MainFrame-2.cpp:1146
 #, c-format
 msgid "LastProgAdr=0x%06lX "
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1140
+#: src\MainFrame-2.cpp:1149
 msgid "No Data"
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1142
+#: src\MainFrame-2.cpp:1151
 #, c-format
 msgid "LastDataAdr=0x%06lX"
 msgstr ""
 
 # P3
-#: src\MainFrame-2.cpp:1144
+#: src\MainFrame-2.cpp:1153
 #, c-format
 msgid " (%s)"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1152
+#: src\MainFrame-2.cpp:1161
 #, c-format
 msgid "Info: Config word set to 0x%06lX from command line ."
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1164
+#: src\MainFrame-2.cpp:1173
 msgid "Aborting LoadAndProgram because of error(s)"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1190
+#: src\MainFrame-2.cpp:1199
 msgid ""
 "Dump would overwrite existing file.\n"
 "  Erase old file ?"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1191
+#: src\MainFrame-2.cpp:1200
 msgid "Confirm overwrite"
 msgstr ""
 
 # P2
-#: src\MainFrame-2.cpp:1202
+#: src\MainFrame-2.cpp:1211
 msgid "Can't create hexfile"
 msgstr ""
 
 # P1
-#: src\MainFrame-2.cpp:1218
+#: src\MainFrame-2.cpp:1227
 msgid ".. stopped executing cmd-line"
 msgstr ""
 
@@ -1058,12 +1073,12 @@ msgid "WxPic Programmer"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:153 src\MainFrame.cpp:1268
+#: src\MainFrame.cpp:153 src\MainFrame.cpp:1263
 msgid "Code"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:154 src\MainFrame.cpp:1272
+#: src\MainFrame.cpp:154 src\MainFrame.cpp:1267
 msgid "Data"
 msgstr ""
 
@@ -1103,7 +1118,7 @@ msgid "Load && &Program Device..."
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:171 src\MainFrame.cpp:1205
+#: src\MainFrame.cpp:171 src\MainFrame.cpp:1200
 msgid "&Reload && Program"
 msgstr ""
 
@@ -1364,81 +1379,81 @@ msgid ""
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:440
+#: src\MainFrame.cpp:439
 msgid "Error in PIC_HW_Init: "
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:446
+#: src\MainFrame.cpp:445
 msgid "Warning in PIC_HW_Init: "
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:494
+#: src\MainFrame.cpp:489
 #, c-format
 msgid "Command execution (%s) continues in %d seconds ... ESC to stop"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:517 src\MainFrame.cpp:935
+#: src\MainFrame.cpp:512 src\MainFrame.cpp:930
 msgid "Erasing ..."
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:524 src\MainFrame.cpp:944
+#: src\MainFrame.cpp:519 src\MainFrame.cpp:939
 msgid "Device has been erased. PROGRAM TO RESTORE CALIB BITS !!"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:529 src\MainFrame.cpp:940
+#: src\MainFrame.cpp:524 src\MainFrame.cpp:935
 msgid "Device has been erased."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:547
+#: src\MainFrame.cpp:542
 #, c-format
 msgid "Loaded file \"%s\" through command line ."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:577
+#: src\MainFrame.cpp:572
 #, c-format
 msgid "Quitting in %d seconds ... ESC to stop"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:600
+#: src\MainFrame.cpp:595
 msgid "Command line finished"
 msgstr ""
 
-#: src\MainFrame.cpp:667
+#: src\MainFrame.cpp:662
 msgid ""
 "BATCH PROG: Insert device or connect ICSP, then press adapter button or "
 "press Enter or OK in this log Window"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:690
+#: src\MainFrame.cpp:685
 msgid "BATCH PROG: please wait.."
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:698
+#: src\MainFrame.cpp:693
 msgid "BATCH PROG: terminated batch mode."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:723
+#: src\MainFrame.cpp:718
 msgid "WARNING ! Windows fooled around with the LPT port bits !"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:725
+#: src\MainFrame.cpp:720
 msgid "WARNING: no adapter seems to exist at selected port."
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:845
+#: src\MainFrame.cpp:840
 #, c-format
 msgid ""
 "The Bandgap calibration bits in config register (0x%04X) do not match the "
@@ -1448,48 +1463,48 @@ msgid ""
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:848
+#: src\MainFrame.cpp:843
 msgid "Overwrite Bandgap calibration "
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:852
+#: src\MainFrame.cpp:847
 msgid "Programming CONFIG-WORD cancelled."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:862
+#: src\MainFrame.cpp:857
 #, c-format
 msgid "Old Bandgap 0x%04X will be overwritten with 0x%04X"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:880
+#: src\MainFrame.cpp:875
 msgid "Programming CONFIG-WORD done."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:884
+#: src\MainFrame.cpp:879
 msgid "Programming CONFIG-WORD FAILED."
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:896
+#: src\MainFrame.cpp:891
 msgid "Programming ID-locations"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:905
+#: src\MainFrame.cpp:900
 msgid "Programming ID-LOCATIONS done."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:909
+#: src\MainFrame.cpp:904
 msgid "Programming ID-LOCATIONS FAILED."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:930
+#: src\MainFrame.cpp:925
 msgid ""
 "The BULK ERASE option is disabled\n"
 "   in the programmer options.\n"
@@ -1497,128 +1512,128 @@ msgid ""
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:931
+#: src\MainFrame.cpp:926
 msgid "Confirm ERASE ALL"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:961
+#: src\MainFrame.cpp:956
 msgid "Must not erase non-FLASH device, check \"Device, Config\" !"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:999
+#: src\MainFrame.cpp:994
 msgid "Reading PIC FAILED (maybe blank)."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1006
+#: src\MainFrame.cpp:1001
 #, c-format
 msgid "Reading done, Conflict: selected device = %hs,  read = %hs"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1011
+#: src\MainFrame.cpp:1006
 msgid "Reading PIC ok."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1024
+#: src\MainFrame.cpp:1019
 msgid "Blank Checking ..."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1035
+#: src\MainFrame.cpp:1030
 msgid "Device is NOT blank."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1039
+#: src\MainFrame.cpp:1034
 msgid "Device is blank."
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1137
+#: src\MainFrame.cpp:1132
 msgid "Save Device List"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1138
+#: src\MainFrame.cpp:1133
 msgid "txt files (TXT, *.txt)|*.txt"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1176
+#: src\MainFrame.cpp:1171
 msgid "CODE"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1182
+#: src\MainFrame.cpp:1177
 msgid "DATA"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1188
+#: src\MainFrame.cpp:1183
 msgid "CONFIG"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1201
+#: src\MainFrame.cpp:1196
 msgid "Load && &Program Device"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1212
+#: src\MainFrame.cpp:1207
 msgid "Program"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1270
+#: src\MainFrame.cpp:1265
 msgid "Executive Code"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1274
+#: src\MainFrame.cpp:1269
 msgid "Configuration"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1279
+#: src\MainFrame.cpp:1274
 msgid "Apply changes in the following editors?\n"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1280
+#: src\MainFrame.cpp:1275
 msgid ", "
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1357
+#: src\MainFrame.cpp:1352
 msgid "ESC: Command-line driven operation cancelled !"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1377
+#: src\MainFrame.cpp:1372
 msgid "Save Hex File"
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1396
+#: src\MainFrame.cpp:1391
 msgid "Reading Executive Code Memory ..."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1406
+#: src\MainFrame.cpp:1401
 msgid "Reading Executive Code Memory ok."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1411
+#: src\MainFrame.cpp:1406
 msgid "Reading Executive Code Memory failed."
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1442
+#: src\MainFrame.cpp:1437
 msgid ""
 "Some CALIBRATION BITS have been erased\n"
 "but not written back to the PIC yet.\n"
@@ -1626,12 +1641,12 @@ msgid ""
 msgstr ""
 
 # P2
-#: src\MainFrame.cpp:1444
+#: src\MainFrame.cpp:1439
 msgid "*** PIC Programmer Warning ***"
 msgstr ""
 
 # P1
-#: src\MainFrame.cpp:1482
+#: src\MainFrame.cpp:1477
 #, c-format
 msgid ""
 "The session %s is not available. Use session manager dialog for more "
@@ -2620,7 +2635,7 @@ msgid "Error in built-in PIC device list, \"%hs\"."
 msgstr ""
 
 # P2
-#: src\WinPicPr\Devices.cpp:4193
+#: src\WinPicPr\Devices.cpp:4227
 #, c-format
 msgid "Device list dumped to \"%s\""
 msgstr ""
