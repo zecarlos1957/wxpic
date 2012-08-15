@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>wxPIC: Programmeur PIC - Index de l'aide</title>
+<link href="../WxPic.css" rel="stylesheet" type="text/css" />
+<link href="../WxPic.ico" rel="shortcut icon"/>
+</head>
+
+<body>
+<div class="left-col">
+ <a href="http://wxpic.free.fr/"><img src="../LargeLogo.png" name="Logo" width="160" height="96" id="Logo" /></a>
+<div class="toc">
+  <div>Sommaire</div>
+    <ul>
+      <li><a href="#Introduction">Présentation</a></li>
+      <li><a href="#Aim">A quoi sert WxPic&nbsp;?</a></li>
+      <li><a href="#PicList">Liste des Micro-controlleur supportés</a></li>
+      <li><a href="#System">Système requis</a></li>
+      <li><a href="#InstallAndRun">Installer et Excuter WxPic</a>
+        <ul>
+          <li><a href="#WinInstall">Windows</a></li>
+          <li><a href="#LinuxInstall">Linux</a></li>
+          <li><a href="#cmd_line_arguments">Arguments de la ligne de commande</a></li>
+        </ul>
+      </li>
+      <li><a href="#Interface2">Interface Utilisateur</a></li>
+      <li><a href="#Glossaire">Glossaire</a></li>
+    </ul>
+  </div>
+</div>
+<ul class="top-menu">
+  <li class="local">Index de l'Aide</li>
+  <li><a href="Menu.htm">Menus et Boutons</a></li>
+  <li><a href="Panel.htm">Pages et Dialogue</a></li>
+  <li><a href="Faq.htm">FAQ</a></li>
+</ul>
+<div class="content">
+<a name="Top" id="Top"></a>
+<h1>WxPic<div>Programmeur pour Micro-controlleur PIC</div></h1>
+<p>Les Micro-controlleurs PIC sont des produits de la société <a href="http://www.microchip.com/">Microchip</a></p>
+<h2><a name="Introduction" id="Introduction"></a>Présentation</h2>
+<p>WxPic est le portage (approximatif) dans l'environnement de développement Open Source <a href="http://www.wxwidgets.org/">wxWidget</a>, <a href="http://www.mingw.org/">MinGw</a>, <a href="http://www.codeblocks.org/">Code::Blocks, wxSmith</a> du programme <a href="http://freenet-homepage.de/dl4yhf/winpicpr.html">WinPic de DL4YHF</a>.</p>
+<p>Dans cette version V1.0, WxPic n'a été testé qu'avec le PIC12F629 et un programmateur série. La probabilité de bugs résiduels avec les autres PIC et les autres interfaces gérées par le programme WinPic d'origine est très élevée. A noter que les PIC12F675, PIC16F630 and PIC16F676 étant très proches du PIC12F629, il est probable que WxPic est capable de les programmer avec succès. Le portage du code pour les 18Fxxxx n'a été ajouté qu'en V1.2 et a encore moins été testé&nbsp;!</p>
+<p>WxPic a la même licence que WinPic: WxPic est un logiciel gratuit dont l'utilisation, la modification et la distribution est autorisée dans un but non lucratif.</p>
+<p>WxPic inclus des librairies de WinRing0 version  1.3.1a. La <a href="http://openlibsys.org/manual/License.html">Licence</a> et les sources sont sur le <a href="http://openlibsys.org/">site d'OpenLibSys</a></p>
+<p>WXPIC EST FOURNI TEL QUEL SANS AUCUNE GARANTIE D'AUCUNE SORTE, EXPLICITE OU IMPLICITE. LES RISQUES LIES A L'UTILISATION DE WXPIC ET DE SA DOCUMENTATION SONT EN TOTALITE A LA CHARGE DE L'UTILISATEUR.</p>
+<p>La version la plus récente de WxPic et les sources correspondants se trouvent sur le <a href="http://wxpic.free.fr">site de WxPic</a>.</p>
+<a class="return" href="#Top">Haut</a>
+<h2><a name="Aim" id="Aim"></a>A quoi sert WxPic&nbsp;?</h2>
+<p>En une phrase, WxPic permet, à l'aide d'un PC muni d'un adaptateur (programmateur), de programmer un micro-controlleur PIC. Plus en détail, il permet:</p>
+<ul>
+  <li>de charger un fichier au format HEX tels que ceux générés par <a href="http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&amp;nodeId=1406&amp;dDocName=en019469&amp;part=SW007002" target="_blank">MPLAB</a> l'outil de développement gratuit de <a href="http://www.microchip.com/">Microchip</a>. Ce fichier définit le contenu binaire de zones mémoire.</li>
+  <li>de faire correspondre ces zones mémoire aux différentes plages de mémoire (code, données et configuration) d'un modèle de micro-controlleur PIC à choisir dans une liste de composants supportés.</li>
+  <li>d'écrire dans le composant les données du fichier, en totalité ou en partie.</li>
+  <li>de relire le contenu du micro-controlleur (si cela est permis par le composant) soit pour le comparer à la mémoire chargée, soit pour le charger en mémoire.</li>
+  <li>d'examiner, éditer et sauvegarder au format HEX, le contenu de la mémoire chargée.</li>
+</ul>
+<p>Et WxPic peut aussi aider à déboguer un Programmateur PIC fait maison en permettant de commander à la main les entrées du programmateur ainsi que d'ajuster les timing des séquences des opérations automatisées.</p>
+<a class="return" href="#Top">Haut</a>
+<h2><a name="PicList" id="PicList"></a>Liste des Micro-controlleurs supportés</h2>
+<ul>
+  <li> PIC12F629, (testé)</li>
+  <li>PIC12F675, PIC16F630, PIC16F676, (similaire au PIC testé)</li>
+  <li> PIC16C84, PIC16F84 </li>
+  <li> PIC16C61, PIC16C71 </li>
+  <li> PIC16C710, PIC16C711<br />
+  </li>
+  <li> PIC10F200/202/204/206</li>
+  <li> PIC12F635, PIC12F675, PIC12F683 </li>
+  <li> PIC12F609, PIC12F615, PIC16F610, PIC16F616</li>
+  <li>PIC16F193x, PIC16LF193x (non testé &amp; programmation lente à améliorer)</li>
+  <li> PIC16F627, PIC16F627A, PIC16F628, PIC16F628A</li>
+  <li>PIC16F636, PIC16F648A </li>
+  <li> PIC16F684, PIC16F688 </li>
+  <li> PIC16F73, &nbsp;PIC16F737, PIC16F74, PIC16F76, PIC16F77 </li>
+  <li> PIC16F818, PIC16F819 </li>
+  <li> PIC16F87, PIC16F88</li>
+  <li> PIC16F873A...PIC16F877A</li>
+  <li> PIC16F88<br />
+  </li>
+  <li> dsPIC30F2010 -- dsPIC30F6010, dsPIC30F's</li>
+  <li>Et d'autres en développant les <a href="../devlist_format.htm">fichiers de paramètres adéquats...</a><br />
+  </li>
+</ul>
+<p> <font color="red"><b></b></font>Le  Support des  PIC18Fxxxx de WinPic a été remis dans WxPic à partir de la version V1.2. Cela rajoute les composants suivants (cependant aucun n'a été testé avec WxPic à ce jour)&nbsp;:</p>
+<ul>
+  <li>PIC18F2550 PIC18F4455 PIC18F4550 PIC18F2220 PIC18F2320 PIC18F2331 PIC18F2420 PIC18F2431 PIC18F2450 PIC18F2455 PIC18F2480 PIC18F2520 PIC18F2525 PIC18F2539 PIC18F2550 PIC18F2580 PIC18F2585 PIC18F2620 PIC18F2680 PIC18F442 PIC18F4220 PIC18F4320 PIC18F4331 PIC18F4420 PIC18F4431 PIC18F4450 PIC18F4480 PIC18F4520 PIC18F452 PIC18F4525 PIC18F4539 PIC18F4550 PIC18F458 PIC18F4580 PIC18F4585 PIC18F4620 PIC18F4680 PIC18F4685 PIC18F6527 PIC18F6585 PIC18F6680 PIC18F8490 </li>
+</ul>
+<a class="return" href="#Top"></a><a class="return" href="#Top">Haut</a>
+<h2><a name="System" id="System"></a>Système requis</h2>
+<p>Pour utiliser WxPic il faut:</p>
+<ul>
+  <li>Un PC sous Windows XP ou Vista,</li>
+  <li>Un <a href="#Programmer">programmateur de PIC parmi ceux supportés</a>,</li>
+  <li>Un port parallèle (LPT1 ou LPT2) ou série (COM1, COM2, ...) disponible compatible avec le programmateur PIC utilisé.</li>
+</ul>
+<p><a name="Programmer" id="Programmer"></a>Les programmateurs supportés sont&nbsp;:</p>
+<ul>
+  <li>Programmateur F629 (testé)</li>
+  <li><a href="../com84.gif">COM84 Programmer</a> (code testé avec le Programmateur F629)</li>
+  <li><a href="http://www.jdm.homepage.dk/newpic3.htm" target="_top">JDM (2)</a> (code testé avec le Programmateur F629)</li>
+  <li><a href="../pip84.gif">PIP84</a> (non testé)</li>
+  <li><a href="../TaitSchema.png">Tait Programmer</a> (non testé)</li>
+  <li><a href="http://ww1.microchip.com/downloads/en/AppNotes/00589a.pdf" target="_blank">Microchip AN589</a> (non testé)</li>
+  <li><a href="../noppp.gif">NOPPP</a> (ou <a href="../noppp-x.gif">variante avec des pull-up</a>) par Michael A. Covington (testé avec un PIC16F84A)</li>
+</ul>
+<p>D'autres programmateurs basés soit sur l'interface série, soit sur l'interface parallèle, peuvent être supportés par l'utilisation d'un fichier texte de <a href="../CustomInterface.htm">description de son interface</a>.</p>
+<a class="return" href="#Top">Haut</a>
+<h2><a name="InstallAndRun" id="InstallAndRun"></a>Installer et Excuter WxPic</h2>
+<h3><a name="WinInstall" id="WinInstall"></a>Windows</h3>
+<p> Avant d'éxécuter WxPic pour la première fois, vous devez l'installer. C'est une opération simple grâce à l'assistant d'installation fourni. Mais il est conseillé d'effectuer cette opération dans un compte administrateur. Sinon Wxpic ne s'installera pas pour tous les utilisateurs et surtout sera incapable d'accéder au port parallèle.</p>
+<p>Pour réaliser l'installation, exécutez simplement l'instaleur multi-langue téléchargé  (WxPic-V#.#.#R###-installer.exe) et suivez les instructions:</p>
+<p>Commencez par choisir votre langue d'installation.</p>
+<p><img src="InstallLang.png" alt="Ecran de sélection de la langue d'installation" width="294" height="153" /></p>
+<p>Lisez et acceptez les termes de la licence et ensuite confirmez les composants à installer. Vous ne devriez rien avoir à changer au niveau des composants à installer excepté les langues que vous pouvez désélectionner si vous pensez utiliser l'interface en anglais uniquement. A noter que le driver WinRing0 est proposé soit en version 32 bits soit en version 64 bit suivant la nature de votre système d'exploitation. C'est automatiquement déterminé par l'installeur. Le programme WxPic est quant à lui toujours en 32 bits afin d'être compatible avec les deux types de système (ce qui n'est pas vrai pour un driver).</p>
+<p><img src="Install.png" alt="Slection of components to install" width="426" height="288" /></p>
+<p>Ensuite, vous avez simplement à confirmer le répertoire d'installation et à cliquer sur le bouton<span class="quote"> Installer</span>. C'est tout, et l'installation de WxPic devrait se terminer dans les 5 secondes.</p>
+<p><img src="InstallFolder.png" alt="Installation folder selection screen" width="426" height="288" /></p>
+<p>Enfin vous pouver exécuter WxPic à partir de votre menu Windows <span class="quote">Démarrer</span> &gt; <span class="quote">Tous les Programmes</span> &gt; <span class="quote">WxPic</span> &gt; <span class="quote">WxPic</span>. N'oubliez pas d'exécuter WxPic depuis un compte administrateur si vous avez à utiliser le port parallèle. Dans ce cas, sous Vista ou Windows 7, vous aurez à confirmer que vous accepter d'accorder à WxPic les droit administrateurs. Par contre les ports série peuvent être utilisés depuis n'importe quel compte (utilisateur ou administrateur).</p>
+<h3><a class="return" href="#Top">Haut</a> </h3>
+<h3><a name="LinuxInstall" id="LinuxInstall"></a>Linux</h3>
+<p>Sous Linux, l'installation de WxPic est un peu plus compliquée que sous Windows. Cela dépend de la version sur laquelle il doit être installé. Les binaires ne sont fournis que pour Ubuntu 12.04 et CentOS 5.7. Il peuvent cependant être compatibles avec d'autre variantes et/ou versions de Linux. Il faudra essayer pour savoir. Dans le cas où aucun des 2 binaires fournis n'est compatible il reste la construction de binaires compatibles à partir des sources. Dans ce cas se référer à la page sur la <a href="http://wxpic.free.fr/Building_fr.htm">génération de WxPic</a>. </p>
+<p>Dans le cas d'un OS compatible ou pour tester cette compatibilité, l'installation d'un binaire se fait en suivant ces instructions&nbsp;:</p>
+<ul>
+  <li>Installer les libraries wxWidgets listées dans la première ligne de la <a href="http://wxpic.free.fr/Download_fr.htm#PackageList">table des paquets</a> en utilisant soit <span class="quote">yum</span> (CentOS) soit <span class="quote">apt-get</span> (Ubuntu) ou leur interface graphique.</li>
+  <li><a href="http://wxpic.free.fr/Download_fr.htm#LinuxRelease">Télécharger le fichier TAR des binaires</a> compatible avec l'OS, dont le nom est de la forme <span class="quote">WinPic-&lt;OS&gt;-&lt;Release&gt;-bin.tar.gz</span></li>
+  <li>Copier the fichierTAR dans le répertoire <span class="quote">/usr</span></li>
+  <li>Décomlpresser le fichiez TAR&nbsp;: <span class="quote">gunzip WinPic-&lt;OS&gt;-&lt;Release&gt;-bin.tar.gz</span></li>
+  <li>Extraire les fichiers de l'archive&nbsp;: <span class="quote">tar xvf WinPic-&lt;OS&gt;-&lt;Release&gt;-bin.tar.gz</span></li>
+  </ul>
+<p>Après installation WxPic apparaît dans le menu <span class="quote">Application</span> &gt; <span class="quote">Programmation</span> de Gnome. WxPic peut être lancé grâce à lui. Mais il faut le faire depuis le compte root pour permettre l'accès au port parallèle. La simple utilisation du port série ne requiert pas de privilèges.</p>
+<p>Sous Ubuntu il n'est pas d'usage d'utiliser le compte root. Avec cet OS il est recommandé d'utliser <span class="quote">sudo</span> pour lancer une commande en mode privilégié. La commande suivante sera donc utilisée pour permettre à WxPic d'accéder au port parallèle&nbsp;:</p>
+<pre>sudo -H wxpic</pre>
+<p class="important">Attention&nbsp;: il est très important de ne pas oublier le -H de la commande. Le -H permet de déplacer l'environnement de l'utilisateur dans le compte root. Cela évite ainsi à WxPic de créer ses fichiers dans l'environnement de l'utilisateur. En effet ces fichiers créés avec les droits du compte root ne pourraient plus être remplacés ou modifier par l'utilisateur. WxPic vérifie cette condition et prévient l'utilisateur en cas d'erreur. Il n'est pas conseillé de passer outre l'avertissement.</p>
+<h3><a class="return" href="#Top">Haut</a> </h3>
+<h2><a name="cmd_line_arguments" id="cmd_line_arguments"></a>Arguments de la ligne de commande </h2>
+<p> Il est possible d'appeler WxPic dans un fichier de commande, or dans un environnement de programmation intégré (IDE) pour effectuer automatiquement une opération sans intervention manuelle. Par exemple il est possible de demander à WxPic de charger un programme depuis un fichier HEX, d'écrire son contenu dans un composant cible et de se terminer après celà.</p>
+<p> Les options acceptées sur la ligne de commande sont les suivants&nbsp;:</p>
+<dl>
+  <p class="important">Sous Linux remplacer le '/' devant les paramètres par '-'</p>
+  <dt>&lt;Tout texte ne commançant par une barre oblique ('/') [par un tiret ('-') sous Linux]&gt;</dt>
+  <dd> Ce texte est considéré comme un nom de fichier. Si la ligne de commande contient l'option <a href="#pSwitch" class="refdt">/p</a>, ce fichier sera chargé en mémoire. Si le fichier ne peut pas être chargé, l'exécution de la ligne de commande est immédiatement arrêtée. Il est alors possible de rechercher manuellement le fichier.<br />
+    Si la ligne de commande contient le paramètre <a href="#rSwitch" class="refdt">/r</a>, c'est le nom du fichier HEX qui sera produit.<br />
+    Si aucune des option <a href="#pSwitch" class="refdt">/p</a> ou <a href="#rSwitch" class="refdt">/r</a> ne sont spécifiés, le fichier sera chargé en mémoire mais pas écrit dans le composant.<br />
+    Un seul fichier peut être spécifié. S'il contient des espaces, il doit être encadré de guillemets.
+</dd>
+  <dt><a name="pSwitch" id="Parameterp"></a>/p</dt>
+  <dd> Programme le composant à partir du contenu de la mémoire.</dd>
+  <dt>/e</dt>
+  <dd> Efface le composant. Il n'est pas nécessaire de spécifié cette option si l'option <a href="#pSwitch" class="refdt">/p</a> est spécifiée car le composant est automatiquement effacé avant la programmation.</dd>
+  <dt><a name="rSwitch" id="rSwitch"></a>/r</dt>
+  <dd> Lit le contenu du composant et le charge en mémoire avant de l'écrire dans le fichier HEX spécifié. </dd>
+  <dt>/v</dt>
+  <dd> Vérifie que le contenu du composant est identique à celui de la mémoire. Ceci n'est pas nécessaire avec l'option <a href="#pSwitch" class="refdt">/p</a> car la programmation est suivie par une vérification pour la plus par des composants.</dd>
+  <dt>/q</dt>
+  <dd> Termine WxPic. Sans cette commande WxPic doit être arrêté manuellement même en mode ligne de commande.  </dd>
+  <dt>/q=&lt;n&gt;</dt>
+  <dd> Termine WxPic après <span class="quote">&lt;n&gt;</span> secondes d'attente après la fin des opérations pour laisser le temps de lire les messages. &lt;n&gt; doit être positif ou nul. Si cette commande n'est pas donnée WxPic reste ouvert à la fin de l'exécution des opérations spécifiées par la ligne de commande. Notez cependant qu'en cas d'erreur lors de l'opération de vérification, WxPic interrompt l'exécution de la ligne de commande et donc la commande <span class="quote">/q=&lt;n&gt;</span> ne sera pas exécutée.</dd>
+  <dt>&nbsp;</dt>
+  <dt>/nodelay</dt>
+  <dd>Habituellement, en mode ligne de commande, WxPic attend quelques secondes avant de programmer afin de laisser une chance d'annuler l'opération. Avec cette option /nodelay il n'y a pas délai avant le début de la programmation.  </dd>
+  <dt>/overwrite</dt>
+  <dd> Avec cette option WxPic ne demandera pas de confirmation avant d'écraser un fichier existant. A utiliser avec l'option <a href="#rSwitch" class="refdt">/r</a> si nécessaire.</dd>
+  <dt>/device=XXXX</dt>
+  <dd> Spécifie le type du composant à utiliser. Sans cette option c'est le composant utilisé lors de la dernière session qui sera utilisé. Il ne doit pas y avoir d'espace dans l'option. Exemple: <code>/device=PIC16F628</code></dd>
+  <dt>/config_word=XXXX</dt>
+  <dd> Écrase la valeur du mot de configuration qui aurait été lue dans un fichier HEX par la valeur spécifiée. XXXX est la valeur spécifiée avec 4 caractères hexadécimaux. Il ne doit pas y avoir d'espace dans l'option.  </dd>
+  <dt><a name="SessionCmdLine" id="SessionCmdLine"></a>/session=XXXX</dt>
+  <dd>Sélectionne la session XXXX (sans distinction de casse) à la place de la <a href="Panel.htm#SessionParDefaut">Session par Défaut</a> qui est normalement utilisée lorsque des paramètres sont spécifiés sur la ligne de commande. S'il n'existe qu'une seule session (la <a href="Panel.htm#SessionParDefaut">Session par Défaut</a>) ce paramètre est ignoré. Si aucun nom de session n'est fourni (<span class="quote">/session=</span>) c'est encore la <a href="Panel.htm#SessionParDefaut">Session par Défaut</a> qui est utilisée.<br />
+  Si le nom de session contient un espace, le paramètre doit être entouré de guillemets (par exemple: <span class="quote">/session=&quot;Ma Session&quot;</span> ou <span class="quote">&quot;/session=Ma Session&quot;</span>)<br />
+  Sous Windows il ne sera pas possible de spécifier un nom de session contenant lui-même des guillemets.</dd>
+</dl>
+<p>Le déroulement des opérations de la ligne de commande peut être interrompu en appuyant sur Echap. Une erreur lors de la vérification interrompt également le déroulement des opérations.</p>
+<p>Lorsqu'un nom de device ou de fichier HEX est fourni par la ligne de commande, celui-ci modifie la configuration de la session choisie (par <span class="quote">/session</span> ou celle par défaut). Mais cette modification n'est pas immédiatement sauvegardée. Elle le sera si l'option <span class="quote">/q</span> est exécutée ou par une opération qui <a href="Panel.htm#SaveConfigMethods">enregistre la configuration</a>.</p>
+<p>Quelques exemples de ligne de commande: </p>
+<dl>
+  <dt><code>WxPic keyer1.hex /p /q</code></dt>
+  <dd> Charge le fichier <code>keyer1.hex</code>, puis programme son contenu dans le composant connecté et termine WxPic.  </dd>
+  <dt><code>WxPic /nodelay c:\pic\my_src\keyer1.hex /p /q</code> </dt>
+  <dd> A peu près la même chose, en spécifiant un chemin absolu pour le fichier cette fois et en évitant le délai de 3 secondes avant le début de la programmation qui permet d'interrompre la programmation avant qu'elle n'ait commencé.</dd>
+  <dt> <code>WxPic /overwrite /r &quot;readout.hex&quot; /q</code> </dt>
+  <dd> Lit le contenu du composant et l'écrit dans le fichier HEX <code>readout.hex</code> en écrasant le fichier s'il existe déjà puis se termine. </dd>
+</dl>
+<a class="return" href="#Top">Haut</a>
+<h2><a name="Interface2" id="Interface2"></a>Interface Utilisateur</h2>
+<p><img src="WxPic.png" width="556" height="341" /></p>
+<p>L'interface de WxPic est essentiellement constituée </p>
+<ul>
+  <li>d'une <a href="Menu.htm">barre de menus</a>, </li>
+  <li>d'une <a href="Menu.htm">barre de boutons</a>,</li>
+  <li>de <a href="Panel.htm">7 pages</a> accessibles grâce à leur onglet.</li>
+</ul>
+<a class="return" href="#Top">Haut</a>
+<h2><a name="Glossaire" id="Glossaire"></a>Glossaire</h2>
+<p>Les termes utilisés dans l'interface utilisateur de WxPic et dans cette aide sont les suivants&nbsp;:</p>
+<dl>
+  <dt><a name="Deviceglossary" id="Deviceglossary"></a>Composant</dt><dd>Le micro-controlleur PIC utilisé.</dd>
+  <dt><a name="Codeglossary" id="Codeglossary"></a>Code</dt><dd>Le code éxécutable (programme) du composant.</dd>
+  <dt><a name="Dataglossary" id="Dataglossary"></a>Données</dt><dd>Les données non-volatiles du composant.</dd>
+  <dt><a name="ConfigGlossary" id="ConfigGlossary"></a>Configuration</dt><dd>Le ou les mots de configuration ou plus généralement toutes les données de configuration et d'indentification.</dd>
+  <dt><a name="IdGlossary" id="IdGlossary"></a>Identification</dt><dd>Les mots d'identification définis par l'utilisateur ainsi que celui du composant. Ce dernier indique le type du composant.</dd>
+  <dt><a name="Memoryglossary" id="Memoryglossary"></a>Mémoire</dt>
+  <dd>Le tampon interne de WxPic qui conserve l'image du code, des données, et de la configuration du composant.</dd>
+  <dt><a name="Hexglossary" id="Hexglossary"></a>Fichier HEX</dt>
+  <dd>Fichier texte décrivant le contenu de plages mémoire, généralement généré par l'outil de développement de <a href="http://www.microchip.com/" target="_blank">Microchip</a> <a href="http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&amp;nodeId=1406&amp;dDocName=en019469&amp;part=SW007002" target="_blank">MPLAB</a>. WxPic peut aussi recréer ces fichiers en lisant les composants non protégés.</dd>
+  <dt><a name="Programerglossary" id="Programer"></a>Programmateur</dt><dd>Matériel permettant de lire et programmer un ou plusieurs modèles de composants.</dd>
+  <dt><a name="InterfaceGlossary" id="Interface"></a>Interface</dt><dd>L'interface du programmateur par port série ou parallèle</dd>
+</dl>
+<a class="return" href="#Top">Haut</a>
+</div>
+</body>
+</html>

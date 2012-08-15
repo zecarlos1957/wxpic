@@ -1,0 +1,16 @@
+<programmer-control-lines
+DataIn="cts"
+VppOnOff="txd"
+VddOnOff="nc"
+Connect="nc"
+ClockOut="rts"
+DataOut="dtr"
+DataOutWhileReading="1"
+PullMclrDown="nc"
+ClkEnable="nc"
+OutEnable="nc"
+OkButton="nc"
+RedLed="nc"
+GreenLed="nc"
+/>
+

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map xmlns="http://wxpic.free.fr/map" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="map.xsd">
+  <entry id="0" url="index.htm">Sommaire</entry>
+  <entry id="1" url="Panel.htm" anchor="ConfigNId"></entry>
+  <entry id="2" url="Faq.htm"></entry>
+  <entry id="3" url="../LptPort.htm"></entry>
+  <entry id="4" url="Menu.htm">Menu Bouton Programme</entry>
+  <entry id="5" url="Panel.htm" anchor="SessionDialog"></entry>
+</map>

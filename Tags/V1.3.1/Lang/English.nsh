@@ -1,0 +1,18 @@
+# Define language variant for the installer 
+LoadLanguageFile "${NSISDIR}\Contrib\Language files\English.nlf"
+LicenseLangString LicenseData ${LANG_ENGLISH} "doc\License.txt"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "${PRODUCT_NAME}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" "PIC Programmer"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "©2009-2010 Philippe Chevrier and Contributors"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "PIC Programmer"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${VERSION_TEXT}"
+
+LangString Win9xError /LANG=${LANG_ENGLISH} "Error! This installer can't run under Windows 9x!"
+LangString LangSectionName /LANG=${LANG_ENGLISH} "Language Support"
+LangString ShortCutSectionName /LANG=${LANG_ENGLISH} "ShortCut in Start Menu"
+LangString DeviceFilesExist /LANG=${LANG_ENGLISH} "Do you want to keep the files in the Devices directory?"
+LangString CantDeleteExe /LANG=${LANG_ENGLISH} "${EXE_NAME} cannot be deleted. It may be running. Stop it and Retry."
+LangString UninstallWarning /LANG=${LANG_ENGLISH} "This will uninstall ${EXE_NAME}. Hit next to continue."
+LangString WinRingSectionName32 /LANG=${LANG_ENGLISH} "WingRing0 32-bit driver"
+LangString WinRingSectionName64 /LANG=${LANG_ENGLISH} "WingRing0 64-bit driver"
+LangString DeviceDirReadme /LANG=${LANG_ENGLISH} "This directory is searched for the device definition files (*.dev). You can copy the MPLAB device definition files here."
