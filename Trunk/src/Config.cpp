@@ -563,6 +563,12 @@ void TSessionConfig::setDefault (void)
     _tcscpy(a.DeviceName, _T("PIC??????"));
     a.UnknownCodeMemorySize = 4096;  // used for PIC_DEV_TYPE_UNKNOWN..
     a.UnknownDataMemorySize = 256;   // ..for a trial to program exotic types
+
+    a.ProgramWhat           = PIC_PROGRAM_ALL;
+    a.UseCompleteChipErase  = 1;
+    a.DisconnectAfterProg   = 1;
+    a.UseDifferentVoltages  = 1;
+    a.LptPortNr             = 1;
 }
 
 void TSessionConfig::saveConfig (void)
